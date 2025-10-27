@@ -14,23 +14,26 @@ export default function ViewToggle() {
   ]
 
   return (
-    <div className="fixed top-6 right-6 z-50 flex gap-3">
+    <div className="fixed top-8 right-8 z-50 flex gap-2">
       {buttons.map(({ mode, label }) => (
         <button
           key={mode}
           onClick={() => !isTransitioning && setViewMode(mode)}
           disabled={isTransitioning}
           className={`
-            px-6 py-3 rounded-lg font-medium text-sm
-            transition-all duration-300
+            px-4 py-2 rounded-lg font-medium text-xs
+            transition-all duration-200
             ${
               viewMode === mode
-                ? 'bg-[#FE5102] text-white shadow-lg shadow-[#FE5102]/50'
-                : 'bg-[#1E293B] text-gray-300 hover:bg-[#2D3B52] hover:text-white'
+                ? 'bg-[#FE5102] text-white'
+                : 'bg-black/40 text-gray-300 hover:bg-black/60 hover:text-white'
             }
             ${isTransitioning ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-            border border-gray-700/50
+            border border-gray-700/30
           `}
+          style={{
+            backdropFilter: 'blur(10px)',
+          }}
         >
           {label}
         </button>

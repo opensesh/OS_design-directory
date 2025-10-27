@@ -15,25 +15,26 @@ export default function CategoryFilters() {
   ]
 
   return (
-    <div className="fixed top-6 left-6 z-50 flex gap-2">
+    <div className="fixed bottom-8 left-8 z-50 flex gap-2">
       {categories.map(({ value, label, color }) => (
         <button
           key={label}
           onClick={() => setCategory(value)}
           className={`
-            px-4 py-2 rounded-full font-medium text-sm
-            transition-all duration-300
+            px-3 py-1.5 rounded-full font-medium text-xs
+            transition-all duration-200
             ${
               activeCategory === value
-                ? 'shadow-lg scale-105'
-                : 'opacity-70 hover:opacity-100 hover:scale-105'
+                ? 'shadow-lg'
+                : 'opacity-60 hover:opacity-100'
             }
-            border-2
+            border
           `}
           style={{
-            backgroundColor: activeCategory === value ? color : 'transparent',
+            backgroundColor: activeCategory === value ? color : 'rgba(0,0,0,0.4)',
             borderColor: color,
             color: activeCategory === value ? 'white' : color,
+            backdropFilter: 'blur(10px)',
           }}
         >
           {label}
