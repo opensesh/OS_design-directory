@@ -13,6 +13,26 @@ export default function ParticleSystem({ count = 1000, radius = 15 }: ParticleSy
   const meshRef = useRef<THREE.InstancedMesh>(null)
   const viewMode = useAppStore((state) => state.viewMode)
   const setTransitioning = useAppStore((state) => state.setTransitioning)
+  const resources = useAppStore((state) => state.resources)
+
+  // Map particle index to resource (cycles through resources if more particles than resources)
+  const getResourceForParticle = (index: number) => {
+    if (resources.length === 0) return null
+    return resources[index % resources.length]
+  }
+
+  // Log resource mapping on load
+  useEffect(() => {
+    if (resources.length > 0) {
+      console.log(`✅ Particle-Resource Mapping:`)
+      console.log(`   Total Resources: ${resources.length}`)
+      console.log(`   Total Particles: ${count}`)
+      console.log(`   Example mappings:`)
+      console.log(`   - Particle 0: ${getResourceForParticle(0)?.name} (${getResourceForParticle(0)?.category})`)
+      console.log(`   - Particle 50: ${getResourceForParticle(50)?.name} (${getResourceForParticle(50)?.category})`)
+      console.log(`   - Particle 100: ${getResourceForParticle(100)?.name} (${getResourceForParticle(100)?.category})`)
+    }
+  }, [resources, count])
 
   // Generate all three layouts once
   const spherePositions = useMemo(() => generateSphereLayout(count, radius), [count, radius])
