@@ -1,0 +1,101 @@
+ID,Name,URL,Description,Category,Section,Pricing,Featured,OpenSource,Tags,Count,Tier
+1,Coolors,https://coolors.co,Super fast color palette generator with instant export options,Brand,Colors,free,TRUE,FALSE,"colors,palette,generator,hex",∞ palettes,1
+2,Google Fonts,https://fonts.google.com,"Free, open-source fonts optimized for web use",Brand,Typography,free,TRUE,TRUE,"fonts,typography,web fonts,free","1,500+ fonts",1
+3,Adobe Color,https://color.adobe.com,Professional color wheel and palette creator from Adobe,Brand,Colors,free,TRUE,FALSE,"colors,palette,wheel,adobe",∞ palettes,1
+4,Fontshare,https://www.fontshare.com,High-quality free fonts from Indian Type Foundry,Brand,Typography,free,TRUE,FALSE,"fonts,free,quality,typography",100+ fonts,1
+5,Color Hunt,https://colorhunt.co,Curated collection of beautiful color palettes,Brand,Colors,free,TRUE,FALSE,"colors,inspiration,palettes,curated","10,000+ palettes",1
+6,UI Gradients,https://uigradients.com,Beautiful gradient collection with CSS code,Brand,Colors,free,TRUE,FALSE,"gradients,colors,css,code",300+ gradients,1
+7,Fontjoy,https://fontjoy.com,AI-powered font pairing generator,Brand,Typography,free,TRUE,FALSE,"fonts,pairing,ai,generator",∞ combinations,1
+8,Leonardo,https://leonardocolor.io,Generate accessible color systems from Adobe,Brand,Colors,free,TRUE,FALSE,"colors,accessibility,wcag,system",∞ systems,1
+9,CSS Gradient,https://cssgradient.io,CSS gradient generator with instant code export,Brand,Colors,free,FALSE,FALSE,"gradients,css,generator,code",∞ gradients,2
+10,Colorbox by Lyft,https://colorbox.io,Advanced color system builder with accessibility,Brand,Colors,free,FALSE,FALSE,"colors,accessibility,system,lyft",∞ systems,2
+11,Font Squirrel,https://www.fontsquirrel.com,Curated free fonts with webfont generator,Brand,Typography,free,FALSE,FALSE,"fonts,free,commercial,webfont","1,000+ fonts",2
+12,DaFont,https://www.dafont.com,Massive archive of free fonts,Brand,Typography,free,FALSE,FALSE,"fonts,free,archive,download","50,000+ fonts",2
+13,Color Safe,https://colorsafe.co,Generate WCAG-compliant color palettes,Brand,Colors,free,FALSE,FALSE,"colors,accessibility,wcag,compliant",∞ palettes,2
+14,Khroma,http://khroma.co,AI color tool that learns your preferences,Brand,Colors,free,FALSE,FALSE,"colors,ai,personalized,learning",∞ palettes,2
+15,Gradient Hunt,https://gradienthunt.com,Curated gradient palette collection,Brand,Colors,free,FALSE,FALSE,"gradients,curated,palettes,css","1,000+ gradients",2
+16,Typescale,https://typescale.com,Visual type scale calculator for typography systems,Brand,Typography,free,FALSE,FALSE,"typography,scale,calculator,system",∞ scales,2
+17,Archetype,https://archetypeapp.com,Font pairing and typography inspiration,Brand,Typography,free,FALSE,FALSE,"fonts,pairing,inspiration,typography",500+ pairs,2
+18,Brand Palettes,https://brandpalettes.com,Color palettes from famous brands,Brand,Colors,free,FALSE,FALSE,"colors,brands,inspiration,palettes","1,000+ brands",2
+19,Picular,https://picular.co,Google image search for color discovery,Brand,Colors,free,FALSE,FALSE,"colors,search,discovery,google",∞ colors,3
+20,Color Space,https://mycolor.space,Generate matching color palettes and gradients,Brand,Colors,free,FALSE,FALSE,"colors,palettes,gradients,generator",∞ palettes,3
+21,Abstract Fonts,https://www.abstractfonts.com,Large collection of free fonts,Brand,Typography,free,FALSE,FALSE,"fonts,free,collection,download","13,000+ fonts",3
+22,Color Contrast Checker,https://coolors.co/contrast-checker,Check WCAG color contrast ratios,Brand,Colors,free,FALSE,FALSE,"accessibility,wcag,contrast,checker",∞ checks,3
+23,Figma,https://www.figma.com,Collaborative design tool for interfaces and prototypes,UX,Design Tools,freemium,TRUE,FALSE,"design,prototyping,collaboration,ui",∞ projects,1
+24,FigJam,https://www.figma.com/figjam,Online whiteboard for team brainstorming,UX,Collaboration,freemium,TRUE,FALSE,"whiteboard,brainstorming,collaboration,figma",∞ boards,1
+25,Maze,https://maze.co,Rapid user testing and research platform,UX,User Testing,freemium,TRUE,FALSE,"user testing,research,analytics,feedback","1,000+ tests",1
+26,Whimsical,https://whimsical.com,"Fast flowcharts, wireframes, and mind maps",UX,Flowcharts,freemium,TRUE,FALSE,"flowcharts,wireframes,mindmaps,diagrams",∞ diagrams,1
+27,Stark,https://www.getstark.co,Comprehensive accessibility tools for designers,UX,Accessibility,freemium,TRUE,FALSE,"accessibility,wcag,contrast,colorblind",∞ checks,1
+28,Optimal Workshop,https://www.optimalworkshop.com,Suite of UX research and testing tools,UX,User Testing,freemium,TRUE,FALSE,"research,testing,card sorting,tree testing",∞ studies,1
+29,UsabilityHub,https://usabilityhub.com,Remote user testing and design surveys,UX,User Testing,freemium,TRUE,FALSE,"testing,surveys,feedback,remote",∞ tests,1
+30,Miro,https://miro.com,Online collaborative whiteboard platform,UX,Collaboration,freemium,FALSE,FALSE,"whiteboard,collaboration,workshop,agile",∞ boards,2
+31,Overflow,https://overflow.io,User flow diagram tool for designers,UX,Flowcharts,freemium,FALSE,FALSE,"user flows,flowcharts,diagrams,prototyping",∞ flows,2
+32,Lookback,https://lookback.io,User research and usability testing platform,UX,User Testing,freemium,FALSE,FALSE,"research,testing,interviews,recordings",∞ sessions,2
+33,UserTesting,https://www.usertesting.com,On-demand human insight platform,UX,User Testing,freemium,FALSE,FALSE,"testing,feedback,videos,insights",∞ tests,2
+34,Axe DevTools,https://www.deque.com/axe,Browser extension for accessibility testing,UX,Accessibility,free,FALSE,TRUE,"accessibility,wcag,testing,browser extension",∞ scans,2
+35,WAVE,https://wave.webaim.org,Web accessibility evaluation tool,UX,Accessibility,free,FALSE,FALSE,"accessibility,wcag,evaluation,web",∞ scans,2
+36,Colorable,https://colorable.jxnblk.com,Color combination contrast tester,UX,Accessibility,free,FALSE,TRUE,"accessibility,contrast,colors,wcag",∞ tests,2
+37,Principle,https://principleformac.com,Animated interactive design prototyping,UX,Prototyping,freemium,FALSE,FALSE,"prototyping,animation,interaction,mac",∞ prototypes,2
+38,ProtoPie,https://www.protopie.io,Advanced interaction prototyping tool,UX,Prototyping,freemium,FALSE,FALSE,"prototyping,interaction,advanced,animation",∞ prototypes,2
+39,Who Can Use,https://whocanuse.com,Color accessibility simulator,UX,Accessibility,free,FALSE,TRUE,"accessibility,contrast,simulator,vision",∞ simulations,3
+40,Lorem Ipsum,https://www.lipsum.com,Classic placeholder text generator,UX,Content,free,FALSE,FALSE,"placeholder,text,lorem ipsum,content",∞ paragraphs,3
+41,MindMeister,https://www.mindmeister.com,Collaborative mind mapping tool,UX,Collaboration,freemium,FALSE,FALSE,"mind mapping,collaboration,brainstorming,diagrams",∞ maps,3
+42,UX Writing Hub,https://uxwritinghub.com,Resources and community for UX writers,UX,Content,free,FALSE,FALSE,"ux writing,content,microcopy,resources",100+ articles,3
+43,Unsplash,https://unsplash.com,Beautiful free high-resolution photos,Art,Photos,free,TRUE,FALSE,"photos,stock,high-res,free",5M+ photos,1
+44,Pexels,https://www.pexels.com,Free stock photos and videos,Art,Photos,free,TRUE,FALSE,"photos,videos,stock,free",3M+ assets,1
+45,unDraw,https://undraw.co,Open-source illustrations for any idea,Art,Illustrations,free,TRUE,TRUE,"illustrations,svg,customizable,free","1,000+ illustrations",1
+46,Lucide,https://lucide.dev,Beautiful open-source icon library,Art,Icons,free,TRUE,TRUE,"icons,svg,open source,modern","1,400+ icons",1
+47,Heroicons,https://heroicons.com,Beautiful hand-crafted SVG icons by Tailwind,Art,Icons,free,TRUE,TRUE,"icons,svg,tailwind,hand-crafted",300+ icons,1
+48,Flaticon,https://www.flaticon.com,Largest database of free icons,Art,Icons,freemium,TRUE,FALSE,"icons,database,large,vectors",10M+ icons,1
+49,Storyset,https://storyset.com,Free customizable illustrations,Art,Illustrations,free,TRUE,FALSE,"illustrations,customizable,animated,free","5,000+ illustrations",1
+50,Pixabay,https://pixabay.com,"Free images, videos, and music",Art,Photos,free,TRUE,FALSE,"photos,videos,music,stock,free",2.8M+ assets,1
+51,Blush,https://blush.design,Illustrations from artists worldwide,Art,Illustrations,freemium,TRUE,FALSE,"illustrations,customizable,collections,artists","10,000+ illustrations",1
+52,Phosphor Icons,https://phosphoricons.com,Flexible icon family for interfaces,Art,Icons,free,TRUE,TRUE,"icons,flexible,weights,open source","7,000+ icons",1
+53,Haikei,https://haikei.app,Generate unique SVG backgrounds and patterns,Art,Patterns,free,TRUE,FALSE,"backgrounds,patterns,svg,generator",∞ patterns,1
+54,Coverr,https://coverr.co,Free stock video footage,Art,Videos,free,TRUE,FALSE,"videos,footage,stock,free","1,000+ videos",1
+55,Humaaans,https://www.humaaans.com,Mix-and-match human illustrations,Art,Illustrations,free,TRUE,FALSE,"illustrations,humans,customizable,library",500+ elements,1
+56,BGJar,https://bgjar.com,Free SVG background generator,Art,Patterns,free,TRUE,FALSE,"backgrounds,svg,generator,patterns",∞ backgrounds,1
+57,Feather Icons,https://feathericons.com,Simply beautiful open-source icons,Art,Icons,free,TRUE,TRUE,"icons,minimalist,open source,svg",300+ icons,1
+58,Noun Project,https://thenounproject.com,Icons and photos for everything,Art,Icons,freemium,FALSE,FALSE,"icons,diverse,large,database",5M+ icons,2
+59,Tabler Icons,https://tabler-icons.io,Customizable open-source icons,Art,Icons,free,FALSE,TRUE,"icons,customizable,stroke,open source","5,000+ icons",2
+60,Pexels Videos,https://www.pexels.com/videos,Free stock videos in HD/4K,Art,Videos,free,FALSE,FALSE,"videos,stock,hd,4k,free","10,000+ videos",2
+61,Open Peeps,https://www.openpeeps.com,Hand-drawn illustration library,Art,Illustrations,free,FALSE,FALSE,"illustrations,hand-drawn,people,library",500+ elements,2
+62,Illustrations.co,https://illlustrations.co,Open-source illustration kit,Art,Illustrations,free,FALSE,TRUE,"illustrations,kit,100 days,open source",100+ illustrations,2
+63,Pixeltrue,https://www.pixeltrue.com/free-illustrations,Free illustrations and animations,Art,Illustrations,free,FALSE,FALSE,"illustrations,animations,lottie,free","1,000+ illustrations",2
+64,Iconscout,https://iconscout.com,Design assets marketplace,Art,Icons,freemium,FALSE,FALSE,"icons,illustrations,3d,marketplace",8M+ assets,2
+65,Burst by Shopify,https://burst.shopify.com,Free stock photos for entrepreneurs,Art,Photos,free,FALSE,FALSE,"photos,ecommerce,business,stock","1,000+ photos",2
+66,Kaboompics,https://kaboompics.com,Free stock photos with color search,Art,Photos,free,FALSE,FALSE,"photos,color search,stock,free","10,000+ photos",2
+67,Reshot,https://www.reshot.com,Handpicked free stock photos and icons,Art,Photos,free,FALSE,FALSE,"photos,icons,handpicked,stock","40,000+ assets",2
+68,Hero Patterns,https://heropatterns.com,Free repeatable SVG background patterns,Art,Patterns,free,FALSE,TRUE,"patterns,svg,backgrounds,tileable",100+ patterns,2
+69,Cool Backgrounds,https://coolbackgrounds.io,Background image generator tools,Art,Patterns,free,FALSE,FALSE,"backgrounds,generator,gradients,patterns",∞ backgrounds,2
+70,3D Icons,https://3dicons.co,Open-source 3D icon library,Art,Icons,free,FALSE,TRUE,"3d,icons,library,open source","1,400+ icons",2
+71,Mixkit,https://mixkit.co,Free assets for video projects,Art,Videos,free,FALSE,FALSE,"videos,music,templates,stock","1,000+ videos",2
+72,Drawkit,https://www.drawkit.com,Beautiful free vector illustrations,Art,Illustrations,freemium,FALSE,FALSE,"illustrations,vectors,hand-drawn,collections","1,000+ illustrations",2
+73,IRA Design,https://iradesign.io,Build your own illustrations,Art,Illustrations,free,FALSE,FALSE,"illustrations,customizable,gradients,builder",∞ combinations,2
+74,Ionicons,https://ionic.io/ionicons,Premium designed icons for web and mobile,Art,Icons,free,FALSE,TRUE,"icons,mobile,web,open source","1,300+ icons",2
+75,Font Awesome,https://fontawesome.com,Iconic font and CSS toolkit,Art,Icons,freemium,FALSE,FALSE,"icons,fonts,toolkit,popular","2,000+ icons",2
+76,Gratisography,https://gratisography.com,Quirky free high-resolution photos,Art,Photos,free,FALSE,FALSE,"photos,quirky,creative,free",500+ photos,3
+77,StockSnap,https://stocksnap.io,Beautiful free stock photos,Art,Photos,free,FALSE,FALSE,"photos,stock,high-res,free","100,000+ photos",3
+78,Picography,https://picography.co,Gorgeous free photos,Art,Photos,free,FALSE,FALSE,"photos,hi-res,free,gorgeous","1,000+ photos",3
+79,OpenMoji,https://openmoji.org,Open-source emoji library,Art,Icons,free,FALSE,TRUE,"emoji,open source,colorful,library","4,000+ emoji",3
+80,CSS.gg,https://css.gg,Pure CSS icons with customizable styling,Art,Icons,free,FALSE,TRUE,"icons,css,customizable,minimal",700+ icons,3
+81,Streamline,https://www.streamlinehq.com,Worlds largest icon library,Art,Icons,freemium,FALSE,FALSE,"icons,large,consistent,professional","100,000+ icons",3
+82,Avataaars,https://getavataaars.com,Mix and match avatar illustrations,Art,Illustrations,free,FALSE,FALSE,"avatars,illustrations,customizable,generator",∞ avatars,3
+83,Hugeicons,https://hugeicons.com,Comprehensive icon pack,Art,Icons,freemium,FALSE,FALSE,"icons,large,styles,comprehensive","4,000+ icons",3
+84,Pattern Library,https://www.pattern.monster,Free customizable SVG patterns,Art,Patterns,free,FALSE,FALSE,"patterns,svg,generator,customizable",∞ patterns,3
+85,React,https://react.dev,JavaScript library for building user interfaces,Code,Frameworks,free,TRUE,TRUE,"react,javascript,ui,library",∞ apps,1
+86,Tailwind CSS,https://tailwindcss.com,Utility-first CSS framework,Code,Frameworks,free,TRUE,TRUE,"css,framework,utility,responsive",∞ projects,1
+87,shadcn/ui,https://ui.shadcn.com,Re-usable components built with Radix UI and Tailwind,Code,UI Kits,free,TRUE,TRUE,"react,components,tailwind,accessible",50+ components,1
+88,Untitled UI,https://www.untitledui.com,Ultimate UI kit for Figma,Code,UI Kits,free,TRUE,FALSE,"figma,ui kit,components,3000+","3,000+ components",1
+89,ChatGPT,https://chat.openai.com,AI writing and coding assistant,Code,AI Tools,freemium,TRUE,FALSE,"ai,assistant,coding,writing",∞ conversations,1
+90,Mockuphone,https://mockuphone.com,Device mockups in browser,Code,Mockups,free,TRUE,FALSE,"mockups,devices,browser,quick",100+ devices,1
+91,Magician,https://magician.design,AI design tool for Figma,Code,AI Tools,freemium,FALSE,FALSE,"ai,figma,plugin,magic",∞ designs,2
+92,CSS Gradient,https://cssgradient.io,CSS gradient generator with code export,Code,Tools,free,FALSE,FALSE,"css,gradients,code,generator",∞ gradients,2
+93,DesignKit,https://designkit.io,Design systems from top companies,Code,UI Kits,free,FALSE,FALSE,"design systems,references,companies,inspiration",100+ systems,2
+94,Smartmockups,https://smartmockups.com,Product mockup creator,Code,Mockups,freemium,FALSE,FALSE,"mockups,product,online,templates","5,000+ templates",2
+95,DALL·E 3,https://openai.com/dall-e-3,Text-to-image AI generator,Code,AI Tools,freemium,FALSE,FALSE,"ai,image generation,dalle,openai",∞ images,2
+96,Uizard,https://uizard.io,Transform wireframes with AI,Code,AI Tools,freemium,FALSE,FALSE,"ai,wireframes,prototyping,automation",∞ projects,2
+97,Anima,https://www.animaapp.com,Design to code conversion,Code,Tools,freemium,FALSE,FALSE,"figma,code,export,react",∞ exports,2
+98,Framework,https://framework.design,iOS UI kit for Figma,Code,UI Kits,free,FALSE,FALSE,"ios,figma,ui kit,apple","1,000+ components",3
+99,Mockup World,https://www.mockupworld.co,Largest free mockups collection,Code,Mockups,free,FALSE,FALSE,"mockups,free,collection,large","10,000+ mockups",3
+100,Diagram,https://diagram.com,AI-powered design for Figma,Code,AI Tools,freemium,FALSE,FALSE,"ai,figma,automation,design",∞ designs,3

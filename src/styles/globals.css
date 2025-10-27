@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  :root {
+    --brand-charcoal: #191919;
+    --brand-vanilla: #FFFAEE;
+    --brand-aperol: #FE5102;
+  }
+  
+  body {
+    @apply bg-brand-charcoal text-brand-vanilla antialiased font-text;
+  }
+}
+
+/* Smooth fade-in animation for lazy-loaded content */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+}
+
+/* Staggered entrance animations with sophisticated easing */
+@keyframes stagger-entrance {
+  0% {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stagger-item {
+  opacity: 0;
+  animation: stagger-entrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.15s; }
+.stagger-3 { animation-delay: 0.25s; }
+.stagger-4 { animation-delay: 0.35s; }
+.stagger-5 { animation-delay: 0.45s; }
+.stagger-6 { animation-delay: 0.55s; }
+
+/* Hero component animations */
+@keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.6s ease-out forwards;
+}
+
+@keyframes fade-up-no-translate {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up-no-translate {
+  animation: fade-up-no-translate 0.6s ease-out forwards;
+}
+
+@layer utilities {
+  .container-responsive {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  /* Glass Fill + Glass Effect - exact Figma specs */
+  .glass-text {
+    /* Fill: FFFAEE at 20% opacity */
+    color: rgba(255, 250, 238, 0.2);
+    /* Background blur: 102.19px */
+    -webkit-backdrop-filter: blur(102.19px);
+    backdrop-filter: blur(102.19px);
+    /* Inner shadows from Figma (approximated with text-shadow and filter) */
+    text-shadow: 
+      3.41px -3.41px 3.41px rgba(214, 210, 200, 0.6) inset,
+      -3.41px 3.41px 3.41px rgba(255, 255, 255, 0.6) inset;
+    /* Subtle stroke for definition */
+    -webkit-text-stroke: 0.5px rgba(255, 250, 238, 0.15);
+  }
+}
+

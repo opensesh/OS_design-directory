@@ -1,0 +1,12 @@
+:root {
+  /* Colors */
+  --color-brand-charcoal: #191919;
+  --color-brand-vanilla: #FFFAEE;
+  --color-brand-aperol: #FE5102;
+
+  /* Typography */
+  --font-display: "Neue Haas Grotesk Display Pro", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-text: "Neue Haas Grotesk Text Pro", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-mono: Offbit, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+

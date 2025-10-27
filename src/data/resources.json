@@ -1,0 +1,184 @@
+{
+  "resources": [
+    {
+      "id": "ux-001",
+      "name": "Nielsen Norman Group",
+      "category": "UX",
+      "description": "Evidence-based UX research and training",
+      "url": "https://www.nngroup.com",
+      "tags": ["research", "usability", "training"],
+      "featured": true
+    },
+    {
+      "id": "ux-002",
+      "name": "Laws of UX",
+      "category": "UX",
+      "description": "Collection of design principles for user interfaces",
+      "url": "https://lawsofux.com",
+      "tags": ["principles", "psychology", "design"],
+      "featured": true
+    },
+    {
+      "id": "ux-003",
+      "name": "UX Collective",
+      "category": "UX",
+      "description": "Curated stories on user experience and design",
+      "url": "https://uxdesign.cc",
+      "tags": ["articles", "community", "trends"],
+      "featured": false
+    },
+    {
+      "id": "ux-004",
+      "name": "Interaction Design Foundation",
+      "category": "UX",
+      "description": "Online UX courses and resources",
+      "url": "https://www.interaction-design.org",
+      "tags": ["education", "courses", "certification"],
+      "featured": false
+    },
+    {
+      "id": "ux-005",
+      "name": "Smashing Magazine UX",
+      "category": "UX",
+      "description": "Articles and resources for UX designers",
+      "url": "https://www.smashingmagazine.com/category/ux-design",
+      "tags": ["articles", "tutorials", "best-practices"],
+      "featured": false
+    },
+    {
+      "id": "brand-001",
+      "name": "Brand New",
+      "category": "Brand",
+      "description": "Opinions on corporate and brand identity work",
+      "url": "https://www.underconsideration.com/brandnew",
+      "tags": ["identity", "logos", "critique"],
+      "featured": true
+    },
+    {
+      "id": "brand-002",
+      "name": "Logo Design Love",
+      "category": "Brand",
+      "description": "Website and blog on logo design",
+      "url": "https://www.logodesignlove.com",
+      "tags": ["logos", "branding", "inspiration"],
+      "featured": false
+    },
+    {
+      "id": "brand-003",
+      "name": "BP&O",
+      "category": "Brand",
+      "description": "Branding, packaging, and opinion",
+      "url": "https://bpando.org",
+      "tags": ["packaging", "branding", "showcase"],
+      "featured": true
+    },
+    {
+      "id": "brand-004",
+      "name": "The Dieline",
+      "category": "Brand",
+      "description": "Package design inspiration and resources",
+      "url": "https://thedieline.com",
+      "tags": ["packaging", "design", "trends"],
+      "featured": false
+    },
+    {
+      "id": "brand-005",
+      "name": "Branding Served",
+      "category": "Brand",
+      "description": "Showcase of branding projects",
+      "url": "https://www.behance.net/galleries/graphic-design/branding",
+      "tags": ["portfolio", "showcase", "inspiration"],
+      "featured": false
+    },
+    {
+      "id": "art-001",
+      "name": "Dribbble",
+      "category": "Art",
+      "description": "Community for showcasing design work",
+      "url": "https://dribbble.com",
+      "tags": ["inspiration", "community", "portfolio"],
+      "featured": true
+    },
+    {
+      "id": "art-002",
+      "name": "Behance",
+      "category": "Art",
+      "description": "Platform to showcase and discover creative work",
+      "url": "https://www.behance.net",
+      "tags": ["portfolio", "showcase", "creative"],
+      "featured": true
+    },
+    {
+      "id": "art-003",
+      "name": "ArtStation",
+      "category": "Art",
+      "description": "Showcase platform for games and film artists",
+      "url": "https://www.artstation.com",
+      "tags": ["3d", "illustration", "games"],
+      "featured": false
+    },
+    {
+      "id": "art-004",
+      "name": "Awwwards",
+      "category": "Art",
+      "description": "Awards for design, creativity and innovation",
+      "url": "https://www.awwwards.com",
+      "tags": ["awards", "web-design", "inspiration"],
+      "featured": true
+    },
+    {
+      "id": "art-005",
+      "name": "CSS Design Awards",
+      "category": "Art",
+      "description": "Web design and development awards",
+      "url": "https://www.cssdesignawards.com",
+      "tags": ["web-design", "awards", "showcase"],
+      "featured": false
+    },
+    {
+      "id": "code-001",
+      "name": "CodePen",
+      "category": "Code",
+      "description": "Social development environment for front-end",
+      "url": "https://codepen.io",
+      "tags": ["playground", "community", "demos"],
+      "featured": true
+    },
+    {
+      "id": "code-002",
+      "name": "Three.js Examples",
+      "category": "Code",
+      "description": "Official Three.js examples and documentation",
+      "url": "https://threejs.org/examples",
+      "tags": ["3d", "webgl", "examples"],
+      "featured": true
+    },
+    {
+      "id": "code-003",
+      "name": "Codrops",
+      "category": "Code",
+      "description": "Web design and development blog",
+      "url": "https://tympanus.net/codrops",
+      "tags": ["tutorials", "experiments", "inspiration"],
+      "featured": false
+    },
+    {
+      "id": "code-004",
+      "name": "CSS-Tricks",
+      "category": "Code",
+      "description": "Web design community and tutorials",
+      "url": "https://css-tricks.com",
+      "tags": ["css", "tutorials", "articles"],
+      "featured": false
+    },
+    {
+      "id": "code-005",
+      "name": "GitHub",
+      "category": "Code",
+      "description": "Development platform and code hosting",
+      "url": "https://github.com",
+      "tags": ["open-source", "collaboration", "version-control"],
+      "featured": true
+    }
+  ]
+}
