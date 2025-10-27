@@ -1,10 +1,14 @@
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
-import ParticleSphere from './components/3d/ParticleSphere'
+import ParticleSystem from './components/3d/ParticleSystem'
+import ViewToggle from './components/ui/ViewToggle'
 
 function App() {
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
+      {/* View Toggle Buttons */}
+      <ViewToggle />
+
       <Canvas
         camera={{ position: [0, 0, 30], fov: 75 }}
         gl={{ alpha: false }}
@@ -14,15 +18,13 @@ function App() {
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} intensity={1} />
 
-        {/* Fibonacci Sphere - 1000 particles */}
-        <ParticleSphere count={1000} radius={15} />
+        {/* Particle System - Morphs between layouts */}
+        <ParticleSystem count={1000} radius={15} />
 
         {/* Camera Controls */}
         <OrbitControls
           enableDamping
           dampingFactor={0.05}
-          autoRotate
-          autoRotateSpeed={0.5}
         />
       </Canvas>
     </div>
