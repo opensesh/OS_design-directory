@@ -23,17 +23,11 @@ export default function ViewToggle() {
           className={`
             px-4 py-2 rounded-lg font-medium text-xs
             transition-all duration-200
-            ${
-              viewMode === mode
-                ? 'bg-[#FE5102] text-white'
-                : 'bg-black/40 text-gray-300 hover:bg-black/60 hover:text-white'
-            }
+            ${viewMode === mode ? 'bg-[#FE5102] text-white' : 'bg-black/40 text-gray-300 hover:bg-black/60'}
             ${isTransitioning ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
             border border-gray-700/30
           `}
-          style={{
-            backdropFilter: 'blur(10px)',
-          }}
+          style={{ backdropFilter: 'blur(10px)' }}
         >
           {label}
         </button>
