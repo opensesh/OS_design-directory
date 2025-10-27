@@ -46,7 +46,7 @@ export default function ParticleSystem({ count = 1000, radius = 15 }: ParticleSy
     setIsTransitioning(true)
     setTransitioning(true)
 
-    const duration = 1500 // 1.5 seconds
+    const duration = 1500
     const startTime = Date.now()
     const tempPositions = new Float32Array(fromPositions.length)
 
@@ -54,12 +54,10 @@ export default function ParticleSystem({ count = 1000, radius = 15 }: ParticleSy
       const elapsed = Date.now() - startTime
       const t = Math.min(elapsed / duration, 1)
 
-      // Ease-in-out-cubic
       const eased = t < 0.5
         ? 4 * t * t * t
         : 1 - Math.pow(-2 * t + 2, 3) / 2
 
-      // Lerp positions
       for (let i = 0; i < fromPositions.length; i++) {
         tempPositions[i] = fromPositions[i] + (toPositions[i] - fromPositions[i]) * eased
       }
