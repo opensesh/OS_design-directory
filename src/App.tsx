@@ -1,12 +1,12 @@
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import ParticleSystem from './components/3d/ParticleSystem'
-import ViewToggle from './components/ui/ViewToggle'
+import SideNav from './components/SideNav'
 
 function App() {
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
-      <ViewToggle />
+      <SideNav />
       <Canvas
         camera={{ position: [0, 0, 30], fov: 75 }}
         gl={{ alpha: false }}
