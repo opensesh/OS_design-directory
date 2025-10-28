@@ -2,11 +2,13 @@ import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import ParticleSystem from './components/3d/ParticleSystem'
 import SideNav from './components/SideNav'
+import Headline from './components/Headline'
 
 function App() {
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
       <SideNav />
+      <Headline />
       <Canvas
         camera={{ position: [0, 0, 30], fov: 75 }}
         gl={{ alpha: false }}
