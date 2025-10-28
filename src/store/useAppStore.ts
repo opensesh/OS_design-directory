@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-type ViewMode = 'sphere' | 'galaxy' | 'grid';
+export type ViewMode = 'sphere' | 'galaxy' | 'grid';
 
 interface AppState {
   viewMode: ViewMode;
