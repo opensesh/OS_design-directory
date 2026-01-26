@@ -17,14 +17,13 @@ const ANIMATION = {
 interface OrbitalRingProps {
   config: CategoryRingConfig;
   activeCategory: string | null;
-  groupRef: React.RefObject<THREE.Group | null>;
 }
 
 /**
  * Individual orbital ring component
  * Renders a thin torus at the specified radius with category color
  */
-function OrbitalRing({ config, activeCategory, groupRef }: OrbitalRingProps) {
+function OrbitalRing({ config, activeCategory }: OrbitalRingProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const currentOpacityRef = useRef(ANIMATION.DEFAULT_OPACITY);
 
@@ -104,7 +103,6 @@ export default function OrbitalRings({ ringConfigs, activeCategory }: OrbitalRin
           key={config.category}
           config={config}
           activeCategory={activeCategory}
-          groupRef={groupRef}
         />
       ))}
     </group>
