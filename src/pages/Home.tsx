@@ -1,6 +1,6 @@
 import { useState, useMemo, lazy, Suspense } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { LayoutGrid, Globe } from 'lucide-react';
+import { Box, Table2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { resources } from '../data';
 import type { NormalizedResource } from '../types/resource';
@@ -120,126 +120,140 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#141414] text-[#FFFAEE] flex flex-col">
-      {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4 border-b border-zinc-800">
-        <div className="flex items-center gap-3">
-          <h1 className="text-xl font-semibold tracking-tight">
-            Design Universe
+    <div className="h-screen bg-os-bg-dark text-os-text-primary-dark font-sans flex flex-col overflow-hidden">
+      {/* Header - Sticky with backdrop blur */}
+      <header className="flex-shrink-0 sticky top-0 z-30 bg-os-bg-dark/80 backdrop-blur-xl border-b border-os-border-dark">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+          <h1 className="text-xl md:text-2xl font-display font-bold text-brand-vanilla">
+            Brand Resource Universe
           </h1>
-          <span className="text-sm text-zinc-500">
-            {filteredResources.length} resources
-          </span>
+          <div className="flex items-center bg-os-surface-dark/50 rounded-lg p-1 border border-os-border-dark">
+            <button
+              onClick={() => setSearchParams({})}
+              className={`p-2 rounded-md transition-all ${
+                displayMode === '3d'
+                  ? 'bg-brand-aperol text-white'
+                  : 'text-os-text-secondary-dark hover:text-brand-vanilla'
+              }`}
+              aria-label="3D View"
+            >
+              <Box className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => setSearchParams({ display: 'table' })}
+              className={`p-2 rounded-md transition-all ${
+                displayMode === 'table'
+                  ? 'bg-brand-aperol text-white'
+                  : 'text-os-text-secondary-dark hover:text-brand-vanilla'
+              }`}
+              aria-label="Table View"
+            >
+              <Table2 className="w-4 h-4" />
+            </button>
+          </div>
         </div>
-
-        {/* Display Toggle */}
-        <div className="flex items-center gap-2 bg-zinc-800/60 rounded-lg p-1">
-          <button
-            onClick={() => setSearchParams({})}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-              displayMode === '3d'
-                ? 'bg-[#FE5102] text-white'
-                : 'text-zinc-400 hover:text-[#FFFAEE]'
-            }`}
-          >
-            <Globe className="w-4 h-4" />
-            3D
-          </button>
-          <button
-            onClick={() => setSearchParams({ display: 'table' })}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-              displayMode === 'table'
-                ? 'bg-[#FE5102] text-white'
-                : 'text-zinc-400 hover:text-[#FFFAEE]'
-            }`}
-          >
-            <LayoutGrid className="w-4 h-4" />
-            Table
-          </button>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col relative">
+      {/* Canvas Container - FLEX-1 fills remaining space */}
+      <div className="flex-1 relative min-h-0">
+        {/* Top gradient overlay */}
+        <div
+          className="absolute top-0 inset-x-0 h-16 pointer-events-none z-10"
+          style={{ background: 'linear-gradient(to bottom, #141414 0%, transparent 100%)' }}
+        />
+
         {/* 3D Canvas or Table View */}
-        <div className="flex-1 relative">
-          <AnimatePresence mode="wait">
-            {displayMode === '3d' ? (
-              <motion.div
-                key="3d"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="absolute inset-0"
-              >
-                <Suspense
-                  fallback={
-                    <div className="w-full h-full flex items-center justify-center">
-                      <div className="flex flex-col items-center gap-4">
-                        <div className="w-10 h-10 border-2 border-[#FE5102] border-t-transparent rounded-full animate-spin" />
-                        <span className="text-zinc-500 text-sm">Loading universe...</span>
-                      </div>
+        <AnimatePresence mode="wait">
+          {displayMode === '3d' ? (
+            <motion.div
+              key="3d"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="w-full h-full"
+            >
+              <Suspense
+                fallback={
+                  <div className="w-full h-full flex items-center justify-center">
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="w-10 h-10 border-2 border-brand-aperol border-t-transparent rounded-full animate-spin" />
+                      <span className="text-os-text-secondary-dark text-sm">Loading universe...</span>
                     </div>
-                  }
-                >
-                  <InspoCanvas
-                    resources={filteredResources}
-                    onResourceClick={handleResourceClick}
-                    onResourceHover={handleResourceHover}
-                  />
-                </Suspense>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="table"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="absolute inset-0 overflow-auto"
+                  </div>
+                }
               >
+                <InspoCanvas
+                  resources={filteredResources}
+                  onResourceClick={handleResourceClick}
+                  onResourceHover={handleResourceHover}
+                />
+              </Suspense>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="table"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="w-full h-full overflow-auto"
+            >
+              <div className="max-w-7xl mx-auto">
                 <InspoTable resources={filteredResources} />
-              </motion.div>
-            )}
-          </AnimatePresence>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Bottom gradient overlay */}
+        <div
+          className="absolute bottom-0 inset-x-0 h-32 pointer-events-none z-10"
+          style={{ background: 'linear-gradient(to top, #141414 0%, transparent 100%)' }}
+        />
+      </div>
+
+      {/* Bottom Controls - FLEX-SHRINK-0 stays fixed */}
+      <div className="flex-shrink-0 relative z-20 bg-os-bg-dark">
+        {/* Top gradient overlap for seamless blend */}
+        <div
+          className="absolute -top-8 left-0 right-0 h-8 pointer-events-none"
+          style={{ background: 'linear-gradient(to bottom, transparent 0%, #141414 100%)' }}
+        />
+
+        <div className="w-full max-w-7xl mx-auto px-6 pt-2 pb-6 space-y-3">
+          {/* AI Response */}
+          <AIFilterResponse
+            message={aiMessage}
+            isTyping={isAiTyping}
+            onDismiss={dismissAiResponse}
+            matchCount={filteredResources.length}
+          />
+
+          {/* Search Input */}
+          <InspoChat
+            onSubmit={handleSearch}
+            isLoading={isAiTyping}
+            placeholder="Describe what you're looking for... (e.g., 'tools for YouTube creators')"
+          />
+
+          {/* Category Buttons */}
+          <CategoryButtons
+            resources={resources}
+            activeCategory={activeCategory}
+            activeSubCategory={activeSubCategory}
+            onCategoryChange={setActiveCategory}
+            onSubCategoryChange={setActiveSubCategory}
+          />
+
+          {/* Resource count */}
+          <p className="text-center text-xs text-os-text-secondary-dark">
+            {filteredResources.length} inspiration resources
+          </p>
         </div>
-
-        {/* Bottom Controls */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 pointer-events-none">
-          <div className="max-w-2xl mx-auto space-y-3">
-            {/* AI Response */}
-            <div className="pointer-events-auto">
-              <AIFilterResponse
-                message={aiMessage}
-                isTyping={isAiTyping}
-                onDismiss={dismissAiResponse}
-                matchCount={filteredResources.length}
-              />
-            </div>
-
-            {/* Search Input */}
-            <div className="pointer-events-auto">
-              <InspoChat
-                onSubmit={handleSearch}
-                isLoading={isAiTyping}
-                placeholder="Search for design tools, resources, or ask a question..."
-              />
-            </div>
-
-            {/* Category Buttons */}
-            <div className="pointer-events-auto">
-              <CategoryButtons
-                resources={resources}
-                activeCategory={activeCategory}
-                activeSubCategory={activeSubCategory}
-                onCategoryChange={setActiveCategory}
-                onSubCategoryChange={setActiveSubCategory}
-              />
-            </div>
-          </div>
-        </div>
-      </main>
+      </div>
 
       {/* Tooltip */}
       <InspoResourceTooltip

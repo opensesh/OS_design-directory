@@ -156,7 +156,7 @@ export default function ResourceDetail() {
     <div className="min-h-screen bg-[#141414] text-[#FFFAEE]">
       {/* Header */}
       <header className="sticky top-0 z-10 bg-[#141414]/80 backdrop-blur-xl border-b border-zinc-800">
-        <div className="max-w-4xl mx-auto px-6 py-4">
+        <div className="max-w-7xl mx-auto px-6 py-4">
           <button
             onClick={() => navigate(-1)}
             className="inline-flex items-center gap-2 text-zinc-400 hover:text-[#FFFAEE] transition-colors"
@@ -168,7 +168,7 @@ export default function ResourceDetail() {
       </header>
 
       {/* Content */}
-      <main className="max-w-4xl mx-auto px-6 py-8">
+      <main className="max-w-7xl mx-auto px-6 py-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
