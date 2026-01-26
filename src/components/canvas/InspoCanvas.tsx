@@ -3,7 +3,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Environment } from '@react-three/drei';
 import * as THREE from 'three';
 import { generateSphereLayout } from '../../utils/particle-layouts';
-import { calculateCategoryRings } from '../../utils/orbital-layout';
+import { calculateCategoryRings, type CategoryRingConfig } from '../../utils/orbital-layout';
 import ResourceNodes, { type ResourceNodesHandle } from './ResourceNodes';
 import OrbitalRings from './OrbitalRings';
 import type { NormalizedResource } from '../../types/resource';
@@ -328,6 +328,71 @@ function InteractionController({
 }
 
 /**
+ * Shared rotation group for orbital elements
+ * Both rings and nodes rotate together for visual consistency
+ */
+interface OrbitalSystemProps {
+  resources: NormalizedResource[];
+  ringConfigs: CategoryRingConfig[];
+  activeCategory?: string | null;
+  activeFilter?: string | null;
+  activeSubFilter?: string | null;
+  filteredResourceIds?: number[] | null;
+  hoveredIndex: number | null;
+  clickedIndex: number | null;
+  resourceNodesRef: React.RefObject<ResourceNodesHandle | null>;
+}
+
+function OrbitalSystem({
+  resources,
+  ringConfigs,
+  activeCategory,
+  activeFilter,
+  activeSubFilter,
+  filteredResourceIds,
+  hoveredIndex,
+  clickedIndex,
+  resourceNodesRef,
+}: OrbitalSystemProps) {
+  const groupRef = useRef<THREE.Group>(null);
+
+  // Slow orbital rotation - pause when hovering for easier interaction
+  useFrame((_, delta) => {
+    if (!groupRef.current) return;
+    if (hoveredIndex === null) {
+      groupRef.current.rotation.y += delta * 0.05;
+    }
+  });
+
+  return (
+    <group ref={groupRef}>
+      {/* Category rings */}
+      {ringConfigs.length > 0 && (
+        <OrbitalRings
+          ringConfigs={ringConfigs}
+          activeCategory={activeCategory || null}
+        />
+      )}
+
+      {/* Resource nodes */}
+      {resources.length > 0 && (
+        <ResourceNodes
+          ref={resourceNodesRef}
+          resources={resources}
+          ringConfigs={ringConfigs}
+          activeCategory={activeCategory}
+          activeFilter={activeFilter}
+          activeSubFilter={activeSubFilter}
+          filteredResourceIds={filteredResourceIds}
+          hoveredIndex={hoveredIndex}
+          clickedIndex={clickedIndex}
+        />
+      )}
+    </group>
+  );
+}
+
+/**
  * InspoCanvas Props
  */
 interface InspoCanvasProps {
@@ -443,34 +508,26 @@ export default function InspoCanvas({
 
       <CentralSphere />
 
-      {/* Category rings - rendered before nodes so they appear behind */}
-      {ringConfigs.length > 0 && (
-        <OrbitalRings
-          ringConfigs={ringConfigs}
-          activeCategory={activeCategory || null}
-        />
-      )}
+      {/* Orbital system - rings and nodes rotate together */}
+      <OrbitalSystem
+        resources={resources}
+        ringConfigs={ringConfigs}
+        activeCategory={activeCategory}
+        activeFilter={activeFilter}
+        activeSubFilter={activeSubFilter}
+        filteredResourceIds={filteredResourceIds}
+        hoveredIndex={hoveredIndex}
+        clickedIndex={clickedIndex}
+        resourceNodesRef={resourceNodesRef}
+      />
 
       {resources.length > 0 && (
-        <>
-          <ResourceNodes
-            ref={resourceNodesRef}
-            resources={resources}
-            ringConfigs={ringConfigs}
-            activeCategory={activeCategory}
-            activeFilter={activeFilter}
-            activeSubFilter={activeSubFilter}
-            filteredResourceIds={filteredResourceIds}
-            hoveredIndex={hoveredIndex}
-            clickedIndex={clickedIndex}
-          />
-          <InteractionController
-            resourceNodesRef={resourceNodesRef}
-            onHover={handleHover}
-            onClick={handleClick}
-            onClickAnimation={handleClickAnimation}
-          />
-        </>
+        <InteractionController
+          resourceNodesRef={resourceNodesRef}
+          onHover={handleHover}
+          onClick={handleClick}
+          onClickAnimation={handleClickAnimation}
+        />
       )}
 
       <OrbitControls

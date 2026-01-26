@@ -255,10 +255,7 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
       if (!meshRef.current || !groupRef.current || resourceCount === 0) return;
       if (!currentOpacitiesRef.current || !targetOpacitiesRef.current || !currentHoverScalesRef.current) return;
 
-      // Slow orbital rotation - pause when hovering for easier interaction
-      if (hoveredIndex === null) {
-        groupRef.current.rotation.y += delta * 0.05;
-      }
+      // Note: Rotation is now handled by parent OrbitalSystem group
 
       // Smoothly lerp density scale
       const densityScaleDiff = targetDensityScaleRef.current - currentDensityScaleRef.current;
