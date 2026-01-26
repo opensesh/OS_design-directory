@@ -245,3 +245,191 @@ export function generateOrbitalPositionsArray(
 
   return positions;
 }
+
+// ============================================================
+// Ring-Based Orbital Layout System
+// ============================================================
+
+/**
+ * Ring configuration for a category
+ */
+export interface CategoryRingConfig {
+  category: string;
+  resourceCount: number;
+  radius: number;
+  color: string;
+  ringIndex: number;
+}
+
+/**
+ * Ring layout constants
+ */
+export const RING_LAYOUT = {
+  MIN_RADIUS: 18,
+  MAX_RADIUS: 50,
+  CENTER_RADIUS: 10,
+  TILT_ANGLE: Math.PI * 0.1, // ~18° tilt for NASA Eyes aesthetic
+} as const;
+
+/**
+ * Calculate ring radii for each category based on resource count
+ * Categories with fewer resources get inner (closer) rings
+ *
+ * @param resources - Array of resources with category property
+ * @param categoryOrder - Ordered list of categories
+ * @param categoryColors - Map of category to color hex
+ * @returns Array of CategoryRingConfig sorted by ring radius
+ */
+export function calculateCategoryRings(
+  resources: Array<{ category: string | null }>,
+  categoryOrder: readonly string[],
+  categoryColors: Record<string, string>
+): CategoryRingConfig[] {
+  // Count resources per category
+  const categoryCounts = new Map<string, number>();
+
+  for (const resource of resources) {
+    const cat = resource.category || 'Other';
+    categoryCounts.set(cat, (categoryCounts.get(cat) || 0) + 1);
+  }
+
+  // Filter to only categories that exist in the data
+  const activeCategories = categoryOrder.filter(cat => categoryCounts.has(cat));
+
+  // Sort by count (fewer = inner ring)
+  const sortedCategories = [...activeCategories].sort((a, b) => {
+    const countA = categoryCounts.get(a) || 0;
+    const countB = categoryCounts.get(b) || 0;
+    return countA - countB;
+  });
+
+  const ringCount = sortedCategories.length;
+  if (ringCount === 0) return [];
+
+  // Distribute rings evenly between min and max radius
+  const radiusStep = ringCount > 1
+    ? (RING_LAYOUT.MAX_RADIUS - RING_LAYOUT.MIN_RADIUS) / (ringCount - 1)
+    : 0;
+
+  return sortedCategories.map((category, index) => ({
+    category,
+    resourceCount: categoryCounts.get(category) || 0,
+    radius: RING_LAYOUT.MIN_RADIUS + (radiusStep * index),
+    color: categoryColors[category] || '#9CA3AF',
+    ringIndex: index,
+  }));
+}
+
+/**
+ * Generate position for a resource on its category ring
+ * Distributes resources evenly around the ring with optional tilt
+ *
+ * @param resourceId - Unique identifier for consistent positioning
+ * @param indexInCategory - Index of this resource within its category
+ * @param totalInCategory - Total resources in this category
+ * @param ringRadius - Radius of the category ring
+ * @param tilt - Tilt angle in radians (default: ~18°)
+ * @returns OrbitalPosition in 3D space
+ */
+export function generateRingPosition(
+  resourceId: string,
+  indexInCategory: number,
+  totalInCategory: number,
+  ringRadius: number,
+  tilt: number = RING_LAYOUT.TILT_ANGLE
+): OrbitalPosition {
+  // Use seeded random for consistent angular offset
+  const random = seededRandom(resourceId);
+
+  // Base angle: evenly distributed around the ring
+  const baseAngle = (indexInCategory / totalInCategory) * Math.PI * 2;
+
+  // Add small random offset for natural look (±5% of spacing)
+  const spacing = Math.PI * 2 / totalInCategory;
+  const angleOffset = (random() - 0.5) * spacing * 0.1;
+  const angle = baseAngle + angleOffset;
+
+  // Position on XZ plane (the ring)
+  const x = Math.cos(angle) * ringRadius;
+  const z = Math.sin(angle) * ringRadius;
+
+  // Apply tilt around the X-axis
+  // Tilted Y = original_y * cos(tilt) - original_z * sin(tilt)
+  // Tilted Z = original_y * sin(tilt) + original_z * cos(tilt)
+  // Since we start on XZ plane, original_y = 0
+  const tiltedY = -z * Math.sin(tilt);
+  const tiltedZ = z * Math.cos(tilt);
+
+  return { x, y: tiltedY, z: tiltedZ };
+}
+
+/**
+ * Convert gravity score to size multiplier
+ * Higher scores = larger nodes (more visual prominence)
+ *
+ * Score 10.0 → 1.4x (largest)
+ * Score 5.5  → 1.1x (medium)
+ * Score 1.0  → 0.8x (smallest)
+ *
+ * @param score - Gravity score (1-10)
+ * @returns Size multiplier (0.8 to 1.4)
+ */
+export function scoreToSizeMultiplier(score: number): number {
+  // Clamp score to valid range
+  const clamped = Math.max(1, Math.min(10, score));
+
+  // Normalize to 0-1 range
+  const normalized = (clamped - 1) / 9;
+
+  // Map to size multiplier range (0.8 to 1.4)
+  return 0.8 + normalized * 0.6;
+}
+
+/**
+ * Build a lookup map for ring positions
+ * Groups resources by category and calculates positions for all
+ *
+ * @param resources - Array of resources with id and category
+ * @param ringConfigs - Category ring configurations
+ * @returns Map of resource ID to position
+ */
+export function buildRingPositionMap(
+  resources: Array<{ id: string | number; category: string | null }>,
+  ringConfigs: CategoryRingConfig[]
+): Map<string, OrbitalPosition> {
+  const positions = new Map<string, OrbitalPosition>();
+
+  // Create a lookup for ring config by category
+  const ringByCategory = new Map<string, CategoryRingConfig>();
+  for (const config of ringConfigs) {
+    ringByCategory.set(config.category, config);
+  }
+
+  // Group resources by category
+  const byCategory = new Map<string, Array<{ id: string | number; category: string | null }>>();
+  for (const resource of resources) {
+    const cat = resource.category || 'Other';
+    if (!byCategory.has(cat)) {
+      byCategory.set(cat, []);
+    }
+    byCategory.get(cat)!.push(resource);
+  }
+
+  // Calculate positions for each resource
+  for (const [category, categoryResources] of byCategory) {
+    const ringConfig = ringByCategory.get(category);
+    if (!ringConfig) continue;
+
+    categoryResources.forEach((resource, indexInCategory) => {
+      const pos = generateRingPosition(
+        String(resource.id),
+        indexInCategory,
+        categoryResources.length,
+        ringConfig.radius
+      );
+      positions.set(String(resource.id), pos);
+    });
+  }
+
+  return positions;
+}
