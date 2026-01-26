@@ -233,8 +233,10 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
       if (!meshRef.current || !groupRef.current || resourceCount === 0) return;
       if (!currentOpacitiesRef.current || !targetOpacitiesRef.current || !currentHoverScalesRef.current) return;
 
-      // Slow orbital rotation
-      groupRef.current.rotation.y += delta * 0.05;
+      // Slow orbital rotation - pause when hovering for easier interaction
+      if (hoveredIndex === null) {
+        groupRef.current.rotation.y += delta * 0.05;
+      }
 
       // Smoothly lerp density scale
       const densityScaleDiff = targetDensityScaleRef.current - currentDensityScaleRef.current;
@@ -353,8 +355,17 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           args={[undefined, undefined, resourceCount]}
           frustumCulled={false}
         >
-          <sphereGeometry args={[nodeRadius, 16, 16]} />
-          <meshBasicMaterial vertexColors transparent opacity={1} />
+          <sphereGeometry args={[nodeRadius, 32, 32]} />
+          <meshPhysicalMaterial
+            vertexColors
+            transparent
+            opacity={1}
+            metalness={0.1}
+            roughness={0.2}
+            clearcoat={1.0}
+            clearcoatRoughness={0.1}
+            envMapIntensity={0.8}
+          />
         </instancedMesh>
       </group>
     );
