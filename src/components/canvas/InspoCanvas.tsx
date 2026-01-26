@@ -3,8 +3,11 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Environment } from '@react-three/drei';
 import * as THREE from 'three';
 import { generateSphereLayout } from '../../utils/particle-layouts';
+import { calculateCategoryRings } from '../../utils/orbital-layout';
 import ResourceNodes, { type ResourceNodesHandle } from './ResourceNodes';
+import OrbitalRings from './OrbitalRings';
 import type { NormalizedResource } from '../../types/resource';
+import { CATEGORY_ORDER, CATEGORY_COLORS } from '../../types/resource';
 
 /**
  * Animation configuration for central sphere entrance
@@ -329,6 +332,7 @@ function InteractionController({
  */
 interface InspoCanvasProps {
   resources?: NormalizedResource[];
+  activeCategory?: string | null;
   activeFilter?: string | null;
   activeSubFilter?: string | null;
   filteredResourceIds?: number[] | null;
@@ -347,6 +351,7 @@ interface InspoCanvasProps {
  */
 export default function InspoCanvas({
   resources = [],
+  activeCategory,
   activeFilter,
   activeSubFilter,
   filteredResourceIds,
@@ -357,6 +362,12 @@ export default function InspoCanvas({
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
   const mousePosRef = useRef({ x: 0, y: 0 });
+
+  // Calculate ring configurations based on resources
+  const ringConfigs = useMemo(() => {
+    if (resources.length === 0) return [];
+    return calculateCategoryRings(resources, CATEGORY_ORDER, CATEGORY_COLORS);
+  }, [resources]);
 
   // Track mouse position for tooltip
   useEffect(() => {
@@ -432,11 +443,21 @@ export default function InspoCanvas({
 
       <CentralSphere />
 
+      {/* Category rings - rendered before nodes so they appear behind */}
+      {ringConfigs.length > 0 && (
+        <OrbitalRings
+          ringConfigs={ringConfigs}
+          activeCategory={activeCategory || null}
+        />
+      )}
+
       {resources.length > 0 && (
         <>
           <ResourceNodes
             ref={resourceNodesRef}
             resources={resources}
+            ringConfigs={ringConfigs}
+            activeCategory={activeCategory}
             activeFilter={activeFilter}
             activeSubFilter={activeSubFilter}
             filteredResourceIds={filteredResourceIds}
