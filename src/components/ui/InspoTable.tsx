@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronUp, ChevronDown, ChevronsUpDown, ExternalLink } from 'lucide-react';
+import { ChevronUp, ChevronDown, ChevronsUpDown, ExternalLink, Search, X } from 'lucide-react';
 import type { NormalizedResource } from '../../types/resource';
 
 // Get favicon URL from domain using Google's service
@@ -26,8 +26,8 @@ function ResourceThumbnail({ resource }: { resource: NormalizedResource }) {
   if (!hasThumbnail && !hasFavicon) {
     const initial = resource.name.charAt(0).toUpperCase();
     return (
-      <div className="w-10 h-10 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center flex-shrink-0">
-        <span className="text-sm font-medium text-zinc-400">{initial}</span>
+      <div className="w-10 h-10 rounded-lg bg-os-surface-dark border border-os-border-dark flex items-center justify-center flex-shrink-0">
+        <span className="text-sm font-medium text-os-text-secondary-dark">{initial}</span>
       </div>
     );
   }
@@ -35,7 +35,7 @@ function ResourceThumbnail({ resource }: { resource: NormalizedResource }) {
   // Show thumbnail if available
   if (hasThumbnail) {
     return (
-      <div className="w-10 h-10 rounded-lg overflow-hidden bg-zinc-800 border border-zinc-700 flex-shrink-0 relative">
+      <div className="w-10 h-10 rounded-lg overflow-hidden bg-os-surface-dark border border-os-border-dark flex-shrink-0 relative">
         <img
           src={resource.thumbnail!}
           alt={resource.name}
@@ -48,7 +48,7 @@ function ResourceThumbnail({ resource }: { resource: NormalizedResource }) {
 
   // Fallback to favicon
   return (
-    <div className="w-10 h-10 rounded-lg overflow-hidden bg-zinc-800 border border-zinc-700 flex items-center justify-center flex-shrink-0">
+    <div className="w-10 h-10 rounded-lg overflow-hidden bg-os-surface-dark border border-os-border-dark flex items-center justify-center flex-shrink-0">
       <img
         src={faviconUrl}
         alt={resource.name}
@@ -61,18 +61,80 @@ function ResourceThumbnail({ resource }: { resource: NormalizedResource }) {
 
 interface InspoTableProps {
   resources: NormalizedResource[];
+  initialCategory?: string;
+  initialSubCategory?: string;
+  initialPricing?: string;
+  initialTier?: string;
+  initialFeatured?: string;
+  initialOpensource?: string;
+  isFromUrl?: boolean;
 }
 
 type SortField = 'name' | 'category' | 'subCategory' | 'pricing';
 type SortDirection = 'asc' | 'desc' | null;
 
-export function InspoTable({ resources }: InspoTableProps) {
+export function InspoTable({
+  resources,
+  initialCategory,
+  initialSubCategory,
+  initialPricing,
+  initialTier,
+  initialFeatured,
+  initialOpensource,
+  isFromUrl,
+}: InspoTableProps) {
   const navigate = useNavigate();
 
-  // Filter state
-  const [categoryFilter, setCategoryFilter] = useState<string>('all');
-  const [subCategoryFilter, setSubCategoryFilter] = useState<string>('all');
-  const [pricingFilter, setPricingFilter] = useState<string>('all');
+  // Filter state - initialize from props
+  const [categoryFilter, setCategoryFilter] = useState<string>(initialCategory || 'all');
+  const [subCategoryFilter, setSubCategoryFilter] = useState<string>(initialSubCategory || 'all');
+  const [pricingFilter, setPricingFilter] = useState<string>(initialPricing || 'all');
+  const [tierFilter, _setTierFilter] = useState<string>(initialTier || 'all');
+  const [featuredFilter, _setFeaturedFilter] = useState<string>(initialFeatured || 'all');
+  const [opensourceFilter, _setOpensourceFilter] = useState<string>(initialOpensource || 'all');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+
+  // Track if user has modified filters (hides the URL filter banner)
+  const [userHasModifiedFilters, setUserHasModifiedFilters] = useState(false);
+
+  // Determine active filter label for the banner
+  const activeFilterLabel = useMemo(() => {
+    const labels: string[] = [];
+    if (categoryFilter !== 'all') labels.push(categoryFilter);
+    if (subCategoryFilter !== 'all') labels.push(subCategoryFilter);
+    if (pricingFilter !== 'all') labels.push(pricingFilter);
+    if (tierFilter !== 'all') labels.push(`Tier ${tierFilter}`);
+    if (featuredFilter === 'true') labels.push('Featured');
+    if (opensourceFilter === 'true') labels.push('Open Source');
+    return labels.join(', ');
+  }, [categoryFilter, subCategoryFilter, pricingFilter, tierFilter, featuredFilter, opensourceFilter]);
+
+  const hasActiveFilters = activeFilterLabel.length > 0;
+  const showFilterBanner = isFromUrl && hasActiveFilters && !userHasModifiedFilters;
+
+  // Clear all filters
+  const clearFilters = () => {
+    setCategoryFilter('all');
+    setSubCategoryFilter('all');
+    setPricingFilter('all');
+    setUserHasModifiedFilters(true);
+  };
+
+  // Wrap filter setters to track user modifications
+  const handleCategoryChange = (value: string) => {
+    setCategoryFilter(value);
+    setUserHasModifiedFilters(true);
+  };
+
+  const handleSubCategoryChange = (value: string) => {
+    setSubCategoryFilter(value);
+    setUserHasModifiedFilters(true);
+  };
+
+  const handlePricingChange = (value: string) => {
+    setPricingFilter(value);
+    setUserHasModifiedFilters(true);
+  };
 
   // Sort state
   const [sortField, setSortField] = useState<SortField | null>(null);
@@ -103,7 +165,17 @@ export function InspoTable({ resources }: InspoTableProps) {
       const categoryMatch = categoryFilter === 'all' || resource.category === categoryFilter;
       const subCategoryMatch = subCategoryFilter === 'all' || resource.subCategory === subCategoryFilter;
       const pricingMatch = pricingFilter === 'all' || resource.pricing === pricingFilter;
-      return categoryMatch && subCategoryMatch && pricingMatch;
+      const tierMatch = tierFilter === 'all' || String(resource.tier) === tierFilter;
+      const featuredMatch = featuredFilter === 'all' || (featuredFilter === 'true' && resource.featured);
+      const opensourceMatch = opensourceFilter === 'all' || (opensourceFilter === 'true' && resource.opensource);
+
+      // Search filter
+      const searchMatch = !searchQuery ||
+        resource.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        resource.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        resource.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+
+      return categoryMatch && subCategoryMatch && pricingMatch && tierMatch && featuredMatch && opensourceMatch && searchMatch;
     });
 
     // Apply sorting
@@ -118,7 +190,7 @@ export function InspoTable({ resources }: InspoTableProps) {
     }
 
     return filtered;
-  }, [resources, categoryFilter, subCategoryFilter, pricingFilter, sortField, sortDirection]);
+  }, [resources, categoryFilter, subCategoryFilter, pricingFilter, tierFilter, featuredFilter, opensourceFilter, searchQuery, sortField, sortDirection]);
 
   // Handle sort toggle
   const handleSort = (field: SortField) => {
@@ -142,26 +214,67 @@ export function InspoTable({ resources }: InspoTableProps) {
       return <ChevronsUpDown className="w-4 h-4 opacity-40" />;
     }
     if (sortDirection === 'asc') {
-      return <ChevronUp className="w-4 h-4 text-[#FE5102]" />;
+      return <ChevronUp className="w-4 h-4 text-brand-aperol" />;
     }
-    return <ChevronDown className="w-4 h-4 text-[#FE5102]" />;
+    return <ChevronDown className="w-4 h-4 text-brand-aperol" />;
   };
 
   return (
     <div className="w-full">
+      {/* Filter Active Banner - shows when navigating from ResourceDetail */}
+      {showFilterBanner && (
+        <div className="flex items-center justify-between px-4 py-2 bg-[#FE5102]/10 border-b border-[#FE5102]/20">
+          <span className="text-sm text-[#FE5102] font-medium">
+            Showing results for: {activeFilterLabel}
+          </span>
+          <button
+            onClick={clearFilters}
+            className="text-xs text-zinc-400 hover:text-[#FFFAEE] transition-colors"
+          >
+            Clear filter
+          </button>
+        </div>
+      )}
+
       {/* Filters */}
-      <div className="bg-[#141414] border-b border-zinc-800">
+      <div className="bg-os-bg-dark border-b border-os-border-dark">
         <div className="flex flex-wrap gap-4 p-4">
+          {/* Search Filter */}
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="search-filter" className="text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark">
+              Search
+            </label>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-os-text-secondary-dark" />
+              <input
+                id="search-filter"
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Filter resources..."
+                className="pl-9 pr-8 py-2 bg-os-surface-dark border border-os-border-dark rounded-lg text-sm text-os-text-primary-dark placeholder:text-os-text-secondary-dark focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors w-48"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-os-text-secondary-dark hover:text-os-text-primary-dark"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              )}
+            </div>
+          </div>
+
           {/* Category Filter */}
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="category-filter" className="text-xs font-medium uppercase tracking-wider text-zinc-500">
+            <label htmlFor="category-filter" className="text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark">
               Category
             </label>
             <select
               id="category-filter"
               value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-[#FFFAEE] focus:outline-none focus:ring-2 focus:ring-[#FE5102]/50 focus:border-[#FE5102] transition-colors cursor-pointer hover:border-[#FE5102]/30"
+              onChange={(e) => handleCategoryChange(e.target.value)}
+              className="px-3 py-2 bg-os-surface-dark border border-os-border-dark rounded-lg text-sm text-os-text-primary-dark focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30"
             >
               <option value="all">All Categories</option>
               {filterOptions.categories.map((category) => (
@@ -174,14 +287,14 @@ export function InspoTable({ resources }: InspoTableProps) {
 
           {/* Sub-category Filter */}
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="subcategory-filter" className="text-xs font-medium uppercase tracking-wider text-zinc-500">
+            <label htmlFor="subcategory-filter" className="text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark">
               Sub-category
             </label>
             <select
               id="subcategory-filter"
               value={subCategoryFilter}
-              onChange={(e) => setSubCategoryFilter(e.target.value)}
-              className="px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-[#FFFAEE] focus:outline-none focus:ring-2 focus:ring-[#FE5102]/50 focus:border-[#FE5102] transition-colors cursor-pointer hover:border-[#FE5102]/30"
+              onChange={(e) => handleSubCategoryChange(e.target.value)}
+              className="px-3 py-2 bg-os-surface-dark border border-os-border-dark rounded-lg text-sm text-os-text-primary-dark focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30"
             >
               <option value="all">All Sub-categories</option>
               {filterOptions.subCategories.map((subCategory) => (
@@ -194,14 +307,14 @@ export function InspoTable({ resources }: InspoTableProps) {
 
           {/* Pricing Filter */}
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="pricing-filter" className="text-xs font-medium uppercase tracking-wider text-zinc-500">
+            <label htmlFor="pricing-filter" className="text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark">
               Pricing
             </label>
             <select
               id="pricing-filter"
               value={pricingFilter}
-              onChange={(e) => setPricingFilter(e.target.value)}
-              className="px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-[#FFFAEE] focus:outline-none focus:ring-2 focus:ring-[#FE5102]/50 focus:border-[#FE5102] transition-colors cursor-pointer hover:border-[#FE5102]/30"
+              onChange={(e) => handlePricingChange(e.target.value)}
+              className="px-3 py-2 bg-os-surface-dark border border-os-border-dark rounded-lg text-sm text-os-text-primary-dark focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30"
             >
               <option value="all">All Pricing</option>
               {filterOptions.pricings.map((pricing) => (
@@ -214,8 +327,8 @@ export function InspoTable({ resources }: InspoTableProps) {
 
           {/* Results Count */}
           <div className="flex items-end ml-auto">
-            <div className="px-3 py-2 text-sm text-zinc-500">
-              <span className="font-medium text-[#FE5102]">{filteredAndSortedResources.length}</span>
+            <div className="px-3 py-2 text-sm text-os-text-secondary-dark">
+              <span className="font-accent text-brand-aperol">{filteredAndSortedResources.length}</span>
               {' '}of{' '}
               <span className="font-medium">{resources.length}</span>
               {' '}resources
@@ -227,18 +340,18 @@ export function InspoTable({ resources }: InspoTableProps) {
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
-          <thead className="sticky top-0 z-10 bg-[#141414] shadow-[0_1px_0_0_rgba(255,255,255,0.1)]">
-            <tr className="border-b border-zinc-800">
+          <thead className="sticky top-0 z-10 bg-os-bg-dark shadow-[0_1px_0_0_rgba(255,255,255,0.1)]">
+            <tr className="border-b border-os-border-dark">
               {/* Thumbnail Header */}
-              <th className="w-16 p-4 bg-[#141414]">
+              <th className="w-16 p-4 bg-os-bg-dark">
                 <span className="sr-only">Thumbnail</span>
               </th>
 
               {/* Name Header */}
-              <th className="text-left p-4 bg-[#141414]">
+              <th className="text-left p-4 bg-os-bg-dark">
                 <button
                   onClick={() => handleSort('name')}
-                  className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-zinc-500 hover:text-[#FE5102] transition-colors group"
+                  className="flex items-center gap-2 text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark hover:text-brand-aperol transition-colors group"
                 >
                   Name
                   {getSortIcon('name')}
@@ -246,10 +359,10 @@ export function InspoTable({ resources }: InspoTableProps) {
               </th>
 
               {/* Category Header */}
-              <th className="text-left p-4 bg-[#141414]">
+              <th className="text-left p-4 bg-os-bg-dark">
                 <button
                   onClick={() => handleSort('category')}
-                  className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-zinc-500 hover:text-[#FE5102] transition-colors group"
+                  className="flex items-center gap-2 text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark hover:text-brand-aperol transition-colors group"
                 >
                   Category
                   {getSortIcon('category')}
@@ -257,10 +370,10 @@ export function InspoTable({ resources }: InspoTableProps) {
               </th>
 
               {/* Sub-category Header */}
-              <th className="text-left p-4 bg-[#141414]">
+              <th className="text-left p-4 bg-os-bg-dark">
                 <button
                   onClick={() => handleSort('subCategory')}
-                  className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-zinc-500 hover:text-[#FE5102] transition-colors group"
+                  className="flex items-center gap-2 text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark hover:text-brand-aperol transition-colors group"
                 >
                   Sub-category
                   {getSortIcon('subCategory')}
@@ -268,10 +381,10 @@ export function InspoTable({ resources }: InspoTableProps) {
               </th>
 
               {/* Pricing Header */}
-              <th className="text-left p-4 bg-[#141414]">
+              <th className="text-left p-4 bg-os-bg-dark">
                 <button
                   onClick={() => handleSort('pricing')}
-                  className="flex items-center gap-2 text-xs font-medium uppercase tracking-wider text-zinc-500 hover:text-[#FE5102] transition-colors group"
+                  className="flex items-center gap-2 text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark hover:text-brand-aperol transition-colors group"
                 >
                   Pricing
                   {getSortIcon('pricing')}
@@ -279,7 +392,7 @@ export function InspoTable({ resources }: InspoTableProps) {
               </th>
 
               {/* Actions Header */}
-              <th className="w-20 p-4 bg-[#141414]">
+              <th className="w-20 p-4 bg-os-bg-dark">
                 <span className="sr-only">Actions</span>
               </th>
             </tr>
@@ -287,7 +400,7 @@ export function InspoTable({ resources }: InspoTableProps) {
           <tbody>
             {filteredAndSortedResources.length === 0 ? (
               <tr>
-                <td colSpan={6} className="p-12 text-center text-zinc-500">
+                <td colSpan={6} className="p-12 text-center text-os-text-secondary-dark">
                   No resources match the selected filters.
                 </td>
               </tr>
@@ -296,7 +409,7 @@ export function InspoTable({ resources }: InspoTableProps) {
                 <tr
                   key={resource.id}
                   onClick={() => navigate(`/resource/${resource.id}`)}
-                  className="border-b border-zinc-800/50 hover:bg-zinc-800/30 transition-colors group cursor-pointer"
+                  className="border-b border-os-border-dark/50 hover:bg-os-surface-dark/30 transition-colors group cursor-pointer"
                 >
                   {/* Thumbnail Column */}
                   <td className="p-4">
@@ -305,29 +418,29 @@ export function InspoTable({ resources }: InspoTableProps) {
 
                   {/* Name Column - Links to detail page */}
                   <td className="p-4">
-                    <span className="font-medium text-[#FFFAEE] group-hover:text-[#FE5102] transition-colors">
+                    <span className="font-medium text-os-text-primary-dark group-hover:text-brand-aperol transition-colors">
                       {resource.name}
                     </span>
                   </td>
 
                   {/* Category Column */}
-                  <td className="p-4 text-zinc-400">
+                  <td className="p-4 text-os-text-secondary-dark">
                     {resource.category || '-'}
                   </td>
 
                   {/* Sub-category Column */}
-                  <td className="p-4 text-zinc-400">
+                  <td className="p-4 text-os-text-secondary-dark">
                     {resource.subCategory || '-'}
                   </td>
 
                   {/* Pricing Column */}
                   <td className="p-4">
                     {resource.pricing ? (
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-zinc-800 text-xs font-medium text-[#FFFAEE] border border-zinc-700">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-os-surface-dark text-xs font-accent text-os-text-primary-dark border border-os-border-dark">
                         {resource.pricing}
                       </span>
                     ) : (
-                      <span className="text-zinc-500">-</span>
+                      <span className="text-os-text-secondary-dark">-</span>
                     )}
                   </td>
 
@@ -338,7 +451,7 @@ export function InspoTable({ resources }: InspoTableProps) {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-[#FE5102] hover:border-[#FE5102]/30 transition-all"
+                      className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-os-surface-dark border border-os-border-dark text-os-text-secondary-dark hover:text-brand-aperol hover:border-brand-aperol/30 transition-all"
                       title={`Visit ${resource.name}`}
                     >
                       <ExternalLink className="w-4 h-4" />
