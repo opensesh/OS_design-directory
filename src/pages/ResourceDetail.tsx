@@ -1,5 +1,5 @@
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   ArrowLeft,
@@ -109,6 +109,7 @@ export default function ResourceDetail() {
   const [screenshotError, setScreenshotError] = useState(false);
   const [faviconError, setFaviconError] = useState(false);
   const [urlCopied, setUrlCopied] = useState(false);
+  const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null);
 
   // Find the resource
   const resource = resources.find(r => r.id === Number(id));
@@ -144,6 +145,24 @@ export default function ResourceDetail() {
       .slice(0, 4)
       .map(s => s.resource);
   }, [resource]);
+
+  // Preload screenshot image to get dimensions for adaptive aspect ratio
+  useEffect(() => {
+    if (resource?.screenshot) {
+      const img = new Image();
+      img.onload = () => {
+        setImageDimensions({ width: img.naturalWidth, height: img.naturalHeight });
+      };
+      img.src = resource.screenshot;
+    } else {
+      setImageDimensions(null);
+    }
+  }, [resource?.screenshot]);
+
+  // Calculate aspect ratio dynamically based on image dimensions
+  const aspectRatio = imageDimensions
+    ? `${imageDimensions.width}/${imageDimensions.height}`
+    : '16/10'; // fallback while loading
 
   // Copy URL to clipboard
   const copyUrl = async () => {
@@ -275,9 +294,9 @@ export default function ResourceDetail() {
               transition={{ delay: 0.05 }}
               className="mb-8"
             >
-              <div className="bg-[#191919] rounded-xl p-6 flex items-center justify-center min-h-[400px]">
-                {/* Browser Mockup - centered and smaller */}
-                <div className="rounded-lg overflow-hidden border border-zinc-800/50 max-w-2xl w-full shadow-2xl">
+              <div className="bg-[#191919] rounded-xl p-6 flex items-center justify-center">
+                {/* Browser Mockup - centered with adaptive aspect ratio */}
+                <div className="rounded-lg overflow-hidden border border-zinc-800/50 max-w-2xl w-full shadow-2xl max-h-[70vh]">
                   {/* Browser chrome with traffic lights */}
                   <div className="flex items-center gap-2 px-3 py-2 bg-zinc-900 border-b border-zinc-800/50">
                     {/* Traffic lights */}
@@ -296,8 +315,15 @@ export default function ResourceDetail() {
                     {/* Spacer for symmetry */}
                     <div className="w-[42px]" />
                   </div>
-                  {/* Screenshot - object-contain to show full image */}
-                  <div className="relative aspect-[16/10] bg-zinc-950">
+                  {/* Screenshot - adaptive aspect ratio based on image dimensions */}
+                  <div
+                    className="relative bg-zinc-950"
+                    style={{
+                      aspectRatio,
+                      maxHeight: 'calc(70vh - 100px)', // Account for browser chrome and padding
+                      width: '100%',
+                    }}
+                  >
                     <img
                       src={resource.screenshot!}
                       alt={`Screenshot of ${resource.name}`}
