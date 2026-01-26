@@ -322,7 +322,7 @@ export function calculateCategoryRings(
 
 /**
  * Generate position for a resource on its category ring
- * Distributes resources evenly around the ring with optional tilt
+ * Distributes resources with organic randomness around the ring
  *
  * @param resourceId - Unique identifier for consistent positioning
  * @param indexInCategory - Index of this resource within its category
@@ -338,20 +338,24 @@ export function generateRingPosition(
   ringRadius: number,
   tilt: number = RING_LAYOUT.TILT_ANGLE
 ): OrbitalPosition {
-  // Use seeded random for consistent angular offset
+  // Use seeded random for consistent positioning
   const random = seededRandom(resourceId);
 
   // Base angle: evenly distributed around the ring
   const baseAngle = (indexInCategory / totalInCategory) * Math.PI * 2;
 
-  // Add small random offset for natural look (±5% of spacing)
+  // Add larger random offset for organic look (±50% of spacing instead of ±5%)
   const spacing = Math.PI * 2 / totalInCategory;
-  const angleOffset = (random() - 0.5) * spacing * 0.1;
+  const angleOffset = (random() - 0.5) * spacing * 0.5;
   const angle = baseAngle + angleOffset;
 
+  // Add radius jitter (±5%) so nodes aren't on a perfect circle
+  const radiusJitter = 1 + (random() - 0.5) * 0.1;
+  const jitteredRadius = ringRadius * radiusJitter;
+
   // Position on XZ plane (the ring)
-  const x = Math.cos(angle) * ringRadius;
-  const z = Math.sin(angle) * ringRadius;
+  const x = Math.cos(angle) * jitteredRadius;
+  const z = Math.sin(angle) * jitteredRadius;
 
   // Apply tilt around the X-axis
   // Tilted Y = original_y * cos(tilt) - original_z * sin(tilt)
@@ -360,7 +364,10 @@ export function generateRingPosition(
   const tiltedY = -z * Math.sin(tilt);
   const tiltedZ = z * Math.cos(tilt);
 
-  return { x, y: tiltedY, z: tiltedZ };
+  // Add vertical scatter (±1.5 units) for more organic feel
+  const yVariance = (random() - 0.5) * 3;
+
+  return { x, y: tiltedY + yVariance, z: tiltedZ };
 }
 
 /**
