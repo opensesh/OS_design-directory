@@ -77,26 +77,27 @@ export function AIFilterResponse({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.25, ease: 'easeOut' }}
+          className="w-full max-w-3xl mx-auto"
         >
-          <div className="bg-zinc-900/80 backdrop-blur-sm rounded-lg border border-zinc-800 p-3 relative">
+          <div className="bg-os-surface-dark/80 backdrop-blur-sm rounded-lg border border-os-border-dark p-3 relative">
             {/* Dismiss button */}
             <button
               onClick={onDismiss}
-              className="absolute top-2 right-2 p-1 rounded-full text-zinc-500 hover:text-[#FFFAEE] hover:bg-zinc-800/50 transition-colors"
+              className="absolute top-2 right-2 p-1 rounded-full text-os-text-secondary-dark hover:text-os-text-primary-dark hover:bg-os-surface-dark/50 transition-colors"
               aria-label="Dismiss"
             >
               <X className="w-3.5 h-3.5" />
             </button>
 
             {/* Typing text */}
-            <p className="text-sm text-[#FFFAEE] leading-relaxed pr-6">
+            <p className="text-sm text-os-text-primary-dark leading-relaxed pr-6">
               {displayedText}
               {/* Blinking cursor while typing */}
               {!isComplete && (
                 <motion.span
                   animate={{ opacity: [1, 0] }}
                   transition={{ duration: 0.5, repeat: Infinity }}
-                  className="inline-block w-0.5 h-4 bg-[#FE5102] ml-0.5 align-middle"
+                  className="inline-block w-0.5 h-4 bg-brand-aperol ml-0.5 align-middle"
                 />
               )}
             </p>
@@ -110,8 +111,8 @@ export function AIFilterResponse({
                   transition={{ delay: 0.2 }}
                   className="mt-2"
                 >
-                  <span className="inline-flex items-center gap-1.5 px-2 py-1 bg-zinc-800/60 rounded-full text-xs text-zinc-400">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#FE5102] animate-pulse" />
+                  <span className="inline-flex items-center gap-1.5 px-2 py-1 bg-os-surface-dark/60 rounded-full text-xs text-os-text-secondary-dark">
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand-aperol animate-pulse" />
                     {matchCount} resource{matchCount !== 1 ? 's' : ''} found
                   </span>
                 </motion.div>

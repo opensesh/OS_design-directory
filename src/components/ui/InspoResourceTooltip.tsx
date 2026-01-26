@@ -163,7 +163,7 @@ export default function InspoResourceTooltip({
 
             {/* Click hint */}
             <p className="text-zinc-500 text-xs mt-3 pt-2 border-t border-zinc-800">
-              Click to view details
+              Click to view details →
             </p>
           </div>
         </motion.div>
