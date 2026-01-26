@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { NormalizedResource } from '../../types/resource';
 import { CATEGORY_COLORS, DEFAULT_COLOR } from '../../types/resource';
+import { GravityScoreBadge } from './GravityScoreBadge';
 
 /**
  * Get favicon URL for a given website URL
@@ -144,13 +145,26 @@ export default function InspoResourceTooltip({
                   {resource.name}
                 </h3>
 
-                {/* Category Badge */}
-                <span
-                  className="inline-flex items-center text-xs px-2 py-0.5 rounded-full text-white/90 mt-1"
-                  style={{ backgroundColor: categoryColor }}
-                >
-                  {resource.category || 'Uncategorized'}
-                </span>
+                {/* Badges row */}
+                <div className="flex items-center gap-2 mt-1.5">
+                  {/* Category Badge */}
+                  <span
+                    className="inline-flex items-center text-xs px-2 py-0.5 rounded-full text-white/90"
+                    style={{ backgroundColor: categoryColor }}
+                  >
+                    {resource.category || 'Uncategorized'}
+                  </span>
+
+                  {/* Gravity Score Badge */}
+                  {resource.gravityScore && (
+                    <GravityScoreBadge
+                      score={resource.gravityScore}
+                      rationale={resource.gravityRationale}
+                      size="sm"
+                      showTooltip={false}
+                    />
+                  )}
+                </div>
               </div>
             </div>
 

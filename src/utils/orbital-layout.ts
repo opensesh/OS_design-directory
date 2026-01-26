@@ -130,7 +130,13 @@ export function generateOrbitalPosition(
   totalResources: number,
   config: OrbitalConfig = {}
 ): OrbitalPosition {
-  const { minRadius = 15, maxRadius = 50, flatness = 0.85 } = config;
+  const {
+    minRadius = 15,
+    maxRadius = 50,
+    flatness = 0.85,
+    gravityScore,
+    radiusVariance = 0.05
+  } = config;
 
   // Fibonacci sphere distribution for even spacing
   // Golden angle in radians
@@ -160,16 +166,29 @@ export function generateOrbitalPosition(
   const ny = y / flatLength;
   const nz = z / flatLength;
 
-  // Use seeded random to determine orbital radius for this specific resource
-  // This creates variation in distance while keeping same resource at same distance
+  // Use seeded random for consistent variance
   const random = seededRandom(resourceId);
-  const radiusVariation = random(); // 0 to 1
 
-  // Interpolate between min and max radius
-  const radius = minRadius + (maxRadius - minRadius) * radiusVariation;
+  // Calculate orbital radius based on gravity score or random distribution
+  let radius: number;
+  if (gravityScore !== undefined) {
+    // Use gravity score to determine base radius
+    radius = scoreToRadius(gravityScore, minRadius, maxRadius);
+
+    // Add small variance for visual interest (seeded for consistency)
+    const variance = radius * radiusVariance;
+    radius += (random() - 0.5) * 2 * variance;
+
+    // Clamp to valid range
+    radius = Math.max(minRadius, Math.min(maxRadius, radius));
+  } else {
+    // Fallback: random radius within full range (legacy behavior)
+    const radiusVariation = random(); // 0 to 1
+    radius = minRadius + (maxRadius - minRadius) * radiusVariation;
+  }
 
   // Scale the normalized position by the calculated radius
-  // Every node is now exactly `radius` units from center (between minRadius and maxRadius)
+  // Every node is now exactly `radius` units from center
   return {
     x: nx * radius,
     y: ny * radius,

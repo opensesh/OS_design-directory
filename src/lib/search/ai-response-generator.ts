@@ -24,7 +24,7 @@ export function generateAIResponse(
   results: ScoredResult[],
   metadata: SearchMetadata
 ): AIResponse {
-  const { quality, detectedConcepts, matchedCategory, matchedPricing, originalQuery } = metadata;
+  const { quality, originalQuery } = metadata;
   const matchCount = results.length;
 
   // No results at all (shouldn't happen with fallbacks, but just in case)
@@ -61,6 +61,7 @@ function generateHighQualityResponse(
   metadata: SearchMetadata
 ): AIResponse {
   const { detectedConcepts, originalQuery, matchedPricing } = metadata;
+  // Note: detectedConcepts and matchedPricing are used in the function logic below
   const matchCount = results.length;
   const topResult = results[0]?.resource;
 

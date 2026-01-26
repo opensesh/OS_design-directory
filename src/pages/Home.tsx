@@ -16,7 +16,6 @@ import {
   semanticSearch,
   generateAIResponse,
   generateCategoryResponse,
-  type SearchMetadata,
 } from '../lib/search';
 
 // Lazy load the 3D canvas for better initial load
@@ -71,9 +70,6 @@ export default function Home() {
     'cmd+k': useCallback(() => setIsSearchModalOpen(true), []),
   });
 
-  // Search metadata for AI response generation
-  const [searchMetadata, setSearchMetadata] = useState<SearchMetadata | null>(null);
-
   // Filter resources based on category, subcategory, and semantic search
   const filteredResources = useMemo(() => {
     // Start with all resources or filter by category/subcategory
@@ -89,14 +85,12 @@ export default function Home() {
 
     // Apply semantic search if there's a query
     if (searchQuery) {
-      const { results, metadata } = semanticSearch(baseResources, searchQuery, {
+      const { results } = semanticSearch(baseResources, searchQuery, {
         minResults: 3,
         maxResults: 50,
         includeFallback: true,
       });
 
-      // Update metadata for AI response (done via state to avoid re-render loop)
-      // The actual AI response is generated in handleSearch
       return results.map(r => r.resource);
     }
 
@@ -124,9 +118,6 @@ export default function Home() {
       includeFallback: true,
     });
 
-    // Store metadata for potential use elsewhere
-    setSearchMetadata(metadata);
-
     // Generate contextual AI response based on search results and metadata
     const aiResponse = generateAIResponse(results, metadata);
 
@@ -151,7 +142,6 @@ export default function Home() {
   const dismissAiResponse = () => {
     setAiMessage(null);
     setSearchQuery('');
-    setSearchMetadata(null);
   };
 
   // Handle category change with AI response
@@ -159,7 +149,6 @@ export default function Home() {
     setActiveCategory(category);
     setActiveSubCategory(null);
     setSearchQuery('');
-    setSearchMetadata(null);
 
     if (category) {
       const categoryResources = resources.filter(r => r.category === category);
@@ -174,7 +163,6 @@ export default function Home() {
   const handleSubCategoryChange = (subCategory: string | null) => {
     setActiveSubCategory(subCategory);
     setSearchQuery('');
-    setSearchMetadata(null);
 
     if (subCategory && activeCategory) {
       const filtered = resources.filter(

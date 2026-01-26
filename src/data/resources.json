@@ -18,7 +18,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/1-figma.jpg"
+    "screenshot": "/assets/screenshots/1-figma.jpg",
+    "gravityScore": 9.8,
+    "gravityRationale": "Industry standard for collaborative UI design"
   },
   {
     "id": 2,
@@ -39,7 +41,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/2-framer.jpg"
+    "screenshot": "/assets/screenshots/2-framer.jpg",
+    "gravityScore": 9.4,
+    "gravityRationale": "Leading design-to-code platform with AI"
   },
   {
     "id": 3,
@@ -60,7 +64,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/3-webflow.jpg"
+    "screenshot": "/assets/screenshots/3-webflow.jpg",
+    "gravityScore": 9,
+    "gravityRationale": "Best no-code web builder for designers"
   },
   {
     "id": 4,
@@ -81,7 +87,9 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/4-dribbble.jpg"
+    "screenshot": "/assets/screenshots/4-dribbble.jpg",
+    "gravityScore": 8,
+    "gravityRationale": "Popular design showcase, community focus"
   },
   {
     "id": 5,
@@ -102,7 +110,9 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/5-behance.jpg"
+    "screenshot": "/assets/screenshots/5-behance.jpg",
+    "gravityScore": 7.5,
+    "gravityRationale": "Adobe portfolio platform, large audience"
   },
   {
     "id": 6,
@@ -123,7 +133,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/6-awwwards.jpg"
+    "screenshot": "/assets/screenshots/6-awwwards.jpg",
+    "gravityScore": 8,
+    "gravityRationale": "Prestigious web design recognition"
   },
   {
     "id": 7,
@@ -143,7 +155,9 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/7-css-design-awards.jpg"
+    "screenshot": "/assets/screenshots/7-css-design-awards.jpg",
+    "gravityScore": 7.5,
+    "gravityRationale": "Respected design awards platform"
   },
   {
     "id": 8,
@@ -164,7 +178,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/8-mobbin.jpg"
+    "screenshot": "/assets/screenshots/8-mobbin.jpg",
+    "gravityScore": 8.8,
+    "gravityRationale": "Essential UI pattern research tool"
   },
   {
     "id": 9,
@@ -185,7 +201,9 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/9-screenlane.jpg"
+    "screenshot": "/assets/screenshots/9-screenlane.jpg",
+    "gravityScore": 7.8,
+    "gravityRationale": "Focused mobile UI inspiration"
   },
   {
     "id": 10,
@@ -206,7 +224,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/10-midjourney.jpg"
+    "screenshot": "/assets/screenshots/10-midjourney.jpg",
+    "gravityScore": 9.5,
+    "gravityRationale": "Leading AI art generator with best aesthetics"
   },
   {
     "id": 11,
@@ -227,7 +247,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/11-dall-e.jpg"
+    "screenshot": "/assets/screenshots/11-dall-e.jpg",
+    "gravityScore": 8.8,
+    "gravityRationale": "Strong AI image tool with editing"
   },
   {
     "id": 12,
@@ -248,7 +270,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/12-runway.jpg"
+    "screenshot": "/assets/screenshots/12-runway.jpg",
+    "gravityScore": 9.3,
+    "gravityRationale": "Leading AI video generation platform"
   },
   {
     "id": 13,
@@ -269,7 +293,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/13-claude.jpg"
+    "screenshot": "/assets/screenshots/13-claude.jpg",
+    "gravityScore": 9.4,
+    "gravityRationale": "Top AI assistant for coding and creative work"
   },
   {
     "id": 14,
@@ -290,7 +316,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/14-chatgpt.jpg"
+    "screenshot": "/assets/screenshots/14-chatgpt.jpg",
+    "gravityScore": 9.6,
+    "gravityRationale": "Most widely adopted AI assistant"
   },
   {
     "id": 15,
@@ -311,7 +339,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/15-github.jpg"
+    "screenshot": "/assets/screenshots/15-github.jpg",
+    "gravityScore": 9.7,
+    "gravityRationale": "Essential platform for code collaboration"
   },
   {
     "id": 16,
@@ -332,7 +362,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/16-vs-code.jpg"
+    "screenshot": "/assets/screenshots/16-vs-code.jpg",
+    "gravityScore": 9.5,
+    "gravityRationale": "Leading code editor with ecosystem"
   },
   {
     "id": 17,
@@ -353,7 +385,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/17-cursor.jpg"
+    "screenshot": "/assets/screenshots/17-cursor.jpg",
+    "gravityScore": 9.2,
+    "gravityRationale": "Leading AI-native code editor"
   },
   {
     "id": 18,
@@ -374,7 +408,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/18-notion.jpg"
+    "screenshot": "/assets/screenshots/18-notion.jpg",
+    "gravityScore": 9.3,
+    "gravityRationale": "Essential team workspace with AI features"
   },
   {
     "id": 19,
@@ -395,7 +431,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/19-linear.jpg"
+    "screenshot": "/assets/screenshots/19-linear.jpg",
+    "gravityScore": 9.2,
+    "gravityRationale": "Best-in-class issue tracking UX"
   },
   {
     "id": 20,
@@ -416,7 +454,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/20-vercel.jpg"
+    "screenshot": "/assets/screenshots/20-vercel.jpg",
+    "gravityScore": 9.3,
+    "gravityRationale": "Premier frontend deployment platform"
   },
   {
     "id": 21,
@@ -437,7 +477,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/21-tailwind-css.jpg"
+    "screenshot": "/assets/screenshots/21-tailwind-css.jpg",
+    "gravityScore": 9.5,
+    "gravityRationale": "Dominant utility-first CSS framework"
   },
   {
     "id": 22,
@@ -458,7 +500,9 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/22-refactoring-ui.jpg"
+    "screenshot": "/assets/screenshots/22-refactoring-ui.jpg",
+    "gravityScore": 7.5,
+    "gravityRationale": "Useful learning resource"
   },
   {
     "id": 23,
@@ -478,7 +522,9 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/23-design-systems-repo.jpg"
+    "screenshot": "/assets/screenshots/23-design-systems-repo.jpg",
+    "gravityScore": 7.5,
+    "gravityRationale": "Useful learning resource"
   },
   {
     "id": 24,
@@ -499,7 +545,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/24-laws-of-ux.jpg"
+    "screenshot": "/assets/screenshots/24-laws-of-ux.jpg",
+    "gravityScore": 8.8,
+    "gravityRationale": "Top learning resource"
   },
   {
     "id": 25,
@@ -520,7 +568,9 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/25-checklist-design.jpg"
+    "screenshot": "/assets/screenshots/25-checklist-design.jpg",
+    "gravityScore": 7.5,
+    "gravityRationale": "Useful learning resource"
   },
   {
     "id": 26,
@@ -541,7 +591,9 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/26-ux-planet.jpg"
+    "screenshot": "/assets/screenshots/26-ux-planet.jpg",
+    "gravityScore": 7.5,
+    "gravityRationale": "Useful learning resource"
   },
   {
     "id": 27,
@@ -562,7 +614,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/27-unsplash.jpg"
+    "screenshot": "/assets/screenshots/27-unsplash.jpg",
+    "gravityScore": 9,
+    "gravityRationale": "Premier free stock photography"
   },
   {
     "id": 28,
@@ -583,7 +637,9 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/28-pexels.jpg"
+    "screenshot": "/assets/screenshots/28-pexels.jpg",
+    "gravityScore": 8.5,
+    "gravityRationale": "Excellent free stock media library"
   },
   {
     "id": 29,
@@ -604,7 +660,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/29-heroicons.jpg"
+    "screenshot": "/assets/screenshots/29-heroicons.jpg",
+    "gravityScore": 8.7,
+    "gravityRationale": "Popular Tailwind-native icons"
   },
   {
     "id": 30,
@@ -625,7 +683,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/30-lucide-icons.jpg"
+    "screenshot": "/assets/screenshots/30-lucide-icons.jpg",
+    "gravityScore": 8.9,
+    "gravityRationale": "Modern, well-maintained icon set"
   },
   {
     "id": 31,
@@ -646,7 +706,9 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/31-phosphor-icons.jpg"
+    "screenshot": "/assets/screenshots/31-phosphor-icons.jpg",
+    "gravityScore": 7.5,
+    "gravityRationale": "Useful templates resource"
   },
   {
     "id": 32,
@@ -667,7 +729,9 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/32-ui8.jpg"
+    "screenshot": "/assets/screenshots/32-ui8.jpg",
+    "gravityScore": 7.5,
+    "gravityRationale": "Useful templates resource"
   },
   {
     "id": 33,
@@ -688,7 +752,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/33-figma-community.jpg"
+    "screenshot": "/assets/screenshots/33-figma-community.jpg",
+    "gravityScore": 8.8,
+    "gravityRationale": "Top templates resource"
   },
   {
     "id": 34,
@@ -709,7 +775,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/34-discord.jpg"
+    "screenshot": "/assets/screenshots/34-discord.jpg",
+    "gravityScore": 8.2,
+    "gravityRationale": "Growing design community adoption"
   },
   {
     "id": 35,
@@ -730,7 +798,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/35-slack.jpg"
+    "screenshot": "/assets/screenshots/35-slack.jpg",
+    "gravityScore": 8.5,
+    "gravityRationale": "Standard team communication tool"
   },
   {
     "id": 36,
@@ -751,7 +821,9 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/36-toptal.jpg"
+    "screenshot": "/assets/screenshots/36-toptal.jpg",
+    "gravityScore": 7.3,
+    "gravityRationale": "Useful community resource"
   },
   {
     "id": 37,
@@ -772,7 +844,9 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/37-upwork.jpg"
+    "screenshot": "/assets/screenshots/37-upwork.jpg",
+    "gravityScore": 7.3,
+    "gravityRationale": "Useful community resource"
   },
   {
     "id": 38,
@@ -793,7 +867,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/38-lottie-files.jpg"
+    "screenshot": "/assets/screenshots/38-lottie-files.jpg",
+    "gravityScore": 8.9,
+    "gravityRationale": "Standard for web animations"
   },
   {
     "id": 39,
@@ -814,7 +890,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/39-rive.jpg"
+    "screenshot": "/assets/screenshots/39-rive.jpg",
+    "gravityScore": 9,
+    "gravityRationale": "Advanced interactive animations"
   },
   {
     "id": 40,
@@ -835,7 +913,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/40-spline.jpg"
+    "screenshot": "/assets/screenshots/40-spline.jpg",
+    "gravityScore": 9,
+    "gravityRationale": "Accessible 3D design for web"
   },
   {
     "id": 41,
@@ -856,7 +936,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/41-three-js.jpg"
+    "screenshot": "/assets/screenshots/41-three-js.jpg",
+    "gravityScore": 9.3,
+    "gravityRationale": "Dominant 3D web graphics library"
   },
   {
     "id": 42,
@@ -877,7 +959,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/42-blender.jpg"
+    "screenshot": "/assets/screenshots/42-blender.jpg",
+    "gravityScore": 9,
+    "gravityRationale": "Industry-standard open-source 3D"
   },
   {
     "id": 43,
@@ -898,7 +982,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/43-supabase.jpg"
+    "screenshot": "/assets/screenshots/43-supabase.jpg",
+    "gravityScore": 9.1,
+    "gravityRationale": "Best open-source Firebase alternative"
   },
   {
     "id": 44,
@@ -919,7 +1005,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/44-stripe.jpg"
+    "screenshot": "/assets/screenshots/44-stripe.jpg",
+    "gravityScore": 9.4,
+    "gravityRationale": "Industry standard for payments"
   },
   {
     "id": 45,
@@ -940,7 +1028,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/45-coolors.jpg"
+    "screenshot": "/assets/screenshots/45-coolors.jpg",
+    "gravityScore": 9.2,
+    "gravityRationale": "Best color palette generator"
   },
   {
     "id": 46,
@@ -961,7 +1051,9 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/46-realtime-colors.jpg"
+    "screenshot": "/assets/screenshots/46-realtime-colors.jpg",
+    "gravityScore": 8.5,
+    "gravityRationale": "Live color visualization tool"
   },
   {
     "id": 47,
@@ -982,7 +1074,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/47-css-tricks.jpg"
+    "screenshot": "/assets/screenshots/47-css-tricks.jpg",
+    "gravityScore": 8.8,
+    "gravityRationale": "Top learning resource"
   },
   {
     "id": 48,
@@ -1003,7 +1097,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/48-smashing-magazine.jpg"
+    "screenshot": "/assets/screenshots/48-smashing-magazine.jpg",
+    "gravityScore": 8.8,
+    "gravityRationale": "Top learning resource"
   },
   {
     "id": 49,
@@ -1024,7 +1120,9 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/49-codrops.jpg"
+    "screenshot": "/assets/screenshots/49-codrops.jpg",
+    "gravityScore": 7.5,
+    "gravityRationale": "Useful learning resource"
   },
   {
     "id": 50,
@@ -1045,7 +1143,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/50-sora.jpg"
+    "screenshot": "/assets/screenshots/50-sora.jpg",
+    "gravityScore": 9.1,
+    "gravityRationale": "Top ai resource"
   },
   {
     "id": 51,
@@ -1066,7 +1166,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/51-elevenlabs.jpg"
+    "screenshot": "/assets/screenshots/51-elevenlabs.jpg",
+    "gravityScore": 9,
+    "gravityRationale": "Leading AI voice synthesis"
   },
   {
     "id": 52,
@@ -1087,7 +1189,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/52-v0.jpg"
+    "screenshot": "/assets/screenshots/52-v0.jpg",
+    "gravityScore": 9.1,
+    "gravityRationale": "Pioneering AI UI generation"
   },
   {
     "id": 53,
@@ -1108,7 +1212,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/53-bolt.jpg"
+    "screenshot": "/assets/screenshots/53-bolt.jpg",
+    "gravityScore": 8.8,
+    "gravityRationale": "Fast AI code generation"
   },
   {
     "id": 54,
@@ -1129,7 +1235,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/54-replit.jpg"
+    "screenshot": "/assets/screenshots/54-replit.jpg",
+    "gravityScore": 8.5,
+    "gravityRationale": "Accessible cloud IDE with AI"
   },
   {
     "id": 55,
@@ -1150,7 +1258,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/55-canva.jpg"
+    "screenshot": "/assets/screenshots/55-canva.jpg",
+    "gravityScore": 8.5,
+    "gravityRationale": "Dominant accessible design tool"
   },
   {
     "id": 56,
@@ -1171,7 +1281,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/56-miro.jpg"
+    "screenshot": "/assets/screenshots/56-miro.jpg",
+    "gravityScore": 8.8,
+    "gravityRationale": "Leading visual collaboration board"
   },
   {
     "id": 57,
@@ -1192,7 +1304,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/57-raycast.jpg"
+    "screenshot": "/assets/screenshots/57-raycast.jpg",
+    "gravityScore": 8.5,
+    "gravityRationale": "Powerful Mac productivity launcher"
   },
   {
     "id": 58,
@@ -1213,7 +1327,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/58-arc-browser.jpg"
+    "screenshot": "/assets/screenshots/58-arc-browser.jpg",
+    "gravityScore": 8.5,
+    "gravityRationale": "Innovative browser design"
   },
   {
     "id": 59,
@@ -1234,7 +1350,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/59-storybook.jpg"
+    "screenshot": "/assets/screenshots/59-storybook.jpg",
+    "gravityScore": 8.8,
+    "gravityRationale": "Standard for UI documentation"
   },
   {
     "id": 60,
@@ -1255,7 +1373,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/60-radix-ui.jpg"
+    "screenshot": "/assets/screenshots/60-radix-ui.jpg",
+    "gravityScore": 9,
+    "gravityRationale": "Best accessible component primitives"
   },
   {
     "id": 61,
@@ -1276,7 +1396,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/61-shadcn-ui.jpg"
+    "screenshot": "/assets/screenshots/61-shadcn-ui.jpg",
+    "gravityScore": 9.4,
+    "gravityRationale": "Revolutionary component distribution"
   },
   {
     "id": 62,
@@ -1297,7 +1419,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/62-framer-motion.jpg"
+    "screenshot": "/assets/screenshots/62-framer-motion.jpg",
+    "gravityScore": 9.3,
+    "gravityRationale": "Premier React animation library"
   },
   {
     "id": 63,
@@ -1318,7 +1442,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/63-gsap.jpg"
+    "screenshot": "/assets/screenshots/63-gsap.jpg",
+    "gravityScore": 8.8,
+    "gravityRationale": "Powerful professional animations"
   },
   {
     "id": 64,
@@ -1339,7 +1465,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/64-zed.jpg"
+    "screenshot": "/assets/screenshots/64-zed.jpg",
+    "gravityScore": 9,
+    "gravityRationale": "Top tools resource"
   },
   {
     "id": 65,
@@ -1360,7 +1488,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/65-godly.jpg"
+    "screenshot": "/assets/screenshots/65-godly.jpg",
+    "gravityScore": 7.8,
+    "gravityRationale": "Modern web design curation"
   },
   {
     "id": 66,
@@ -1381,7 +1511,9 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/66-site-inspire.jpg"
+    "screenshot": "/assets/screenshots/66-site-inspire.jpg",
+    "gravityScore": 7.8,
+    "gravityRationale": "Curated website gallery"
   },
   {
     "id": 67,
@@ -1402,7 +1534,9 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/67-land-book.jpg"
+    "screenshot": "/assets/screenshots/67-land-book.jpg",
+    "gravityScore": 7.5,
+    "gravityRationale": "Landing page inspiration"
   },
   {
     "id": 68,
@@ -1423,7 +1557,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/68-product-hunt.jpg"
+    "screenshot": "/assets/screenshots/68-product-hunt.jpg",
+    "gravityScore": 8,
+    "gravityRationale": "Key startup launch platform"
   },
   {
     "id": 69,
@@ -1444,7 +1580,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/69-hacker-news.jpg"
+    "screenshot": "/assets/screenshots/69-hacker-news.jpg",
+    "gravityScore": 7.8,
+    "gravityRationale": "Tech community discussions"
   },
   {
     "id": 70,
@@ -1465,7 +1603,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/70-indie-hackers.jpg"
+    "screenshot": "/assets/screenshots/70-indie-hackers.jpg",
+    "gravityScore": 7.5,
+    "gravityRationale": "Indie founder community"
   },
   {
     "id": 71,
@@ -1486,7 +1626,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/71-codepen.jpg"
+    "screenshot": "/assets/screenshots/71-codepen.jpg",
+    "gravityScore": 8,
+    "gravityRationale": "Popular frontend playground"
   },
   {
     "id": 72,
@@ -1507,7 +1649,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/72-dev-to.jpg"
+    "screenshot": "/assets/screenshots/72-dev-to.jpg",
+    "gravityScore": 7.5,
+    "gravityRationale": "Developer content platform"
   },
   {
     "id": 73,
@@ -1528,7 +1672,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/73-perplexity.jpg"
+    "screenshot": "/assets/screenshots/73-perplexity.jpg",
+    "gravityScore": 9.2,
+    "gravityRationale": "Leading AI search engine"
   },
   {
     "id": 74,
@@ -1549,7 +1695,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/74-replicate.jpg"
+    "screenshot": "/assets/screenshots/74-replicate.jpg",
+    "gravityScore": 8.3,
+    "gravityRationale": "AI model deployment platform"
   },
   {
     "id": 75,
@@ -1570,7 +1718,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/75-hugging-face.jpg"
+    "screenshot": "/assets/screenshots/75-hugging-face.jpg",
+    "gravityScore": 8.8,
+    "gravityRationale": "Essential AI/ML hub"
   },
   {
     "id": 76,
@@ -1591,7 +1741,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/76-stable-diffusion.jpg"
+    "screenshot": "/assets/screenshots/76-stable-diffusion.jpg",
+    "gravityScore": 8.5,
+    "gravityRationale": "Open-source AI image flexibility"
   },
   {
     "id": 77,
@@ -1612,7 +1764,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/77-loom.jpg"
+    "screenshot": "/assets/screenshots/77-loom.jpg",
+    "gravityScore": 8.5,
+    "gravityRationale": "Standard for async video"
   },
   {
     "id": 78,
@@ -1633,7 +1787,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/78-gamma.jpg"
+    "screenshot": "/assets/screenshots/78-gamma.jpg",
+    "gravityScore": 8.5,
+    "gravityRationale": "AI presentation generation"
   },
   {
     "id": 79,
@@ -1654,7 +1810,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/79-excalidraw.jpg"
+    "screenshot": "/assets/screenshots/79-excalidraw.jpg",
+    "gravityScore": 9,
+    "gravityRationale": "Beloved open-source whiteboard"
   },
   {
     "id": 80,
@@ -1675,7 +1833,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/80-cal-com.jpg"
+    "screenshot": "/assets/screenshots/80-cal-com.jpg",
+    "gravityScore": 8.3,
+    "gravityRationale": "Open-source scheduling platform"
   },
   {
     "id": 81,
@@ -1696,7 +1856,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/81-plausible.jpg"
+    "screenshot": "/assets/screenshots/81-plausible.jpg",
+    "gravityScore": 8.2,
+    "gravityRationale": "Privacy-focused analytics"
   },
   {
     "id": 82,
@@ -1717,7 +1879,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/82-posthog.jpg"
+    "screenshot": "/assets/screenshots/82-posthog.jpg",
+    "gravityScore": 8.8,
+    "gravityRationale": "Comprehensive open-source analytics"
   },
   {
     "id": 83,
@@ -1738,7 +1902,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/83-resend.jpg"
+    "screenshot": "/assets/screenshots/83-resend.jpg",
+    "gravityScore": 8.5,
+    "gravityRationale": "Modern developer email API"
   },
   {
     "id": 84,
@@ -1759,7 +1925,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/84-clerk.jpg"
+    "screenshot": "/assets/screenshots/84-clerk.jpg",
+    "gravityScore": 8.5,
+    "gravityRationale": "Best-in-class auth platform"
   },
   {
     "id": 85,
@@ -1780,7 +1948,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/85-neon.jpg"
+    "screenshot": "/assets/screenshots/85-neon.jpg",
+    "gravityScore": 8.5,
+    "gravityRationale": "Serverless Postgres pioneer"
   },
   {
     "id": 86,
@@ -1801,7 +1971,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/86-upstash.jpg"
+    "screenshot": "/assets/screenshots/86-upstash.jpg",
+    "gravityScore": 8.3,
+    "gravityRationale": "Serverless Redis/Kafka"
   },
   {
     "id": 87,
@@ -1822,7 +1994,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/87-railway.jpg"
+    "screenshot": "/assets/screenshots/87-railway.jpg",
+    "gravityScore": 8.7,
+    "gravityRationale": "Modern infrastructure platform"
   },
   {
     "id": 88,
@@ -1843,7 +2017,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/88-render.jpg"
+    "screenshot": "/assets/screenshots/88-render.jpg",
+    "gravityScore": 8.4,
+    "gravityRationale": "Simple cloud deployment"
   },
   {
     "id": 89,
@@ -1864,7 +2040,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/89-fly-io.jpg"
+    "screenshot": "/assets/screenshots/89-fly-io.jpg",
+    "gravityScore": 8.5,
+    "gravityRationale": "Edge deployment platform"
   },
   {
     "id": 90,
@@ -1885,7 +2063,9 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": "/assets/screenshots/90-cloudflare.jpg"
+    "screenshot": "/assets/screenshots/90-cloudflare.jpg",
+    "gravityScore": 9,
+    "gravityRationale": "Essential edge/CDN platform"
   },
   {
     "name": "Y2Mate",
@@ -1906,7 +2086,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/91-y2mate.jpg",
-    "id": 91
+    "id": 91,
+    "gravityScore": 4,
+    "gravityRationale": "Basic utility, ad-heavy"
   },
   {
     "name": "FreeConvert",
@@ -1927,7 +2109,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/92-freeconvert.jpg",
-    "id": 92
+    "id": 92,
+    "gravityScore": 7.7,
+    "gravityRationale": "Useful tools resource"
   },
   {
     "name": "CloudConvert",
@@ -1948,7 +2132,9 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/93-cloudconvert.jpg",
-    "id": 93
+    "id": 93,
+    "gravityScore": 9,
+    "gravityRationale": "Top tools resource"
   },
   {
     "name": "Compress JPEG",
@@ -1969,7 +2155,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/94-compress-jpeg.jpg",
-    "id": 94
+    "id": 94,
+    "gravityScore": 7.7,
+    "gravityRationale": "Useful tools resource"
   },
   {
     "name": "Flowkeeper",
@@ -1990,7 +2178,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/95-flowkeeper.jpg",
-    "id": 95
+    "id": 95,
+    "gravityScore": 7.5,
+    "gravityRationale": "Useful templates resource"
   },
   {
     "name": "Good Design Tools",
@@ -2011,7 +2201,9 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/96-good-design-tools.jpg",
-    "id": 96
+    "id": 96,
+    "gravityScore": 8.8,
+    "gravityRationale": "Top learning resource"
   },
   {
     "name": "Lindy",
@@ -2032,7 +2224,9 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/97-lindy.jpg",
-    "id": 97
+    "id": 97,
+    "gravityScore": 9.1,
+    "gravityRationale": "Top ai resource"
   },
   {
     "name": "VEED.io",
@@ -2053,7 +2247,9 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/98-veed-io.jpg",
-    "id": 98
+    "id": 98,
+    "gravityScore": 9,
+    "gravityRationale": "Top tools resource"
   },
   {
     "name": "Higgsfield",
@@ -2074,7 +2270,9 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/99-higgsfield.jpg",
-    "id": 99
+    "id": 99,
+    "gravityScore": 9.1,
+    "gravityRationale": "Top ai resource"
   },
   {
     "name": "Google Flow",
@@ -2095,7 +2293,9 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/100-google-flow.jpg",
-    "id": 100
+    "id": 100,
+    "gravityScore": 9.1,
+    "gravityRationale": "Top ai resource"
   },
   {
     "name": "Google AI Studio",
@@ -2116,7 +2316,9 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/101-google-ai-studio.jpg",
-    "id": 101
+    "id": 101,
+    "gravityScore": 9.1,
+    "gravityRationale": "Top ai resource"
   },
   {
     "name": "Sprout Social",
@@ -2137,7 +2339,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/102-sprout-social.jpg",
-    "id": 102
+    "id": 102,
+    "gravityScore": 7.7,
+    "gravityRationale": "Useful tools resource"
   },
   {
     "name": "Social Blade",
@@ -2158,7 +2362,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/103-social-blade.jpg",
-    "id": 103
+    "id": 103,
+    "gravityScore": 7.7,
+    "gravityRationale": "Useful tools resource"
   },
   {
     "name": "Shopify Themes",
@@ -2179,7 +2385,9 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/104-shopify-themes.jpg",
-    "id": 104
+    "id": 104,
+    "gravityScore": 8.8,
+    "gravityRationale": "Top templates resource"
   },
   {
     "name": "Framer Globe",
@@ -2200,7 +2408,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/105-framer-globe.jpg",
-    "id": 105
+    "id": 105,
+    "gravityScore": 7.5,
+    "gravityRationale": "Useful templates resource"
   },
   {
     "name": "Shader Gradient",
@@ -2221,7 +2431,9 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/106-shader-gradient.jpg",
-    "id": 106
+    "id": 106,
+    "gravityScore": 9,
+    "gravityRationale": "Top tools resource"
   },
   {
     "name": "Framer Library",
@@ -2242,7 +2454,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/107-framer-library.jpg",
-    "id": 107
+    "id": 107,
+    "gravityScore": 7.5,
+    "gravityRationale": "Useful templates resource"
   },
   {
     "name": "Nav Supply",
@@ -2263,7 +2477,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/108-nav-supply.jpg",
-    "id": 108
+    "id": 108,
+    "gravityScore": 7.5,
+    "gravityRationale": "Useful templates resource"
   },
   {
     "name": "Framer Things",
@@ -2284,7 +2500,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/109-framer-things.jpg",
-    "id": 109
+    "id": 109,
+    "gravityScore": 7.5,
+    "gravityRationale": "Useful templates resource"
   },
   {
     "name": "Framer Fuel",
@@ -2305,7 +2523,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/110-framer-fuel.jpg",
-    "id": 110
+    "id": 110,
+    "gravityScore": 7.5,
+    "gravityRationale": "Useful templates resource"
   },
   {
     "name": "Frameplate",
@@ -2326,7 +2546,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/111-frameplate.jpg",
-    "id": 111
+    "id": 111,
+    "gravityScore": 7.5,
+    "gravityRationale": "Useful templates resource"
   },
   {
     "name": "React Bits",
@@ -2347,7 +2569,9 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/112-react-bits.jpg",
-    "id": 112
+    "id": 112,
+    "gravityScore": 9,
+    "gravityRationale": "Top tools resource"
   },
   {
     "name": "Aceternity UI",
@@ -2368,7 +2592,9 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/113-aceternity-ui.jpg",
-    "id": 113
+    "id": 113,
+    "gravityScore": 9,
+    "gravityRationale": "Top tools resource"
   },
   {
     "name": "Open Alternative",
@@ -2389,7 +2615,9 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/114-open-alternative.jpg",
-    "id": 114
+    "id": 114,
+    "gravityScore": 8.8,
+    "gravityRationale": "Top learning resource"
   },
   {
     "name": "Untitled UI",
@@ -2410,7 +2638,9 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/115-untitled-ui.jpg",
-    "id": 115
+    "id": 115,
+    "gravityScore": 8.8,
+    "gravityRationale": "Top templates resource"
   },
   {
     "name": "Thind UI",
@@ -2431,7 +2661,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/116-thind-ui.jpg",
-    "id": 116
+    "id": 116,
+    "gravityScore": 7.7,
+    "gravityRationale": "Useful tools resource"
   },
   {
     "name": "Blank",
@@ -2452,7 +2684,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/117-blank.jpg",
-    "id": 117
+    "id": 117,
+    "gravityScore": 7.5,
+    "gravityRationale": "Useful templates resource"
   },
   {
     "name": "Lumos",
@@ -2473,7 +2707,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/118-lumos.jpg",
-    "id": 118
+    "id": 118,
+    "gravityScore": 7.5,
+    "gravityRationale": "Useful templates resource"
   },
   {
     "name": "TweakCN",
@@ -2494,7 +2730,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/119-tweakcn.jpg",
-    "id": 119
+    "id": 119,
+    "gravityScore": 7.7,
+    "gravityRationale": "Useful tools resource"
   },
   {
     "name": "Studio 2AM",
@@ -2515,7 +2753,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/120-studio-2am.jpg",
-    "id": 120
+    "id": 120,
+    "gravityScore": 7.7,
+    "gravityRationale": "Useful tools resource"
   },
   {
     "name": "Brand Toolkit",
@@ -2536,7 +2776,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/121-brand-toolkit.jpg",
-    "id": 121
+    "id": 121,
+    "gravityScore": 7.7,
+    "gravityRationale": "Useful tools resource"
   },
   {
     "name": "TextureLib",
@@ -2557,7 +2799,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": null,
-    "id": 122
+    "id": 122,
+    "gravityScore": 7.5,
+    "gravityRationale": "Useful templates resource"
   },
   {
     "name": "TextureLabs",
@@ -2578,7 +2822,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/123-texturelabs.jpg",
-    "id": 123
+    "id": 123,
+    "gravityScore": 7.5,
+    "gravityRationale": "Useful templates resource"
   },
   {
     "name": "Endless Tools",
@@ -2599,7 +2845,9 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/124-endless-tools.jpg",
-    "id": 124
+    "id": 124,
+    "gravityScore": 9.1,
+    "gravityRationale": "Top ai resource"
   },
   {
     "name": "DITHR Tool",
@@ -2620,7 +2868,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/125-dithr-tool.jpg",
-    "id": 125
+    "id": 125,
+    "gravityScore": 7.7,
+    "gravityRationale": "Useful tools resource"
   },
   {
     "name": "STL to ASCII",
@@ -2641,7 +2891,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/126-stl-to-ascii.jpg",
-    "id": 126
+    "id": 126,
+    "gravityScore": 7.7,
+    "gravityRationale": "Useful tools resource"
   },
   {
     "name": "Kurt Mock-ups",
@@ -2662,7 +2914,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/127-kurt-mock-ups.jpg",
-    "id": 127
+    "id": 127,
+    "gravityScore": 7.5,
+    "gravityRationale": "Useful templates resource"
   },
   {
     "name": "Supernova",
@@ -2683,7 +2937,9 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/128-supernova.jpg",
-    "id": 128
+    "id": 128,
+    "gravityScore": 9,
+    "gravityRationale": "Top tools resource"
   },
   {
     "name": "Freepik",
@@ -2704,7 +2960,9 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/129-freepik.jpg",
-    "id": 129
+    "id": 129,
+    "gravityScore": 8.3,
+    "gravityRationale": "Huge stock resource library"
   },
   {
     "name": "Pixabay",
@@ -2725,7 +2983,9 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/130-pixabay.jpg",
-    "id": 130
+    "id": 130,
+    "gravityScore": 8.8,
+    "gravityRationale": "Top templates resource"
   },
   {
     "name": "Hinto AI",
@@ -2746,7 +3006,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/131-hinto-ai.jpg",
-    "id": 131
+    "id": 131,
+    "gravityScore": 7.8,
+    "gravityRationale": "Useful ai resource"
   },
   {
     "name": "VidIQ",
@@ -2767,7 +3029,9 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/132-vidiq.jpg",
-    "id": 132
+    "id": 132,
+    "gravityScore": 9,
+    "gravityRationale": "Top tools resource"
   },
   {
     "name": "Happy Editing",
@@ -2788,7 +3052,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/133-happy-editing.jpg",
-    "id": 133
+    "id": 133,
+    "gravityScore": 7.5,
+    "gravityRationale": "Useful learning resource"
   },
   {
     "name": "Ungrid",
@@ -2809,7 +3075,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/134-ungrid.jpg",
-    "id": 134
+    "id": 134,
+    "gravityScore": 7.7,
+    "gravityRationale": "Useful tools resource"
   },
   {
     "name": "Video to ASCII",
@@ -2830,7 +3098,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/135-video-to-ascii.jpg",
-    "id": 135
+    "id": 135,
+    "gravityScore": 7.7,
+    "gravityRationale": "Useful tools resource"
   },
   {
     "name": "Newhead Design",
@@ -2851,7 +3121,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/136-newhead-design.jpg",
-    "id": 136
+    "id": 136,
+    "gravityScore": 7.5,
+    "gravityRationale": "Useful inspiration resource"
   },
   {
     "name": "Motion Boutique",
@@ -2872,7 +3144,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/137-motion-boutique.jpg",
-    "id": 137
+    "id": 137,
+    "gravityScore": 7.7,
+    "gravityRationale": "Useful tools resource"
   },
   {
     "name": "21st.dev",
@@ -2893,7 +3167,9 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/138-21st-dev.jpg",
-    "id": 138
+    "id": 138,
+    "gravityScore": 8.8,
+    "gravityRationale": "Top learning resource"
   },
   {
     "name": "Unicorn Studio",
@@ -2914,7 +3190,9 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/139-unicorn-studio.jpg",
-    "id": 139
+    "id": 139,
+    "gravityScore": 9,
+    "gravityRationale": "Top tools resource"
   },
   {
     "name": "Motion for React",
@@ -2935,7 +3213,9 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/140-motion-for-react.jpg",
-    "id": 140
+    "id": 140,
+    "gravityScore": 8.8,
+    "gravityRationale": "Top learning resource"
   },
   {
     "name": "Plunk",
@@ -2956,7 +3236,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/141-plunk.jpg",
-    "id": 141
+    "id": 141,
+    "gravityScore": 7.7,
+    "gravityRationale": "Useful tools resource"
   },
   {
     "name": "Notion Templates",
@@ -2977,7 +3259,9 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/142-notion-templates.jpg",
-    "id": 142
+    "id": 142,
+    "gravityScore": 8.8,
+    "gravityRationale": "Top templates resource"
   },
   {
     "name": "Notionland",
@@ -2998,7 +3282,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/143-notionland.jpg",
-    "id": 143
+    "id": 143,
+    "gravityScore": 7.5,
+    "gravityRationale": "Useful templates resource"
   },
   {
     "name": "Super",
@@ -3019,7 +3305,9 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/144-super.jpg",
-    "id": 144
+    "id": 144,
+    "gravityScore": 9,
+    "gravityRationale": "Top tools resource"
   },
   {
     "name": "Thenty",
@@ -3040,7 +3328,9 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/145-thenty.jpg",
-    "id": 145
+    "id": 145,
+    "gravityScore": 7.7,
+    "gravityRationale": "Useful tools resource"
   },
   {
     "name": "Outseta",
@@ -3061,6 +3351,8 @@
     "tier": 2,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/146-outseta.jpg",
-    "id": 146
+    "id": 146,
+    "gravityScore": 7.7,
+    "gravityRationale": "Useful tools resource"
   }
 ]

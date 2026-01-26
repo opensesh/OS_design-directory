@@ -16,6 +16,7 @@ import {
   ArrowUpRight,
 } from 'lucide-react';
 import { resources } from '../data';
+import { RatingScale } from '../components/ui/RatingScale';
 
 /**
  * Get favicon URL for a given website URL
@@ -560,6 +561,26 @@ export default function ResourceDetail() {
                   </div>
                 );
               })()}
+            </motion.div>
+          )}
+
+          {/* Rating Section */}
+          {resource.gravityScore && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="mb-6"
+            >
+              <h2 className="text-xs font-semibold text-[#FFFAEE] mb-3 uppercase tracking-wide flex items-center gap-2">
+                <span className="w-6 h-px bg-[#FE5102]" />
+                Rating
+              </h2>
+              <RatingScale
+                score={resource.gravityScore}
+                rationale={resource.gravityRationale}
+                showTooltip={true}
+              />
             </motion.div>
           )}
 

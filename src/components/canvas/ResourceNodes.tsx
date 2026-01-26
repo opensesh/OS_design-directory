@@ -124,6 +124,7 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
     }));
 
     // Calculate FIXED positions and colors for ALL resources
+    // Resources with higher gravity scores are positioned closer to the center
     const { positions, colors } = useMemo(() => {
       const count = resources.length;
       const posArray = new Float32Array(count * 3);
@@ -134,7 +135,10 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           String(resource.id),
           index,
           count,
-          orbitalConfig
+          {
+            ...orbitalConfig,
+            gravityScore: resource.gravityScore,
+          }
         );
 
         posArray[index * 3] = pos.x;
