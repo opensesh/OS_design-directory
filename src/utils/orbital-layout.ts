@@ -44,6 +44,7 @@ export interface OrbitalPosition {
 export interface OrbitalConfig {
   minRadius?: number;  // Minimum distance from center (default: 15)
   maxRadius?: number;  // Maximum distance from center (default: 50)
+  flatness?: number;   // 0 = sphere, 1 = flat disk (default: 0.85)
 }
 
 /**
@@ -68,7 +69,7 @@ export function generateOrbitalPosition(
   totalResources: number,
   config: OrbitalConfig = {}
 ): OrbitalPosition {
-  const { minRadius = 15, maxRadius = 50 } = config;
+  const { minRadius = 15, maxRadius = 50, flatness = 0.85 } = config;
 
   // Fibonacci sphere distribution for even spacing
   // Golden angle in radians
@@ -76,10 +77,12 @@ export function generateOrbitalPosition(
 
   // Calculate position on unit sphere using Fibonacci lattice
   // y goes from 1 to -1 (top to bottom of sphere)
-  const y = 1 - (index / (totalResources - 1)) * 2;
+  // Apply flatness to compress Y-axis (0 = sphere, 1 = flat disk)
+  const rawY = 1 - (index / (totalResources - 1)) * 2;
+  const y = rawY * (1 - flatness);
 
-  // Calculate radius at this y level (for a unit sphere)
-  const radiusAtY = Math.sqrt(1 - y * y);
+  // Calculate radius at this y level (use rawY for proper spiral distribution)
+  const radiusAtY = Math.sqrt(1 - rawY * rawY);
 
   // Theta is the angle around the y-axis
   const theta = goldenAngle * index;
@@ -87,6 +90,14 @@ export function generateOrbitalPosition(
   // Calculate x and z on the unit sphere
   const x = Math.cos(theta) * radiusAtY;
   const z = Math.sin(theta) * radiusAtY;
+
+  // Normalize the flattened position to ensure consistent distance from center
+  // Without this, flattening compresses Y without normalizing, causing some
+  // nodes to end up closer to center than minRadius (inside the central sphere)
+  const flatLength = Math.sqrt(x * x + y * y + z * z);
+  const nx = x / flatLength;
+  const ny = y / flatLength;
+  const nz = z / flatLength;
 
   // Use seeded random to determine orbital radius for this specific resource
   // This creates variation in distance while keeping same resource at same distance
@@ -96,11 +107,12 @@ export function generateOrbitalPosition(
   // Interpolate between min and max radius
   const radius = minRadius + (maxRadius - minRadius) * radiusVariation;
 
-  // Scale the unit sphere position by the calculated radius
+  // Scale the normalized position by the calculated radius
+  // Every node is now exactly `radius` units from center (between minRadius and maxRadius)
   return {
-    x: x * radius,
-    y: y * radius,
-    z: z * radius
+    x: nx * radius,
+    y: ny * radius,
+    z: nz * radius
   };
 }
 
