@@ -28,7 +28,6 @@ export interface NormalizedResource {
  */
 export const CATEGORY_COLORS: Record<string, string> = {
   'Community': '#3B82F6',
-  'Contractors': '#8B5CF6',
   'Inspiration': '#FF5102',
   'Learning': '#10B981',
   'Templates': '#F59E0B',
