@@ -1,6 +1,6 @@
 import { useRef, useMemo, useEffect, useState, useCallback } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, Environment } from '@react-three/drei';
 import * as THREE from 'three';
 import { generateSphereLayout } from '../../utils/particle-layouts';
 import ResourceNodes, { type ResourceNodesHandle } from './ResourceNodes';
@@ -133,10 +133,66 @@ function CentralSphere() {
   return (
     <group ref={groupRef} position={[0, 0, 0]}>
       <instancedMesh ref={meshRef} args={[undefined, undefined, particleCount]}>
-        <sphereGeometry args={[particleSize, 8, 8]} />
-        <meshBasicMaterial vertexColors transparent opacity={1} />
+        <sphereGeometry args={[particleSize, 16, 16]} />
+        <meshPhysicalMaterial
+          vertexColors
+          transparent
+          opacity={1}
+          metalness={0.05}
+          roughness={0.35}
+          clearcoat={0.7}
+          clearcoatRoughness={0.2}
+          envMapIntensity={0.6}
+        />
       </instancedMesh>
     </group>
+  );
+}
+
+/**
+ * CursorLight
+ *
+ * A point light that follows the cursor position in 3D space.
+ * Creates dynamic clearcoat reflections as the user moves the mouse.
+ */
+function CursorLight() {
+  const lightRef = useRef<THREE.PointLight>(null);
+  const { camera, gl } = useThree();
+  const mouse = useRef(new THREE.Vector2());
+  const worldPos = useRef(new THREE.Vector3());
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = gl.domElement.getBoundingClientRect();
+      mouse.current.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.current.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+    };
+    gl.domElement.addEventListener('mousemove', handleMouseMove);
+    return () => gl.domElement.removeEventListener('mousemove', handleMouseMove);
+  }, [gl]);
+
+  useFrame(() => {
+    if (!lightRef.current) return;
+
+    // Project mouse to world space at a fixed depth in front of the nodes
+    const tempPos = new THREE.Vector3(mouse.current.x, mouse.current.y, 0.5);
+    tempPos.unproject(camera);
+
+    // Calculate direction from camera and scale to desired depth
+    const dir = tempPos.sub(camera.position).normalize();
+    worldPos.current.copy(camera.position).add(dir.multiplyScalar(30));
+
+    lightRef.current.position.copy(worldPos.current);
+  });
+
+  return (
+    <pointLight
+      ref={lightRef}
+      intensity={1.2}
+      distance={50}
+      decay={2}
+      color="#ffffff"
+    />
   );
 }
 
@@ -361,8 +417,18 @@ export default function InspoCanvas({
       gl={{ alpha: true }}
       style={{ background: '#141414' }}
     >
-      <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} intensity={1} />
+      {/* Lighting setup for physical materials */}
+      <ambientLight intensity={0.4} />
+      <directionalLight position={[10, 10, 5]} intensity={1.5} />
+      <directionalLight position={[-10, -5, -10]} intensity={0.5} color="#8090ff" />
+      <pointLight position={[0, 20, 0]} intensity={0.8} />
+      <pointLight position={[-15, -10, 15]} intensity={0.4} color="#ff9060" />
+
+      {/* Cursor-following light for dynamic clearcoat reflections */}
+      <CursorLight />
+
+      {/* Environment map for clearcoat reflections */}
+      <Environment preset="city" background={false} />
 
       <CentralSphere />
 
