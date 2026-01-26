@@ -6,16 +6,33 @@
   html {
     scroll-behavior: smooth;
   }
-  
+
   :root {
     --brand-charcoal: #191919;
     --brand-vanilla: #FFFAEE;
     --brand-aperol: #FE5102;
   }
-  
+
   body {
-    @apply bg-brand-charcoal text-brand-vanilla antialiased font-text;
+    @apply bg-os-bg-dark text-os-text-primary-dark antialiased;
+    font-family: 'Neue Haas Grotesk Display Pro', system-ui, sans-serif;
   }
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeIn 0.2s ease-in-out forwards;
 }
 
 /* Smooth fade-in animation for lazy-loaded content */
@@ -89,11 +106,149 @@
   animation: fade-up-no-translate 0.6s ease-out forwards;
 }
 
+/* Neuromorphic styling for pre-prompt containers */
+.neuromorphic-prompt {
+  background: linear-gradient(145deg, #2a2a2a, #252525);
+  box-shadow:
+    4px 4px 8px rgba(0, 0, 0, 0.3),
+    -4px -4px 8px rgba(255, 255, 255, 0.02),
+    inset 2px 2px 4px rgba(0, 0, 0, 0.2),
+    inset -2px -2px 4px rgba(255, 255, 255, 0.01);
+  transition: all 0.2s ease;
+}
+
+.neuromorphic-prompt:hover {
+  box-shadow:
+    6px 6px 12px rgba(0, 0, 0, 0.4),
+    -6px -6px 12px rgba(255, 255, 255, 0.03),
+    inset 1px 1px 2px rgba(0, 0, 0, 0.15),
+    inset -1px -1px 2px rgba(255, 255, 255, 0.02);
+  transform: translateY(-2px);
+}
+
+.neuromorphic-prompt:active {
+  box-shadow:
+    2px 2px 4px rgba(0, 0, 0, 0.3),
+    -2px -2px 4px rgba(255, 255, 255, 0.02),
+    inset 4px 4px 8px rgba(0, 0, 0, 0.3),
+    inset -4px -4px 8px rgba(255, 255, 255, 0.01);
+  transform: translateY(0);
+}
+
+/* Chat response typography - Perplexity-style */
+.chat-content {
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.chat-content h1,
+.chat-content h2,
+.chat-content h3 {
+  font-family: 'Neue Haas Grotesk Display Pro', system-ui, sans-serif;
+  font-weight: 600;
+  color: #FFFAEE;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.chat-content h1 {
+  font-size: 1.25rem;
+}
+
+.chat-content h2 {
+  font-size: 1.125rem;
+}
+
+.chat-content h3 {
+  font-size: 1rem;
+}
+
+.chat-content p {
+  margin-bottom: 1em;
+}
+
+.chat-content ul,
+.chat-content ol {
+  padding-left: 1.5em;
+  margin-bottom: 1em;
+}
+
+.chat-content li {
+  margin-bottom: 0.25em;
+}
+
+.chat-content code {
+  font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+  font-size: 0.875em;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.125em 0.375em;
+  border-radius: 4px;
+}
+
+.chat-content pre {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1em;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1em 0;
+}
+
+.chat-content pre code {
+  background: none;
+  padding: 0;
+}
+
+/* Custom scrollbar for chat */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Drawer slide animations */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.2s ease-out forwards;
+}
+
+.animate-slide-out-right {
+  animation: slideOutRight 0.2s ease-in forwards;
+}
+
 @layer utilities {
   .container-responsive {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
-  
+
   /* Glass Fill + Glass Effect - exact Figma specs */
   .glass-text {
     /* Fill: FFFAEE at 20% opacity */
@@ -102,11 +257,10 @@
     -webkit-backdrop-filter: blur(102.19px);
     backdrop-filter: blur(102.19px);
     /* Inner shadows from Figma (approximated with text-shadow and filter) */
-    text-shadow: 
+    text-shadow:
       3.41px -3.41px 3.41px rgba(214, 210, 200, 0.6) inset,
       -3.41px 3.41px 3.41px rgba(255, 255, 255, 0.6) inset;
     /* Subtle stroke for definition */
     -webkit-text-stroke: 0.5px rgba(255, 250, 238, 0.15);
   }
 }
-
