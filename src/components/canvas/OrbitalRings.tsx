@@ -10,8 +10,8 @@ import { RING_LAYOUT } from '../../utils/orbital-layout';
 const ANIMATION = {
   OPACITY_LERP_SPEED: 0.08,
   DEFAULT_OPACITY: 0.35,
-  ACTIVE_OPACITY: 0.7,
-  INACTIVE_OPACITY: 0.1,
+  ACTIVE_OPACITY: 0.8,       // Selected ring - prominent
+  INACTIVE_OPACITY: 0.15,    // Non-selected rings - faded
 };
 
 interface OrbitalRingProps {
