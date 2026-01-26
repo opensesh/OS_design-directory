@@ -21,6 +21,10 @@ export interface NormalizedResource {
   tier: number | null;
   thumbnail: string | null;
   screenshot: string | null;
+  /** Gravity score (1.0-10.0), higher = closer to center in 3D view */
+  gravityScore: number;
+  /** Brief explanation for the score (50 chars max) */
+  gravityRationale?: string;
 }
 
 /**

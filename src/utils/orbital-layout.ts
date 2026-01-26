@@ -3,6 +3,7 @@
  *
  * Generates deterministic 3D positions for resources orbiting around
  * a central sphere. Uses Fibonacci sphere distribution for even spacing.
+ * Higher gravity scores place resources closer to the center sphere.
  */
 
 /**
@@ -28,6 +29,64 @@ function seededRandom(seed: string): () => number {
     return state / 0x7fffffff;
   };
 }
+
+/**
+ * Convert gravity score (1-10) to orbital radius
+ * Higher scores = closer to center (smaller radius)
+ *
+ * Score 10.0 → radius 15 (closest to center)
+ * Score 5.5  → radius 32.5 (middle)
+ * Score 1.0  → radius 50 (furthest from center)
+ */
+export function scoreToRadius(
+  score: number,
+  minRadius: number = 15,
+  maxRadius: number = 50
+): number {
+  // Clamp score to valid range
+  const clamped = Math.max(1, Math.min(10, score));
+
+  // Normalize to 0-1 range (inverted so higher score = smaller radius)
+  const normalized = (clamped - 1) / 9;
+
+  // Map to radius range (inverted: high score = low radius)
+  return maxRadius - normalized * (maxRadius - minRadius);
+}
+
+/**
+ * Radius ranges by score tier
+ */
+export const SCORE_TIERS = {
+  'industry-leader': { min: 9.0, max: 10.0, radiusRange: [15, 18] as const },
+  'excellent': { min: 7.5, max: 8.9, radiusRange: [18, 25] as const },
+  'good': { min: 6.0, max: 7.4, radiusRange: [25, 35] as const },
+  'niche': { min: 4.0, max: 5.9, radiusRange: [35, 45] as const },
+  'limited': { min: 1.0, max: 3.9, radiusRange: [45, 50] as const },
+} as const;
+
+export type ScoreTier = keyof typeof SCORE_TIERS;
+
+/**
+ * Get the tier for a given gravity score
+ */
+export function getScoreTier(score: number): ScoreTier {
+  if (score >= 9.0) return 'industry-leader';
+  if (score >= 7.5) return 'excellent';
+  if (score >= 6.0) return 'good';
+  if (score >= 4.0) return 'niche';
+  return 'limited';
+}
+
+/**
+ * Tier labels for display
+ */
+export const TIER_LABELS: Record<ScoreTier, string> = {
+  'industry-leader': 'Industry Leader',
+  'excellent': 'Excellent',
+  'good': 'Good',
+  'niche': 'Niche',
+  'limited': 'Limited',
+};
 
 /**
  * Position in 3D space
