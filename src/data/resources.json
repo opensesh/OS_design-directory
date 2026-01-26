@@ -18,7 +18,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/1-figma.jpg"
   },
   {
     "id": 2,
@@ -39,7 +39,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/2-framer.jpg"
   },
   {
     "id": 3,
@@ -60,7 +60,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/3-webflow.jpg"
   },
   {
     "id": 4,
@@ -102,7 +102,7 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/5-behance.jpg"
   },
   {
     "id": 6,
@@ -143,7 +143,7 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/7-css-design-awards.jpg"
   },
   {
     "id": 8,
@@ -164,7 +164,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/8-mobbin.jpg"
   },
   {
     "id": 9,
@@ -185,7 +185,7 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/9-screenlane.jpg"
   },
   {
     "id": 10,
@@ -227,7 +227,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/11-dall-e.jpg"
   },
   {
     "id": 12,
@@ -269,7 +269,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/13-claude.jpg"
   },
   {
     "id": 14,
@@ -290,7 +290,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/14-chatgpt.jpg"
   },
   {
     "id": 15,
@@ -311,7 +311,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/15-github.jpg"
   },
   {
     "id": 16,
@@ -332,7 +332,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/16-vs-code.jpg"
   },
   {
     "id": 17,
@@ -353,7 +353,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/17-cursor.jpg"
   },
   {
     "id": 18,
@@ -374,7 +374,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/18-notion.jpg"
   },
   {
     "id": 19,
@@ -395,7 +395,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/19-linear.jpg"
   },
   {
     "id": 20,
@@ -416,7 +416,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/20-vercel.jpg"
   },
   {
     "id": 21,
@@ -458,7 +458,7 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/22-refactoring-ui.jpg"
   },
   {
     "id": 23,
@@ -478,7 +478,7 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/23-design-systems-repo.jpg"
   },
   {
     "id": 24,
@@ -499,7 +499,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/24-laws-of-ux.jpg"
   },
   {
     "id": 25,
@@ -520,7 +520,7 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/25-checklist-design.jpg"
   },
   {
     "id": 26,
@@ -541,7 +541,7 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/26-ux-planet.jpg"
   },
   {
     "id": 27,
@@ -562,7 +562,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/27-unsplash.jpg"
   },
   {
     "id": 28,
@@ -604,7 +604,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/29-heroicons.jpg"
   },
   {
     "id": 30,
@@ -625,7 +625,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/30-lucide-icons.jpg"
   },
   {
     "id": 31,
@@ -646,7 +646,7 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/31-phosphor-icons.jpg"
   },
   {
     "id": 32,
@@ -667,7 +667,7 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/32-ui8.jpg"
   },
   {
     "id": 33,
@@ -688,7 +688,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/33-figma-community.jpg"
   },
   {
     "id": 34,
@@ -709,7 +709,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/34-discord.jpg"
   },
   {
     "id": 35,
@@ -730,7 +730,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/35-slack.jpg"
   },
   {
     "id": 36,
@@ -751,7 +751,7 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/36-toptal.jpg"
   },
   {
     "id": 37,
@@ -772,7 +772,7 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/37-upwork.jpg"
   },
   {
     "id": 38,
@@ -793,7 +793,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/38-lottie-files.jpg"
   },
   {
     "id": 39,
@@ -814,7 +814,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/39-rive.jpg"
   },
   {
     "id": 40,
@@ -877,7 +877,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/42-blender.jpg"
   },
   {
     "id": 43,
@@ -898,7 +898,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/43-supabase.jpg"
   },
   {
     "id": 44,
@@ -919,7 +919,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/44-stripe.jpg"
   },
   {
     "id": 45,
@@ -940,7 +940,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/45-coolors.jpg"
   },
   {
     "id": 46,
@@ -961,7 +961,7 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/46-realtime-colors.jpg"
   },
   {
     "id": 47,
@@ -982,7 +982,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/47-css-tricks.jpg"
   },
   {
     "id": 48,
@@ -1003,7 +1003,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/48-smashing-magazine.jpg"
   },
   {
     "id": 49,
@@ -1024,7 +1024,7 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/49-codrops.jpg"
   },
   {
     "id": 50,
@@ -1087,7 +1087,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/52-v0.jpg"
   },
   {
     "id": 53,
@@ -1108,7 +1108,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/53-bolt.jpg"
   },
   {
     "id": 54,
@@ -1129,7 +1129,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/54-replit.jpg"
   },
   {
     "id": 55,
@@ -1150,7 +1150,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/55-canva.jpg"
   },
   {
     "id": 56,
@@ -1171,7 +1171,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/56-miro.jpg"
   },
   {
     "id": 57,
@@ -1192,7 +1192,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/57-raycast.jpg"
   },
   {
     "id": 58,
@@ -1213,7 +1213,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/58-arc-browser.jpg"
   },
   {
     "id": 59,
@@ -1234,7 +1234,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/59-storybook.jpg"
   },
   {
     "id": 60,
@@ -1255,7 +1255,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/60-radix-ui.jpg"
   },
   {
     "id": 61,
@@ -1297,7 +1297,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/62-framer-motion.jpg"
   },
   {
     "id": 63,
@@ -1318,7 +1318,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/63-gsap.jpg"
   },
   {
     "id": 64,
@@ -1339,7 +1339,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/64-zed.jpg"
   },
   {
     "id": 65,
@@ -1360,7 +1360,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/65-godly.jpg"
   },
   {
     "id": 66,
@@ -1381,7 +1381,7 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/66-site-inspire.jpg"
   },
   {
     "id": 67,
@@ -1402,7 +1402,7 @@
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/67-land-book.jpg"
   },
   {
     "id": 68,
@@ -1423,7 +1423,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/68-product-hunt.jpg"
   },
   {
     "id": 69,
@@ -1444,7 +1444,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/69-hacker-news.jpg"
   },
   {
     "id": 70,
@@ -1465,7 +1465,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/70-indie-hackers.jpg"
   },
   {
     "id": 71,
@@ -1486,7 +1486,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/71-codepen.jpg"
   },
   {
     "id": 72,
@@ -1507,7 +1507,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/72-dev-to.jpg"
   },
   {
     "id": 73,
@@ -1528,7 +1528,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/73-perplexity.jpg"
   },
   {
     "id": 74,
@@ -1549,7 +1549,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/74-replicate.jpg"
   },
   {
     "id": 75,
@@ -1570,7 +1570,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/75-hugging-face.jpg"
   },
   {
     "id": 76,
@@ -1591,7 +1591,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/76-stable-diffusion.jpg"
   },
   {
     "id": 77,
@@ -1612,7 +1612,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/77-loom.jpg"
   },
   {
     "id": 78,
@@ -1633,7 +1633,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/78-gamma.jpg"
   },
   {
     "id": 79,
@@ -1654,7 +1654,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/79-excalidraw.jpg"
   },
   {
     "id": 80,
@@ -1675,7 +1675,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/80-cal-com.jpg"
   },
   {
     "id": 81,
@@ -1696,7 +1696,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/81-plausible.jpg"
   },
   {
     "id": 82,
@@ -1717,7 +1717,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/82-posthog.jpg"
   },
   {
     "id": 83,
@@ -1738,7 +1738,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/83-resend.jpg"
   },
   {
     "id": 84,
@@ -1759,7 +1759,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/84-clerk.jpg"
   },
   {
     "id": 85,
@@ -1780,7 +1780,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/85-neon.jpg"
   },
   {
     "id": 86,
@@ -1801,7 +1801,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/86-upstash.jpg"
   },
   {
     "id": 87,
@@ -1822,7 +1822,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/87-railway.jpg"
   },
   {
     "id": 88,
@@ -1843,7 +1843,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/88-render.jpg"
   },
   {
     "id": 89,
@@ -1864,7 +1864,7 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/89-fly-io.jpg"
   },
   {
     "id": 90,
@@ -1885,6 +1885,1182 @@
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/90-cloudflare.jpg"
+  },
+  {
+    "name": "Y2Mate",
+    "url": "https://y2mate.nu/",
+    "description": "Free YouTube to MP3 converter. Download YouTube videos as MP3 audio files quickly and easily.",
+    "category": "Tools",
+    "subCategory": "Converters",
+    "pricing": "Free",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "youtube",
+      "mp3",
+      "converter",
+      "download"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/91-y2mate.jpg",
+    "id": 91
+  },
+  {
+    "name": "FreeConvert",
+    "url": "https://www.freeconvert.com/",
+    "description": "Free online file converter. Convert videos, audio, images, documents, and more.",
+    "category": "Tools",
+    "subCategory": "Converters",
+    "pricing": "Freemium",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "converter",
+      "file",
+      "video",
+      "audio"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/92-freeconvert.jpg",
+    "id": 92
+  },
+  {
+    "name": "CloudConvert",
+    "url": "https://cloudconvert.com/",
+    "description": "Online file converter supporting 200+ formats. Convert anything to anything.",
+    "category": "Tools",
+    "subCategory": "Converters",
+    "pricing": "Freemium",
+    "featured": true,
+    "opensource": false,
+    "tags": [
+      "converter",
+      "cloud",
+      "file",
+      "formats"
+    ],
+    "count": null,
+    "tier": 1,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/93-cloudconvert.jpg",
+    "id": 93
+  },
+  {
+    "name": "Compress JPEG",
+    "url": "https://compressjpeg.com/",
+    "description": "Compress JPEG images online. Reduce file size while maintaining quality.",
+    "category": "Tools",
+    "subCategory": "Image Tools",
+    "pricing": "Free",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "compression",
+      "jpeg",
+      "images",
+      "optimization"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/94-compress-jpeg.jpg",
+    "id": 94
+  },
+  {
+    "name": "Flowkeeper",
+    "url": "https://flowkeeper.webflow.io/",
+    "description": "Webflow resources and templates for designers. Curated collection of Webflow assets.",
+    "category": "Templates",
+    "subCategory": "Webflow",
+    "pricing": "Free",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "webflow",
+      "templates",
+      "resources",
+      "design"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/95-flowkeeper.jpg",
+    "id": 95
+  },
+  {
+    "name": "Good Design Tools",
+    "url": "https://www.gooddesign.tools/",
+    "description": "Curated collection of the best design tools. Find the perfect tools for your design workflow.",
+    "category": "Learning",
+    "subCategory": "Resources",
+    "pricing": "Free",
+    "featured": true,
+    "opensource": false,
+    "tags": [
+      "tools",
+      "curated",
+      "design",
+      "collection"
+    ],
+    "count": null,
+    "tier": 1,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/96-good-design-tools.jpg",
+    "id": 96
+  },
+  {
+    "name": "Lindy",
+    "url": "https://www.lindy.ai/",
+    "description": "AI assistant that automates your work. Create custom AI employees for repetitive tasks.",
+    "category": "AI",
+    "subCategory": "Automation",
+    "pricing": "Freemium",
+    "featured": true,
+    "opensource": false,
+    "tags": [
+      "ai",
+      "automation",
+      "assistant",
+      "workflow"
+    ],
+    "count": null,
+    "tier": 1,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/97-lindy.jpg",
+    "id": 97
+  },
+  {
+    "name": "VEED.io",
+    "url": "https://www.veed.io/",
+    "description": "Online video editor. Edit, record, and stream videos with AI-powered tools.",
+    "category": "Tools",
+    "subCategory": "Video",
+    "pricing": "Freemium",
+    "featured": true,
+    "opensource": false,
+    "tags": [
+      "video",
+      "editor",
+      "ai",
+      "streaming"
+    ],
+    "count": null,
+    "tier": 1,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/98-veed-io.jpg",
+    "id": 98
+  },
+  {
+    "name": "Higgsfield",
+    "url": "https://higgsfield.ai/",
+    "description": "AI-powered video generation platform. Create stunning videos with artificial intelligence.",
+    "category": "AI",
+    "subCategory": "Video Generation",
+    "pricing": "Freemium",
+    "featured": true,
+    "opensource": false,
+    "tags": [
+      "ai",
+      "video",
+      "generation",
+      "creative"
+    ],
+    "count": null,
+    "tier": 1,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/99-higgsfield.jpg",
+    "id": 99
+  },
+  {
+    "name": "Google Flow",
+    "url": "https://labs.google/fx/tools/flow",
+    "description": "Google's experimental creative flow tool. Generate and manipulate visual content with AI.",
+    "category": "AI",
+    "subCategory": "Image Generation",
+    "pricing": "Free",
+    "featured": true,
+    "opensource": false,
+    "tags": [
+      "google",
+      "ai",
+      "creative",
+      "experimental"
+    ],
+    "count": null,
+    "tier": 1,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/100-google-flow.jpg",
+    "id": 100
+  },
+  {
+    "name": "Google AI Studio",
+    "url": "https://aistudio.google.com/",
+    "description": "Build with Gemini. Google's platform for prototyping and building AI applications.",
+    "category": "AI",
+    "subCategory": "Development",
+    "pricing": "Freemium",
+    "featured": true,
+    "opensource": false,
+    "tags": [
+      "google",
+      "gemini",
+      "ai",
+      "development"
+    ],
+    "count": null,
+    "tier": 1,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/101-google-ai-studio.jpg",
+    "id": 101
+  },
+  {
+    "name": "Sprout Social",
+    "url": "https://sproutsocial.com/",
+    "description": "Social media management platform. Schedule, analyze, and engage across all social networks.",
+    "category": "Tools",
+    "subCategory": "Social Media",
+    "pricing": "Paid",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "social media",
+      "management",
+      "analytics",
+      "scheduling"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/102-sprout-social.jpg",
+    "id": 102
+  },
+  {
+    "name": "Social Blade",
+    "url": "https://socialblade.com/",
+    "description": "Track social media statistics. Analytics for YouTube, Twitch, Instagram, and more.",
+    "category": "Tools",
+    "subCategory": "Analytics",
+    "pricing": "Freemium",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "analytics",
+      "social media",
+      "youtube",
+      "statistics"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/103-social-blade.jpg",
+    "id": 103
+  },
+  {
+    "name": "Shopify Themes",
+    "url": "https://themes.shopify.com/",
+    "description": "Official Shopify theme store. Premium and free themes for your e-commerce store.",
+    "category": "Templates",
+    "subCategory": "E-commerce",
+    "pricing": "Freemium",
+    "featured": true,
+    "opensource": false,
+    "tags": [
+      "shopify",
+      "themes",
+      "ecommerce",
+      "templates"
+    ],
+    "count": null,
+    "tier": 1,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/104-shopify-themes.jpg",
+    "id": 104
+  },
+  {
+    "name": "Framer Globe",
+    "url": "https://globe.framer.website/",
+    "description": "Interactive 3D globe component for Framer. Add beautiful globe visualizations to your site.",
+    "category": "Templates",
+    "subCategory": "Framer",
+    "pricing": "Paid",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "framer",
+      "3d",
+      "globe",
+      "component"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/105-framer-globe.jpg",
+    "id": 105
+  },
+  {
+    "name": "Shader Gradient",
+    "url": "https://www.shadergradient.co/",
+    "description": "Create beautiful animated gradients. Real-time shader-based gradient generator.",
+    "category": "Tools",
+    "subCategory": "Design",
+    "pricing": "Freemium",
+    "featured": true,
+    "opensource": false,
+    "tags": [
+      "gradient",
+      "shader",
+      "animation",
+      "design"
+    ],
+    "count": null,
+    "tier": 1,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/106-shader-gradient.jpg",
+    "id": 106
+  },
+  {
+    "name": "Framer Library",
+    "url": "https://bento.me/framerlib",
+    "description": "Curated collection of Framer resources. Components, templates, and tutorials.",
+    "category": "Templates",
+    "subCategory": "Framer",
+    "pricing": "Free",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "framer",
+      "library",
+      "components",
+      "resources"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/107-framer-library.jpg",
+    "id": 107
+  },
+  {
+    "name": "Nav Supply",
+    "url": "https://nav.supply/",
+    "description": "Premium navigation components for Framer. Beautiful, animated navigation menus.",
+    "category": "Templates",
+    "subCategory": "Framer",
+    "pricing": "Paid",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "framer",
+      "navigation",
+      "components",
+      "menu"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/108-nav-supply.jpg",
+    "id": 108
+  },
+  {
+    "name": "Framer Things",
+    "url": "https://framerthings.com/",
+    "description": "Framer templates and components marketplace. High-quality resources for Framer.",
+    "category": "Templates",
+    "subCategory": "Framer",
+    "pricing": "Freemium",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "framer",
+      "templates",
+      "components",
+      "marketplace"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/109-framer-things.jpg",
+    "id": 109
+  },
+  {
+    "name": "Framer Fuel",
+    "url": "https://www.framerfuel.com/",
+    "description": "Framer templates and UI kits. Modern designs for Framer websites.",
+    "category": "Templates",
+    "subCategory": "Framer",
+    "pricing": "Paid",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "framer",
+      "templates",
+      "ui kits",
+      "design"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/110-framer-fuel.jpg",
+    "id": 110
+  },
+  {
+    "name": "Frameplate",
+    "url": "https://frameplate.co/",
+    "description": "Framer template library. Collection of ready-to-use Framer templates.",
+    "category": "Templates",
+    "subCategory": "Framer",
+    "pricing": "Freemium",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "framer",
+      "templates",
+      "library",
+      "website"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/111-frameplate.jpg",
+    "id": 111
+  },
+  {
+    "name": "React Bits",
+    "url": "https://www.reactbits.dev/",
+    "description": "Animated React components library. Copy-paste components with beautiful animations.",
+    "category": "Tools",
+    "subCategory": "Components",
+    "pricing": "Free",
+    "featured": true,
+    "opensource": true,
+    "tags": [
+      "react",
+      "components",
+      "animation",
+      "library"
+    ],
+    "count": null,
+    "tier": 1,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/112-react-bits.jpg",
+    "id": 112
+  },
+  {
+    "name": "Aceternity UI",
+    "url": "https://ui.aceternity.com/",
+    "description": "Beautiful UI components with stunning animations. Copy and paste into your React projects.",
+    "category": "Tools",
+    "subCategory": "Components",
+    "pricing": "Free",
+    "featured": true,
+    "opensource": true,
+    "tags": [
+      "react",
+      "components",
+      "animation",
+      "ui"
+    ],
+    "count": null,
+    "tier": 1,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/113-aceternity-ui.jpg",
+    "id": 113
+  },
+  {
+    "name": "Open Alternative",
+    "url": "https://openalternative.co/",
+    "description": "Discover open source alternatives to popular software. Find free replacements for paid tools.",
+    "category": "Learning",
+    "subCategory": "Resources",
+    "pricing": "Free",
+    "featured": true,
+    "opensource": true,
+    "tags": [
+      "open-source",
+      "alternatives",
+      "software",
+      "free"
+    ],
+    "count": null,
+    "tier": 1,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/114-open-alternative.jpg",
+    "id": 114
+  },
+  {
+    "name": "Untitled UI",
+    "url": "https://www.untitledui.com/",
+    "description": "The largest Figma UI kit. 10,000+ components for designing beautiful interfaces.",
+    "category": "Templates",
+    "subCategory": "UI Kits",
+    "pricing": "Paid",
+    "featured": true,
+    "opensource": false,
+    "tags": [
+      "figma",
+      "ui kit",
+      "components",
+      "design system"
+    ],
+    "count": null,
+    "tier": 1,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/115-untitled-ui.jpg",
+    "id": 115
+  },
+  {
+    "name": "Thind UI",
+    "url": "https://thind.dev/ui",
+    "description": "Modern UI components for React. Beautiful, accessible components built with Tailwind.",
+    "category": "Tools",
+    "subCategory": "Components",
+    "pricing": "Free",
+    "featured": false,
+    "opensource": true,
+    "tags": [
+      "react",
+      "tailwind",
+      "components",
+      "ui"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/116-thind-ui.jpg",
+    "id": 116
+  },
+  {
+    "name": "Blank",
+    "url": "https://useblank.design/",
+    "description": "Minimal design system for Figma. Clean, simple components for modern interfaces.",
+    "category": "Templates",
+    "subCategory": "UI Kits",
+    "pricing": "Freemium",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "figma",
+      "minimal",
+      "design system",
+      "components"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/117-blank.jpg",
+    "id": 117
+  },
+  {
+    "name": "Lumos",
+    "url": "https://lumos.timothyricks.com/",
+    "description": "Figma design system by Timothy Ricks. Comprehensive UI kit for modern applications.",
+    "category": "Templates",
+    "subCategory": "UI Kits",
+    "pricing": "Paid",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "figma",
+      "design system",
+      "ui kit",
+      "components"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/118-lumos.jpg",
+    "id": 118
+  },
+  {
+    "name": "TweakCN",
+    "url": "https://tweakcn.com/",
+    "description": "Customize shadcn/ui themes visually. Generate and export custom color schemes.",
+    "category": "Tools",
+    "subCategory": "Design",
+    "pricing": "Free",
+    "featured": false,
+    "opensource": true,
+    "tags": [
+      "shadcn",
+      "themes",
+      "customization",
+      "tailwind"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/119-tweakcn.jpg",
+    "id": 119
+  },
+  {
+    "name": "Studio 2AM",
+    "url": "https://studio2am.co/",
+    "description": "Creative tools for designers. Unique effects and plugins for design workflows.",
+    "category": "Tools",
+    "subCategory": "Design",
+    "pricing": "Freemium",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "design",
+      "tools",
+      "effects",
+      "creative"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/120-studio-2am.jpg",
+    "id": 120
+  },
+  {
+    "name": "Brand Toolkit",
+    "url": "https://brandtoolk.it/",
+    "description": "Essential branding resources and tools. Everything you need to build a strong brand.",
+    "category": "Tools",
+    "subCategory": "Branding",
+    "pricing": "Freemium",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "branding",
+      "toolkit",
+      "resources",
+      "design"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/121-brand-toolkit.jpg",
+    "id": 121
+  },
+  {
+    "name": "TextureLib",
+    "url": "https://texturelib.com/",
+    "description": "Free texture library. High-quality textures for 3D, games, and design projects.",
+    "category": "Templates",
+    "subCategory": "Textures",
+    "pricing": "Free",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "textures",
+      "3d",
+      "design",
+      "free"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": null,
+    "id": 122
+  },
+  {
+    "name": "TextureLabs",
+    "url": "https://texturelabs.org/",
+    "description": "Free textures and materials. Seamless textures for 3D and design work.",
+    "category": "Templates",
+    "subCategory": "Textures",
+    "pricing": "Free",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "textures",
+      "materials",
+      "3d",
+      "seamless"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/123-texturelabs.jpg",
+    "id": 123
+  },
+  {
+    "name": "Endless Tools",
+    "url": "https://app.endlesstools.io/",
+    "description": "AI-powered design tools. Generate patterns, gradients, and graphics with AI.",
+    "category": "AI",
+    "subCategory": "Design",
+    "pricing": "Freemium",
+    "featured": true,
+    "opensource": false,
+    "tags": [
+      "ai",
+      "design",
+      "patterns",
+      "graphics"
+    ],
+    "count": null,
+    "tier": 1,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/124-endless-tools.jpg",
+    "id": 124
+  },
+  {
+    "name": "DITHR Tool",
+    "url": "https://antlii.work/DITHR-Tool",
+    "description": "Dithering effect tool. Apply retro dither effects to images.",
+    "category": "Tools",
+    "subCategory": "Graphics",
+    "pricing": "Free",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "dither",
+      "retro",
+      "effects",
+      "graphics"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/125-dithr-tool.jpg",
+    "id": 125
+  },
+  {
+    "name": "STL to ASCII",
+    "url": "https://andrewsink.github.io/STL-to-ASCII-Generator/",
+    "description": "Convert 3D STL files to ASCII art. Visualize 3D models as text-based graphics.",
+    "category": "Tools",
+    "subCategory": "3D",
+    "pricing": "Free",
+    "featured": false,
+    "opensource": true,
+    "tags": [
+      "3d",
+      "ascii",
+      "converter",
+      "stl"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/126-stl-to-ascii.jpg",
+    "id": 126
+  },
+  {
+    "name": "Kurt Mock-ups",
+    "url": "https://www.kurtwinterdesign.com/mock-ups",
+    "description": "Premium device mockups. High-quality mockup templates for presentations.",
+    "category": "Templates",
+    "subCategory": "Mockups",
+    "pricing": "Paid",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "mockups",
+      "devices",
+      "presentations",
+      "design"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/127-kurt-mock-ups.jpg",
+    "id": 127
+  },
+  {
+    "name": "Supernova",
+    "url": "https://app.supernova.io/",
+    "description": "Design system platform. Build, manage, and scale design systems efficiently.",
+    "category": "Tools",
+    "subCategory": "Design Systems",
+    "pricing": "Freemium",
+    "featured": true,
+    "opensource": false,
+    "tags": [
+      "design system",
+      "documentation",
+      "collaboration",
+      "tokens"
+    ],
+    "count": null,
+    "tier": 1,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/128-supernova.jpg",
+    "id": 128
+  },
+  {
+    "name": "Freepik",
+    "url": "https://www.freepik.com/",
+    "description": "Free vectors, photos, and PSD files. Millions of graphic resources for download.",
+    "category": "Templates",
+    "subCategory": "Images",
+    "pricing": "Freemium",
+    "featured": true,
+    "opensource": false,
+    "tags": [
+      "vectors",
+      "photos",
+      "graphics",
+      "free"
+    ],
+    "count": null,
+    "tier": 1,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/129-freepik.jpg",
+    "id": 129
+  },
+  {
+    "name": "Pixabay",
+    "url": "https://pixabay.com/",
+    "description": "Free images and royalty-free stock. Photos, illustrations, vectors, and videos.",
+    "category": "Templates",
+    "subCategory": "Images",
+    "pricing": "Free",
+    "featured": true,
+    "opensource": false,
+    "tags": [
+      "images",
+      "stock",
+      "free",
+      "royalty-free"
+    ],
+    "count": null,
+    "tier": 1,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/130-pixabay.jpg",
+    "id": 130
+  },
+  {
+    "name": "Hinto AI",
+    "url": "https://hintoai.com/",
+    "description": "AI-powered design feedback. Get instant design critiques and suggestions.",
+    "category": "AI",
+    "subCategory": "Design",
+    "pricing": "Freemium",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "ai",
+      "design",
+      "feedback",
+      "critique"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/131-hinto-ai.jpg",
+    "id": 131
+  },
+  {
+    "name": "VidIQ",
+    "url": "https://vidiq.com/",
+    "description": "YouTube growth tool. Analytics, SEO tools, and insights for content creators.",
+    "category": "Tools",
+    "subCategory": "Video",
+    "pricing": "Freemium",
+    "featured": true,
+    "opensource": false,
+    "tags": [
+      "youtube",
+      "analytics",
+      "seo",
+      "growth"
+    ],
+    "count": null,
+    "tier": 1,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/132-vidiq.jpg",
+    "id": 132
+  },
+  {
+    "name": "Happy Editing",
+    "url": "https://www.happyediting.co/",
+    "description": "Video editing resources and tutorials. Learn professional editing techniques.",
+    "category": "Learning",
+    "subCategory": "Video",
+    "pricing": "Freemium",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "video",
+      "editing",
+      "tutorials",
+      "resources"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/133-happy-editing.jpg",
+    "id": 133
+  },
+  {
+    "name": "Ungrid",
+    "url": "https://experiments.uninspired.studio/projects/grid/",
+    "description": "Experimental grid tool by Uninspired Studio. Create unique grid-based layouts.",
+    "category": "Tools",
+    "subCategory": "Design",
+    "pricing": "Free",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "grid",
+      "layout",
+      "experimental",
+      "design"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/134-ungrid.jpg",
+    "id": 134
+  },
+  {
+    "name": "Video to ASCII",
+    "url": "https://collidingscopes.github.io/ascii/",
+    "description": "Convert video to ASCII art in real-time. Browser-based ASCII video converter.",
+    "category": "Tools",
+    "subCategory": "Graphics",
+    "pricing": "Free",
+    "featured": false,
+    "opensource": true,
+    "tags": [
+      "ascii",
+      "video",
+      "converter",
+      "art"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/135-video-to-ascii.jpg",
+    "id": 135
+  },
+  {
+    "name": "Newhead Design",
+    "url": "https://newhead.design/",
+    "description": "Design agency portfolio and resources. Inspiration and tools for designers.",
+    "category": "Inspiration",
+    "subCategory": "Portfolios",
+    "pricing": "Free",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "portfolio",
+      "agency",
+      "design",
+      "inspiration"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/136-newhead-design.jpg",
+    "id": 136
+  },
+  {
+    "name": "Motion Boutique",
+    "url": "https://www.motionboutique.com/",
+    "description": "After Effects plugins and tools. Professional motion design resources.",
+    "category": "Tools",
+    "subCategory": "Animation",
+    "pricing": "Paid",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "after effects",
+      "plugins",
+      "motion",
+      "animation"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/137-motion-boutique.jpg",
+    "id": 137
+  },
+  {
+    "name": "21st.dev",
+    "url": "https://21st.dev/",
+    "description": "Modern development resources. Curated tools and libraries for developers.",
+    "category": "Learning",
+    "subCategory": "Resources",
+    "pricing": "Free",
+    "featured": true,
+    "opensource": false,
+    "tags": [
+      "development",
+      "resources",
+      "tools",
+      "curated"
+    ],
+    "count": null,
+    "tier": 1,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/138-21st-dev.jpg",
+    "id": 138
+  },
+  {
+    "name": "Unicorn Studio",
+    "url": "https://www.unicorn.studio/",
+    "description": "WebGL visual effects editor. Create stunning visual effects without code.",
+    "category": "Tools",
+    "subCategory": "Graphics",
+    "pricing": "Freemium",
+    "featured": true,
+    "opensource": false,
+    "tags": [
+      "webgl",
+      "effects",
+      "visual",
+      "no-code"
+    ],
+    "count": null,
+    "tier": 1,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/139-unicorn-studio.jpg",
+    "id": 139
+  },
+  {
+    "name": "Motion for React",
+    "url": "https://examples.motion.dev/",
+    "description": "Framer Motion examples and demos. Interactive examples for React animations.",
+    "category": "Learning",
+    "subCategory": "Resources",
+    "pricing": "Free",
+    "featured": true,
+    "opensource": true,
+    "tags": [
+      "framer motion",
+      "react",
+      "animation",
+      "examples"
+    ],
+    "count": null,
+    "tier": 1,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/140-motion-for-react.jpg",
+    "id": 140
+  },
+  {
+    "name": "Plunk",
+    "url": "https://www.useplunk.com/",
+    "description": "Open source email platform. Send transactional and marketing emails easily.",
+    "category": "Tools",
+    "subCategory": "Email",
+    "pricing": "Freemium",
+    "featured": false,
+    "opensource": true,
+    "tags": [
+      "email",
+      "transactional",
+      "marketing",
+      "open-source"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/141-plunk.jpg",
+    "id": 141
+  },
+  {
+    "name": "Notion Templates",
+    "url": "https://www.notion.com/templates",
+    "description": "Official Notion template gallery. Free templates for productivity and organization.",
+    "category": "Templates",
+    "subCategory": "Productivity",
+    "pricing": "Free",
+    "featured": true,
+    "opensource": false,
+    "tags": [
+      "notion",
+      "templates",
+      "productivity",
+      "organization"
+    ],
+    "count": null,
+    "tier": 1,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/142-notion-templates.jpg",
+    "id": 142
+  },
+  {
+    "name": "Notionland",
+    "url": "https://www.notionland.co/",
+    "description": "Curated Notion templates marketplace. Premium templates for Notion users.",
+    "category": "Templates",
+    "subCategory": "Productivity",
+    "pricing": "Freemium",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "notion",
+      "templates",
+      "marketplace",
+      "productivity"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/143-notionland.jpg",
+    "id": 143
+  },
+  {
+    "name": "Super",
+    "url": "https://super.so/",
+    "description": "Turn Notion into a website. Create fast, beautiful websites from Notion pages.",
+    "category": "Tools",
+    "subCategory": "No-Code",
+    "pricing": "Paid",
+    "featured": true,
+    "opensource": false,
+    "tags": [
+      "notion",
+      "website",
+      "no-code",
+      "cms"
+    ],
+    "count": null,
+    "tier": 1,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/144-super.jpg",
+    "id": 144
+  },
+  {
+    "name": "Thenty",
+    "url": "https://thenty.io/",
+    "description": "No-code website builder. Create beautiful websites without coding.",
+    "category": "Tools",
+    "subCategory": "No-Code",
+    "pricing": "Freemium",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "website",
+      "no-code",
+      "builder",
+      "design"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/145-thenty.jpg",
+    "id": 145
+  },
+  {
+    "name": "Outseta",
+    "url": "https://www.outseta.com/",
+    "description": "All-in-one startup toolkit. Payments, auth, CRM, and email in one platform.",
+    "category": "Tools",
+    "subCategory": "Business",
+    "pricing": "Freemium",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "startup",
+      "payments",
+      "auth",
+      "crm"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/146-outseta.jpg",
+    "id": 146
   }
 ]
