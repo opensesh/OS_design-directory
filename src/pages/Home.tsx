@@ -12,6 +12,12 @@ import { AIFilterResponse } from '../components/ui/AIFilterResponse';
 import InspoResourceTooltip from '../components/ui/InspoResourceTooltip';
 import { InspoTable } from '../components/ui/InspoTable';
 import { CardView } from '../components/card-view';
+import {
+  semanticSearch,
+  generateAIResponse,
+  generateCategoryResponse,
+  type SearchMetadata,
+} from '../lib/search';
 
 // Lazy load the 3D canvas for better initial load
 const InspoCanvas = lazy(() => import('../components/canvas/InspoCanvas'));
@@ -65,63 +71,66 @@ export default function Home() {
     'cmd+k': useCallback(() => setIsSearchModalOpen(true), []),
   });
 
-  // Filter resources based on category and subcategory
+  // Search metadata for AI response generation
+  const [searchMetadata, setSearchMetadata] = useState<SearchMetadata | null>(null);
+
+  // Filter resources based on category, subcategory, and semantic search
   const filteredResources = useMemo(() => {
-    let filtered = resources;
+    // Start with all resources or filter by category/subcategory
+    let baseResources = resources;
 
     if (activeCategory) {
-      filtered = filtered.filter(r => r.category === activeCategory);
+      baseResources = baseResources.filter(r => r.category === activeCategory);
     }
 
     if (activeSubCategory) {
-      filtered = filtered.filter(r => r.subCategory === activeSubCategory);
+      baseResources = baseResources.filter(r => r.subCategory === activeSubCategory);
     }
 
-    // Search filter (simple text match for now)
+    // Apply semantic search if there's a query
     if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(r =>
-        r.name.toLowerCase().includes(query) ||
-        r.description?.toLowerCase().includes(query) ||
-        r.category?.toLowerCase().includes(query) ||
-        r.subCategory?.toLowerCase().includes(query) ||
-        r.tags?.some(tag => tag.toLowerCase().includes(query))
-      );
+      const { results, metadata } = semanticSearch(baseResources, searchQuery, {
+        minResults: 3,
+        maxResults: 50,
+        includeFallback: true,
+      });
+
+      // Update metadata for AI response (done via state to avoid re-render loop)
+      // The actual AI response is generated in handleSearch
+      return results.map(r => r.resource);
     }
 
-    return filtered;
+    return baseResources;
   }, [activeCategory, activeSubCategory, searchQuery]);
 
-  // Handle search submission
+  // Handle search submission with semantic search
   const handleSearch = (query: string) => {
     setSearchQuery(query);
     setIsAiTyping(true);
 
-    // Simulate AI response
-    const matchCount = resources.filter(r => {
-      const q = query.toLowerCase();
-      return r.name.toLowerCase().includes(q) ||
-        r.description?.toLowerCase().includes(q) ||
-        r.category?.toLowerCase().includes(q) ||
-        r.tags?.some(tag => tag.toLowerCase().includes(q));
-    }).length;
-
-    // Generate contextual response
-    let response = '';
-    if (matchCount === 0) {
-      response = `I couldn't find any resources matching "${query}". Try different keywords or browse by category.`;
-    } else if (matchCount === 1) {
-      response = `Found 1 resource for "${query}". Click to explore!`;
-    } else if (query.toLowerCase().includes('free')) {
-      const freeCount = resources.filter(r => r.pricing?.toLowerCase().includes('free')).length;
-      response = `Found ${freeCount} free resources. Great for getting started without a budget!`;
-    } else if (query.toLowerCase().includes('ai')) {
-      response = `Showing ${matchCount} AI-powered tools. These are transforming how designers work.`;
-    } else {
-      response = `Found ${matchCount} resources matching "${query}". Explore the universe to discover more!`;
+    // Get base resources (filtered by category if active)
+    let baseResources = resources;
+    if (activeCategory) {
+      baseResources = baseResources.filter(r => r.category === activeCategory);
+    }
+    if (activeSubCategory) {
+      baseResources = baseResources.filter(r => r.subCategory === activeSubCategory);
     }
 
-    setAiMessage(response);
+    // Perform semantic search
+    const { results, metadata } = semanticSearch(baseResources, query, {
+      minResults: 3,
+      maxResults: 50,
+      includeFallback: true,
+    });
+
+    // Store metadata for potential use elsewhere
+    setSearchMetadata(metadata);
+
+    // Generate contextual AI response based on search results and metadata
+    const aiResponse = generateAIResponse(results, metadata);
+
+    setAiMessage(aiResponse.message);
     setIsAiTyping(false);
   };
 
@@ -142,6 +151,44 @@ export default function Home() {
   const dismissAiResponse = () => {
     setAiMessage(null);
     setSearchQuery('');
+    setSearchMetadata(null);
+  };
+
+  // Handle category change with AI response
+  const handleCategoryChange = (category: string | null) => {
+    setActiveCategory(category);
+    setActiveSubCategory(null);
+    setSearchQuery('');
+    setSearchMetadata(null);
+
+    if (category) {
+      const categoryResources = resources.filter(r => r.category === category);
+      const response = generateCategoryResponse(category, categoryResources.length);
+      setAiMessage(response.message);
+    } else {
+      setAiMessage(null);
+    }
+  };
+
+  // Handle subcategory change
+  const handleSubCategoryChange = (subCategory: string | null) => {
+    setActiveSubCategory(subCategory);
+    setSearchQuery('');
+    setSearchMetadata(null);
+
+    if (subCategory && activeCategory) {
+      const filtered = resources.filter(
+        r => r.category === activeCategory && r.subCategory === subCategory
+      );
+      setAiMessage(`Showing ${filtered.length} ${subCategory.toLowerCase()} resources.`);
+    } else if (activeCategory) {
+      // Reset to just category message
+      const categoryResources = resources.filter(r => r.category === activeCategory);
+      const response = generateCategoryResponse(activeCategory, categoryResources.length);
+      setAiMessage(response.message);
+    } else {
+      setAiMessage(null);
+    }
   };
 
   return (
@@ -368,8 +415,8 @@ export default function Home() {
                 resources={resources}
                 activeCategory={activeCategory}
                 activeSubCategory={activeSubCategory}
-                onCategoryChange={setActiveCategory}
-                onSubCategoryChange={setActiveSubCategory}
+                onCategoryChange={handleCategoryChange}
+                onSubCategoryChange={handleSubCategoryChange}
               />
 
               {/* Resource count - more prominent */}

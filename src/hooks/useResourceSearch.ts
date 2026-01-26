@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { resources } from '../data';
 import type { NormalizedResource } from '../types/resource';
+import { semanticSearch, type SearchMetadata } from '../lib/search';
 
 export interface SearchResult {
   resource: NormalizedResource;
@@ -25,93 +26,17 @@ interface UseResourceSearchResult {
   defaultResults: SearchResult[];
   isSearching: boolean;
   clearSearch: () => void;
+  metadata: SearchMetadata | null;
 }
 
 /**
- * Calculate a relevance score for a resource based on the search query
- * Higher scores = more relevant
+ * Hook for searching resources with semantic search, debouncing, and scoring
  *
- * Scoring weights:
- * - Name exact match: 100
- * - Name starts with: 80
- * - Name contains: 60
- * - Description contains: 40
- * - Category match: 30
- * - Subcategory match: 25
- * - Tag match: 20
- */
-function scoreResource(resource: NormalizedResource, query: string): SearchResult | null {
-  const q = query.toLowerCase().trim();
-  if (!q) return null;
-
-  let score = 0;
-  let matchedField = '';
-
-  // Name matching (highest weight)
-  const name = resource.name.toLowerCase();
-  if (name === q) {
-    score += 100;
-    matchedField = 'name';
-  } else if (name.startsWith(q)) {
-    score += 80;
-    matchedField = 'name';
-  } else if (name.includes(q)) {
-    score += 60;
-    matchedField = 'name';
-  }
-
-  // Description matching
-  const description = resource.description?.toLowerCase() || '';
-  if (description.includes(q)) {
-    score += 40;
-    if (!matchedField) matchedField = 'description';
-  }
-
-  // Category matching
-  const category = resource.category?.toLowerCase() || '';
-  if (category.includes(q)) {
-    score += 30;
-    if (!matchedField) matchedField = 'category';
-  }
-
-  // Subcategory matching
-  const subCategory = resource.subCategory?.toLowerCase() || '';
-  if (subCategory.includes(q)) {
-    score += 25;
-    if (!matchedField) matchedField = 'subCategory';
-  }
-
-  // Tag matching
-  const tags = resource.tags || [];
-  for (const tag of tags) {
-    if (tag.toLowerCase().includes(q)) {
-      score += 20;
-      if (!matchedField) matchedField = 'tags';
-      break; // Only count once
-    }
-  }
-
-  // Multi-word query bonus: check if all words match somewhere
-  const queryWords = q.split(/\s+/).filter(w => w.length > 1);
-  if (queryWords.length > 1) {
-    const searchText = `${name} ${description} ${category} ${subCategory} ${tags.join(' ')}`.toLowerCase();
-    const allMatch = queryWords.every(word => searchText.includes(word));
-    if (allMatch) {
-      score += 15;
-    }
-  }
-
-  if (score === 0) return null;
-
-  return {
-    resource,
-    score,
-    matchedField,
-  };
-}
-
-/**
- * Hook for searching resources with debouncing and scoring
+ * Uses the semantic search library which provides:
+ * - Synonym expansion (photo → photography, image, picture)
+ * - Concept mapping (vibe code → Cursor, v0, Bolt)
+ * - Fuzzy matching for typos (figam → Figma)
+ * - Intelligent fallbacks (always returns useful results)
  */
 export function useResourceSearch(options: UseResourceSearchOptions = {}): UseResourceSearchResult {
   const { debounceMs = 100, maxResults = 50 } = options;
@@ -119,6 +44,7 @@ export function useResourceSearch(options: UseResourceSearchOptions = {}): UseRe
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+  const [searchMetadata, setSearchMetadata] = useState<SearchMetadata | null>(null);
 
   // Debounce the query
   useEffect(() => {
@@ -131,23 +57,28 @@ export function useResourceSearch(options: UseResourceSearchOptions = {}): UseRe
     return () => clearTimeout(timer);
   }, [query, debounceMs]);
 
-  // Calculate search results
+  // Calculate search results using semantic search
   const results = useMemo((): SearchResult[] => {
-    if (!debouncedQuery.trim()) return [];
-
-    const scored: SearchResult[] = [];
-
-    for (const resource of resources) {
-      const result = scoreResource(resource, debouncedQuery);
-      if (result) {
-        scored.push(result);
-      }
+    if (!debouncedQuery.trim()) {
+      setSearchMetadata(null);
+      return [];
     }
 
-    // Sort by score descending
-    scored.sort((a, b) => b.score - a.score);
+    // Use semantic search for intelligent matching
+    const { results: semanticResults, metadata } = semanticSearch(resources, debouncedQuery, {
+      minResults: 3,
+      maxResults,
+      includeFallback: true,
+    });
 
-    return scored.slice(0, maxResults);
+    setSearchMetadata(metadata);
+
+    // Convert ScoredResult to SearchResult for backwards compatibility
+    return semanticResults.map(sr => ({
+      resource: sr.resource,
+      score: sr.score,
+      matchedField: sr.matchReasons[0] || 'semantic',
+    }));
   }, [debouncedQuery, maxResults]);
 
   // Group results by category
@@ -165,9 +96,14 @@ export function useResourceSearch(options: UseResourceSearchOptions = {}): UseRe
     return groups;
   }, [results]);
 
-  // Default results for empty query state (top 15 resources grouped by category)
+  // Default results for empty query state (top 15 resources by gravity score)
   const defaultResults = useMemo((): SearchResult[] => {
-    return resources
+    return [...resources]
+      .sort((a, b) => {
+        // Sort by: featured first, then by gravity score
+        if (a.featured !== b.featured) return a.featured ? -1 : 1;
+        return b.gravityScore - a.gravityScore;
+      })
       .slice(0, 15)
       .map(r => ({ resource: r, score: 0, matchedField: '' }));
   }, []);
@@ -175,6 +111,7 @@ export function useResourceSearch(options: UseResourceSearchOptions = {}): UseRe
   const clearSearch = useCallback(() => {
     setQuery('');
     setDebouncedQuery('');
+    setSearchMetadata(null);
   }, []);
 
   return {
@@ -185,5 +122,6 @@ export function useResourceSearch(options: UseResourceSearchOptions = {}): UseRe
     defaultResults,
     isSearching,
     clearSearch,
+    metadata: searchMetadata,
   };
 }
