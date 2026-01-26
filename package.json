@@ -9,9 +9,11 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "migrate-screenshots": "npx tsx scripts/migrate-screenshots.ts",
-    "capture-screenshots": "npx tsx scripts/capture-screenshots.ts"
+    "capture-screenshots": "npx tsx scripts/capture-screenshots.ts",
+    "fix-screenshots": "npx tsx scripts/fix-screenshots.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.71.2",
     "@gsap/react": "^2.1.2",
     "@radix-ui/react-collapsible": "^1.1.12",
     "@react-three/drei": "^9.122.0",
@@ -19,6 +21,7 @@
     "@types/papaparse": "^5.3.16",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dotenv": "^17.2.3",
     "framer-motion": "^11.15.0",
     "gsap": "^3.13.0",
     "lucide-react": "^0.548.0",
@@ -26,6 +29,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.13.0",
+    "serpapi": "^2.2.1",
+    "sharp": "^0.34.5",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.181.2",
