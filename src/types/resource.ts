@@ -28,6 +28,21 @@ export interface NormalizedResource {
 }
 
 /**
+ * Category ordering for ring layout
+ * Inner rings (fewer resources) to outer rings (more resources)
+ */
+export const CATEGORY_ORDER = [
+  'Community',
+  'Inspiration',
+  'Learning',
+  'Templates',
+  'Tools',
+  'AI',
+] as const;
+
+export type CategoryName = (typeof CATEGORY_ORDER)[number];
+
+/**
  * Category Color Mapping
  */
 export const CATEGORY_COLORS: Record<string, string> = {
