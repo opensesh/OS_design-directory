@@ -1,7 +1,11 @@
 import { useRef, useMemo, useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-import { generateOrbitalPosition } from '../../utils/orbital-layout';
+import {
+  buildRingPositionMap,
+  scoreToSizeMultiplier,
+  type CategoryRingConfig,
+} from '../../utils/orbital-layout';
 import type { NormalizedResource } from '../../types/resource';
 import { getCategoryColor } from '../../types/resource';
 
@@ -67,6 +71,8 @@ export interface ResourceNodesHandle {
 
 interface ResourceNodesProps {
   resources: NormalizedResource[];
+  ringConfigs: CategoryRingConfig[];
+  activeCategory?: string | null;
   activeFilter?: string | null;
   activeSubFilter?: string | null;
   filteredResourceIds?: number[] | null;
@@ -86,6 +92,8 @@ interface ResourceNodesProps {
 const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
   function ResourceNodes({
     resources,
+    ringConfigs,
+    activeCategory,
     activeFilter,
     activeSubFilter,
     filteredResourceIds,
@@ -111,7 +119,6 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
     const visibleCountRef = useRef(0);
 
     const nodeRadius = 0.5;
-    const orbitalConfig = { minRadius: 15, maxRadius: 50 };
     const resourceCount = resources.length;
 
     // Expose mesh and resource lookup for raycasting
@@ -123,23 +130,19 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
       getVisibleCount: () => visibleCountRef.current,
     }));
 
-    // Calculate FIXED positions and colors for ALL resources
-    // Resources with higher gravity scores are positioned closer to the center
-    const { positions, colors } = useMemo(() => {
+    // Calculate FIXED positions, colors, and size multipliers for ALL resources
+    // Resources are positioned on their category's ring
+    const { positions, colors, sizeMultipliers } = useMemo(() => {
       const count = resources.length;
       const posArray = new Float32Array(count * 3);
       const colorArray = new Float32Array(count * 3);
+      const sizeArray = new Float32Array(count);
+
+      // Build position map using ring layout
+      const positionMap = buildRingPositionMap(resources, ringConfigs);
 
       resources.forEach((resource, index) => {
-        const pos = generateOrbitalPosition(
-          String(resource.id),
-          index,
-          count,
-          {
-            ...orbitalConfig,
-            gravityScore: resource.gravityScore,
-          }
-        );
+        const pos = positionMap.get(String(resource.id)) || { x: 0, y: 0, z: 0 };
 
         posArray[index * 3] = pos.x;
         posArray[index * 3 + 1] = pos.y;
@@ -151,10 +154,13 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
         colorArray[index * 3] = color.r;
         colorArray[index * 3 + 1] = color.g;
         colorArray[index * 3 + 2] = color.b;
+
+        // Score-based size multiplier (0.8x to 1.4x)
+        sizeArray[index] = scoreToSizeMultiplier(resource.gravityScore);
       });
 
-      return { positions: posArray, colors: colorArray };
-    }, [resources, orbitalConfig.minRadius, orbitalConfig.maxRadius]);
+      return { positions: posArray, colors: colorArray, sizeMultipliers: sizeArray };
+    }, [resources, ringConfigs]);
 
     // Initialize opacity and hover scale arrays
     useEffect(() => {
@@ -177,12 +183,18 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
 
       resources.forEach((resource, index) => {
         let shouldBeVisible = true;
+        let categoryDimmed = false;
 
         // AI filter takes priority if set
         if (filteredResourceIds && filteredResourceIds.length > 0) {
           shouldBeVisible = filteredResourceIds.includes(resource.id);
         } else {
-          // Category filter
+          // Category selection for ring highlighting
+          if (activeCategory) {
+            categoryDimmed = resource.category !== activeCategory;
+          }
+
+          // Category filter (legacy)
           if (activeFilter) {
             shouldBeVisible = resource.category === activeFilter;
           }
@@ -193,11 +205,17 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           }
         }
 
-        targetOpacitiesRef.current![index] = shouldBeVisible
-          ? ANIMATION.VISIBLE_OPACITY
-          : ANIMATION.HIDDEN_OPACITY;
+        // Determine final opacity
+        if (!shouldBeVisible) {
+          targetOpacitiesRef.current![index] = ANIMATION.HIDDEN_OPACITY;
+        } else if (categoryDimmed) {
+          // Dimmed but still slightly visible (0.15 opacity)
+          targetOpacitiesRef.current![index] = 0.15;
+        } else {
+          targetOpacitiesRef.current![index] = ANIMATION.VISIBLE_OPACITY;
+        }
 
-        if (shouldBeVisible) visibleCount++;
+        if (shouldBeVisible && !categoryDimmed) visibleCount++;
       });
 
       // Update visible count and target scales
@@ -205,7 +223,7 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
       targetDensityScaleRef.current = calculateDensityScale(visibleCount);
       targetCameraZRef.current = calculateCameraDistance(visibleCount);
 
-    }, [activeFilter, activeSubFilter, filteredResourceIds, resources, resourceCount]);
+    }, [activeCategory, activeFilter, activeSubFilter, filteredResourceIds, resources, resourceCount]);
 
     // Initial mesh setup
     useEffect(() => {
@@ -314,10 +332,11 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           hasChanges = true;
         }
 
-        // Final scale = opacity scale * hover/click scale * density scale (for visible nodes)
+        // Final scale = opacity scale * hover/click scale * density scale * size multiplier
         const isVisible = targetOpacitiesRef.current[i] > 0;
         const appliedDensityScale = isVisible ? densityScale : 1;
-        const finalScale = Math.max(0.001, newOpacity) * newHoverScale * appliedDensityScale;
+        const scoreSizeMultiplier = sizeMultipliers[i] || 1;
+        const finalScale = Math.max(0.001, newOpacity) * newHoverScale * appliedDensityScale * scoreSizeMultiplier;
 
         dummy.position.set(
           positions[i * 3] || 0,
