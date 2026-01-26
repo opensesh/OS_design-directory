@@ -101,9 +101,11 @@ export interface OrbitalPosition {
  * Configuration for orbital positioning
  */
 export interface OrbitalConfig {
-  minRadius?: number;  // Minimum distance from center (default: 15)
-  maxRadius?: number;  // Maximum distance from center (default: 50)
-  flatness?: number;   // 0 = sphere, 1 = flat disk (default: 0.85)
+  minRadius?: number;      // Minimum distance from center (default: 15)
+  maxRadius?: number;      // Maximum distance from center (default: 50)
+  flatness?: number;       // 0 = sphere, 1 = flat disk (default: 0.85)
+  gravityScore?: number;   // Gravity score (1-10), higher = closer to center
+  radiusVariance?: number; // Variance percentage for radius jitter (default: 0.05)
 }
 
 /**
