@@ -9,7 +9,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["design", "prototyping", "collaboration", "ui/ux"],
+    "tags": [
+      "design",
+      "prototyping",
+      "collaboration",
+      "ui/ux"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -25,7 +30,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["website", "no-code", "design", "publishing"],
+    "tags": [
+      "website",
+      "no-code",
+      "design",
+      "publishing"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -41,7 +51,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["website", "no-code", "cms", "hosting"],
+    "tags": [
+      "website",
+      "no-code",
+      "cms",
+      "hosting"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -57,11 +72,16 @@
     "pricing": "Freemium",
     "featured": false,
     "opensource": false,
-    "tags": ["portfolio", "design", "showcase", "hiring"],
+    "tags": [
+      "portfolio",
+      "design",
+      "showcase",
+      "hiring"
+    ],
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/4-dribbble.jpg"
   },
   {
     "id": 5,
@@ -73,7 +93,12 @@
     "pricing": "Free",
     "featured": false,
     "opensource": false,
-    "tags": ["portfolio", "creative", "adobe", "showcase"],
+    "tags": [
+      "portfolio",
+      "creative",
+      "adobe",
+      "showcase"
+    ],
     "count": null,
     "tier": 2,
     "thumbnail": null,
@@ -89,11 +114,16 @@
     "pricing": "Free",
     "featured": true,
     "opensource": false,
-    "tags": ["awards", "website", "design", "development"],
+    "tags": [
+      "awards",
+      "website",
+      "design",
+      "development"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/6-awwwards.jpg"
   },
   {
     "id": 7,
@@ -105,7 +135,11 @@
     "pricing": "Free",
     "featured": false,
     "opensource": false,
-    "tags": ["awards", "css", "web design"],
+    "tags": [
+      "awards",
+      "css",
+      "web design"
+    ],
     "count": null,
     "tier": 2,
     "thumbnail": null,
@@ -121,7 +155,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["mobile", "ui patterns", "screenshots", "research"],
+    "tags": [
+      "mobile",
+      "ui patterns",
+      "screenshots",
+      "research"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -137,7 +176,12 @@
     "pricing": "Free",
     "featured": false,
     "opensource": false,
-    "tags": ["mobile", "ui", "screenshots", "daily"],
+    "tags": [
+      "mobile",
+      "ui",
+      "screenshots",
+      "daily"
+    ],
     "count": null,
     "tier": 2,
     "thumbnail": null,
@@ -153,11 +197,16 @@
     "pricing": "Paid",
     "featured": true,
     "opensource": false,
-    "tags": ["ai", "image generation", "art", "creative"],
+    "tags": [
+      "ai",
+      "image generation",
+      "art",
+      "creative"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/10-midjourney.jpg"
   },
   {
     "id": 11,
@@ -169,7 +218,12 @@
     "pricing": "Paid",
     "featured": true,
     "opensource": false,
-    "tags": ["ai", "openai", "image generation", "text-to-image"],
+    "tags": [
+      "ai",
+      "openai",
+      "image generation",
+      "text-to-image"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -185,11 +239,16 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["ai", "video", "generation", "creative tools"],
+    "tags": [
+      "ai",
+      "video",
+      "generation",
+      "creative tools"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/12-runway.jpg"
   },
   {
     "id": 13,
@@ -201,7 +260,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["ai", "chatbot", "anthropic", "assistant"],
+    "tags": [
+      "ai",
+      "chatbot",
+      "anthropic",
+      "assistant"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -217,7 +281,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["ai", "chatbot", "openai", "gpt"],
+    "tags": [
+      "ai",
+      "chatbot",
+      "openai",
+      "gpt"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -233,7 +302,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["git", "version control", "collaboration", "code"],
+    "tags": [
+      "git",
+      "version control",
+      "collaboration",
+      "code"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -249,7 +323,12 @@
     "pricing": "Free",
     "featured": true,
     "opensource": true,
-    "tags": ["editor", "ide", "microsoft", "development"],
+    "tags": [
+      "editor",
+      "ide",
+      "microsoft",
+      "development"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -265,7 +344,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["ai", "editor", "code", "productivity"],
+    "tags": [
+      "ai",
+      "editor",
+      "code",
+      "productivity"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -281,7 +365,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["notes", "wiki", "collaboration", "productivity"],
+    "tags": [
+      "notes",
+      "wiki",
+      "collaboration",
+      "productivity"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -297,7 +386,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["project management", "issues", "roadmap", "agile"],
+    "tags": [
+      "project management",
+      "issues",
+      "roadmap",
+      "agile"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -313,7 +407,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["hosting", "deployment", "frontend", "serverless"],
+    "tags": [
+      "hosting",
+      "deployment",
+      "frontend",
+      "serverless"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -329,11 +428,16 @@
     "pricing": "Free",
     "featured": true,
     "opensource": true,
-    "tags": ["css", "framework", "utility", "styling"],
+    "tags": [
+      "css",
+      "framework",
+      "utility",
+      "styling"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/21-tailwind-css.jpg"
   },
   {
     "id": 22,
@@ -345,7 +449,12 @@
     "pricing": "Paid",
     "featured": false,
     "opensource": false,
-    "tags": ["ui", "design", "course", "tailwind"],
+    "tags": [
+      "ui",
+      "design",
+      "course",
+      "tailwind"
+    ],
     "count": null,
     "tier": 2,
     "thumbnail": null,
@@ -361,7 +470,11 @@
     "pricing": "Free",
     "featured": false,
     "opensource": false,
-    "tags": ["design systems", "collection", "resources"],
+    "tags": [
+      "design systems",
+      "collection",
+      "resources"
+    ],
     "count": null,
     "tier": 2,
     "thumbnail": null,
@@ -377,7 +490,12 @@
     "pricing": "Free",
     "featured": true,
     "opensource": false,
-    "tags": ["ux", "psychology", "principles", "design"],
+    "tags": [
+      "ux",
+      "psychology",
+      "principles",
+      "design"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -393,7 +511,12 @@
     "pricing": "Free",
     "featured": false,
     "opensource": false,
-    "tags": ["checklist", "best practices", "ux", "design"],
+    "tags": [
+      "checklist",
+      "best practices",
+      "ux",
+      "design"
+    ],
     "count": null,
     "tier": 2,
     "thumbnail": null,
@@ -409,7 +532,12 @@
     "pricing": "Free",
     "featured": false,
     "opensource": false,
-    "tags": ["ux", "blog", "articles", "medium"],
+    "tags": [
+      "ux",
+      "blog",
+      "articles",
+      "medium"
+    ],
     "count": null,
     "tier": 2,
     "thumbnail": null,
@@ -425,7 +553,12 @@
     "pricing": "Free",
     "featured": true,
     "opensource": false,
-    "tags": ["photos", "stock", "free", "images"],
+    "tags": [
+      "photos",
+      "stock",
+      "free",
+      "images"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -441,11 +574,16 @@
     "pricing": "Free",
     "featured": false,
     "opensource": false,
-    "tags": ["photos", "videos", "stock", "free"],
+    "tags": [
+      "photos",
+      "videos",
+      "stock",
+      "free"
+    ],
     "count": null,
     "tier": 2,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/28-pexels.jpg"
   },
   {
     "id": 29,
@@ -457,7 +595,12 @@
     "pricing": "Free",
     "featured": true,
     "opensource": true,
-    "tags": ["icons", "svg", "tailwind", "free"],
+    "tags": [
+      "icons",
+      "svg",
+      "tailwind",
+      "free"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -473,7 +616,12 @@
     "pricing": "Free",
     "featured": true,
     "opensource": true,
-    "tags": ["icons", "svg", "open-source", "feather"],
+    "tags": [
+      "icons",
+      "svg",
+      "open-source",
+      "feather"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -489,7 +637,12 @@
     "pricing": "Free",
     "featured": false,
     "opensource": true,
-    "tags": ["icons", "svg", "flexible", "open-source"],
+    "tags": [
+      "icons",
+      "svg",
+      "flexible",
+      "open-source"
+    ],
     "count": null,
     "tier": 2,
     "thumbnail": null,
@@ -505,7 +658,12 @@
     "pricing": "Paid",
     "featured": false,
     "opensource": false,
-    "tags": ["marketplace", "ui kits", "templates", "figma"],
+    "tags": [
+      "marketplace",
+      "ui kits",
+      "templates",
+      "figma"
+    ],
     "count": null,
     "tier": 2,
     "thumbnail": null,
@@ -521,7 +679,12 @@
     "pricing": "Free",
     "featured": true,
     "opensource": false,
-    "tags": ["figma", "templates", "plugins", "community"],
+    "tags": [
+      "figma",
+      "templates",
+      "plugins",
+      "community"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -537,7 +700,12 @@
     "pricing": "Free",
     "featured": true,
     "opensource": false,
-    "tags": ["chat", "voice", "community", "gaming"],
+    "tags": [
+      "chat",
+      "voice",
+      "community",
+      "gaming"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -553,7 +721,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["messaging", "work", "collaboration", "teams"],
+    "tags": [
+      "messaging",
+      "work",
+      "collaboration",
+      "teams"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -569,7 +742,12 @@
     "pricing": "Paid",
     "featured": false,
     "opensource": false,
-    "tags": ["freelance", "hiring", "talent", "remote"],
+    "tags": [
+      "freelance",
+      "hiring",
+      "talent",
+      "remote"
+    ],
     "count": null,
     "tier": 2,
     "thumbnail": null,
@@ -585,7 +763,12 @@
     "pricing": "Freemium",
     "featured": false,
     "opensource": false,
-    "tags": ["freelance", "hiring", "marketplace", "remote"],
+    "tags": [
+      "freelance",
+      "hiring",
+      "marketplace",
+      "remote"
+    ],
     "count": null,
     "tier": 2,
     "thumbnail": null,
@@ -601,7 +784,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["animations", "lottie", "motion", "free"],
+    "tags": [
+      "animations",
+      "lottie",
+      "motion",
+      "free"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -617,7 +805,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["animation", "interactive", "graphics", "real-time"],
+    "tags": [
+      "animation",
+      "interactive",
+      "graphics",
+      "real-time"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -633,11 +826,16 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["3d", "design", "animation", "web"],
+    "tags": [
+      "3d",
+      "design",
+      "animation",
+      "web"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/40-spline.jpg"
   },
   {
     "id": 41,
@@ -649,11 +847,16 @@
     "pricing": "Free",
     "featured": true,
     "opensource": true,
-    "tags": ["3d", "webgl", "javascript", "animation"],
+    "tags": [
+      "3d",
+      "webgl",
+      "javascript",
+      "animation"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/41-three-js.jpg"
   },
   {
     "id": 42,
@@ -665,7 +868,12 @@
     "pricing": "Free",
     "featured": true,
     "opensource": true,
-    "tags": ["3d", "modeling", "animation", "rendering"],
+    "tags": [
+      "3d",
+      "modeling",
+      "animation",
+      "rendering"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -681,7 +889,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": true,
-    "tags": ["database", "backend", "postgres", "auth"],
+    "tags": [
+      "database",
+      "backend",
+      "postgres",
+      "auth"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -697,7 +910,12 @@
     "pricing": "Pay per use",
     "featured": true,
     "opensource": false,
-    "tags": ["payments", "api", "billing", "subscriptions"],
+    "tags": [
+      "payments",
+      "api",
+      "billing",
+      "subscriptions"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -713,7 +931,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["color", "palette", "generator", "design"],
+    "tags": [
+      "color",
+      "palette",
+      "generator",
+      "design"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -729,7 +952,12 @@
     "pricing": "Free",
     "featured": false,
     "opensource": false,
-    "tags": ["color", "visualization", "fonts", "preview"],
+    "tags": [
+      "color",
+      "visualization",
+      "fonts",
+      "preview"
+    ],
     "count": null,
     "tier": 2,
     "thumbnail": null,
@@ -745,7 +973,12 @@
     "pricing": "Free",
     "featured": true,
     "opensource": false,
-    "tags": ["css", "html", "javascript", "tutorials"],
+    "tags": [
+      "css",
+      "html",
+      "javascript",
+      "tutorials"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -761,7 +994,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["design", "development", "articles", "tutorials"],
+    "tags": [
+      "design",
+      "development",
+      "articles",
+      "tutorials"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -777,7 +1015,12 @@
     "pricing": "Free",
     "featured": false,
     "opensource": false,
-    "tags": ["tutorials", "experiments", "css", "javascript"],
+    "tags": [
+      "tutorials",
+      "experiments",
+      "css",
+      "javascript"
+    ],
     "count": null,
     "tier": 2,
     "thumbnail": null,
@@ -793,11 +1036,16 @@
     "pricing": "Paid",
     "featured": true,
     "opensource": false,
-    "tags": ["ai", "video", "text-to-video", "openai"],
+    "tags": [
+      "ai",
+      "video",
+      "text-to-video",
+      "openai"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/50-sora.jpg"
   },
   {
     "id": 51,
@@ -809,11 +1057,16 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["ai", "voice", "audio", "text-to-speech"],
+    "tags": [
+      "ai",
+      "voice",
+      "audio",
+      "text-to-speech"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/51-elevenlabs.jpg"
   },
   {
     "id": 52,
@@ -825,7 +1078,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["ai", "react", "ui", "code generation"],
+    "tags": [
+      "ai",
+      "react",
+      "ui",
+      "code generation"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -841,7 +1099,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["ai", "full-stack", "development", "deployment"],
+    "tags": [
+      "ai",
+      "full-stack",
+      "development",
+      "deployment"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -857,7 +1120,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["ide", "collaboration", "ai", "hosting"],
+    "tags": [
+      "ide",
+      "collaboration",
+      "ai",
+      "hosting"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -873,7 +1141,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["design", "graphics", "templates", "social media"],
+    "tags": [
+      "design",
+      "graphics",
+      "templates",
+      "social media"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -889,7 +1162,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["whiteboard", "collaboration", "brainstorming", "remote"],
+    "tags": [
+      "whiteboard",
+      "collaboration",
+      "brainstorming",
+      "remote"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -905,7 +1183,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["launcher", "macos", "productivity", "extensions"],
+    "tags": [
+      "launcher",
+      "macos",
+      "productivity",
+      "extensions"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -921,7 +1204,12 @@
     "pricing": "Free",
     "featured": true,
     "opensource": false,
-    "tags": ["browser", "productivity", "organization", "ai"],
+    "tags": [
+      "browser",
+      "productivity",
+      "organization",
+      "ai"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -937,7 +1225,12 @@
     "pricing": "Free",
     "featured": true,
     "opensource": true,
-    "tags": ["components", "documentation", "testing", "react"],
+    "tags": [
+      "components",
+      "documentation",
+      "testing",
+      "react"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -953,7 +1246,12 @@
     "pricing": "Free",
     "featured": true,
     "opensource": true,
-    "tags": ["components", "accessibility", "react", "headless"],
+    "tags": [
+      "components",
+      "accessibility",
+      "react",
+      "headless"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -969,11 +1267,16 @@
     "pricing": "Free",
     "featured": true,
     "opensource": true,
-    "tags": ["components", "tailwind", "radix", "react"],
+    "tags": [
+      "components",
+      "tailwind",
+      "radix",
+      "react"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
-    "screenshot": null
+    "screenshot": "/assets/screenshots/61-shadcn-ui.jpg"
   },
   {
     "id": 62,
@@ -985,7 +1288,12 @@
     "pricing": "Free",
     "featured": true,
     "opensource": true,
-    "tags": ["animation", "react", "motion", "gestures"],
+    "tags": [
+      "animation",
+      "react",
+      "motion",
+      "gestures"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1001,7 +1309,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["animation", "javascript", "svg", "scrolltrigger"],
+    "tags": [
+      "animation",
+      "javascript",
+      "svg",
+      "scrolltrigger"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1017,7 +1330,12 @@
     "pricing": "Free",
     "featured": true,
     "opensource": true,
-    "tags": ["editor", "collaboration", "performance", "rust"],
+    "tags": [
+      "editor",
+      "collaboration",
+      "performance",
+      "rust"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1033,7 +1351,12 @@
     "pricing": "Free",
     "featured": true,
     "opensource": false,
-    "tags": ["gallery", "curated", "web design", "premium"],
+    "tags": [
+      "gallery",
+      "curated",
+      "web design",
+      "premium"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1049,7 +1372,12 @@
     "pricing": "Free",
     "featured": false,
     "opensource": false,
-    "tags": ["gallery", "web design", "css", "inspiration"],
+    "tags": [
+      "gallery",
+      "web design",
+      "css",
+      "inspiration"
+    ],
     "count": null,
     "tier": 2,
     "thumbnail": null,
@@ -1065,7 +1393,12 @@
     "pricing": "Free",
     "featured": false,
     "opensource": false,
-    "tags": ["landing pages", "gallery", "design", "inspiration"],
+    "tags": [
+      "landing pages",
+      "gallery",
+      "design",
+      "inspiration"
+    ],
     "count": null,
     "tier": 2,
     "thumbnail": null,
@@ -1081,7 +1414,12 @@
     "pricing": "Free",
     "featured": true,
     "opensource": false,
-    "tags": ["products", "startups", "tech", "discovery"],
+    "tags": [
+      "products",
+      "startups",
+      "tech",
+      "discovery"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1097,7 +1435,12 @@
     "pricing": "Free",
     "featured": true,
     "opensource": false,
-    "tags": ["news", "tech", "startups", "discussion"],
+    "tags": [
+      "news",
+      "tech",
+      "startups",
+      "discussion"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1113,7 +1456,12 @@
     "pricing": "Free",
     "featured": true,
     "opensource": false,
-    "tags": ["indie", "startups", "revenue", "community"],
+    "tags": [
+      "indie",
+      "startups",
+      "revenue",
+      "community"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1129,7 +1477,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["code", "frontend", "playground", "sharing"],
+    "tags": [
+      "code",
+      "frontend",
+      "playground",
+      "sharing"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1145,7 +1498,12 @@
     "pricing": "Free",
     "featured": true,
     "opensource": true,
-    "tags": ["developer", "community", "articles", "inclusive"],
+    "tags": [
+      "developer",
+      "community",
+      "articles",
+      "inclusive"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1161,7 +1519,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["ai", "search", "research", "sources"],
+    "tags": [
+      "ai",
+      "search",
+      "research",
+      "sources"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1177,7 +1540,12 @@
     "pricing": "Pay per use",
     "featured": true,
     "opensource": false,
-    "tags": ["ai", "models", "api", "deployment"],
+    "tags": [
+      "ai",
+      "models",
+      "api",
+      "deployment"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1193,7 +1561,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": true,
-    "tags": ["ai", "models", "community", "ml"],
+    "tags": [
+      "ai",
+      "models",
+      "community",
+      "ml"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1209,7 +1582,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": true,
-    "tags": ["ai", "image", "open-source", "generation"],
+    "tags": [
+      "ai",
+      "image",
+      "open-source",
+      "generation"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1225,7 +1603,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["video", "screen recording", "async", "communication"],
+    "tags": [
+      "video",
+      "screen recording",
+      "async",
+      "communication"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1241,7 +1624,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["ai", "presentations", "documents", "websites"],
+    "tags": [
+      "ai",
+      "presentations",
+      "documents",
+      "websites"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1257,7 +1645,12 @@
     "pricing": "Free",
     "featured": true,
     "opensource": true,
-    "tags": ["whiteboard", "diagrams", "sketching", "collaboration"],
+    "tags": [
+      "whiteboard",
+      "diagrams",
+      "sketching",
+      "collaboration"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1273,7 +1666,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": true,
-    "tags": ["scheduling", "calendar", "open-source", "meetings"],
+    "tags": [
+      "scheduling",
+      "calendar",
+      "open-source",
+      "meetings"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1289,7 +1687,12 @@
     "pricing": "Paid",
     "featured": true,
     "opensource": true,
-    "tags": ["analytics", "privacy", "open-source", "simple"],
+    "tags": [
+      "analytics",
+      "privacy",
+      "open-source",
+      "simple"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1305,7 +1708,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": true,
-    "tags": ["analytics", "product", "open-source", "events"],
+    "tags": [
+      "analytics",
+      "product",
+      "open-source",
+      "events"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1321,7 +1729,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["email", "api", "transactional", "developers"],
+    "tags": [
+      "email",
+      "api",
+      "transactional",
+      "developers"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1337,7 +1750,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["auth", "user management", "components", "security"],
+    "tags": [
+      "auth",
+      "user management",
+      "components",
+      "security"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1353,7 +1771,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["database", "postgres", "serverless", "branching"],
+    "tags": [
+      "database",
+      "postgres",
+      "serverless",
+      "branching"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1369,7 +1792,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["redis", "kafka", "serverless", "edge"],
+    "tags": [
+      "redis",
+      "kafka",
+      "serverless",
+      "edge"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1385,7 +1813,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["hosting", "deployment", "infrastructure", "paas"],
+    "tags": [
+      "hosting",
+      "deployment",
+      "infrastructure",
+      "paas"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1401,7 +1834,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["hosting", "cloud", "deployment", "services"],
+    "tags": [
+      "hosting",
+      "cloud",
+      "deployment",
+      "services"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1417,7 +1855,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["hosting", "edge", "global", "containers"],
+    "tags": [
+      "hosting",
+      "edge",
+      "global",
+      "containers"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
@@ -1433,7 +1876,12 @@
     "pricing": "Freemium",
     "featured": true,
     "opensource": false,
-    "tags": ["cdn", "security", "workers", "dns"],
+    "tags": [
+      "cdn",
+      "security",
+      "workers",
+      "dns"
+    ],
     "count": null,
     "tier": 1,
     "thumbnail": null,
