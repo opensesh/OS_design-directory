@@ -340,7 +340,7 @@ interface OrbitalSystemProps {
   filteredResourceIds?: number[] | null;
   hoveredIndex: number | null;
   clickedIndex: number | null;
-  resourceNodesRef: React.RefObject<ResourceNodesHandle | null>;
+  resourceNodesRef: React.RefObject<ResourceNodesHandle>;
 }
 
 function OrbitalSystem({
