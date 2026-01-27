@@ -475,7 +475,7 @@ export default function Home() {
                 message={aiMessage}
                 isTyping={isAiTyping}
                 onDismiss={dismissAiResponse}
-                matchCount={filteredResources.length}
+                matchCount={filteredResourceIds ? filteredResourceIds.length : filteredResources.length}
               />
 
               {/* Search Input */}
@@ -496,7 +496,9 @@ export default function Home() {
 
               {/* Resource count - more prominent */}
               <p className="text-center text-sm text-os-text-secondary-dark">
-                <span className="font-semibold text-brand-aperol">{filteredResources.length}</span> inspiration resources
+                <span className="font-semibold text-brand-aperol">
+                  {filteredResourceIds ? filteredResourceIds.length : filteredResources.length}
+                </span> inspiration resources
               </p>
             </div>
           </motion.div>
