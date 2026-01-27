@@ -15,7 +15,56 @@ const ANIMATION = {
   INACTIVE_OPACITY: 0.15,    // Non-selected rings - faded
   DEFAULT_STROKE_SCALE: 1.0,
   ACTIVE_STROKE_SCALE: 2.0,  // 2x thicker when highlighted
+  FILL_OPACITY: 0.35,        // Medium fill opacity per user preference
 };
+
+/**
+ * RingFill Component
+ *
+ * Renders a flat, camera-facing circular fill between inner and outer radii.
+ * Creates Saturn-like fill effect that fills inward toward the center sphere.
+ */
+interface RingFillProps {
+  innerRadius: number;
+  outerRadius: number;
+  color: string;
+  isActive: boolean;
+}
+
+function RingFill({ innerRadius, outerRadius, color, isActive }: RingFillProps) {
+  const meshRef = useRef<THREE.Mesh>(null);
+  const opacityRef = useRef(0);
+
+  const geometry = useMemo(() => {
+    return new THREE.RingGeometry(innerRadius, outerRadius, 64);
+  }, [innerRadius, outerRadius]);
+
+  const material = useMemo(() => {
+    return new THREE.MeshBasicMaterial({
+      color,
+      transparent: true,
+      opacity: 0,
+      side: THREE.DoubleSide,
+      depthWrite: false,  // Prevent z-fighting with nodes
+    });
+  }, [color]);
+
+  useFrame(() => {
+    const targetOpacity = isActive ? ANIMATION.FILL_OPACITY : 0;
+    opacityRef.current += (targetOpacity - opacityRef.current) * 0.1;
+    material.opacity = opacityRef.current;
+  });
+
+  return (
+    <mesh
+      ref={meshRef}
+      geometry={geometry}
+      material={material}
+      rotation={[Math.PI / 2 + RING_LAYOUT.TILT_ANGLE, 0, 0]}  // Match ring tilt
+      position={[0, 0, 0]}
+    />
+  );
+}
 
 interface OrbitalRingProps {
   config: CategoryRingConfig;
@@ -128,14 +177,68 @@ interface OrbitalRingsProps {
  * - Thin torus geometry for each category
  * - Smooth opacity transitions on category selection
  * - Synchronized rotation with ResourceNodes group
+ * - Saturn-like ring fills when categories are active
  */
 export default function OrbitalRings({ ringConfigs, activeCategory, matchedCategories }: OrbitalRingsProps) {
   const groupRef = useRef<THREE.Group>(null);
+
+  // Sort configs by radius for fill boundary calculation
+  const sortedConfigs = useMemo(() =>
+    [...ringConfigs].sort((a, b) => a.radius - b.radius),
+  [ringConfigs]);
+
+  // Determine active categories
+  const activeCategories = useMemo(() => {
+    const active = new Set<string>();
+    if (activeCategory) active.add(activeCategory);
+    matchedCategories?.forEach(c => active.add(c));
+    return active;
+  }, [activeCategory, matchedCategories]);
+
+  // Calculate fill boundaries for active categories
+  const fillConfigs = useMemo(() => {
+    const fills: Array<{
+      category: string;
+      innerRadius: number;
+      outerRadius: number;
+      color: string;
+    }> = [];
+
+    let lastActiveRadius = RING_LAYOUT.CENTER_RADIUS; // Start from center sphere (10 units)
+
+    for (const config of sortedConfigs) {
+      if (activeCategories.has(config.category)) {
+        fills.push({
+          category: config.category,
+          innerRadius: lastActiveRadius,
+          outerRadius: config.radius,
+          color: config.color,
+        });
+        lastActiveRadius = config.radius;
+      }
+    }
+
+    return fills;
+  }, [sortedConfigs, activeCategories]);
+
+  const hasActiveFilters = activeCategories.size > 0;
 
   if (ringConfigs.length === 0) return null;
 
   return (
     <group ref={groupRef}>
+      {/* Ring fills (flat, tilted) - only when filters active */}
+      {hasActiveFilters && fillConfigs.map((fill) => (
+        <RingFill
+          key={`fill-${fill.category}`}
+          innerRadius={fill.innerRadius}
+          outerRadius={fill.outerRadius}
+          color={fill.color}
+          isActive={true}
+        />
+      ))}
+
+      {/* Existing orbital ring tori */}
       {ringConfigs.map((config) => (
         <OrbitalRing
           key={config.category}
