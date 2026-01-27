@@ -1,6 +1,6 @@
 import { useState, useMemo, lazy, Suspense, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Box, Table2, Search, LayoutGrid } from 'lucide-react';
+import { Box, Table2, Search, LayoutGrid, Menu } from 'lucide-react';
 import { SearchModal } from '../components/search/SearchModal';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -12,6 +12,7 @@ import { AIFilterResponse } from '../components/ui/AIFilterResponse';
 import InspoResourceTooltip from '../components/ui/InspoResourceTooltip';
 import { InspoTable } from '../components/ui/InspoTable';
 import { CardView } from '../components/card-view';
+import { MobileMenu } from '../components/ui/MobileMenu';
 import {
   semanticSearch,
   generateAIResponse,
@@ -64,6 +65,9 @@ export default function Home() {
 
   // Search modal state
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+
+  // Mobile menu state
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Keyboard shortcuts
   useKeyboardShortcuts({
@@ -213,24 +217,25 @@ export default function Home() {
                 />
               </svg>
             </div>
-            {/* Hide title on mobile - subtle label style */}
-            <h1 className="hidden md:block text-label font-display uppercase tracking-wider text-os-text-secondary-dark">
+            {/* Title - visible on all screen sizes */}
+            <h1 className="text-label font-display uppercase tracking-wider text-os-text-secondary-dark">
               Design Directory
             </h1>
           </button>
           <div className="flex items-center gap-3">
-            {/* Search Button - square on mobile, expands on desktop */}
+            {/* Search Button - hidden on mobile, visible on desktop */}
             <button
               onClick={() => setIsSearchModalOpen(true)}
-              className="flex items-center justify-center gap-2 w-10 h-10 md:w-auto md:h-10 md:px-3 bg-os-surface-dark/50 border border-os-border-dark rounded-lg text-os-text-secondary-dark hover:text-os-text-primary-dark hover:border-brand-aperol/30 transition-all"
+              className="hidden md:flex items-center justify-center gap-2 h-10 px-3 bg-os-surface-dark/50 border border-os-border-dark rounded-lg text-os-text-secondary-dark hover:text-os-text-primary-dark hover:border-brand-aperol/30 transition-all"
               title="Search resources (⌘K)"
             >
               <Search className="w-4 h-4" />
-              <span className="hidden md:inline text-sm">Search...</span>
+              <span className="text-sm">Search...</span>
               <kbd className="hidden lg:inline text-[10px] px-1.5 py-0.5 bg-os-bg-dark rounded border border-os-border-dark">⌘K</kbd>
             </button>
 
-          <div className="flex items-center bg-os-surface-dark/50 rounded-lg p-1 border border-os-border-dark">
+          {/* View mode toggles - hidden on mobile, visible on desktop */}
+          <div className="hidden md:flex items-center bg-os-surface-dark/50 rounded-lg p-1 border border-os-border-dark">
             <button
               onClick={() => setSearchParams({})}
               className={`p-2 rounded-md transition-all ${
@@ -265,6 +270,15 @@ export default function Home() {
               <Table2 className="w-4 h-4" />
             </button>
           </div>
+
+          {/* Hamburger menu button - visible on mobile only */}
+          <button
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="flex md:hidden items-center justify-center w-10 h-10 bg-os-surface-dark/50 border border-os-border-dark rounded-lg text-os-text-secondary-dark hover:text-os-text-primary-dark hover:border-brand-aperol/30 transition-all"
+            aria-label="Open menu"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
           </div>
         </div>
         </div>
@@ -459,6 +473,21 @@ export default function Home() {
         onSelectResource={(resource) => {
           setIsSearchModalOpen(false);
           navigate(`/resource/${resource.id}`);
+        }}
+      />
+
+      {/* Mobile Menu */}
+      <MobileMenu
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+        onOpenSearch={() => setIsSearchModalOpen(true)}
+        displayMode={displayMode}
+        onDisplayModeChange={(mode) => {
+          if (mode === '3d') {
+            setSearchParams({});
+          } else {
+            setSearchParams({ display: mode });
+          }
         }}
       />
     </div>
