@@ -293,6 +293,7 @@ function InteractionController({
   }, [camera, gl, raycaster, resourceNodesRef, onHover, onClick, onClickAnimation]);
 
   // Perform raycasting on each frame for smooth hover detection
+  // With 2x radius screen-space proximity check for delightful gliding experience
   useFrame(() => {
     if (!resourceNodesRef.current || !isMouseInCanvasRef.current) return;
 
@@ -304,6 +305,7 @@ function InteractionController({
 
     let newHovered: number | null = null;
 
+    // First check: direct raycaster hit
     if (intersects.length > 0 && intersects[0].instanceId !== undefined) {
       const index = intersects[0].instanceId;
       const opacity = resourceNodesRef.current.getOpacityAtIndex(index);
@@ -311,6 +313,64 @@ function InteractionController({
       // Only hover if node is visible enough
       if (opacity >= 0.1) {
         newHovered = index;
+      }
+    }
+
+    // Second check: screen-space proximity for 2x hover radius
+    // This makes hovering feel more forgiving and delightful
+    if (newHovered === null) {
+      const HOVER_RADIUS_PX = 40; // Approximate 2x visual radius in pixels
+      const canvas = gl.domElement;
+      const canvasRect = canvas.getBoundingClientRect();
+
+      // Convert normalized mouse to pixel coordinates
+      const mousePixelX = (mouse.current.x * 0.5 + 0.5) * canvasRect.width;
+      const mousePixelY = (-mouse.current.y * 0.5 + 0.5) * canvasRect.height;
+
+      let closestIndex = -1;
+      let closestDistance = Infinity;
+
+      // Get instance count from mesh
+      const instanceCount = mesh.count;
+      const tempMatrix = new THREE.Matrix4();
+      const tempPosition = new THREE.Vector3();
+
+      for (let i = 0; i < instanceCount; i++) {
+        const opacity = resourceNodesRef.current.getOpacityAtIndex(i) ?? 0;
+        if (opacity < 0.1) continue; // Skip filtered nodes
+
+        // Get world position from instance matrix
+        mesh.getMatrixAt(i, tempMatrix);
+        tempPosition.setFromMatrixPosition(tempMatrix);
+
+        // Apply parent group rotation to get actual world position
+        const groupRotation = resourceNodesRef.current.getGroupRotation();
+        if (groupRotation) {
+          // Create rotation matrix from euler
+          const rotationMatrix = new THREE.Matrix4().makeRotationFromEuler(groupRotation);
+          tempPosition.applyMatrix4(rotationMatrix);
+        }
+
+        // Project to screen space
+        tempPosition.project(camera);
+        const screenX = (tempPosition.x * 0.5 + 0.5) * canvasRect.width;
+        const screenY = (-tempPosition.y * 0.5 + 0.5) * canvasRect.height;
+
+        // Skip if behind camera
+        if (tempPosition.z > 1) continue;
+
+        const dx = mousePixelX - screenX;
+        const dy = mousePixelY - screenY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < HOVER_RADIUS_PX && distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = i;
+        }
+      }
+
+      if (closestIndex !== -1) {
+        newHovered = closestIndex;
       }
     }
 
