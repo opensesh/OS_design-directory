@@ -1,0 +1,1464 @@
+{
+  "timestamp": "2026-01-26T21:48:16.606Z",
+  "results": [
+    {
+      "id": 1,
+      "name": "Figma",
+      "file": "1-figma.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows Figma's main marketing website with clear navigation, hero content showcasing the product, company logos, and a call-to-action. The cookie notice overlay doesn't obstruct the main content or prevent interaction with the site.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 2,
+      "name": "Framer",
+      "file": "2-framer.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Framer design interface with a clear view of the design canvas, tools panel on the left, properties panel on the right, and a website preview displaying 'Canvas' branding. All interface elements are fully visible and functional.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 3,
+      "name": "Webflow",
+      "file": "3-webflow.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows Webflow's main marketing homepage with clear navigation, product messaging about 'Smarter sites start here', and options to build websites using AI, templates, or blank sites. The page is fully functional and displays the actual product interface.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 4,
+      "name": "Dribbble",
+      "file": "4-dribbble.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "Shows actual product interface of cryptocurrency exchange app with clear UI elements, trading screens, and functional content",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 5,
+      "name": "Behance",
+      "file": "5-behance.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Behance homepage with full navigation, hero section, search functionality, and content categories visible. All interface elements are properly displayed and accessible.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 6,
+      "name": "Awwwards",
+      "file": "6-awwwards.jpg",
+      "classification": "good",
+      "confidence": 0.9,
+      "reason": "Shows the actual SaaS Interface website with full content visible - header, main title, description, UI examples, and gallery section. While there's a cookie notice at bottom, the main content is fully accessible and functional.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 7,
+      "name": "CSS Design Awards",
+      "file": "7-css-design-awards.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual CSS Design Awards website displaying a featured award entry for Westbourne Grammar School. The page shows complete content including the award details, design scores, and website preview without any blocking elements or errors.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 8,
+      "name": "Mobbin",
+      "file": "8-mobbin.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows Mobbin's main landing page with clear branding, headline about design inspiration, feature descriptions, and call-to-action buttons. The content is fully accessible without any blocking elements.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 9,
+      "name": "Screenlane",
+      "file": "9-screenlane.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Screenlane product interface with clear navigation, main content about UI/UX inspiration, call-to-action buttons, and app icons displayed normally without any blocking elements",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 10,
+      "name": "Midjourney",
+      "file": "10-midjourney.jpg",
+      "classification": "bad",
+      "confidence": 0.95,
+      "reason": "Replaced: Page shows a Cloudflare security verification challenge with 'Verify you are human' text and checkbox, blocking access to the actual website content",
+      "category": "captcha",
+      "replaced": true
+    },
+    {
+      "id": 11,
+      "name": "DALL-E",
+      "file": "11-dall-e.jpg",
+      "classification": "bad",
+      "confidence": 0.95,
+      "reason": "Replaced: The screenshot shows a Cloudflare human verification page with a 'Verify you are human' checkbox, which is a CAPTCHA blocking access to the actual DALL-E interface",
+      "category": "captcha",
+      "replaced": true
+    },
+    {
+      "id": 12,
+      "name": "Runway",
+      "file": "12-runway.jpg",
+      "classification": "bad",
+      "confidence": 0.95,
+      "reason": "Replaced: This is a login/authentication page with username/email and password fields, blocking access to the actual Runway product interface",
+      "category": "login",
+      "replaced": true
+    },
+    {
+      "id": 13,
+      "name": "Claude",
+      "file": "13-claude.jpg",
+      "classification": "bad",
+      "confidence": 0.95,
+      "reason": "Replaced: This is clearly a CAPTCHA/human verification page with Cloudflare protection, asking users to 'Verify you are human by completing the action below' before accessing Claude.ai",
+      "category": "captcha",
+      "replaced": true
+    },
+    {
+      "id": 14,
+      "name": "ChatGPT",
+      "file": "14-chatgpt.jpg",
+      "classification": "bad",
+      "confidence": 0.95,
+      "reason": "Replaced: The page shows a Cloudflare CAPTCHA verification widget with 'Verify you are human' text, which is blocking access to the actual ChatGPT interface",
+      "category": "captcha",
+      "replaced": true
+    },
+    {
+      "id": 15,
+      "name": "GitHub",
+      "file": "15-github.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows GitHub's main homepage with full navigation, marketing content, and call-to-action buttons for signing up and trying GitHub Copilot. It's the actual product website interface, not blocked by any authentication or errors.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 16,
+      "name": "VS Code",
+      "file": "16-vs-code.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the main VS Code website with clear branding, navigation menu, download options, and a code editor interface demonstration. All content is fully visible and accessible.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 17,
+      "name": "Cursor",
+      "file": "17-cursor.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "Shows the actual Cursor product interface with code editor, file explorer, and chat functionality clearly visible and accessible",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 18,
+      "name": "Notion",
+      "file": "18-notion.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows Notion's main marketing/landing page with full content visible including navigation, hero section with illustrations, main messaging about 'One workspace. Zero busywork.', call-to-action buttons, product screenshot, and company logos at bottom",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 19,
+      "name": "Linear",
+      "file": "19-linear.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows Linear's main marketing/homepage with clear navigation, product description, and interface preview - the actual product website is fully accessible",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 20,
+      "name": "Vercel",
+      "file": "20-vercel.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows Vercel's main landing page with clear branding, navigation menu, main heading 'Build and deploy on the AI Cloud', descriptive text, and call-to-action buttons. The content is fully accessible and represents the actual product website.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 21,
+      "name": "Tailwind CSS",
+      "file": "21-tailwind-css.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Tailwind CSS homepage with clear navigation, main heading, product description, and code example visible. All content is fully accessible and represents the normal website interface.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 22,
+      "name": "Refactoring UI",
+      "file": "22-refactoring-ui.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Refactoring UI product website with clear branding, product description, sales copy, social proof (20,000+ copies sold, 4.68 rating), and call-to-action buttons. The content is fully visible and accessible.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 23,
+      "name": "Design Systems Repo",
+      "file": "23-design-systems-repo.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Design Systems Repo website with full navigation, content description, and featured design system examples like Wanda, Finastra, and Cedar displayed clearly without any obstructions",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 24,
+      "name": "Laws of UX",
+      "file": "24-laws-of-ux.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Laws of UX website with clear navigation, content about UX principles, and visible interface elements including the main description and three UX concept cards (Aesthetic-Usability Effect, Choice Overload, and Chunking).",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 25,
+      "name": "Checklist Design",
+      "file": "25-checklist-design.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Checklist Design website interface with full navigation, main content sections for Website and Components categories, and various design elements clearly visible and accessible",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 26,
+      "name": "UX Planet",
+      "file": "26-ux-planet.jpg",
+      "classification": "bad",
+      "confidence": 0.95,
+      "reason": "Replaced: The page shows a Cloudflare CAPTCHA verification screen with 'Verify you are human by completing the action below' text and a checkbox to verify humanity, blocking access to the actual UX Planet website",
+      "category": "captcha",
+      "replaced": true
+    },
+    {
+      "id": 27,
+      "name": "Unsplash",
+      "file": "27-unsplash.jpg",
+      "classification": "bad",
+      "confidence": 0.95,
+      "reason": "Replaced: This is clearly an error page showing 'Oh noes!' with 'Access Denied: error code 4d1dbaddtcc0f385' message, indicating the user cannot access the requested content",
+      "category": "error",
+      "replaced": true
+    },
+    {
+      "id": 28,
+      "name": "Pexels",
+      "file": "28-pexels.jpg",
+      "classification": "bad",
+      "confidence": 0.95,
+      "reason": "Replaced: This is a Cloudflare security verification page asking users to 'Verify you are human by completing the action below' with a CAPTCHA checkbox, not the actual Pexels website interface",
+      "category": "captcha",
+      "replaced": true
+    },
+    {
+      "id": 29,
+      "name": "Heroicons",
+      "file": "29-heroicons.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Heroicons website interface with full functionality - the header, navigation, icon search, icon categories (Outline, Solid, Mini, Micro), and a grid of SVG icons with their names. All content is accessible and the product is fully usable.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 30,
+      "name": "Lucide Icons",
+      "file": "30-lucide-icons.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Lucide Icons website with full navigation, icon showcase, feature descriptions, and functional search interface",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 31,
+      "name": "Phosphor Icons",
+      "file": "31-phosphor-icons.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the main Phosphor Icons website with clear branding, description, navigation buttons, and functional links. The notification banners at the top are part of the normal user interface, not blocking content access.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 32,
+      "name": "UI8",
+      "file": "32-ui8.jpg",
+      "classification": "bad",
+      "confidence": 0.95,
+      "reason": "This is clearly a CAPTCHA/human verification page with Cloudflare security check, asking users to verify they are human before proceeding to ui8.net",
+      "category": "captcha",
+      "replaced": false
+    },
+    {
+      "id": 33,
+      "name": "Figma Community",
+      "file": "33-figma-community.jpg",
+      "classification": "bad",
+      "confidence": 1,
+      "reason": "Replaced: This is a CloudFront 403 ERROR page that states 'The request could not be satisfied' and explains the request was blocked, which is clearly an error page blocking access to the Figma Community content.",
+      "category": "error",
+      "replaced": true
+    },
+    {
+      "id": 34,
+      "name": "Discord",
+      "file": "34-discord.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows Discord's main marketing/landing page with full navigation, product description, and call-to-action buttons. It's the actual website interface, not blocked by any authentication or error pages.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 35,
+      "name": "Slack",
+      "file": "35-slack.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows Slack's marketing homepage with clear navigation, product messaging, call-to-action buttons, company logos, and a product interface preview - all indicating a fully functional website",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 36,
+      "name": "Toptal",
+      "file": "36-toptal.jpg",
+      "classification": "bad",
+      "confidence": 0.95,
+      "reason": "Replaced: This is an access blocked/error page showing 'Sorry, you have been blocked' with explanatory text about being unable to access toptal.com, not the actual product interface",
+      "category": "error",
+      "replaced": true
+    },
+    {
+      "id": 37,
+      "name": "Upwork",
+      "file": "37-upwork.jpg",
+      "classification": "bad",
+      "confidence": 0.95,
+      "reason": "Replaced: The page shows a Cloudflare CAPTCHA with 'Verify you are human' checkbox, blocking access to the actual Upwork website",
+      "category": "captcha",
+      "replaced": true
+    },
+    {
+      "id": 38,
+      "name": "Lottie Files",
+      "file": "38-lottie-files.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the main LottieFiles website homepage with full navigation, marketing content about motion design/animations, and a clear call-to-action. All content is visible and accessible without any blocking elements.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 39,
+      "name": "Rive",
+      "file": "39-rive.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "Shows the main Rive website with clear branding, navigation menu, main tagline 'CREATE WITH MOTION', descriptive text, call-to-action buttons, and product category sections at the bottom",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 40,
+      "name": "Spline",
+      "file": "40-spline.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Spline website homepage with clear navigation, main heading, product description, and call-to-action buttons. The cookie consent dialog is a normal website feature and doesn't obstruct the main content.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 41,
+      "name": "Three.js",
+      "file": "41-three-js.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Three.js website with navigation menu on left (Learn, Tools, Community, Code, Resources, Merch sections) and a gallery of Three.js project examples displayed as thumbnail images on the right side",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 42,
+      "name": "Blender",
+      "file": "42-blender.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Blender website with full navigation menu, main content announcing Blender 5.0 release, download buttons, and latest news section - all functioning normally without any blocking elements",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 43,
+      "name": "Supabase",
+      "file": "43-supabase.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Supabase homepage with clear branding, navigation menu, main value proposition, call-to-action buttons, and company logos - all indicating a fully functional product landing page",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 44,
+      "name": "Stripe",
+      "file": "44-stripe.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows Stripe's main homepage with clear navigation, product messaging about financial infrastructure, payment interface mockups, and call-to-action buttons. All content is fully visible and accessible without any blocking elements.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 45,
+      "name": "Coolors",
+      "file": "45-coolors.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "Shows the main Coolors website homepage with full product interface including color palettes, generator tools, navigation menu, and marketing content - all functional elements are visible and accessible",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 46,
+      "name": "Realtime Colors",
+      "file": "46-realtime-colors.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the main product interface for Realtime Colors, a tool for visualizing colors and fonts on websites. The page displays the core functionality with color selection tools, preview areas, and navigation elements clearly visible.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 47,
+      "name": "CSS Tricks",
+      "file": "47-css-tricks.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "Shows the actual CSS-Tricks website with full navigation, featured article about responsive hexagon grid, and multiple article previews clearly visible",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 48,
+      "name": "Smashing Magazine",
+      "file": "48-smashing-magazine.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Smashing Magazine website interface with full navigation, article content, newsletter signup, and all typical website elements functioning normally",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 49,
+      "name": "Codrops",
+      "file": "49-codrops.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Codrops website with full navigation, content sections including Creative Hub and Webzibition, article listings with images and descriptions, and all functionality appears accessible without any blocking elements.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 50,
+      "name": "Sora",
+      "file": "50-sora.jpg",
+      "classification": "bad",
+      "confidence": 1,
+      "reason": "Replaced: This is clearly a CAPTCHA/verification page with the text 'Verify you are human by completing the action below' and a Cloudflare security checkpoint, not the actual Sora product interface",
+      "category": "captcha",
+      "replaced": true
+    },
+    {
+      "id": 51,
+      "name": "ElevenLabs",
+      "file": "51-elevenlabs.jpg",
+      "classification": "bad",
+      "confidence": 0.95,
+      "reason": "Replaced: This is a login/authentication page with sign-in options (Google, Apple, SSO) and email/password fields, blocking access to the actual ElevenLabs product interface",
+      "category": "login",
+      "replaced": true
+    },
+    {
+      "id": 52,
+      "name": "v0",
+      "file": "52-v0.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the main product interface of v0, a development tool. The page displays a search bar asking 'What do you want to create?' with suggested options like Contact Form, Image Editor, Mini Game, and Finance Calculator. Below are template categories and preview thumbnails. This is clearly the actual functional website interface, not any kind of blocking or error page.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 53,
+      "name": "Bolt",
+      "file": "53-bolt.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows Bolt's main product interface with the homepage featuring 'What will you build today?' headline, input field for building apps, and core functionality clearly visible",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 54,
+      "name": "Replit",
+      "file": "54-replit.jpg",
+      "classification": "bad",
+      "confidence": 0.95,
+      "reason": "Replaced: This is an access denied/blocked error page showing 'Sorry, you have been blocked' and 'You are unable to access replit.com', not the actual Replit product interface",
+      "category": "error",
+      "replaced": true
+    },
+    {
+      "id": 55,
+      "name": "Canva",
+      "file": "55-canva.jpg",
+      "classification": "bad",
+      "confidence": 0.95,
+      "reason": "Replaced: This shows a CAPTCHA verification page with 'Verify you are human' checkbox and Cloudflare security check, blocking access to the actual Canva interface",
+      "category": "captcha",
+      "replaced": true
+    },
+    {
+      "id": 56,
+      "name": "Miro",
+      "file": "56-miro.jpg",
+      "classification": "partial",
+      "confidence": 0.8,
+      "reason": "Replaced: The main Miro website content is visible including the hero section and AI workflow demo, but there is a cookie consent overlay at the bottom that partially obstructs the page content",
+      "category": "partial",
+      "replaced": true
+    },
+    {
+      "id": 57,
+      "name": "Raycast",
+      "file": "57-raycast.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Raycast website with full navigation, product description, and branding. It's the main landing page displaying the product as 'Your shortcut to everything' with clear messaging about productivity tools.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 58,
+      "name": "Arc Browser",
+      "file": "58-arc-browser.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Arc Browser website with clear product information, a demo interface showing Dia AI assistant functionality, and a working 'Try Dia' call-to-action button. The content is fully visible and functional.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 59,
+      "name": "Storybook",
+      "file": "59-storybook.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Storybook website with clear navigation, product description, statistics, and a functional interface demo at the bottom. All content is fully visible and accessible.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 60,
+      "name": "Radix UI",
+      "file": "60-radix-ui.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Radix UI website with complete content including navigation, main heading, code examples, and feature descriptions. All content is fully visible and accessible.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 61,
+      "name": "shadcn/ui",
+      "file": "61-shadcn-ui.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual shadcn/ui product interface with clear navigation, component examples, and full functionality visible including docs, components, themes, and interactive elements",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 62,
+      "name": "Framer Motion",
+      "file": "62-framer-motion.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the complete Framer Motion homepage with clear branding, product description, navigation menu, and feature highlights. All content is fully accessible and represents the actual product interface.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 63,
+      "name": "GSAP",
+      "file": "63-gsap.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the main GSAP website homepage with full navigation, branding, description of the JavaScript animation library, and call-to-action buttons. All content is clearly visible and accessible.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 64,
+      "name": "Zed",
+      "file": "64-zed.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the complete Zed code editor website with full navigation, product description, feature highlights, and a code editor interface screenshot. All content is clearly visible and accessible.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 65,
+      "name": "Godly",
+      "file": "65-godly.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Godly website interface - a design inspiration platform displaying web design examples in a grid layout with clear navigation, subscribe buttons, and functional content",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 66,
+      "name": "Site Inspire",
+      "file": "66-site-inspire.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Site Inspire website interface with navigation menu, search functionality, featured content showcase, and category filters - all core functionality is accessible and working",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 67,
+      "name": "Land-book",
+      "file": "67-land-book.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Landbook website interface with full navigation, content sections, search functionality, and website design examples visible. The page is fully functional and accessible.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 68,
+      "name": "Product Hunt",
+      "file": "68-product-hunt.jpg",
+      "classification": "bad",
+      "confidence": 0.95,
+      "reason": "Replaced: Page shows a Cloudflare CAPTCHA verification challenge with 'Verify you are human' text and checkbox, blocking access to the actual Product Hunt website",
+      "category": "captcha",
+      "replaced": true
+    },
+    {
+      "id": 69,
+      "name": "Hacker News",
+      "file": "69-hacker-news.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Hacker News homepage with a complete list of numbered articles, titles, points, comments, and timestamps - all the expected interface elements are present and functional",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 70,
+      "name": "Indie Hackers",
+      "file": "70-indie-hackers.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "Shows the actual Indie Hackers website with full content including posts, navigation menu, newsletter signup, and leaderboard - all functionality is accessible without obstruction",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 71,
+      "name": "CodePen",
+      "file": "71-codepen.jpg",
+      "classification": "bad",
+      "confidence": 0.95,
+      "reason": "Replaced: This is a Cloudflare human verification/CAPTCHA page with a checkbox to 'Verify you are human' blocking access to the actual CodePen website",
+      "category": "captcha",
+      "replaced": true
+    },
+    {
+      "id": 72,
+      "name": "Dev.to",
+      "file": "72-dev-to.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "Shows the full Dev.to website interface with navigation menu, community description, feed content including DEV Challenges post, and sidebar with current challenges - all core functionality is accessible",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 73,
+      "name": "Perplexity",
+      "file": "73-perplexity.jpg",
+      "classification": "bad",
+      "confidence": 1,
+      "reason": "Replaced: The page shows a CAPTCHA verification challenge with 'Verify you are human by completing the action below' and a Cloudflare security check, blocking access to the actual Perplexity website content",
+      "category": "captcha",
+      "replaced": true
+    },
+    {
+      "id": 74,
+      "name": "Replicate",
+      "file": "74-replicate.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the main Replicate website with full product interface including navigation, hero section, API code examples, and product features clearly visible",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 75,
+      "name": "Hugging Face",
+      "file": "75-hugging-face.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Hugging Face website homepage with full functionality - navigation menu, search bar, main content area displaying 'The AI community building the future' tagline, and a detailed models browser panel showing various AI models with filters and categories. All interface elements are clearly visible and accessible.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 76,
+      "name": "Stable Diffusion",
+      "file": "76-stable-diffusion.jpg",
+      "classification": "good",
+      "confidence": 0.9,
+      "reason": "This shows the main marketing website for Stability AI with clear navigation, messaging about their AI services, and functional elements like 'Let's get started' button. The cookie consent dialog is normal website functionality, not blocking access to content.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 77,
+      "name": "Loom",
+      "file": "77-loom.jpg",
+      "classification": "good",
+      "confidence": 0.9,
+      "reason": "This shows Loom's main marketing/landing page with clear product messaging, call-to-action buttons, and full website functionality visible. The cookie consent banner is a normal website element, not an obstruction to core functionality.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 78,
+      "name": "Gamma",
+      "file": "78-gamma.jpg",
+      "classification": "bad",
+      "confidence": 0.95,
+      "reason": "Replaced: The page shows a Cloudflare CAPTCHA verification with 'Verify you are human' checkbox, blocking access to the actual Gamma product interface",
+      "category": "captcha",
+      "replaced": true
+    },
+    {
+      "id": 79,
+      "name": "Excalidraw",
+      "file": "79-excalidraw.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the main Excalidraw interface with the drawing canvas, toolbar at top, menu options (Open, Help, Live collaboration, Sign up), and instructional text for getting started. All core functionality is visible and accessible.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 80,
+      "name": "Cal.com",
+      "file": "80-cal-com.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the main Cal.com landing page with full product information, scheduling interface preview, sign-up options, and navigation menu - representing the actual product website",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 81,
+      "name": "Plausible",
+      "file": "81-plausible.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Plausible website with their main landing page featuring product description, navigation menu, call-to-action buttons, and a preview of their analytics dashboard interface",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 82,
+      "name": "PostHog",
+      "file": "82-posthog.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual PostHog product interface with a clear homepage displaying company information, product features, navigation menu, and various app options. The interface is fully functional and accessible without any blocking elements.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 83,
+      "name": "Resend",
+      "file": "83-resend.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Resend product homepage with clear navigation, heading 'Email for developers', descriptive text, and call-to-action buttons. The content is fully accessible and represents the main product interface.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 84,
+      "name": "Clerk",
+      "file": "84-clerk.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This is the main marketing/landing page for Clerk showing their authentication and user management product. The page displays complete content including navigation, headline, description, call-to-action buttons, and company logos. There's only a small cookie consent dialog at the bottom which doesn't obstruct the main content.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 85,
+      "name": "Neon",
+      "file": "85-neon.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows Neon's main product website with clear branding, navigation menu, headline about Postgres for modern engineering teams, and call-to-action buttons. It's the actual product interface/marketing site, not blocked by any authentication or errors.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 86,
+      "name": "Upstash",
+      "file": "86-upstash.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Upstash website homepage with full navigation, product branding, and content clearly visible including their 'Serverless Data Platform' messaging and service offerings like Redis, Vector, QStash, Workflow, and Search.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 87,
+      "name": "Railway",
+      "file": "87-railway.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows Railway's main product website with clear navigation, hero section promoting their cloud platform, call-to-action buttons, and a product interface preview at the bottom. All content is fully accessible without any blocking elements.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 88,
+      "name": "Render",
+      "file": "88-render.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows Render's main website homepage with full navigation, clear heading 'Your fastest path to production', descriptive text about building and scaling apps, and prominent call-to-action buttons. The page is fully functional and displays the actual product website content.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 89,
+      "name": "Fly.io",
+      "file": "89-fly-io.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Fly.io homepage with full navigation, main content including tagline 'Build fast. Run any code fearlessly.', descriptive text, and a clear call-to-action button. All content is accessible without any blocking elements.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 90,
+      "name": "Cloudflare",
+      "file": "90-cloudflare.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows Cloudflare's main marketing website with clear navigation, headline content, call-to-action buttons, and promotional sections for their products and reports. It's the actual product interface/website, not blocked by any authentication or errors.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 91,
+      "name": "Y2Mate",
+      "file": "91-y2mate.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Y2Mate website interface with the main YouTube to MP3 converter functionality, including URL input field, convert button, and detailed instructions for use.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 92,
+      "name": "FreeConvert",
+      "file": "92-freeconvert.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the main FreeConvert file converter interface with the upload area, choose files button, and clear branding - it's the actual functional product page",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 93,
+      "name": "CloudConvert",
+      "file": "93-cloudconvert.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the main CloudConvert file converter interface with clear functionality - file selection button, format conversion options, and descriptive content about the service's features including supported formats, security, and API capabilities.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 94,
+      "name": "Compress JPEG",
+      "file": "94-compress-jpeg.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the main interface of the Compress JPEG tool with clear instructions, file upload area, compression options, and all expected functionality visible and accessible",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 95,
+      "name": "Flowkeeper",
+      "file": "95-flowkeeper.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Flowkeeper product interface - a resource directory for Webflow designers and developers with 1500+ tools and resources, displaying various categorized tags and navigation elements",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 96,
+      "name": "Good Design Tools",
+      "file": "96-good-design-tools.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Good Design Tools website homepage with full navigation menu, featured tools section, email signup, and tool cards - all content is accessible and functional",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 97,
+      "name": "Lindy",
+      "file": "97-lindy.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows Lindy's main product landing page with clear navigation, hero section about AI employees, interactive prompt input field, feature buttons, and product information - all indicating the actual functional website interface",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 98,
+      "name": "VEED.io",
+      "file": "98-veed-io.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows VEED.io's main marketing website with clear navigation, product information, and call-to-action buttons. While there is a cookie consent dialog, it doesn't block the main content and the full website functionality is accessible.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 99,
+      "name": "Higgsfield",
+      "file": "99-higgsfield.jpg",
+      "classification": "bad",
+      "confidence": 0.95,
+      "reason": "Replaced: This is clearly a CAPTCHA/verification page with the text 'Verifying you are human. This may take a few seconds.' and mentions reviewing connection security before proceeding, which are typical CAPTCHA elements rather than the actual product interface.",
+      "category": "captcha",
+      "replaced": true
+    },
+    {
+      "id": 100,
+      "name": "Google Flow",
+      "file": "100-google-flow.jpg",
+      "classification": "good",
+      "confidence": 0.9,
+      "reason": "This shows the main landing page for Google Flow/Veo with clear branding, tagline 'Where the next wave of storytelling happens with Veo', and functional elements like 'Create with Flow' button and navigation links",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 101,
+      "name": "Google AI Studio",
+      "file": "101-google-ai-studio.jpg",
+      "classification": "good",
+      "confidence": 0.9,
+      "reason": "This shows the actual Google AI Studio product interface with clear branding, navigation menu, product description, and what appears to be a video player or demo area. The page is fully loaded and accessible.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 102,
+      "name": "Sprout Social",
+      "file": "102-sprout-social.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Sprout Social marketing website with clear navigation, headline, email signup form, and product demonstration imagery. It's the main landing page showcasing their social media management tools.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 103,
+      "name": "Social Blade",
+      "file": "103-social-blade.jpg",
+      "classification": "bad",
+      "confidence": 1,
+      "reason": "Replaced: This is clearly an access denied error page showing 'SOCIAL BLADE ACCESS DENIED' and 'ISSUE DETECTED' with error details, IP address, and explanations for why access was blocked",
+      "category": "error",
+      "replaced": true
+    },
+    {
+      "id": 104,
+      "name": "Shopify Themes",
+      "file": "104-shopify-themes.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "Shows the actual Shopify Theme Store interface with clear navigation, theme previews, and functional content without any blocking elements or errors",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 105,
+      "name": "Framer Globe",
+      "file": "105-framer-globe.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Framer Globe product interface with a 3D interactive globe, component features listed, and copy functionality - clearly the main product page",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 106,
+      "name": "Shader Gradient",
+      "file": "106-shader-gradient.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Shader Gradient product landing page with clear branding, description, and call-to-action buttons for the gradient creation tool",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 107,
+      "name": "Framer Library",
+      "file": "107-framer-library.jpg",
+      "classification": "good",
+      "confidence": 0.9,
+      "reason": "This shows the actual Framer Library website interface with a curated collection of Framer resources, displaying various cards for different tools and assets like Framer Overrides, Framestack, Daily Remix, and Godlike. The content is fully visible and accessible.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 108,
+      "name": "Nav Supply",
+      "file": "108-nav-supply.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Nav Supply product landing page with clear branding, product description for Framer navigation patterns, creator attribution to Benjamin, and visible product details including 14 patterns and 08 videos.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 109,
+      "name": "Framer Things",
+      "file": "109-framer-things.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Framer Things website with full navigation, main heading 'Your Marketplace for Framer Resources', descriptive text, and an 'Explore Library' button. The page is fully loaded and accessible without any blocking elements.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 110,
+      "name": "Framer Fuel",
+      "file": "110-framer-fuel.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "Shows the main Framer Fuel website with clear branding, navigation menu, main heading 'Premium Framer Resources To Fuel Your Websites', descriptive text about their library of components, and a 'View Library' call-to-action button. This is the actual product interface.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 111,
+      "name": "Frameplate",
+      "file": "111-frameplate.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Frameplate website homepage with clear navigation, main heading about Framer templates library, call-to-action buttons, and company logos - fully functional product interface",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 112,
+      "name": "React Bits",
+      "file": "112-react-bits.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual React Bits website homepage with full navigation, branding, main content describing React components for developers, and functional call-to-action buttons. All content is clearly visible and accessible.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 113,
+      "name": "Aceternity UI",
+      "file": "113-aceternity-ui.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Aceternity UI website homepage with clear navigation, product information, and interactive components demonstrating the service",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 114,
+      "name": "Open Alternative",
+      "file": "114-open-alternative.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the main OpenAlternative website homepage with full navigation, content about open source software alternatives, email signup form, and sponsor logos - indicating the actual product interface is working properly",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 115,
+      "name": "Untitled UI",
+      "file": "115-untitled-ui.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the main product landing page for Untitled UI with full navigation, product description, pricing options, and complete interface elements visible",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 116,
+      "name": "Thind UI",
+      "file": "116-thind-ui.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Thind UI documentation website with a clear navigation menu, components list, introduction section, and a preview of the UI design system with color palettes and components visible",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 117,
+      "name": "Blank",
+      "file": "117-blank.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Blank UI Kit product website with clear branding, navigation, product description, and call-to-action buttons. All content is fully visible and accessible.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 118,
+      "name": "Lumos",
+      "file": "118-lumos.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Lumos Framework documentation website with clear navigation, cloneable project information, documentation links, and resources sections all fully visible and accessible",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 119,
+      "name": "TweakCN",
+      "file": "119-tweakcn.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "Shows the complete TweakCN product interface with navigation, main content about designing shadcn/ui themes, visual theme editor panel, and all functionality clearly visible",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 120,
+      "name": "Studio 2AM",
+      "file": "120-studio-2am.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Studio 2AM website interface with clear navigation, product categories, promotional content, and design resources displayed. All content is fully accessible without any blocking elements.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 121,
+      "name": "Brand Toolkit",
+      "file": "121-brand-toolkit.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "Shows the actual ToolKit product interface with typography controls, text editing features, and branding customization tools clearly visible and functional",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 123,
+      "name": "TextureLabs",
+      "file": "123-texturelabs.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the full TextureLabs website interface with navigation menu, featured textures, categories, and all content clearly visible and accessible",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 124,
+      "name": "Endless Tools",
+      "file": "124-endless-tools.jpg",
+      "classification": "bad",
+      "confidence": 0.95,
+      "reason": "Replaced: This is a login/authentication page with email input, 'Send Code' button, and 'Log in with password' option, blocking access to the actual product interface",
+      "category": "login",
+      "replaced": true
+    },
+    {
+      "id": 125,
+      "name": "DITHR Tool",
+      "file": "125-dithr-tool.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "Shows the full DITHR Tool interface with a colorful graphic being processed, complete control panels on the right with settings for dither type, texture size, brightness, contrast, and color options. This is clearly the actual working product interface.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 126,
+      "name": "STL to ASCII",
+      "file": "126-stl-to-ascii.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the complete functional interface of the STL to ASCII Generator tool with all controls visible including file upload, model controls, ASCII output display, and export options",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 127,
+      "name": "Kurt Mock-ups",
+      "file": "127-kurt-mock-ups.jpg",
+      "classification": "good",
+      "confidence": 0.9,
+      "reason": "This shows the actual Kurt Mock-ups website with a subscription signup form, company logos, and navigation menu - it's the functional product interface",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 128,
+      "name": "Supernova",
+      "file": "128-supernova.jpg",
+      "classification": "bad",
+      "confidence": 0.95,
+      "reason": "Replaced: This is a login/sign-in page for Supernova that blocks access to the main product interface, requiring authentication before users can access the actual content",
+      "category": "login",
+      "replaced": true
+    },
+    {
+      "id": 129,
+      "name": "Freepik",
+      "file": "129-freepik.jpg",
+      "classification": "bad",
+      "confidence": 1,
+      "reason": "This is a 403 Access Denied error page showing the user doesn't have permission to access the resource, not the actual Freepik interface",
+      "category": "error",
+      "replaced": false
+    },
+    {
+      "id": 130,
+      "name": "Pixabay",
+      "file": "130-pixabay.jpg",
+      "classification": "bad",
+      "confidence": 1,
+      "reason": "Replaced: This is clearly a CAPTCHA/verification page with the text 'Verify you are human by completing the action below' and a Cloudflare security check, not the actual Pixabay website interface",
+      "category": "captcha",
+      "replaced": true
+    },
+    {
+      "id": 131,
+      "name": "Hinto AI",
+      "file": "131-hinto-ai.jpg",
+      "classification": "good",
+      "confidence": 0.9,
+      "reason": "This shows the actual Hinto AI product website with clear navigation, main heading about turning demos into knowledge base content, and call-to-action buttons. The cookie consent dialog is a normal website element, not an obstruction to the main content.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 132,
+      "name": "VidIQ",
+      "file": "132-vidiq.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual VidIQ website homepage with clear branding, navigation menu, main headline about YouTube growth, featured creators, and call-to-action buttons. The interface is fully functional and displays the product's marketing page properly.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 133,
+      "name": "Happy Editing",
+      "file": "133-happy-editing.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the main Happy Editing website interface with full navigation, product offerings, branding elements, and promotional content clearly visible and accessible",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 134,
+      "name": "Ungrid",
+      "file": "134-ungrid.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "Shows the actual Ungrid product interface with background upload, cell images panel, and main canvas displaying a mosaic artwork being created",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 135,
+      "name": "Video to ASCII",
+      "file": "135-video-to-ascii.jpg",
+      "classification": "good",
+      "confidence": 0.9,
+      "reason": "Shows the actual Video to ASCII interface with an 'Effect Width' control slider set to 50% and an 'Open Controls' button, indicating this is the functional product interface",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 136,
+      "name": "Newhead Design",
+      "file": "136-newhead-design.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "Shows the actual Newhead Design website with clear navigation, company branding, descriptive text about their services as animators and graphic designers, and design work examples visible",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 137,
+      "name": "Motion Boutique",
+      "file": "137-motion-boutique.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Motion Boutique website with clear navigation menu, company branding, and descriptive text about their After Effects plugins and tools. The colorful geometric design and professional layout indicate a fully functional website interface.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 138,
+      "name": "21st.dev",
+      "file": "138-21st-dev.jpg",
+      "classification": "partial",
+      "confidence": 0.8,
+      "reason": "Replaced: The main interface is visible showing components library with navigation menu and content, but there's a modal/popup overlay about '1Code - Latest Product by 21st' that partially obstructs the view of the underlying content",
+      "category": "partial",
+      "replaced": true
+    },
+    {
+      "id": 139,
+      "name": "Unicorn Studio",
+      "file": "139-unicorn-studio.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Unicorn Studio product website with clear branding, navigation, main heading 'The Design Tool for WebGL Magic', descriptive text, and a 'Start creating' call-to-action button. All content is fully visible and accessible.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 140,
+      "name": "Motion for React",
+      "file": "140-motion-for-react.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Motion for React website with a clear navigation bar, examples section, search functionality, and animated content examples visible at the bottom. The page is fully functional and displays the intended product interface.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 141,
+      "name": "Plunk",
+      "file": "141-plunk.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Plunk website homepage with complete marketing content, navigation, product description, and call-to-action buttons. All content is fully visible and accessible.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 142,
+      "name": "Notion Templates",
+      "file": "142-notion-templates.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Notion Templates marketplace interface with full functionality - navigation menu, search bar, template categories, and content sections all clearly visible and accessible without any blocking elements",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 143,
+      "name": "Notionland",
+      "file": "143-notionland.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Notionland website interface with clear navigation, heading content about being 'The #1 Destination for All Things Notion', action buttons like 'Browse templates' and 'Create Account', and interactive sections asking 'What would you like to do with Notion?' with options like 'Organize my day', 'Build new habits', and 'Reach my goals'. The page is fully functional and accessible.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 144,
+      "name": "Super",
+      "file": "144-super.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows Super's main marketing/landing page with clear navigation, product description, call-to-action buttons, and example website previews. The page is fully functional and displays the actual product interface for potential users.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 145,
+      "name": "Thenty",
+      "file": "145-thenty.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the actual Thenty product website with clear navigation, main heading 'CREATE COURSES IN FRAMER', descriptive text about the platform's features, and a product interface screenshot demonstrating the course creation functionality.",
+      "category": "good",
+      "replaced": false
+    },
+    {
+      "id": 146,
+      "name": "Outseta",
+      "file": "146-outseta.jpg",
+      "classification": "good",
+      "confidence": 0.95,
+      "reason": "This shows the main marketing/landing page for Outseta with clear navigation, product information, call-to-action buttons, and example content showcasing their membership platform features.",
+      "category": "good",
+      "replaced": false
+    }
+  ],
+  "summary": {
+    "total": 146,
+    "analyzed": 145,
+    "good": 117,
+    "partial": 2,
+    "bad": 26,
+    "replaced": 26,
+    "failed": 0
+  }
+}

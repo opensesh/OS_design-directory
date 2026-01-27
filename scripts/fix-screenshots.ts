@@ -250,6 +250,12 @@ async function searchForReplacementImage(resourceName: string): Promise<string[]
  */
 async function downloadImage(url: string, outputPath: string): Promise<boolean> {
   return new Promise((resolve) => {
+    // Validate URL - reject relative paths or invalid URLs
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      resolve(false);
+      return;
+    }
+
     const protocol = url.startsWith('https') ? https : http;
 
     const request = protocol.get(

@@ -67,7 +67,7 @@ function OrbitalRing({ config, activeCategory }: OrbitalRingProps) {
   return (
     <mesh
       ref={meshRef}
-      rotation={[RING_LAYOUT.TILT_ANGLE, 0, 0]}
+      rotation={[Math.PI / 2 + RING_LAYOUT.TILT_ANGLE, 0, 0]}
       material={material}
     >
       <torusGeometry args={[config.radius, tubeRadius, tubularSegments, radialSegments]} />
