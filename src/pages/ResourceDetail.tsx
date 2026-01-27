@@ -218,7 +218,7 @@ export default function ResourceDetail() {
     <div className="min-h-screen bg-[#141414] text-[#FFFAEE]">
       {/* Header - Consistent with Home */}
       <header className="sticky top-0 z-10 bg-[#141414]/80 backdrop-blur-xl border-b border-zinc-800">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           {/* Left: Logo */}
           <Link
             to="/"
