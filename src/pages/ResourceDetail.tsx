@@ -314,7 +314,7 @@ export default function ResourceDetail() {
               transition={{ delay: 0.05 }}
               className="mb-8"
             >
-              <div className="bg-[#191919] rounded-xl p-6 flex items-center justify-center">
+              <div className="relative bg-[#191919] rounded-xl p-6 flex items-center justify-center">
                 {/* Browser Mockup - centered with adaptive aspect ratio */}
                 <div className="rounded-lg overflow-hidden border border-zinc-800/50 max-w-2xl w-full shadow-2xl max-h-[70vh]">
                   {/* Browser chrome with traffic lights */}
@@ -351,6 +351,32 @@ export default function ResourceDetail() {
                       onError={() => setScreenshotError(true)}
                     />
                   </div>
+                </div>
+
+                {/* Action buttons - fixed to bottom-right (desktop only) */}
+                <div className="hidden md:flex absolute bottom-4 right-4 items-center gap-2">
+                  {/* Copy URL button */}
+                  <button
+                    onClick={copyUrl}
+                    className={`p-2 rounded-lg border transition-all ${
+                      urlCopied
+                        ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                        : 'bg-zinc-800/80 border-zinc-700 text-zinc-400 hover:text-[#FFFAEE] hover:bg-zinc-700'
+                    }`}
+                  >
+                    {urlCopied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                  </button>
+
+                  {/* Website button */}
+                  <a
+                    href={resource.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-[#FE5102] text-white text-sm font-medium rounded-lg hover:bg-[#FE5102]/90 transition-colors"
+                  >
+                    Website
+                    <ArrowUpRight className="w-4 h-4" />
+                  </a>
                 </div>
               </div>
             </motion.div>
