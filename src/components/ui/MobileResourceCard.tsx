@@ -89,7 +89,7 @@ export function MobileResourceCard({ resource, onClick }: MobileResourceCardProp
       </div>
 
       {/* Column 3: Pricing chip (fixed width, right-aligned) */}
-      <div className="shrink-0 w-24 flex justify-end">
+      <div className="shrink-0 w-20 flex justify-end">
         {resource.pricing && (
           <span className="inline-flex items-center px-2 py-0.5 rounded bg-os-surface-dark text-[10px] font-accent font-bold uppercase text-os-text-primary-dark border border-os-border-dark">
             {resource.pricing}
