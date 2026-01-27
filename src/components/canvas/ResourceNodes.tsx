@@ -102,7 +102,9 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
     const currentOpacitiesRef = useRef<Float32Array | null>(null);
     const targetOpacitiesRef = useRef<Float32Array | null>(null);
     const currentHoverScalesRef = useRef<Float32Array | null>(null);
+    const entranceProgressRef = useRef<Float32Array | null>(null);  // Separate entrance progress from opacity
     const entranceStartTimeRef = useRef<number | null>(null);
+    const opacityAttributeRef = useRef<THREE.InstancedBufferAttribute | null>(null);
 
     // Visible count for external access
     const visibleCountRef = useRef(0);
@@ -160,7 +162,7 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
       };
     }, [resources, ringConfigs]);
 
-    // Initialize opacity and hover scale arrays
+    // Initialize opacity, hover scale, and entrance progress arrays
     useEffect(() => {
       if (resourceCount === 0) return;
 
@@ -168,6 +170,7 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
         currentOpacitiesRef.current = new Float32Array(resourceCount).fill(0);
         targetOpacitiesRef.current = new Float32Array(resourceCount).fill(ANIMATION.VISIBLE_OPACITY);
         currentHoverScalesRef.current = new Float32Array(resourceCount).fill(ANIMATION.NORMAL_SCALE);
+        entranceProgressRef.current = new Float32Array(resourceCount).fill(0);  // Track entrance separately
         entranceStartTimeRef.current = Date.now();
         setIsInitialized(false);
       }
@@ -248,6 +251,13 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
         // Add texture index attribute for per-instance texture selection
         const texIndexAttribute = new THREE.InstancedBufferAttribute(textureIndices, 1);
         meshRef.current.geometry.setAttribute('texIndex', texIndexAttribute);
+
+        // Add per-instance opacity attribute
+        const opacityArray = new Float32Array(resourceCount).fill(1.0);
+        const opacityAttribute = new THREE.InstancedBufferAttribute(opacityArray, 1);
+        opacityAttribute.setUsage(THREE.DynamicDrawUsage);  // Will be updated frequently
+        meshRef.current.geometry.setAttribute('instanceOpacity', opacityAttribute);
+        opacityAttributeRef.current = opacityAttribute;
       }
     }, [positions, colors, textureIndices, resourceCount]);
 
@@ -255,6 +265,7 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
     useFrame(() => {
       if (!meshRef.current || !groupRef.current || resourceCount === 0) return;
       if (!currentOpacitiesRef.current || !targetOpacitiesRef.current || !currentHoverScalesRef.current) return;
+      if (!entranceProgressRef.current || !opacityAttributeRef.current) return;
 
       // Note: Rotation is now handled by parent OrbitalSystem group
       // Note: Camera position stays fixed - no zoom on filter
@@ -265,33 +276,42 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
 
       const dummy = new THREE.Object3D();
       let hasChanges = false;
+      let opacityChanged = false;
 
       for (let i = 0; i < resourceCount; i++) {
-        // Entrance animation
+        // Entrance animation - track progress separately for scale
         const nodeEntranceDelay = ANIMATION.ENTRANCE_DELAY + (i * ANIMATION.STAGGER_DELAY);
         const timeSinceNodeStart = timeSinceStart - nodeEntranceDelay;
 
-        let targetOpacity = targetOpacitiesRef.current[i];
-
-        if (!isInitialized && timeSinceNodeStart < ANIMATION.ENTRANCE_DURATION) {
+        let entranceScale = entranceProgressRef.current[i];
+        if (!isInitialized) {
           if (timeSinceNodeStart <= 0) {
-            targetOpacity = 0;
+            entranceScale = 0;
+          } else if (timeSinceNodeStart < ANIMATION.ENTRANCE_DURATION) {
+            const progress = timeSinceNodeStart / ANIMATION.ENTRANCE_DURATION;
+            // Ease out quad for smooth pop-in
+            entranceScale = progress < 0.5
+              ? 2 * progress * progress
+              : 1 - Math.pow(-2 * progress + 2, 2) / 2;
           } else {
-            const entranceProgress = timeSinceNodeStart / ANIMATION.ENTRANCE_DURATION;
-            const easedProgress = entranceProgress < 0.5
-              ? 2 * entranceProgress * entranceProgress
-              : 1 - Math.pow(-2 * entranceProgress + 2, 2) / 2;
-            targetOpacity = easedProgress * targetOpacitiesRef.current[i];
+            entranceScale = 1.0;
           }
+          if (Math.abs(entranceScale - entranceProgressRef.current[i]) > 0.001) {
+            entranceProgressRef.current[i] = entranceScale;
+            hasChanges = true;
+          }
+        } else {
+          entranceScale = 1.0;
         }
 
-        // Lerp opacity
+        // Lerp filter opacity (independent of scale now)
+        const targetOpacity = targetOpacitiesRef.current[i];
         const currentOpacity = currentOpacitiesRef.current[i];
         const newOpacity = currentOpacity + (targetOpacity - currentOpacity) * ANIMATION.FILTER_LERP_SPEED;
 
         if (Math.abs(newOpacity - currentOpacity) > 0.001) {
           currentOpacitiesRef.current[i] = newOpacity;
-          hasChanges = true;
+          opacityChanged = true;
         }
 
         // Hover and click scale animation
@@ -315,10 +335,10 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           hasChanges = true;
         }
 
-        // Final scale = opacity scale * hover/click scale * size multiplier
-        // No density scale - nodes stay same size, only opacity changes on filter
+        // Final scale = entrance scale * hover/click scale * size multiplier
+        // Opacity is now handled separately via shader attribute
         const scoreSizeMultiplier = sizeMultipliers[i] || 1;
-        const finalScale = Math.max(0.001, newOpacity) * newHoverScale * scoreSizeMultiplier;
+        const finalScale = Math.max(0.001, entranceScale) * newHoverScale * scoreSizeMultiplier;
 
         dummy.position.set(
           positions[i * 3] || 0,
@@ -328,10 +348,17 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
         dummy.scale.set(finalScale, finalScale, finalScale);
         dummy.updateMatrix();
         meshRef.current.setMatrixAt(i, dummy.matrix);
+
+        // Update per-instance opacity attribute for shader
+        opacityAttributeRef.current.setX(i, newOpacity);
       }
 
       if (hasChanges) {
         meshRef.current.instanceMatrix.needsUpdate = true;
+      }
+
+      if (opacityChanged || hasChanges) {
+        opacityAttributeRef.current.needsUpdate = true;
       }
 
       // Check entrance completion
@@ -381,15 +408,18 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           '#include <common>',
           `#include <common>
           attribute float texIndex;
+          attribute float instanceOpacity;
           varying float vTexIndex;
+          varying float vInstanceOpacity;
           varying vec2 vPlanetUv;`
         );
 
-        // Pass texture index and compute spherical UV in vertex shader
+        // Pass texture index, opacity, and compute spherical UV in vertex shader
         shader.vertexShader = shader.vertexShader.replace(
           '#include <begin_vertex>',
           `#include <begin_vertex>
           vTexIndex = texIndex;
+          vInstanceOpacity = instanceOpacity;
           // Compute spherical UV from position for sphere mapping
           vec3 normalizedPos = normalize(position);
           vPlanetUv = vec2(
@@ -411,6 +441,7 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           uniform sampler2D planetTex6;
           uniform sampler2D planetTex7;
           varying float vTexIndex;
+          varying float vInstanceOpacity;
           varying vec2 vPlanetUv;
 
           vec4 samplePlanetTexture(vec2 uv, float idx) {
@@ -426,7 +457,7 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           }`
         );
 
-        // Blend planet texture with vertex color before lighting
+        // Blend planet texture with vertex color and apply per-instance opacity
         shader.fragmentShader = shader.fragmentShader.replace(
           '#include <color_fragment>',
           `#include <color_fragment>
@@ -436,7 +467,9 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           float luminance = dot(planetColor.rgb, vec3(0.299, 0.587, 0.114));
           // Blend: vertex color tinted by texture luminance detail
           // This keeps category color dominant while adding surface variation
-          diffuseColor.rgb = diffuseColor.rgb * (0.5 + luminance * 0.5);`
+          diffuseColor.rgb = diffuseColor.rgb * (0.5 + luminance * 0.5);
+          // Apply per-instance opacity for filter fading
+          diffuseColor.a *= vInstanceOpacity;`
         );
       };
 
