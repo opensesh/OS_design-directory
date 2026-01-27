@@ -20,8 +20,9 @@ const ANIMATION = {
   HOVER_LERP_SPEED: 0.15,
   CLICK_LERP_SPEED: 0.3,
   VISIBLE_OPACITY: 1.0,
-  HIDDEN_OPACITY: 0.0,
-  DIMMED_OPACITY: 0.2,         // Non-selected category nodes (slightly more visible)
+  HIDDEN_OPACITY: 0.0,           // Keep for semantic clarity (fully hidden)
+  FILTERED_OUT_OPACITY: 0.15,    // Filtered nodes stay visible but faded
+  DIMMED_OPACITY: 0.25,          // Non-selected category nodes
   HOVER_SCALE: 1.3,
   CLICK_SCALE: 1.5,
   NORMAL_SCALE: 1.0,
@@ -168,8 +169,9 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
         }
 
         // Determine final opacity (no scale change, only opacity)
+        // Filtered-out nodes stay visible but faded, not fully hidden
         if (!shouldBeVisible) {
-          targetOpacitiesRef.current![index] = ANIMATION.HIDDEN_OPACITY;
+          targetOpacitiesRef.current![index] = ANIMATION.FILTERED_OUT_OPACITY;
         } else if (categoryDimmed) {
           // Dimmed but still visible at 20% opacity
           targetOpacitiesRef.current![index] = ANIMATION.DIMMED_OPACITY;
