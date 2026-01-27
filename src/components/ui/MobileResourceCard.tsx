@@ -69,35 +69,15 @@ export function MobileResourceCard({ resource, onClick }: MobileResourceCardProp
       onClick={onClick}
       className="flex items-center gap-3 p-3 bg-os-bg-dark border-b border-os-border-dark/50 active:bg-os-surface-dark/30 transition-colors cursor-pointer"
     >
-      {/* Thumbnail */}
+      {/* Column 1: Thumbnail (fixed width) */}
       <MobileThumbnail resource={resource} />
 
-      {/* Name - flex-shrink allowed, truncate */}
-      <h3 className="font-medium text-sm text-os-text-primary-dark truncate min-w-0 flex-1 xs:flex-none xs:w-auto">
-        {resource.name}
-      </h3>
-
-      {/* Category + Subcategory - hidden on very small, visible on xs+ */}
-      <p className="hidden xs:block text-xs text-os-text-secondary-dark truncate whitespace-nowrap">
-        {resource.category}
-        {resource.subCategory && (
-          <>
-            <span className="mx-1">•</span>
-            {resource.subCategory}
-          </>
-        )}
-      </p>
-
-      {/* Pricing Badge - hidden on very small, visible on xs+ */}
-      {resource.pricing && (
-        <span className="hidden xs:inline-flex shrink-0 items-center px-2 py-0.5 rounded bg-os-surface-dark text-[10px] font-accent font-bold uppercase text-os-text-primary-dark border border-os-border-dark">
-          {resource.pricing}
-        </span>
-      )}
-
-      {/* Very small viewport fallback - stack category and pricing below name */}
-      <div className="xs:hidden flex flex-col gap-0.5">
-        <p className="text-xs text-os-text-secondary-dark truncate">
+      {/* Column 2: Name + Category below (flex-grow) */}
+      <div className="flex-1 min-w-0">
+        <h3 className="font-medium text-sm text-os-text-primary-dark truncate">
+          {resource.name}
+        </h3>
+        <p className="text-xs text-os-text-secondary-dark truncate mt-0.5">
           {resource.category}
           {resource.subCategory && (
             <>
@@ -106,14 +86,18 @@ export function MobileResourceCard({ resource, onClick }: MobileResourceCardProp
             </>
           )}
         </p>
+      </div>
+
+      {/* Column 3: Pricing chip (fixed width, right-aligned) */}
+      <div className="shrink-0 w-24 flex justify-end">
         {resource.pricing && (
-          <span className="inline-flex w-fit px-2 py-0.5 rounded bg-os-surface-dark text-[10px] font-accent font-bold uppercase text-os-text-primary-dark border border-os-border-dark">
+          <span className="inline-flex items-center px-2 py-0.5 rounded bg-os-surface-dark text-[10px] font-accent font-bold uppercase text-os-text-primary-dark border border-os-border-dark">
             {resource.pricing}
           </span>
         )}
       </div>
 
-      {/* External Link Button */}
+      {/* Column 4: External Link Button (fixed width) */}
       <a
         href={resource.url}
         target="_blank"
