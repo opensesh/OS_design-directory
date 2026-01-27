@@ -417,35 +417,60 @@ export default function ResourceDetail() {
             </div>
 
             {/* Title + Domain + Tags */}
-            <div>
+            <div className="flex-1 min-w-0">
+              {/* Clickable Title + Domain */}
               <a
                 href={resource.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex items-center gap-2"
+                className="group block"
               >
                 <h1 className="text-2xl md:text-3xl font-bold tracking-tight group-hover:text-[#FE5102] transition-colors">
                   {resource.name}
                 </h1>
-                <ArrowUpRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity text-[#FE5102]" />
+                <div className="flex items-center gap-1.5 text-zinc-400 group-hover:text-[#FE5102] transition-colors mt-1">
+                  <Globe className="w-3.5 h-3.5" />
+                  <span className="text-sm">{domain}</span>
+                </div>
               </a>
-              <div className="flex items-center gap-1.5 text-zinc-400 mb-2">
-                <Globe className="w-3.5 h-3.5" />
-                <span className="text-sm">{domain}</span>
+
+              {/* Mobile action buttons - shown below title on mobile only */}
+              <div className="flex gap-2 mt-4 md:hidden">
+                <a
+                  href={resource.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-[#FE5102] text-white text-sm font-medium rounded-lg hover:bg-[#FE5102]/90 transition-colors"
+                >
+                  Website
+                  <ArrowUpRight className="w-4 h-4" />
+                </a>
+                <button
+                  onClick={copyUrl}
+                  className={`px-4 py-3 rounded-lg border transition-all ${
+                    urlCopied
+                      ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                      : 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:bg-zinc-700'
+                  }`}
+                >
+                  {urlCopied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
+                </button>
               </div>
 
-              {/* Tags */}
+              {/* Tags in styled horizontal container */}
               {resource.tags && resource.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1.5">
-                  {resource.tags.map((tag, idx) => (
-                    <span
-                      key={idx}
-                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-800/60 border border-zinc-700/50 text-xs text-zinc-400"
-                    >
-                      <Tag className="w-2.5 h-2.5" />
-                      {tag}
-                    </span>
-                  ))}
+                <div className="bg-zinc-800/30 border border-zinc-700/50 rounded-lg px-3 py-2 mt-4">
+                  <div className="flex flex-wrap gap-1.5">
+                    {resource.tags.map((tag, idx) => (
+                      <span
+                        key={idx}
+                        className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded bg-zinc-800/60 border border-zinc-700/50 text-zinc-400"
+                      >
+                        <Tag className="w-2.5 h-2.5" />
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
