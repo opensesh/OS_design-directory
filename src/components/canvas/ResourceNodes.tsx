@@ -375,16 +375,17 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
     });
 
     // Create custom material with planet texture blending
+    // Reduced clearcoat and increased roughness to show textures better
     const customMaterial = useMemo(() => {
       const material = new THREE.MeshPhysicalMaterial({
         vertexColors: true,
         transparent: true,
         opacity: 1,
-        metalness: 0.1,
-        roughness: 0.3,
-        clearcoat: 0.8,
-        clearcoatRoughness: 0.2,
-        envMapIntensity: 0.6,
+        metalness: 0.05,          // Reduced from 0.1
+        roughness: 0.45,          // Increased from 0.3 for less shine
+        clearcoat: 0.3,           // Reduced from 0.8 - less glassy
+        clearcoatRoughness: 0.4,  // Increased from 0.2 - diffuse the coating
+        envMapIntensity: 0.4,     // Reduced from 0.6
       });
 
       // Set up texture uniforms
@@ -467,9 +468,10 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           // Extract luminance for detail
           float luminance = dot(planetColor.rgb, vec3(0.299, 0.587, 0.114));
           // Blend: vertex color tinted by texture detail
-          // Mix category color with texture - more visible surface variation
-          vec3 textureInfluence = mix(vec3(luminance), planetColor.rgb, 0.3);
-          diffuseColor.rgb = diffuseColor.rgb * (0.4 + textureInfluence * 0.6);
+          // Increased texture influence from 30% to 50% for more visible surface variation
+          vec3 textureInfluence = mix(vec3(luminance), planetColor.rgb, 0.5);
+          // Stronger blend: 30% base + 70% texture influence (was 40%/60%)
+          diffuseColor.rgb = diffuseColor.rgb * (0.3 + textureInfluence * 0.7);
           // Apply per-instance opacity for filter fading
           diffuseColor.a *= vInstanceOpacity;`
         );
