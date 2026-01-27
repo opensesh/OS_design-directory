@@ -374,14 +374,16 @@ export function generateRingPosition(
  * Convert gravity score to size multiplier
  * Higher scores = larger nodes (more visual prominence)
  *
- * Score 10.0 → 1.2x (largest)
- * Score 5.5  → 0.9x (medium)
- * Score 1.0  → 0.6x (smallest)
+ * Uses power curve for dramatic high-score emphasis:
+ * Score 1.0  → 0.50x (smallest)
+ * Score 5.0  → 0.75x (medium)
+ * Score 9.0  → 1.42x (very large)
+ * Score 10.0 → 1.50x (largest)
  *
- * ~2x difference between lowest and highest scores
+ * Ratio: Score 9 / Score 5 = ~1.9x (approximately 2x per user request)
  *
  * @param score - Gravity score (1-10)
- * @returns Size multiplier (0.6 to 1.2)
+ * @returns Size multiplier (0.5 to 1.5)
  */
 export function scoreToSizeMultiplier(score: number): number {
   // Clamp score to valid range
@@ -390,8 +392,9 @@ export function scoreToSizeMultiplier(score: number): number {
   // Normalize to 0-1 range
   const normalized = (clamped - 1) / 9;
 
-  // Map to size multiplier range (0.6 to 1.2) for ~2x difference
-  return 0.6 + normalized * 0.6;
+  // Power curve for dramatic high-score emphasis
+  // Score 1 → 0.5x, Score 5 → 0.75x, Score 9 → 1.42x, Score 10 → 1.5x
+  return 0.5 + Math.pow(normalized, 1.3) * 1.0;
 }
 
 /**
