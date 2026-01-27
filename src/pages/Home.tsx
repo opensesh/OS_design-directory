@@ -217,10 +217,6 @@ export default function Home() {
                 />
               </svg>
             </div>
-            {/* Title - visible on all screen sizes */}
-            <h1 className="text-label font-display uppercase tracking-wider text-os-text-secondary-dark">
-              Design Directory
-            </h1>
           </button>
           <div className="flex items-center gap-3">
             {/* Search Button - hidden on mobile, visible on desktop */}
@@ -290,10 +286,10 @@ export default function Home() {
         role="region"
         aria-label="Current view"
       >
-        <div className="max-w-7xl mx-auto px-6 py-6 md:py-8">
-          <div className="flex items-baseline gap-3">
+        <div className="max-w-7xl mx-auto px-6 py-3 md:py-4">
+          <div className="flex flex-col gap-0.5">
             <span className="text-caption font-accent uppercase tracking-wider text-os-text-secondary-dark">
-              Viewing
+              Design Directory
             </span>
             <AnimatePresence mode="wait">
               <motion.h2
@@ -302,7 +298,7 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -4 }}
                 transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-                className="text-h3 md:text-h3-tablet font-display text-brand-vanilla"
+                className="text-h4 md:text-h3 font-display text-brand-vanilla"
                 aria-live="polite"
               >
                 {displayMode === '3d' && 'Universe View'}

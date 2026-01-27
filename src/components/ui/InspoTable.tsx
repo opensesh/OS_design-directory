@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronUp, ChevronDown, ChevronsUpDown, ExternalLink, Search, X } from 'lucide-react';
 import type { NormalizedResource } from '../../types/resource';
+import { MobileResourceCard } from './MobileResourceCard';
 
 // Get favicon URL from domain using Google's service
 function getFaviconUrl(url: string): string {
