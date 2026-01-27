@@ -1,6 +1,6 @@
 import { useState, useMemo, lazy, Suspense, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Box, Table2, Search, LayoutGrid, Menu } from 'lucide-react';
+import { Box, Table2, Search, LayoutGrid } from 'lucide-react';
 import { SearchModal } from '../components/search/SearchModal';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -12,7 +12,6 @@ import { AIFilterResponse } from '../components/ui/AIFilterResponse';
 import InspoResourceTooltip from '../components/ui/InspoResourceTooltip';
 import { InspoTable } from '../components/ui/InspoTable';
 import { CardView } from '../components/card-view';
-import { MobileMenu } from '../components/ui/MobileMenu';
 import {
   semanticSearch,
   generateAIResponse,
@@ -65,9 +64,6 @@ export default function Home() {
 
   // Search modal state
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
-
-  // Mobile menu state
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Keyboard shortcuts
   useKeyboardShortcuts({
@@ -267,13 +263,13 @@ export default function Home() {
             </button>
           </div>
 
-          {/* Hamburger menu button - visible on mobile only */}
+          {/* Search button - visible on mobile only */}
           <button
-            onClick={() => setIsMobileMenuOpen(true)}
+            onClick={() => setIsSearchModalOpen(true)}
             className="flex md:hidden items-center justify-center w-10 h-10 bg-os-surface-dark/50 border border-os-border-dark rounded-lg text-os-text-secondary-dark hover:text-os-text-primary-dark hover:border-brand-aperol/30 transition-all"
-            aria-label="Open menu"
+            aria-label="Search resources"
           >
-            <Menu className="w-5 h-5" />
+            <Search className="w-5 h-5" />
           </button>
           </div>
         </div>
@@ -287,25 +283,65 @@ export default function Home() {
         aria-label="Current view"
       >
         <div className="max-w-7xl mx-auto px-6 py-3 md:py-4">
-          <div className="flex flex-col gap-0.5">
-            <span className="text-caption font-accent uppercase tracking-wider text-os-text-secondary-dark">
-              Design Directory
-            </span>
-            <AnimatePresence mode="wait">
-              <motion.h2
-                key={displayMode}
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-                className="text-h4 md:text-h3 font-display text-brand-vanilla"
-                aria-live="polite"
+          <div className="flex items-center justify-between">
+            {/* Left: Label + View Name */}
+            <div className="flex flex-col gap-0.5">
+              <span className="text-caption font-accent uppercase tracking-wider text-os-text-secondary-dark">
+                Design Directory
+              </span>
+              <AnimatePresence mode="wait">
+                <motion.h2
+                  key={displayMode}
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+                  className="text-h4 md:text-h3 font-display text-brand-vanilla"
+                  aria-live="polite"
+                >
+                  {displayMode === '3d' && 'Universe View'}
+                  {displayMode === 'card' && 'Card View'}
+                  {displayMode === 'table' && 'Table View'}
+                </motion.h2>
+              </AnimatePresence>
+            </div>
+
+            {/* Right: View toggle (mobile only) */}
+            <div className="flex md:hidden items-center bg-os-surface-dark/50 rounded-lg p-1 border border-os-border-dark">
+              <button
+                onClick={() => setSearchParams({})}
+                className={`p-2 rounded-md transition-all ${
+                  displayMode === '3d'
+                    ? 'bg-brand-aperol text-white'
+                    : 'text-os-text-secondary-dark hover:text-brand-vanilla'
+                }`}
+                aria-label="3D View"
               >
-                {displayMode === '3d' && 'Universe View'}
-                {displayMode === 'card' && 'Card View'}
-                {displayMode === 'table' && 'Table View'}
-              </motion.h2>
-            </AnimatePresence>
+                <Box className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setSearchParams({ display: 'card' })}
+                className={`p-2 rounded-md transition-all ${
+                  displayMode === 'card'
+                    ? 'bg-brand-aperol text-white'
+                    : 'text-os-text-secondary-dark hover:text-brand-vanilla'
+                }`}
+                aria-label="Card View"
+              >
+                <LayoutGrid className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setSearchParams({ display: 'table' })}
+                className={`p-2 rounded-md transition-all ${
+                  displayMode === 'table'
+                    ? 'bg-brand-aperol text-white'
+                    : 'text-os-text-secondary-dark hover:text-brand-vanilla'
+                }`}
+                aria-label="Table View"
+              >
+                <Table2 className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -472,20 +508,6 @@ export default function Home() {
         }}
       />
 
-      {/* Mobile Menu */}
-      <MobileMenu
-        isOpen={isMobileMenuOpen}
-        onClose={() => setIsMobileMenuOpen(false)}
-        onOpenSearch={() => setIsSearchModalOpen(true)}
-        displayMode={displayMode}
-        onDisplayModeChange={(mode) => {
-          if (mode === '3d') {
-            setSearchParams({});
-          } else {
-            setSearchParams({ display: mode });
-          }
-        }}
-      />
     </div>
   );
 }

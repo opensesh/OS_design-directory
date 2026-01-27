@@ -14,9 +14,12 @@ import {
   Copy,
   Check,
   ArrowUpRight,
+  Search,
+  ChevronRight,
 } from 'lucide-react';
 import { resources } from '../data';
 import { RatingScale } from '../components/ui/RatingScale';
+import { SearchModal } from '../components/search/SearchModal';
 
 /**
  * Get favicon URL for a given website URL
@@ -110,6 +113,7 @@ export default function ResourceDetail() {
   const [faviconError, setFaviconError] = useState(false);
   const [urlCopied, setUrlCopied] = useState(false);
   const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
   // Find the resource
   const resource = resources.find(r => r.id === Number(id));
@@ -212,22 +216,33 @@ export default function ResourceDetail() {
 
   return (
     <div className="min-h-screen bg-[#141414] text-[#FFFAEE]">
-      {/* Header */}
+      {/* Header - Consistent with Home */}
       <header className="sticky top-0 z-10 bg-[#141414]/80 backdrop-blur-xl border-b border-zinc-800">
-        <div className="max-w-7xl mx-auto px-6 py-4 grid grid-cols-3 items-center">
-          {/* Left: Back button */}
-          <div className="justify-self-start">
-            <button
-              onClick={() => navigate(-1)}
-              className="inline-flex items-center gap-2 text-zinc-400 hover:text-[#FFFAEE] transition-colors"
+        <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+          {/* Left: Logo */}
+          <Link
+            to="/"
+            className="flex items-center justify-center w-10 h-10 bg-zinc-800/50 rounded-lg border border-zinc-700 hover:border-zinc-600 transition-colors"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 301 300"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="flex-shrink-0"
             >
-              <ArrowLeft className="w-4 h-4" />
-              Back
-            </button>
-          </div>
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M89.6779 45.0952C125.924 24.2532 166.282 15.3228 203.299 19.9365C241.122 24.6493 271.008 42.8823 287.467 71.2574C303.925 99.6323 304.82 134.526 290.014 169.493C275.518 203.732 247.568 234.061 211.322 254.903C181.312 272.158 148.494 281.25 117.08 281.25C110.546 281.25 104.074 280.853 97.7016 280.062C59.8782 275.349 29.9921 257.118 13.5335 228.743C-2.92498 200.368 -3.81968 165.474 10.9865 130.507C25.4825 96.2685 53.4317 65.9375 89.6779 45.0952ZM113.022 54.5178C112.504 54.7618 111.987 55.0117 111.469 55.2613C101.203 62.9218 91.5207 73.7058 82.0022 88.5736C48.4267 141.019 56.7609 225.538 100.36 250.871C110.136 256.551 120.348 259.779 130.236 260.951C103.812 243.253 81.3686 200.716 81.3686 149.839H81.3814C81.3843 110.563 94.7644 76.2604 113.022 54.5178ZM70.212 82.4671C25.3833 121.776 7.89883 177.685 31.52 218.427C42.411 237.218 60.7648 250.604 84.1555 257.139C63.8213 242.961 46.464 218.673 42.4386 191.585C37.7557 160.093 45.5451 126.103 62.1279 95.8722C64.7191 91.1514 67.4163 86.6839 70.212 82.4671ZM101.43 158.683C102.448 184.25 107.876 207.925 116.981 226.095C124.198 240.505 133.228 250.093 142.544 253.532C141.526 227.964 134.855 205.526 125.75 187.355C118.533 172.945 110.746 162.122 101.43 158.683ZM198.902 158.683C189.586 162.122 181.81 172.933 174.58 187.355C165.475 205.526 158.804 227.952 157.786 253.532C167.102 250.093 176.12 240.518 183.349 226.095C192.454 207.925 197.884 184.262 198.902 158.683ZM171.24 38.6389C170.853 38.6705 170.466 38.7014 170.078 38.736C196.501 56.4308 218.947 98.9645 218.95 149.839L218.943 151.412C218.593 189.915 205.405 223.508 187.475 244.971C199.645 236.756 210.382 224.016 225.907 196.15C246.775 158.696 243.01 83.837 205.062 49.9329C194.228 40.2432 179.285 38.8914 171.24 38.6389ZM150.216 72.1839C145.989 120.911 130.382 149.39 100.738 149.844C131.856 150.346 146.546 182.705 149.561 236.239C152.8 182.701 168.449 150.341 199.587 149.844C170.18 149.375 154.588 120.49 150.216 72.1839ZM216.685 42.4878C257.555 69.7162 275.921 142.282 238.687 203.683C235.58 209.348 232.086 214.758 228.274 219.886C247.606 203.71 262.569 184.151 271.555 162.938C283.976 133.586 283.404 104.618 269.927 81.3758C258.633 61.8976 239.629 48.7885 216.685 42.4878ZM142.533 46.1719C133.217 49.6105 124.199 59.1844 116.97 73.6066C107.865 91.777 102.435 115.441 101.417 141.021C110.733 137.582 118.509 126.77 125.739 112.348C134.844 94.1776 141.515 71.7515 142.533 46.1719ZM157.786 46.1719C158.804 71.7392 165.475 94.1776 174.58 112.348C181.797 126.758 189.586 137.582 198.902 141.021C197.884 115.453 192.454 91.7788 183.349 73.6084C176.132 59.1982 167.102 49.6106 157.786 46.1719Z"
+                fill="#FFFAEE"
+              />
+            </svg>
+          </Link>
 
-          {/* Center: Breadcrumbs - truly centered, hidden on mobile */}
-          <div className="hidden md:flex justify-self-center items-center gap-2 text-sm">
+          {/* Center: Breadcrumbs - desktop only */}
+          <div className="hidden md:flex items-center gap-2 text-sm">
             <Link
               to={`/?display=table&category=${encodeURIComponent(resource.category || '')}`}
               className="text-zinc-400 hover:text-[#FFFAEE] transition-colors"
@@ -246,20 +261,21 @@ export default function ResourceDetail() {
             </a>
           </div>
 
-          {/* Right: Action buttons */}
-          <div className="justify-self-end flex items-center gap-2">
+          {/* Right: Desktop actions + Mobile search */}
+          <div className="flex items-center gap-2">
+            {/* Desktop: Visit Site + Copy buttons */}
             <a
               href={resource.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#FE5102] text-white rounded-lg hover:bg-[#FE5102]/90 transition-all font-medium text-sm whitespace-nowrap"
+              className="hidden md:inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#FE5102] text-white rounded-lg hover:bg-[#FE5102]/90 transition-all font-medium text-sm whitespace-nowrap"
             >
               <span>Visit Site</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </a>
             <button
               onClick={copyUrl}
-              className={`relative group inline-flex items-center justify-center w-9 h-9 rounded-lg border transition-all ${
+              className={`hidden md:inline-flex relative group items-center justify-center w-9 h-9 rounded-lg border transition-all ${
                 urlCopied
                   ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
                   : 'bg-zinc-800/80 border-zinc-700 text-zinc-400 hover:text-[#FFFAEE] hover:border-zinc-600'
@@ -270,14 +286,73 @@ export default function ResourceDetail() {
               ) : (
                 <Copy className="w-4 h-4" />
               )}
-              {/* CSS tooltip */}
               <span className="absolute -bottom-9 left-1/2 -translate-x-1/2 px-2 py-1 bg-zinc-900 text-xs text-zinc-200 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity border border-zinc-700">
                 {urlCopied ? 'Copied!' : 'Copy URL'}
               </span>
             </button>
+
+            {/* Mobile: Search button */}
+            <button
+              onClick={() => setIsSearchModalOpen(true)}
+              className="flex md:hidden items-center justify-center w-10 h-10 bg-zinc-800/50 border border-zinc-700 rounded-lg text-zinc-400 hover:text-[#FFFAEE] hover:border-zinc-600 transition-all"
+              aria-label="Search resources"
+            >
+              <Search className="w-5 h-5" />
+            </button>
           </div>
         </div>
       </header>
+
+      {/* Subheader - Mobile only: Back + Breadcrumbs + Actions */}
+      <div className="md:hidden flex items-center justify-between px-4 py-3 border-b border-zinc-800 bg-[#141414]">
+        {/* Left: Back button + Breadcrumbs (max 50% width) */}
+        <div className="flex items-center gap-2 max-w-[50%]">
+          <button
+            onClick={() => navigate(-1)}
+            className="shrink-0 p-2 rounded-lg bg-zinc-800/50 border border-zinc-700"
+          >
+            <ArrowLeft className="w-4 h-4 text-zinc-400" />
+          </button>
+          <nav className="flex items-center gap-1 text-sm min-w-0">
+            <Link
+              to={`/?display=table&category=${encodeURIComponent(resource.category || '')}`}
+              className="text-zinc-400 hover:text-[#FFFAEE] truncate transition-colors"
+            >
+              {resource.category || 'Resource'}
+            </Link>
+            <ChevronRight className="w-3 h-3 shrink-0 text-zinc-600" />
+            <span className="text-[#FFFAEE] truncate">
+              {resource.subCategory || resource.name}
+            </span>
+          </nav>
+        </div>
+
+        {/* Right: Action buttons */}
+        <div className="flex items-center gap-2 shrink-0">
+          <a
+            href={resource.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-3 py-1.5 bg-[#FE5102] text-white rounded-lg text-sm font-medium"
+          >
+            Visit Site
+          </a>
+          <button
+            onClick={copyUrl}
+            className={`p-2 rounded-lg border transition-all ${
+              urlCopied
+                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                : 'bg-zinc-800/50 border-zinc-700 text-zinc-400'
+            }`}
+          >
+            {urlCopied ? (
+              <Check className="w-4 h-4" />
+            ) : (
+              <Copy className="w-4 h-4" />
+            )}
+          </button>
+        </div>
+      </div>
 
       {/* Content */}
       <main className="max-w-7xl mx-auto px-6 py-8">
@@ -670,6 +745,16 @@ export default function ResourceDetail() {
           )}
         </motion.div>
       </main>
+
+      {/* Search Modal */}
+      <SearchModal
+        isOpen={isSearchModalOpen}
+        onClose={() => setIsSearchModalOpen(false)}
+        onSelectResource={(selectedResource) => {
+          setIsSearchModalOpen(false);
+          navigate(`/resource/${selectedResource.id}`);
+        }}
+      />
     </div>
   );
 }

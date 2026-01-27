@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence, useSpring, useTransform } from 'framer-motion';
 import { Info } from 'lucide-react';
 import { getScoreTier, TIER_LABELS, type ScoreTier } from '../../utils/orbital-layout';
 
@@ -10,6 +10,33 @@ interface RatingScaleProps {
   rationale?: string;
   /** Show info icon with tooltip */
   showTooltip?: boolean;
+  /** Animate the score and track on mount */
+  animateOnMount?: boolean;
+}
+
+/**
+ * Animated score counter that counts up from 0
+ */
+function AnimatedScore({
+  value,
+  delay = 0,
+  animate = true,
+}: {
+  value: number;
+  delay?: number;
+  animate?: boolean;
+}) {
+  const spring = useSpring(animate ? 0 : value, { stiffness: 50, damping: 20 });
+  const display = useTransform(spring, (v) => v.toFixed(1));
+
+  useEffect(() => {
+    if (animate) {
+      const timeout = setTimeout(() => spring.set(value), delay * 1000);
+      return () => clearTimeout(timeout);
+    }
+  }, [value, spring, delay, animate]);
+
+  return <motion.span>{display}</motion.span>;
 }
 
 /**
@@ -59,18 +86,14 @@ function TooltipContent({
       </div>
 
       {rationale && (
-        <p className="text-xs text-zinc-500 leading-relaxed">
+        <p className="text-xs text-zinc-400 leading-relaxed">
           {rationale}
         </p>
       )}
 
       <div className="pt-2 border-t border-zinc-700">
-        <p className="text-xs text-zinc-600 leading-relaxed">
+        <p className="text-xs text-zinc-400 leading-relaxed">
           Resources are rated based on their overall value to the design community.
-        </p>
-        <p className="mt-1.5 text-xs text-zinc-600">
-          Scores consider: sentiment (30%), utility (30%), accessibility (20%),
-          and innovation (20%).
         </p>
       </div>
     </div>
@@ -87,6 +110,7 @@ export function RatingScale({
   score,
   rationale,
   showTooltip = true,
+  animateOnMount = false,
 }: RatingScaleProps) {
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const tier = getScoreTier(score);
@@ -94,51 +118,88 @@ export function RatingScale({
   const percentage = (score / 10) * 100;
 
   return (
-    <div className="flex items-center gap-4">
+    <div
+      className="flex items-center gap-4"
+      role="region"
+      aria-label={`Rating: ${score.toFixed(1)} out of 10, ${TIER_LABELS[tier]}`}
+    >
       {/* Scale track */}
       <div className="flex-1 relative">
         {/* Number labels */}
-        <div className="flex justify-between text-xs text-zinc-500 mb-1.5">
+        <div className="flex justify-between text-xs text-zinc-400 mb-1.5">
           <span>0</span>
           <span>10</span>
         </div>
 
         {/* Track container */}
-        <div className="h-1.5 bg-zinc-800 rounded-full relative">
+        <div
+          className="h-1.5 bg-zinc-800 rounded-full relative"
+          role="progressbar"
+          aria-valuenow={score}
+          aria-valuemin={0}
+          aria-valuemax={10}
+          aria-label={`Score: ${score.toFixed(1)}`}
+        >
           {/* Filled portion */}
-          <div
-            className="absolute h-full rounded-full transition-all duration-300"
-            style={{
-              width: `${percentage}%`,
-              backgroundColor: tierColor,
-            }}
-          />
+          {animateOnMount ? (
+            <motion.div
+              className="absolute h-full rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${percentage}%` }}
+              transition={{ delay: 0.25, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              style={{ backgroundColor: tierColor }}
+            />
+          ) : (
+            <div
+              className="absolute h-full rounded-full transition-all duration-300"
+              style={{
+                width: `${percentage}%`,
+                backgroundColor: tierColor,
+              }}
+            />
+          )}
 
           {/* Indicator dot */}
-          <div
-            className="absolute w-3 h-3 rounded-full -top-[3px] border-2 border-[#141414] transition-all duration-300"
-            style={{
-              left: `calc(${percentage}% - 6px)`,
-              backgroundColor: tierColor,
-            }}
-          />
+          {animateOnMount ? (
+            <motion.div
+              className="absolute w-3 h-3 rounded-full -top-[3px] border-2 border-[#141414]"
+              initial={{ left: '-6px', scale: 0 }}
+              animate={{ left: `calc(${percentage}% - 6px)`, scale: 1 }}
+              transition={{ delay: 0.25, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              style={{ backgroundColor: tierColor }}
+            />
+          ) : (
+            <div
+              className="absolute w-3 h-3 rounded-full -top-[3px] border-2 border-[#141414] transition-all duration-300"
+              style={{
+                left: `calc(${percentage}% - 6px)`,
+                backgroundColor: tierColor,
+              }}
+            />
+          )}
         </div>
       </div>
 
       {/* Score + Info */}
       <div className="flex items-center gap-2 relative">
         <span className="text-lg font-bold text-[#FFFAEE] tabular-nums">
-          {score.toFixed(1)}
+          {animateOnMount ? (
+            <AnimatedScore value={score} delay={0.2} animate={true} />
+          ) : (
+            score.toFixed(1)
+          )}
         </span>
 
         {showTooltip && (
           <button
             type="button"
-            className="text-zinc-500 hover:text-zinc-400 transition-colors"
+            className="text-zinc-400 hover:text-zinc-300 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FE5102]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#141414] rounded"
             onMouseEnter={() => setIsTooltipOpen(true)}
             onMouseLeave={() => setIsTooltipOpen(false)}
             onClick={() => setIsTooltipOpen(!isTooltipOpen)}
-            aria-label={`Rating: ${score.toFixed(1)} - ${TIER_LABELS[tier]}`}
+            aria-label={`Rating info: ${score.toFixed(1)} - ${TIER_LABELS[tier]}`}
+            aria-expanded={isTooltipOpen}
+            aria-haspopup="true"
           >
             <Info className="w-4 h-4" />
           </button>
@@ -153,6 +214,7 @@ export function RatingScale({
               exit={{ opacity: 0, y: 4, scale: 0.95 }}
               transition={{ duration: 0.15 }}
               className="absolute z-50 bottom-full right-0 mb-2"
+              role="tooltip"
             >
               <div className="bg-zinc-900 border border-zinc-700 rounded-xl shadow-xl">
                 <TooltipContent score={score} tier={tier} rationale={rationale} />
