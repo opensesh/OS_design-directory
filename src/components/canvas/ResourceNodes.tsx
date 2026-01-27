@@ -1,5 +1,5 @@
 import { useRef, useMemo, useEffect, useState, forwardRef, useImperativeHandle } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useLoader } from '@react-three/fiber';
 import * as THREE from 'three';
 import {
   buildRingPositionMap,
@@ -8,6 +8,28 @@ import {
 } from '../../utils/orbital-layout';
 import type { NormalizedResource } from '../../types/resource';
 import { getCategoryColor } from '../../types/resource';
+
+/**
+ * Planet texture paths for node surface detail
+ */
+const PLANET_TEXTURES = [
+  '/textures/planets/2k_jupiter.jpg',
+  '/textures/planets/2k_mars.jpg',
+  '/textures/planets/2k_mercury.jpg',
+  '/textures/planets/2k_neptune.jpg',
+  '/textures/planets/2k_saturn.jpg',
+  '/textures/planets/2k_uranus.jpg',
+  '/textures/planets/2k_venus_atmosphere.jpg',
+  '/textures/planets/2k_venus_surface.jpg',
+];
+
+/**
+ * Seeded random number generator for consistent texture assignment
+ */
+function seededRandom(seed: number): number {
+  const x = Math.sin(seed * 9999) * 10000;
+  return x - Math.floor(x);
+}
 
 /**
  * Animation configuration
@@ -70,6 +92,10 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
   }, ref) {
     const meshRef = useRef<THREE.InstancedMesh>(null);
     const groupRef = useRef<THREE.Group>(null);
+    const materialRef = useRef<THREE.MeshPhysicalMaterial | null>(null);
+
+    // Load planet textures
+    const planetTextures = useLoader(THREE.TextureLoader, PLANET_TEXTURES);
 
     // Animation state
     const [isInitialized, setIsInitialized] = useState(false);
@@ -93,13 +119,14 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
       getVisibleCount: () => visibleCountRef.current,
     }));
 
-    // Calculate FIXED positions, colors, and size multipliers for ALL resources
+    // Calculate FIXED positions, colors, size multipliers, and texture indices for ALL resources
     // Resources are positioned on their category's ring
-    const { positions, colors, sizeMultipliers } = useMemo(() => {
+    const { positions, colors, sizeMultipliers, textureIndices } = useMemo(() => {
       const count = resources.length;
       const posArray = new Float32Array(count * 3);
       const colorArray = new Float32Array(count * 3);
       const sizeArray = new Float32Array(count);
+      const texIndexArray = new Float32Array(count);
 
       // Build position map using ring layout
       const positionMap = buildRingPositionMap(resources, ringConfigs);
@@ -120,9 +147,17 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
 
         // Score-based size multiplier (0.8x to 1.4x)
         sizeArray[index] = scoreToSizeMultiplier(resource.gravityScore);
+
+        // Seeded random texture index based on resource ID for consistency
+        texIndexArray[index] = Math.floor(seededRandom(resource.id) * PLANET_TEXTURES.length);
       });
 
-      return { positions: posArray, colors: colorArray, sizeMultipliers: sizeArray };
+      return {
+        positions: posArray,
+        colors: colorArray,
+        sizeMultipliers: sizeArray,
+        textureIndices: texIndexArray,
+      };
     }, [resources, ringConfigs]);
 
     // Initialize opacity and hover scale arrays
@@ -209,8 +244,12 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
       if (meshRef.current.geometry) {
         const colorAttribute = new THREE.InstancedBufferAttribute(colors, 3);
         meshRef.current.geometry.setAttribute('color', colorAttribute);
+
+        // Add texture index attribute for per-instance texture selection
+        const texIndexAttribute = new THREE.InstancedBufferAttribute(textureIndices, 1);
+        meshRef.current.geometry.setAttribute('texIndex', texIndexAttribute);
       }
-    }, [positions, colors, resourceCount]);
+    }, [positions, colors, textureIndices, resourceCount]);
 
     // Animation loop
     useFrame(() => {
@@ -307,6 +346,104 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
       }
     });
 
+    // Create custom material with planet texture blending
+    const customMaterial = useMemo(() => {
+      const material = new THREE.MeshPhysicalMaterial({
+        vertexColors: true,
+        transparent: true,
+        opacity: 1,
+        metalness: 0.1,
+        roughness: 0.3,
+        clearcoat: 0.8,
+        clearcoatRoughness: 0.2,
+        envMapIntensity: 0.6,
+      });
+
+      // Set up texture uniforms
+      planetTextures.forEach((tex, i) => {
+        tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+      });
+
+      // Inject custom shader code to sample planet textures
+      material.onBeforeCompile = (shader) => {
+        // Add texture uniforms
+        shader.uniforms.planetTex0 = { value: planetTextures[0] };
+        shader.uniforms.planetTex1 = { value: planetTextures[1] };
+        shader.uniforms.planetTex2 = { value: planetTextures[2] };
+        shader.uniforms.planetTex3 = { value: planetTextures[3] };
+        shader.uniforms.planetTex4 = { value: planetTextures[4] };
+        shader.uniforms.planetTex5 = { value: planetTextures[5] };
+        shader.uniforms.planetTex6 = { value: planetTextures[6] };
+        shader.uniforms.planetTex7 = { value: planetTextures[7] };
+
+        // Add varying and attribute declarations to vertex shader
+        shader.vertexShader = shader.vertexShader.replace(
+          '#include <common>',
+          `#include <common>
+          attribute float texIndex;
+          varying float vTexIndex;
+          varying vec2 vPlanetUv;`
+        );
+
+        // Pass texture index and compute spherical UV in vertex shader
+        shader.vertexShader = shader.vertexShader.replace(
+          '#include <begin_vertex>',
+          `#include <begin_vertex>
+          vTexIndex = texIndex;
+          // Compute spherical UV from position for sphere mapping
+          vec3 normalizedPos = normalize(position);
+          vPlanetUv = vec2(
+            atan(normalizedPos.z, normalizedPos.x) / (2.0 * 3.14159265) + 0.5,
+            asin(normalizedPos.y) / 3.14159265 + 0.5
+          );`
+        );
+
+        // Add texture uniforms and varying to fragment shader
+        shader.fragmentShader = shader.fragmentShader.replace(
+          '#include <common>',
+          `#include <common>
+          uniform sampler2D planetTex0;
+          uniform sampler2D planetTex1;
+          uniform sampler2D planetTex2;
+          uniform sampler2D planetTex3;
+          uniform sampler2D planetTex4;
+          uniform sampler2D planetTex5;
+          uniform sampler2D planetTex6;
+          uniform sampler2D planetTex7;
+          varying float vTexIndex;
+          varying vec2 vPlanetUv;
+
+          vec4 samplePlanetTexture(vec2 uv, float idx) {
+            int texIdx = int(idx);
+            if (texIdx == 0) return texture2D(planetTex0, uv);
+            else if (texIdx == 1) return texture2D(planetTex1, uv);
+            else if (texIdx == 2) return texture2D(planetTex2, uv);
+            else if (texIdx == 3) return texture2D(planetTex3, uv);
+            else if (texIdx == 4) return texture2D(planetTex4, uv);
+            else if (texIdx == 5) return texture2D(planetTex5, uv);
+            else if (texIdx == 6) return texture2D(planetTex6, uv);
+            else return texture2D(planetTex7, uv);
+          }`
+        );
+
+        // Blend planet texture with vertex color before lighting
+        shader.fragmentShader = shader.fragmentShader.replace(
+          '#include <color_fragment>',
+          `#include <color_fragment>
+          // Sample planet texture
+          vec4 planetColor = samplePlanetTexture(vPlanetUv, vTexIndex);
+          // Extract luminance for detail
+          float luminance = dot(planetColor.rgb, vec3(0.299, 0.587, 0.114));
+          // Blend: vertex color tinted by texture luminance detail
+          // This keeps category color dominant while adding surface variation
+          diffuseColor.rgb = diffuseColor.rgb * (0.5 + luminance * 0.5);`
+        );
+      };
+
+      materialRef.current = material;
+      return material;
+    }, [planetTextures]);
+
     if (resourceCount === 0) return null;
 
     return (
@@ -315,18 +452,9 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           ref={meshRef}
           args={[undefined, undefined, resourceCount]}
           frustumCulled={false}
+          material={customMaterial}
         >
           <sphereGeometry args={[nodeRadius, 32, 32]} />
-          <meshPhysicalMaterial
-            vertexColors
-            transparent
-            opacity={1}
-            metalness={0.1}
-            roughness={0.2}
-            clearcoat={1.0}
-            clearcoatRoughness={0.1}
-            envMapIntensity={0.8}
-          />
         </instancedMesh>
       </group>
     );
