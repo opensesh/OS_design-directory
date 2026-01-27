@@ -204,7 +204,7 @@ export default function OrbitalRings({ ringConfigs, activeCategory, matchedCateg
       color: string;
     }> = [];
 
-    let lastActiveRadius = RING_LAYOUT.CENTER_RADIUS; // Start from center sphere (10 units)
+    let lastActiveRadius: number = RING_LAYOUT.CENTER_RADIUS; // Start from center sphere (10 units)
 
     for (const config of sortedConfigs) {
       if (activeCategories.has(config.category)) {
