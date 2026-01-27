@@ -67,32 +67,47 @@ export function MobileResourceCard({ resource, onClick }: MobileResourceCardProp
   return (
     <div
       onClick={onClick}
-      className="flex items-start gap-3 p-3 bg-os-bg-dark border-b border-os-border-dark/50 active:bg-os-surface-dark/30 transition-colors cursor-pointer"
+      className="flex items-center gap-3 p-3 bg-os-bg-dark border-b border-os-border-dark/50 active:bg-os-surface-dark/30 transition-colors cursor-pointer"
     >
       {/* Thumbnail */}
       <MobileThumbnail resource={resource} />
 
-      {/* Content */}
-      <div className="flex-1 min-w-0">
-        {/* Name */}
-        <h3 className="font-medium text-sm text-os-text-primary-dark truncate pr-8">
-          {resource.name}
-        </h3>
+      {/* Name - flex-shrink allowed, truncate */}
+      <h3 className="font-medium text-sm text-os-text-primary-dark truncate min-w-0 flex-1 xs:flex-none xs:w-auto">
+        {resource.name}
+      </h3>
 
-        {/* Category and Subcategory */}
-        <p className="text-xs text-os-text-secondary-dark mt-0.5 truncate">
+      {/* Category + Subcategory - hidden on very small, visible on xs+ */}
+      <p className="hidden xs:block text-xs text-os-text-secondary-dark truncate whitespace-nowrap">
+        {resource.category}
+        {resource.subCategory && (
+          <>
+            <span className="mx-1">•</span>
+            {resource.subCategory}
+          </>
+        )}
+      </p>
+
+      {/* Pricing Badge - hidden on very small, visible on xs+ */}
+      {resource.pricing && (
+        <span className="hidden xs:inline-flex shrink-0 items-center px-2 py-0.5 rounded bg-os-surface-dark text-[10px] font-accent font-bold uppercase text-os-text-primary-dark border border-os-border-dark">
+          {resource.pricing}
+        </span>
+      )}
+
+      {/* Very small viewport fallback - stack category and pricing below name */}
+      <div className="xs:hidden flex flex-col gap-0.5">
+        <p className="text-xs text-os-text-secondary-dark truncate">
           {resource.category}
           {resource.subCategory && (
             <>
-              <span className="mx-1.5">•</span>
+              <span className="mx-1">•</span>
               {resource.subCategory}
             </>
           )}
         </p>
-
-        {/* Pricing Badge */}
         {resource.pricing && (
-          <span className="inline-flex items-center mt-1.5 px-2 py-0.5 rounded bg-os-surface-dark text-[10px] font-accent text-os-text-primary-dark border border-os-border-dark">
+          <span className="inline-flex w-fit px-2 py-0.5 rounded bg-os-surface-dark text-[10px] font-accent font-bold uppercase text-os-text-primary-dark border border-os-border-dark">
             {resource.pricing}
           </span>
         )}
@@ -104,7 +119,7 @@ export function MobileResourceCard({ resource, onClick }: MobileResourceCardProp
         target="_blank"
         rel="noopener noreferrer"
         onClick={(e) => e.stopPropagation()}
-        className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-lg bg-os-surface-dark border border-os-border-dark text-os-text-secondary-dark active:text-brand-aperol active:border-brand-aperol/30 transition-all"
+        className="shrink-0 flex items-center justify-center w-9 h-9 rounded-lg bg-os-surface-dark border border-os-border-dark text-os-text-secondary-dark active:text-brand-aperol active:border-brand-aperol/30 transition-all"
         title={`Visit ${resource.name}`}
       >
         <ExternalLink className="w-4 h-4" />
