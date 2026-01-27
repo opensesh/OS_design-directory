@@ -26,6 +26,7 @@ interface OrbitalRingProps {
 function OrbitalRing({ config, activeCategory }: OrbitalRingProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const currentOpacityRef = useRef(ANIMATION.DEFAULT_OPACITY);
+  const pulsePhaseRef = useRef(0);
 
   // Ring geometry parameters
   const tubeRadius = 0.02;
@@ -42,23 +43,37 @@ function OrbitalRing({ config, activeCategory }: OrbitalRingProps) {
     });
   }, [config.color]);
 
-  // Animate opacity based on active category
-  useFrame(() => {
+  // Animate opacity based on active category with pulse effect for active ring
+  useFrame((_, delta) => {
     if (!meshRef.current) return;
 
-    // Determine target opacity
+    const isActive = activeCategory === config.category;
+
+    // Update pulse phase when active
+    if (isActive) {
+      pulsePhaseRef.current += delta * 2.5;
+    } else {
+      // Gradually reset pulse phase when inactive
+      pulsePhaseRef.current *= 0.95;
+    }
+
+    // Determine target opacity with pulse modulation
     let targetOpacity = ANIMATION.DEFAULT_OPACITY;
     if (activeCategory !== null) {
-      targetOpacity = activeCategory === config.category
-        ? ANIMATION.ACTIVE_OPACITY
-        : ANIMATION.INACTIVE_OPACITY;
+      if (isActive) {
+        // Pulse between 0.6 and 1.0 when active
+        const pulse = Math.sin(pulsePhaseRef.current) * 0.2 + 0.8;
+        targetOpacity = ANIMATION.ACTIVE_OPACITY * pulse;
+      } else {
+        targetOpacity = ANIMATION.INACTIVE_OPACITY;
+      }
     }
 
     // Lerp to target
     const currentOpacity = currentOpacityRef.current;
     const newOpacity = currentOpacity + (targetOpacity - currentOpacity) * ANIMATION.OPACITY_LERP_SPEED;
 
-    if (Math.abs(newOpacity - currentOpacity) > 0.001) {
+    if (Math.abs(newOpacity - currentOpacity) > 0.001 || isActive) {
       currentOpacityRef.current = newOpacity;
       material.opacity = newOpacity;
     }
