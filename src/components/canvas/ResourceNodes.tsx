@@ -360,7 +360,7 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
       });
 
       // Set up texture uniforms
-      planetTextures.forEach((tex, i) => {
+      planetTextures.forEach((tex) => {
         tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
       });
 
