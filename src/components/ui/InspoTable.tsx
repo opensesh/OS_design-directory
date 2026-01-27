@@ -239,98 +239,102 @@ export function InspoTable({
 
       {/* Filters */}
       <div className="bg-os-bg-dark border-b border-os-border-dark">
-        <div className="p-3 sm:p-4 space-y-3 sm:space-y-0">
-          {/* Search Filter - Full width on mobile */}
-          <div className="w-full sm:w-auto">
-            <label htmlFor="search-filter" className="sr-only sm:not-sr-only block text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark mb-1.5">
-              Search
-            </label>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-os-text-secondary-dark" />
-              <input
-                id="search-filter"
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Filter resources..."
-                className="w-full sm:w-48 pl-9 pr-8 py-2 bg-os-surface-dark border border-os-border-dark rounded-lg text-xs sm:text-sm text-os-text-primary-dark placeholder:text-os-text-secondary-dark focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-os-text-secondary-dark hover:text-os-text-primary-dark"
+        <div className="p-4 md:p-6 space-y-4">
+          {/* Desktop: Flex row with filters right-aligned */}
+          {/* Mobile: Stack vertically with labels visible */}
+          <div className="flex flex-col md:flex-row md:items-end md:justify-end gap-4">
+            {/* Search Filter */}
+            <div className="w-full md:w-auto md:order-1">
+              <label htmlFor="search-filter" className="block text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark mb-2">
+                Search
+              </label>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-os-text-secondary-dark" />
+                <input
+                  id="search-filter"
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Filter resources..."
+                  className="w-full md:w-48 pl-9 pr-8 py-2 bg-os-surface-dark border border-os-border-dark rounded-lg text-xs sm:text-sm text-os-text-primary-dark placeholder:text-os-text-secondary-dark focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-os-text-secondary-dark hover:text-os-text-primary-dark"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Filter Dropdowns - 3 columns on mobile, flex row on desktop */}
+            <div className="grid grid-cols-3 md:flex gap-3 md:gap-4 md:order-2">
+              {/* Category Filter */}
+              <div className="flex flex-col">
+                <label htmlFor="category-filter" className="block text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark mb-2">
+                  Category
+                </label>
+                <select
+                  id="category-filter"
+                  value={categoryFilter}
+                  onChange={(e) => handleCategoryChange(e.target.value)}
+                  className="px-2 sm:px-3 py-2 bg-os-surface-dark border border-os-border-dark rounded-lg text-xs sm:text-sm text-os-text-primary-dark focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30"
                 >
-                  <X className="w-3 h-3" />
-                </button>
-              )}
+                  <option value="all">All</option>
+                  {filterOptions.categories.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Sub-category Filter */}
+              <div className="flex flex-col">
+                <label htmlFor="subcategory-filter" className="block text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark mb-2">
+                  Sub-cat
+                </label>
+                <select
+                  id="subcategory-filter"
+                  value={subCategoryFilter}
+                  onChange={(e) => handleSubCategoryChange(e.target.value)}
+                  className="px-2 sm:px-3 py-2 bg-os-surface-dark border border-os-border-dark rounded-lg text-xs sm:text-sm text-os-text-primary-dark focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30"
+                >
+                  <option value="all">All</option>
+                  {filterOptions.subCategories.map((subCategory) => (
+                    <option key={subCategory} value={subCategory}>
+                      {subCategory}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Pricing Filter */}
+              <div className="flex flex-col">
+                <label htmlFor="pricing-filter" className="block text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark mb-2">
+                  Pricing
+                </label>
+                <select
+                  id="pricing-filter"
+                  value={pricingFilter}
+                  onChange={(e) => handlePricingChange(e.target.value)}
+                  className="px-2 sm:px-3 py-2 bg-os-surface-dark border border-os-border-dark rounded-lg text-xs sm:text-sm text-os-text-primary-dark focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30"
+                >
+                  <option value="all">All</option>
+                  {filterOptions.pricings.map((pricing) => (
+                    <option key={pricing} value={pricing}>
+                      {pricing}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
 
-          {/* Filter Dropdowns - 3 columns on mobile, flex on desktop */}
-          <div className="grid grid-cols-3 sm:flex gap-2 sm:gap-4 sm:flex-wrap sm:items-end">
-            {/* Category Filter */}
-            <div className="flex flex-col gap-1">
-              <label htmlFor="category-filter" className="hidden sm:block text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark">
-                Category
-              </label>
-              <select
-                id="category-filter"
-                value={categoryFilter}
-                onChange={(e) => handleCategoryChange(e.target.value)}
-                className="px-2 sm:px-3 py-2 bg-os-surface-dark border border-os-border-dark rounded-lg text-xs sm:text-sm text-os-text-primary-dark focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30"
-              >
-                <option value="all">All</option>
-                {filterOptions.categories.map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Sub-category Filter */}
-            <div className="flex flex-col gap-1">
-              <label htmlFor="subcategory-filter" className="hidden sm:block text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark">
-                Sub-category
-              </label>
-              <select
-                id="subcategory-filter"
-                value={subCategoryFilter}
-                onChange={(e) => handleSubCategoryChange(e.target.value)}
-                className="px-2 sm:px-3 py-2 bg-os-surface-dark border border-os-border-dark rounded-lg text-xs sm:text-sm text-os-text-primary-dark focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30"
-              >
-                <option value="all">All</option>
-                {filterOptions.subCategories.map((subCategory) => (
-                  <option key={subCategory} value={subCategory}>
-                    {subCategory}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Pricing Filter */}
-            <div className="flex flex-col gap-1">
-              <label htmlFor="pricing-filter" className="hidden sm:block text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark">
-                Pricing
-              </label>
-              <select
-                id="pricing-filter"
-                value={pricingFilter}
-                onChange={(e) => handlePricingChange(e.target.value)}
-                className="px-2 sm:px-3 py-2 bg-os-surface-dark border border-os-border-dark rounded-lg text-xs sm:text-sm text-os-text-primary-dark focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30"
-              >
-                <option value="all">All</option>
-                {filterOptions.pricings.map((pricing) => (
-                  <option key={pricing} value={pricing}>
-                    {pricing}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Results Count */}
-          <div className="text-xs sm:text-sm text-os-text-secondary-dark pt-1 sm:pt-0">
+          {/* Results Count - with breathing room */}
+          <div className="text-sm text-os-text-secondary-dark pt-2">
             <span className="font-accent text-brand-aperol">{filteredAndSortedResources.length}</span>
             {' '}of{' '}
             <span className="font-medium">{resources.length}</span>
@@ -455,7 +459,7 @@ export function InspoTable({
                   {/* Pricing Column */}
                   <td className="p-4">
                     {resource.pricing ? (
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-os-surface-dark text-xs font-accent text-os-text-primary-dark border border-os-border-dark">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-os-surface-dark text-xs font-accent font-bold uppercase text-os-text-primary-dark border border-os-border-dark">
                         {resource.pricing}
                       </span>
                     ) : (
