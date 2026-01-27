@@ -411,226 +411,173 @@ export default function ResourceDetail() {
             </motion.div>
           )}
 
-          {/* Info Section - Two Column Layout */}
+          {/* Title + Tags Section */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="flex flex-col md:flex-row md:items-start gap-6 mb-6"
+            className="flex items-start gap-4 mb-6"
           >
-            {/* Left: Icon + Title + Domain + Tags */}
-            <div className="flex items-start gap-4">
-              {/* Thumbnail/Favicon */}
-              <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-zinc-800 border border-zinc-700 shadow-lg flex-shrink-0">
-                {hasThumbnail ? (
+            {/* Thumbnail/Favicon */}
+            <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-zinc-800 border border-zinc-700 shadow-lg flex-shrink-0">
+              {hasThumbnail ? (
+                <img
+                  src={resource.thumbnail!}
+                  alt={resource.name}
+                  className="w-full h-full object-cover"
+                  onError={() => setImgError(true)}
+                />
+              ) : faviconUrl && !faviconError ? (
+                <div className="w-full h-full flex items-center justify-center bg-zinc-800">
                   <img
-                    src={resource.thumbnail!}
+                    src={faviconUrl}
                     alt={resource.name}
-                    className="w-full h-full object-cover"
-                    onError={() => setImgError(true)}
+                    className="w-8 h-8 object-contain"
+                    onError={() => setFaviconError(true)}
                   />
-                ) : faviconUrl && !faviconError ? (
-                  <div className="w-full h-full flex items-center justify-center bg-zinc-800">
-                    <img
-                      src={faviconUrl}
-                      alt={resource.name}
-                      className="w-8 h-8 object-contain"
-                      onError={() => setFaviconError(true)}
-                    />
-                  </div>
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-zinc-800">
-                    <span className="text-xl font-bold text-zinc-400">
-                      {resource.name.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              {/* Title + Domain + Tags */}
-              <div>
-                <a
-                  href={resource.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-2"
-                >
-                  <h1 className="text-2xl md:text-3xl font-bold tracking-tight group-hover:text-[#FE5102] transition-colors">
-                    {resource.name}
-                  </h1>
-                  <ArrowUpRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity text-[#FE5102]" />
-                </a>
-                <div className="flex items-center gap-1.5 text-zinc-500 mb-2">
-                  <Globe className="w-3.5 h-3.5" />
-                  <span className="text-sm">{domain}</span>
                 </div>
-
-                {/* Tags */}
-                {resource.tags && resource.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5">
-                    {resource.tags.map((tag, idx) => (
-                      <span
-                        key={idx}
-                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-800/60 border border-zinc-700/50 text-xs text-zinc-400"
-                      >
-                        <Tag className="w-2.5 h-2.5" />
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-zinc-800">
+                  <span className="text-xl font-bold text-zinc-400">
+                    {resource.name.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+              )}
             </div>
 
-            {/* Right: Details - responsive layout */}
-            {/* Desktop: horizontal */}
-            <div className="hidden md:flex items-center gap-3 md:ml-auto">
-              <h2 className="text-xs font-semibold text-[#FFFAEE] uppercase tracking-wide flex items-center gap-2 flex-shrink-0">
-                <span className="w-6 h-px bg-[#FE5102]" />
-                Details
-              </h2>
-              <div className="flex flex-wrap items-center gap-1.5">
-                {/* Category - Aperol colored */}
-                {resource.category && (
-                  <Link
-                    to={`/?display=table&category=${encodeURIComponent(resource.category)}`}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#FE5102]/10 text-[#FE5102] text-xs font-medium border border-[#FE5102]/20 hover:bg-[#FE5102]/20 transition-colors"
-                  >
-                    <Folder className="w-3 h-3" />
-                    {resource.category}
-                  </Link>
-                )}
-
-                {/* Subcategory - Gray */}
-                {resource.subCategory && (
-                  <Link
-                    to={`/?display=table&subCategory=${encodeURIComponent(resource.subCategory)}`}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-zinc-800 text-zinc-400 text-xs border border-zinc-700 hover:bg-zinc-700 hover:text-[#FFFAEE] transition-colors"
-                  >
-                    <Layers className="w-3 h-3" />
-                    {resource.subCategory}
-                  </Link>
-                )}
-
-                {/* Pricing - Color coded */}
-                {resource.pricing && (
-                  <Link
-                    to={`/?display=table&pricing=${encodeURIComponent(resource.pricing)}`}
-                    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium border hover:opacity-80 transition-colors ${pricingStyle.bg} ${pricingStyle.text} ${pricingStyle.border}`}
-                  >
-                    <DollarSign className="w-3 h-3" />
-                    {resource.pricing}
-                  </Link>
-                )}
-
-                {/* Tier - Gray */}
-                {resource.tier && (
-                  <Link
-                    to={`/?display=table&tier=${resource.tier}`}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-zinc-800 text-zinc-400 text-xs border border-zinc-700 hover:bg-zinc-700 hover:text-[#FFFAEE] transition-colors"
-                  >
-                    <Layers className="w-3 h-3" />
-                    Tier {resource.tier}
-                  </Link>
-                )}
-
-                {/* Featured - Amber */}
-                {resource.featured && (
-                  <Link
-                    to="/?display=table&featured=true"
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-400 text-xs font-medium border border-amber-500/20 hover:bg-amber-500/20 transition-colors"
-                  >
-                    <Star className="w-3 h-3 fill-current" />
-                    Featured
-                  </Link>
-                )}
-
-                {/* Open Source - Emerald */}
-                {resource.opensource && (
-                  <Link
-                    to="/?display=table&opensource=true"
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors"
-                  >
-                    <Code className="w-3 h-3" />
-                    Open Source
-                  </Link>
-                )}
+            {/* Title + Domain + Tags */}
+            <div>
+              <a
+                href={resource.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-2"
+              >
+                <h1 className="text-2xl md:text-3xl font-bold tracking-tight group-hover:text-[#FE5102] transition-colors">
+                  {resource.name}
+                </h1>
+                <ArrowUpRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity text-[#FE5102]" />
+              </a>
+              <div className="flex items-center gap-1.5 text-zinc-400 mb-2">
+                <Globe className="w-3.5 h-3.5" />
+                <span className="text-sm">{domain}</span>
               </div>
+
+              {/* Tags */}
+              {resource.tags && resource.tags.length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                  {resource.tags.map((tag, idx) => (
+                    <span
+                      key={idx}
+                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-800/60 border border-zinc-700/50 text-xs text-zinc-400"
+                    >
+                      <Tag className="w-2.5 h-2.5" />
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
+          </motion.div>
 
-            {/* Mobile: vertical stack */}
-            <div className="md:hidden">
-              <h2 className="text-xs font-semibold text-[#FFFAEE] uppercase tracking-wide flex items-center gap-2 mb-2">
+          {/* Rating Section - Moved up after Title/Tags */}
+          {resource.gravityScore && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+              className="mb-6"
+            >
+              <h2 className="text-xs font-semibold text-[#FFFAEE] mb-3 uppercase tracking-wide flex items-center gap-2">
                 <span className="w-6 h-px bg-[#FE5102]" />
-                Details
+                Rating
               </h2>
-              <div className="flex flex-wrap gap-1.5">
-                {/* Category - Aperol colored */}
-                {resource.category && (
-                  <Link
-                    to={`/?display=table&category=${encodeURIComponent(resource.category)}`}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#FE5102]/10 text-[#FE5102] text-xs font-medium border border-[#FE5102]/20 hover:bg-[#FE5102]/20 transition-colors"
-                  >
-                    <Folder className="w-3 h-3" />
-                    {resource.category}
-                  </Link>
-                )}
+              <RatingScale
+                score={resource.gravityScore}
+                rationale={resource.gravityRationale}
+                showTooltip={true}
+                animateOnMount
+              />
+            </motion.div>
+          )}
 
-                {/* Subcategory - Gray */}
-                {resource.subCategory && (
-                  <Link
-                    to={`/?display=table&subCategory=${encodeURIComponent(resource.subCategory)}`}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-zinc-800 text-zinc-400 text-xs border border-zinc-700 hover:bg-zinc-700 hover:text-[#FFFAEE] transition-colors"
-                  >
-                    <Layers className="w-3 h-3" />
-                    {resource.subCategory}
-                  </Link>
-                )}
+          {/* Details Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="mb-6"
+          >
+            <h2 className="text-xs font-semibold text-[#FFFAEE] mb-3 uppercase tracking-wide flex items-center gap-2">
+              <span className="w-6 h-px bg-[#FE5102]" />
+              Details
+            </h2>
+            <div className="flex flex-wrap gap-1.5">
+              {/* Category - Aperol colored */}
+              {resource.category && (
+                <Link
+                  to={`/?display=table&category=${encodeURIComponent(resource.category)}`}
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#FE5102]/10 text-[#FE5102] text-xs font-medium border border-[#FE5102]/20 hover:bg-[#FE5102]/20 transition-colors"
+                >
+                  <Folder className="w-3 h-3" />
+                  {resource.category}
+                </Link>
+              )}
 
-                {/* Pricing - Color coded */}
-                {resource.pricing && (
-                  <Link
-                    to={`/?display=table&pricing=${encodeURIComponent(resource.pricing)}`}
-                    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium border hover:opacity-80 transition-colors ${pricingStyle.bg} ${pricingStyle.text} ${pricingStyle.border}`}
-                  >
-                    <DollarSign className="w-3 h-3" />
-                    {resource.pricing}
-                  </Link>
-                )}
+              {/* Subcategory - Gray */}
+              {resource.subCategory && (
+                <Link
+                  to={`/?display=table&subCategory=${encodeURIComponent(resource.subCategory)}`}
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-zinc-800 text-zinc-400 text-xs border border-zinc-700 hover:bg-zinc-700 hover:text-[#FFFAEE] transition-colors"
+                >
+                  <Layers className="w-3 h-3" />
+                  {resource.subCategory}
+                </Link>
+              )}
 
-                {/* Tier - Gray */}
-                {resource.tier && (
-                  <Link
-                    to={`/?display=table&tier=${resource.tier}`}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-zinc-800 text-zinc-400 text-xs border border-zinc-700 hover:bg-zinc-700 hover:text-[#FFFAEE] transition-colors"
-                  >
-                    <Layers className="w-3 h-3" />
-                    Tier {resource.tier}
-                  </Link>
-                )}
+              {/* Pricing - Color coded */}
+              {resource.pricing && (
+                <Link
+                  to={`/?display=table&pricing=${encodeURIComponent(resource.pricing)}`}
+                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium border hover:opacity-80 transition-colors ${pricingStyle.bg} ${pricingStyle.text} ${pricingStyle.border}`}
+                >
+                  <DollarSign className="w-3 h-3" />
+                  {resource.pricing}
+                </Link>
+              )}
 
-                {/* Featured - Amber */}
-                {resource.featured && (
-                  <Link
-                    to="/?display=table&featured=true"
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-400 text-xs font-medium border border-amber-500/20 hover:bg-amber-500/20 transition-colors"
-                  >
-                    <Star className="w-3 h-3 fill-current" />
-                    Featured
-                  </Link>
-                )}
+              {/* Tier - Gray */}
+              {resource.tier && (
+                <Link
+                  to={`/?display=table&tier=${resource.tier}`}
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-zinc-800 text-zinc-400 text-xs border border-zinc-700 hover:bg-zinc-700 hover:text-[#FFFAEE] transition-colors"
+                >
+                  <Layers className="w-3 h-3" />
+                  Tier {resource.tier}
+                </Link>
+              )}
 
-                {/* Open Source - Emerald */}
-                {resource.opensource && (
-                  <Link
-                    to="/?display=table&opensource=true"
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors"
-                  >
-                    <Code className="w-3 h-3" />
-                    Open Source
-                  </Link>
-                )}
-              </div>
+              {/* Featured - Amber */}
+              {resource.featured && (
+                <Link
+                  to="/?display=table&featured=true"
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-400 text-xs font-medium border border-amber-500/20 hover:bg-amber-500/20 transition-colors"
+                >
+                  <Star className="w-3 h-3 fill-current" />
+                  Featured
+                </Link>
+              )}
+
+              {/* Open Source - Emerald */}
+              {resource.opensource && (
+                <Link
+                  to="/?display=table&opensource=true"
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors"
+                >
+                  <Code className="w-3 h-3" />
+                  Open Source
+                </Link>
+              )}
             </div>
           </motion.div>
 
@@ -639,7 +586,7 @@ export default function ResourceDetail() {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 }}
+              transition={{ delay: 0.25 }}
               className="mb-6"
             >
               <h2 className="text-xs font-semibold text-[#FFFAEE] mb-3 uppercase tracking-wide flex items-center gap-2">
@@ -665,32 +612,12 @@ export default function ResourceDetail() {
             </motion.div>
           )}
 
-          {/* Rating Section */}
-          {resource.gravityScore && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="mb-6"
-            >
-              <h2 className="text-xs font-semibold text-[#FFFAEE] mb-3 uppercase tracking-wide flex items-center gap-2">
-                <span className="w-6 h-px bg-[#FE5102]" />
-                Rating
-              </h2>
-              <RatingScale
-                score={resource.gravityScore}
-                rationale={resource.gravityRationale}
-                showTooltip={true}
-              />
-            </motion.div>
-          )}
-
           {/* Related Resources */}
           {relatedResources.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
+              transition={{ delay: 0.3 }}
               className="mb-8 pt-6 border-t border-zinc-800/30"
             >
               <h2 className="text-xs font-semibold text-[#FFFAEE] mb-3 uppercase tracking-wide flex items-center gap-2">
