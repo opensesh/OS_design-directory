@@ -213,8 +213,8 @@ export default function Home() {
                 />
               </svg>
             </div>
-            {/* Hide title on mobile */}
-            <h1 className="hidden md:block text-xl md:text-2xl font-display font-bold text-brand-vanilla">
+            {/* Hide title on mobile - subtle label style */}
+            <h1 className="hidden md:block text-label font-display uppercase tracking-wider text-os-text-secondary-dark">
               Design Directory
             </h1>
           </button>
@@ -269,6 +269,36 @@ export default function Home() {
         </div>
         </div>
       </header>
+
+      {/* Subheader - View Mode Indicator */}
+      <section
+        className="flex-shrink-0 bg-os-bg-dark border-b border-os-border-dark"
+        role="region"
+        aria-label="Current view"
+      >
+        <div className="max-w-7xl mx-auto px-6 py-6 md:py-8">
+          <div className="flex items-baseline gap-3">
+            <span className="text-caption font-accent uppercase tracking-wider text-os-text-secondary-dark">
+              Viewing
+            </span>
+            <AnimatePresence mode="wait">
+              <motion.h2
+                key={displayMode}
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+                className="text-h3 md:text-h3-tablet font-display text-brand-vanilla"
+                aria-live="polite"
+              >
+                {displayMode === '3d' && 'Universe View'}
+                {displayMode === 'card' && 'Card View'}
+                {displayMode === 'table' && 'Table View'}
+              </motion.h2>
+            </AnimatePresence>
+          </div>
+        </div>
+      </section>
 
       {/* Canvas Container - FLEX-1 fills remaining space */}
       <div className="flex-1 relative min-h-0">
