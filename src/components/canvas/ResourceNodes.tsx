@@ -1,5 +1,6 @@
 import { useRef, useMemo, useEffect, useState, forwardRef, useImperativeHandle } from 'react';
-import { useFrame, useLoader } from '@react-three/fiber';
+import { useFrame } from '@react-three/fiber';
+import { useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 import {
   buildRingPositionMap,
@@ -94,8 +95,8 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
     const groupRef = useRef<THREE.Group>(null);
     const materialRef = useRef<THREE.MeshPhysicalMaterial | null>(null);
 
-    // Load planet textures
-    const planetTextures = useLoader(THREE.TextureLoader, PLANET_TEXTURES);
+    // Load planet textures using drei's useTexture (handles Suspense gracefully)
+    const planetTextures = useTexture(PLANET_TEXTURES);
 
     // Animation state
     const [isInitialized, setIsInitialized] = useState(false);

@@ -1,4 +1,4 @@
-import { useRef, useMemo, useEffect, useState, useCallback } from 'react';
+import { useRef, useMemo, useEffect, useState, useCallback, Suspense } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Environment } from '@react-three/drei';
 import * as THREE from 'three';
@@ -509,17 +509,19 @@ export default function InspoCanvas({
       <CentralSphere />
 
       {/* Orbital system - rings and nodes rotate together */}
-      <OrbitalSystem
-        resources={resources}
-        ringConfigs={ringConfigs}
-        activeCategory={activeCategory}
-        activeFilter={activeFilter}
-        activeSubFilter={activeSubFilter}
-        filteredResourceIds={filteredResourceIds}
-        hoveredIndex={hoveredIndex}
-        clickedIndex={clickedIndex}
-        resourceNodesRef={resourceNodesRef}
-      />
+      <Suspense fallback={null}>
+        <OrbitalSystem
+          resources={resources}
+          ringConfigs={ringConfigs}
+          activeCategory={activeCategory}
+          activeFilter={activeFilter}
+          activeSubFilter={activeSubFilter}
+          filteredResourceIds={filteredResourceIds}
+          hoveredIndex={hoveredIndex}
+          clickedIndex={clickedIndex}
+          resourceNodesRef={resourceNodesRef}
+        />
+      </Suspense>
 
       {resources.length > 0 && (
         <InteractionController
