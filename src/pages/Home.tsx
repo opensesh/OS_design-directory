@@ -53,6 +53,8 @@ export default function Home() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [activeSubCategory, setActiveSubCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [filteredResourceIds, setFilteredResourceIds] = useState<number[] | null>(null);
+  const [matchedCategories, setMatchedCategories] = useState<string[]>([]);
 
   // AI response state
   const [aiMessage, setAiMessage] = useState<string | null>(null);
@@ -102,21 +104,20 @@ export default function Home() {
     setSearchQuery(query);
     setIsAiTyping(true);
 
-    // Get base resources (filtered by category if active)
-    let baseResources = resources;
-    if (activeCategory) {
-      baseResources = baseResources.filter(r => r.category === activeCategory);
-    }
-    if (activeSubCategory) {
-      baseResources = baseResources.filter(r => r.subCategory === activeSubCategory);
-    }
-
-    // Perform semantic search
-    const { results, metadata } = semanticSearch(baseResources, query, {
+    // Perform semantic search on ALL resources (not pre-filtered)
+    const { results, metadata } = semanticSearch(resources, query, {
       minResults: 3,
       maxResults: 50,
       includeFallback: true,
     });
+
+    // Extract matched resource IDs for filtering
+    const ids = results.map(r => r.resource.id);
+    setFilteredResourceIds(ids);
+
+    // Extract matched categories for multi-ring highlighting
+    const categories = [...new Set(results.map(r => r.resource.category).filter(Boolean))] as string[];
+    setMatchedCategories(categories);
 
     // Generate contextual AI response based on search results and metadata
     const aiResponse = generateAIResponse(results, metadata);
@@ -142,6 +143,8 @@ export default function Home() {
   const dismissAiResponse = () => {
     setAiMessage(null);
     setSearchQuery('');
+    setFilteredResourceIds(null);
+    setMatchedCategories([]);
   };
 
   // Handle category change with AI response
@@ -149,6 +152,8 @@ export default function Home() {
     setActiveCategory(category);
     setActiveSubCategory(null);
     setSearchQuery('');
+    setFilteredResourceIds(null);  // Clear search filter
+    setMatchedCategories([]);       // Clear matched categories
 
     if (category) {
       const categoryResources = resources.filter(r => r.category === category);
@@ -192,6 +197,8 @@ export default function Home() {
               setActiveSubCategory(null);
               setSearchQuery('');
               setAiMessage(null);
+              setFilteredResourceIds(null);
+              setMatchedCategories([]);
             }}
             className="flex items-center gap-3 hover:opacity-80 transition-opacity"
           >
@@ -381,7 +388,11 @@ export default function Home() {
                 }
               >
                 <InspoCanvas
-                  resources={filteredResources}
+                  resources={resources}
+                  activeCategory={activeCategory}
+                  activeSubFilter={activeSubCategory}
+                  filteredResourceIds={filteredResourceIds}
+                  matchedCategories={matchedCategories}
                   onResourceClick={handleResourceClick}
                   onResourceHover={handleResourceHover}
                 />
