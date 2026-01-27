@@ -466,9 +466,10 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           vec4 planetColor = samplePlanetTexture(vPlanetUv, vTexIndex);
           // Extract luminance for detail
           float luminance = dot(planetColor.rgb, vec3(0.299, 0.587, 0.114));
-          // Blend: vertex color tinted by texture luminance detail
-          // This keeps category color dominant while adding surface variation
-          diffuseColor.rgb = diffuseColor.rgb * (0.5 + luminance * 0.5);
+          // Blend: vertex color tinted by texture detail
+          // Mix category color with texture - more visible surface variation
+          vec3 textureInfluence = mix(vec3(luminance), planetColor.rgb, 0.3);
+          diffuseColor.rgb = diffuseColor.rgb * (0.4 + textureInfluence * 0.6);
           // Apply per-instance opacity for filter fading
           diffuseColor.a *= vInstanceOpacity;`
         );
