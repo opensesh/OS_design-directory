@@ -339,8 +339,25 @@ export function InspoTable({
         </div>
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto">
+      {/* Mobile Card View */}
+      <div className="sm:hidden">
+        {filteredAndSortedResources.length === 0 ? (
+          <div className="p-8 text-center text-os-text-secondary-dark text-sm">
+            No resources match the selected filters.
+          </div>
+        ) : (
+          filteredAndSortedResources.map((resource) => (
+            <MobileResourceCard
+              key={resource.id}
+              resource={resource}
+              onClick={() => navigate(`/resource/${resource.id}`)}
+            />
+          ))
+        )}
+      </div>
+
+      {/* Desktop Table View */}
+      <div className="hidden sm:block overflow-x-auto">
         <table className="w-full border-collapse">
           <thead className="sticky top-0 z-10 bg-os-bg-dark shadow-[0_1px_0_0_rgba(255,255,255,0.1)]">
             <tr className="border-b border-os-border-dark">
