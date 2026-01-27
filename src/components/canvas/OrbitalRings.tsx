@@ -5,27 +5,33 @@ import type { CategoryRingConfig } from '../../utils/orbital-layout';
 import { RING_LAYOUT } from '../../utils/orbital-layout';
 
 /**
- * Animation configuration for ring opacity transitions
+ * Animation configuration for ring opacity and stroke transitions
  */
 const ANIMATION = {
   OPACITY_LERP_SPEED: 0.08,
+  SCALE_LERP_SPEED: 0.1,
   DEFAULT_OPACITY: 0.35,
   ACTIVE_OPACITY: 0.8,       // Selected ring - prominent
   INACTIVE_OPACITY: 0.15,    // Non-selected rings - faded
+  DEFAULT_STROKE_SCALE: 1.0,
+  ACTIVE_STROKE_SCALE: 2.0,  // 2x thicker when highlighted
 };
 
 interface OrbitalRingProps {
   config: CategoryRingConfig;
   activeCategory: string | null;
+  matchedCategories?: string[];
 }
 
 /**
  * Individual orbital ring component
  * Renders a thin torus at the specified radius with category color
+ * Supports both single-category (button filter) and multi-category (search) highlighting
  */
-function OrbitalRing({ config, activeCategory }: OrbitalRingProps) {
+function OrbitalRing({ config, activeCategory, matchedCategories }: OrbitalRingProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const currentOpacityRef = useRef(ANIMATION.DEFAULT_OPACITY);
+  const currentStrokeScaleRef = useRef(ANIMATION.DEFAULT_STROKE_SCALE);
   const pulsePhaseRef = useRef(0);
 
   // Ring geometry parameters
@@ -43,39 +49,55 @@ function OrbitalRing({ config, activeCategory }: OrbitalRingProps) {
     });
   }, [config.color]);
 
-  // Animate opacity based on active category with pulse effect for active ring
+  // Animate opacity and stroke scale based on active category or matched categories
   useFrame((_, delta) => {
     if (!meshRef.current) return;
 
     const isActive = activeCategory === config.category;
+    const isMatched = matchedCategories?.includes(config.category) ?? false;
+    const hasAnyFilter = activeCategory !== null || (matchedCategories && matchedCategories.length > 0);
 
-    // Update pulse phase when active
-    if (isActive) {
+    // Update pulse phase when active or matched
+    if (isActive || isMatched) {
       pulsePhaseRef.current += delta * 2.5;
     } else {
       // Gradually reset pulse phase when inactive
       pulsePhaseRef.current *= 0.95;
     }
 
-    // Determine target opacity with pulse modulation
+    // Determine target opacity and stroke scale with pulse modulation
     let targetOpacity = ANIMATION.DEFAULT_OPACITY;
-    if (activeCategory !== null) {
-      if (isActive) {
-        // Pulse between 0.6 and 1.0 when active
+    let targetStrokeScale = ANIMATION.DEFAULT_STROKE_SCALE;
+
+    if (hasAnyFilter) {
+      if (isActive || isMatched) {
+        // Pulse between 0.6 and 1.0 when active/matched
         const pulse = Math.sin(pulsePhaseRef.current) * 0.2 + 0.8;
         targetOpacity = ANIMATION.ACTIVE_OPACITY * pulse;
+        targetStrokeScale = ANIMATION.ACTIVE_STROKE_SCALE;  // Thicker stroke
       } else {
         targetOpacity = ANIMATION.INACTIVE_OPACITY;
+        targetStrokeScale = ANIMATION.DEFAULT_STROKE_SCALE;
       }
     }
 
-    // Lerp to target
+    // Lerp opacity
     const currentOpacity = currentOpacityRef.current;
     const newOpacity = currentOpacity + (targetOpacity - currentOpacity) * ANIMATION.OPACITY_LERP_SPEED;
 
-    if (Math.abs(newOpacity - currentOpacity) > 0.001 || isActive) {
+    if (Math.abs(newOpacity - currentOpacity) > 0.001 || isActive || isMatched) {
       currentOpacityRef.current = newOpacity;
       material.opacity = newOpacity;
+    }
+
+    // Lerp stroke scale (Y and Z scale for torus thickness)
+    const currentStrokeScale = currentStrokeScaleRef.current;
+    const newStrokeScale = currentStrokeScale + (targetStrokeScale - currentStrokeScale) * ANIMATION.SCALE_LERP_SPEED;
+
+    if (Math.abs(newStrokeScale - currentStrokeScale) > 0.001) {
+      currentStrokeScaleRef.current = newStrokeScale;
+      // Scale Y and Z to make the torus tube thicker
+      meshRef.current.scale.set(1, newStrokeScale, newStrokeScale);
     }
   });
 
@@ -93,6 +115,7 @@ function OrbitalRing({ config, activeCategory }: OrbitalRingProps) {
 interface OrbitalRingsProps {
   ringConfigs: CategoryRingConfig[];
   activeCategory: string | null;
+  matchedCategories?: string[];
 }
 
 /**
@@ -106,7 +129,7 @@ interface OrbitalRingsProps {
  * - Smooth opacity transitions on category selection
  * - Synchronized rotation with ResourceNodes group
  */
-export default function OrbitalRings({ ringConfigs, activeCategory }: OrbitalRingsProps) {
+export default function OrbitalRings({ ringConfigs, activeCategory, matchedCategories }: OrbitalRingsProps) {
   const groupRef = useRef<THREE.Group>(null);
 
   if (ringConfigs.length === 0) return null;
@@ -118,6 +141,7 @@ export default function OrbitalRings({ ringConfigs, activeCategory }: OrbitalRin
           key={config.category}
           config={config}
           activeCategory={activeCategory}
+          matchedCategories={matchedCategories}
         />
       ))}
     </group>
