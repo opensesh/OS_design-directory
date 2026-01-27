@@ -263,34 +263,6 @@ export default function ResourceDetail() {
 
           {/* Right: Desktop actions + Mobile search */}
           <div className="flex items-center gap-2">
-            {/* Desktop: Visit Site + Copy buttons */}
-            <a
-              href={resource.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden md:inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#FE5102] text-white rounded-lg hover:bg-[#FE5102]/90 transition-all font-medium text-sm whitespace-nowrap"
-            >
-              <span>Visit Site</span>
-              <ArrowUpRight className="w-3.5 h-3.5" />
-            </a>
-            <button
-              onClick={copyUrl}
-              className={`hidden md:inline-flex relative group items-center justify-center w-9 h-9 rounded-lg border transition-all ${
-                urlCopied
-                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                  : 'bg-zinc-800/80 border-zinc-700 text-zinc-400 hover:text-[#FFFAEE] hover:border-zinc-600'
-              }`}
-            >
-              {urlCopied ? (
-                <Check className="w-4 h-4" />
-              ) : (
-                <Copy className="w-4 h-4" />
-              )}
-              <span className="absolute -bottom-9 left-1/2 -translate-x-1/2 px-2 py-1 bg-zinc-900 text-xs text-zinc-200 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity border border-zinc-700">
-                {urlCopied ? 'Copied!' : 'Copy URL'}
-              </span>
-            </button>
-
             {/* Mobile: Search button */}
             <button
               onClick={() => setIsSearchModalOpen(true)}
