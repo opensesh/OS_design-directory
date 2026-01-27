@@ -275,10 +275,9 @@ export default function ResourceDetail() {
         </div>
       </header>
 
-      {/* Subheader - Mobile only: Back + Breadcrumbs + Actions */}
-      <div className="md:hidden flex items-center justify-between px-4 py-3 border-b border-zinc-800 bg-[#141414]">
-        {/* Left: Back button + Breadcrumbs (max 50% width) */}
-        <div className="flex items-center gap-2 max-w-[50%]">
+      {/* Subheader - Mobile only: Back + Breadcrumbs */}
+      <div className="md:hidden flex items-center px-6 py-3 border-b border-zinc-800 bg-[#141414]">
+        <div className="flex items-center gap-2">
           <button
             onClick={() => navigate(-1)}
             className="shrink-0 p-2 rounded-lg bg-zinc-800/50 border border-zinc-700"
@@ -297,32 +296,6 @@ export default function ResourceDetail() {
               {resource.subCategory || resource.name}
             </span>
           </nav>
-        </div>
-
-        {/* Right: Action buttons */}
-        <div className="flex items-center gap-2 shrink-0">
-          <a
-            href={resource.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-3 py-1.5 bg-[#FE5102] text-white rounded-lg text-sm font-medium"
-          >
-            Visit Site
-          </a>
-          <button
-            onClick={copyUrl}
-            className={`p-2 rounded-lg border transition-all ${
-              urlCopied
-                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                : 'bg-zinc-800/50 border-zinc-700 text-zinc-400'
-            }`}
-          >
-            {urlCopied ? (
-              <Check className="w-4 h-4" />
-            ) : (
-              <Copy className="w-4 h-4" />
-            )}
-          </button>
         </div>
       </div>
 
