@@ -8,6 +8,9 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
+      screens: {
+        'xs': '400px',  // Custom breakpoint for very small devices
+      },
       colors: {
         // BRAND-OS Color System
         brand: {
