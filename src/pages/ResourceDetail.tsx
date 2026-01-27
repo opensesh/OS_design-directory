@@ -476,46 +476,32 @@ export default function ResourceDetail() {
             </div>
           </motion.div>
 
-          {/* Rating Section - Moved up after Title/Tags */}
-          {resource.gravityScore && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 }}
-              className="mb-6"
-            >
-              <h2 className="text-xs font-semibold text-[#FFFAEE] mb-3 uppercase tracking-wide flex items-center gap-2">
-                <span className="w-6 h-px bg-[#FE5102]" />
-                Rating
-              </h2>
+          {/* Rating & Details - Combined, no section headers */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="space-y-3 mb-6"
+          >
+            {/* Rating - no header */}
+            {resource.gravityScore && (
               <RatingScale
                 score={resource.gravityScore}
                 rationale={resource.gravityRationale}
                 showTooltip={true}
                 animateOnMount
               />
-            </motion.div>
-          )}
+            )}
 
-          {/* Details Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="mb-6"
-          >
-            <h2 className="text-xs font-semibold text-[#FFFAEE] mb-3 uppercase tracking-wide flex items-center gap-2">
-              <span className="w-6 h-px bg-[#FE5102]" />
-              Details
-            </h2>
+            {/* Details badges - smaller to match tags, no header */}
             <div className="flex flex-wrap gap-1.5">
               {/* Category - Aperol colored */}
               {resource.category && (
                 <Link
                   to={`/?display=table&category=${encodeURIComponent(resource.category)}`}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#FE5102]/10 text-[#FE5102] text-xs font-medium border border-[#FE5102]/20 hover:bg-[#FE5102]/20 transition-colors"
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#FE5102]/10 text-[#FE5102] text-xs border border-[#FE5102]/20 hover:bg-[#FE5102]/20 transition-colors"
                 >
-                  <Folder className="w-3 h-3" />
+                  <Folder className="w-2.5 h-2.5" />
                   {resource.category}
                 </Link>
               )}
@@ -524,9 +510,9 @@ export default function ResourceDetail() {
               {resource.subCategory && (
                 <Link
                   to={`/?display=table&subCategory=${encodeURIComponent(resource.subCategory)}`}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-zinc-800 text-zinc-400 text-xs border border-zinc-700 hover:bg-zinc-700 hover:text-[#FFFAEE] transition-colors"
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-800/60 text-zinc-400 text-xs border border-zinc-700/50 hover:bg-zinc-700 hover:text-[#FFFAEE] transition-colors"
                 >
-                  <Layers className="w-3 h-3" />
+                  <Layers className="w-2.5 h-2.5" />
                   {resource.subCategory}
                 </Link>
               )}
@@ -535,9 +521,9 @@ export default function ResourceDetail() {
               {resource.pricing && (
                 <Link
                   to={`/?display=table&pricing=${encodeURIComponent(resource.pricing)}`}
-                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium border hover:opacity-80 transition-colors ${pricingStyle.bg} ${pricingStyle.text} ${pricingStyle.border}`}
+                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs border hover:opacity-80 transition-colors ${pricingStyle.bg} ${pricingStyle.text} ${pricingStyle.border}`}
                 >
-                  <DollarSign className="w-3 h-3" />
+                  <DollarSign className="w-2.5 h-2.5" />
                   {resource.pricing}
                 </Link>
               )}
@@ -546,9 +532,9 @@ export default function ResourceDetail() {
               {resource.tier && (
                 <Link
                   to={`/?display=table&tier=${resource.tier}`}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-zinc-800 text-zinc-400 text-xs border border-zinc-700 hover:bg-zinc-700 hover:text-[#FFFAEE] transition-colors"
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-800/60 text-zinc-400 text-xs border border-zinc-700/50 hover:bg-zinc-700 hover:text-[#FFFAEE] transition-colors"
                 >
-                  <Layers className="w-3 h-3" />
+                  <Layers className="w-2.5 h-2.5" />
                   Tier {resource.tier}
                 </Link>
               )}
@@ -557,9 +543,9 @@ export default function ResourceDetail() {
               {resource.featured && (
                 <Link
                   to="/?display=table&featured=true"
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-400 text-xs font-medium border border-amber-500/20 hover:bg-amber-500/20 transition-colors"
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 text-xs border border-amber-500/20 hover:bg-amber-500/20 transition-colors"
                 >
-                  <Star className="w-3 h-3 fill-current" />
+                  <Star className="w-2.5 h-2.5 fill-current" />
                   Featured
                 </Link>
               )}
@@ -568,9 +554,9 @@ export default function ResourceDetail() {
               {resource.opensource && (
                 <Link
                   to="/?display=table&opensource=true"
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-medium border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors"
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-xs border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors"
                 >
-                  <Code className="w-3 h-3" />
+                  <Code className="w-2.5 h-2.5" />
                   Open Source
                 </Link>
               )}
