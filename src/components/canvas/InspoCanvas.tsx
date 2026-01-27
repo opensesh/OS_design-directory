@@ -338,6 +338,7 @@ interface OrbitalSystemProps {
   activeFilter?: string | null;
   activeSubFilter?: string | null;
   filteredResourceIds?: number[] | null;
+  matchedCategories?: string[];
   hoveredIndex: number | null;
   clickedIndex: number | null;
   resourceNodesRef: React.RefObject<ResourceNodesHandle>;
@@ -350,6 +351,7 @@ function OrbitalSystem({
   activeFilter,
   activeSubFilter,
   filteredResourceIds,
+  matchedCategories,
   hoveredIndex,
   clickedIndex,
   resourceNodesRef,
@@ -371,6 +373,7 @@ function OrbitalSystem({
         <OrbitalRings
           ringConfigs={ringConfigs}
           activeCategory={activeCategory || null}
+          matchedCategories={matchedCategories}
         />
       )}
 
@@ -401,6 +404,7 @@ interface InspoCanvasProps {
   activeFilter?: string | null;
   activeSubFilter?: string | null;
   filteredResourceIds?: number[] | null;
+  matchedCategories?: string[];
   onResourceHover?: (resource: NormalizedResource | null, mousePosition: { x: number; y: number }) => void;
   onResourceClick?: (resource: NormalizedResource) => void;
 }
@@ -420,6 +424,7 @@ export default function InspoCanvas({
   activeFilter,
   activeSubFilter,
   filteredResourceIds,
+  matchedCategories,
   onResourceHover,
   onResourceClick,
 }: InspoCanvasProps) {
@@ -517,6 +522,7 @@ export default function InspoCanvas({
           activeFilter={activeFilter}
           activeSubFilter={activeSubFilter}
           filteredResourceIds={filteredResourceIds}
+          matchedCategories={matchedCategories}
           hoveredIndex={hoveredIndex}
           clickedIndex={clickedIndex}
           resourceNodesRef={resourceNodesRef}
