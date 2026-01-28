@@ -126,21 +126,25 @@ interface SkyboxProps {
 function Skybox({ texturePath = '/textures/galaxy/skybox.jpg' }: SkyboxProps) {
   const texture = useTexture(texturePath);
 
-  // Configure texture for equirectangular mapping
+  // Configure texture for equirectangular mapping with seamless wrapping
   useMemo(() => {
     texture.mapping = THREE.EquirectangularReflectionMapping;
     texture.colorSpace = THREE.SRGBColorSpace;
+    // Seamless wrapping and quality improvements
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.ClampToEdgeWrapping;
+    texture.anisotropy = 16;
   }, [texture]);
 
   return (
     <mesh scale={[-500, 500, 500]}>
-      <sphereGeometry args={[1, 64, 64]} />
+      <sphereGeometry args={[1, 128, 64]} />
       <meshBasicMaterial
         map={texture}
         side={THREE.BackSide}
         depthWrite={false}
         transparent={true}
-        opacity={0.6}
+        opacity={0.35}
       />
     </mesh>
   );
