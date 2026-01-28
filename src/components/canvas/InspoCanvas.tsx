@@ -22,6 +22,14 @@ const CAMERA_ANIMATION = {
 };
 
 /**
+ * Keyboard navigation configuration
+ */
+const KEYBOARD_NAV = {
+  MOVE_SPEED: 0.8,
+  ROTATE_SPEED: 0.02,
+};
+
+/**
  * CursorLight
  *
  * A point light that follows the cursor position in 3D space.
@@ -66,6 +74,85 @@ function CursorLight() {
       color="#ffffff"
     />
   );
+}
+
+/**
+ * KeyboardController
+ *
+ * Handles keyboard navigation for camera movement.
+ * Arrow keys or WASD for panning, Q/E for zoom in/out.
+ */
+function KeyboardController() {
+  const { camera, gl } = useThree();
+  const keysPressed = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    const canvas = gl.domElement;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Only handle if canvas is focused or no input is focused
+      const activeElement = document.activeElement;
+      if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+        return;
+      }
+      keysPressed.current.add(e.key.toLowerCase());
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      keysPressed.current.delete(e.key.toLowerCase());
+    };
+
+    // Make canvas focusable
+    canvas.tabIndex = 0;
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [gl]);
+
+  useFrame(() => {
+    const keys = keysPressed.current;
+    if (keys.size === 0) return;
+
+    // Get camera right and up vectors for movement
+    const right = new THREE.Vector3();
+    const up = new THREE.Vector3(0, 1, 0);
+    camera.getWorldDirection(right);
+    right.cross(up).normalize();
+
+    const forward = new THREE.Vector3();
+    camera.getWorldDirection(forward);
+
+    // Horizontal movement (Arrow Left/Right or A/D)
+    if (keys.has('arrowleft') || keys.has('a')) {
+      camera.position.add(right.clone().multiplyScalar(-KEYBOARD_NAV.MOVE_SPEED));
+    }
+    if (keys.has('arrowright') || keys.has('d')) {
+      camera.position.add(right.clone().multiplyScalar(KEYBOARD_NAV.MOVE_SPEED));
+    }
+
+    // Vertical movement (Arrow Up/Down or W/S)
+    if (keys.has('arrowup') || keys.has('w')) {
+      camera.position.add(up.clone().multiplyScalar(KEYBOARD_NAV.MOVE_SPEED));
+    }
+    if (keys.has('arrowdown') || keys.has('s')) {
+      camera.position.add(up.clone().multiplyScalar(-KEYBOARD_NAV.MOVE_SPEED));
+    }
+
+    // Zoom (Q/E or +/-)
+    if (keys.has('q') || keys.has('=') || keys.has('+')) {
+      camera.position.add(forward.clone().multiplyScalar(KEYBOARD_NAV.MOVE_SPEED * 2));
+    }
+    if (keys.has('e') || keys.has('-') || keys.has('_')) {
+      camera.position.add(forward.clone().multiplyScalar(-KEYBOARD_NAV.MOVE_SPEED * 2));
+    }
+  });
+
+  return null;
 }
 
 /**
@@ -573,6 +660,9 @@ export default function InspoCanvas({
       {/* Cursor-following light for dynamic clearcoat reflections */}
       <CursorLight />
 
+      {/* Keyboard navigation */}
+      <KeyboardController />
+
       {/* Environment map for clearcoat reflections */}
       <Environment preset="night" background={false} />
 
@@ -616,7 +706,8 @@ export default function InspoCanvas({
         minDistance={30}
         maxDistance={200}
         autoRotate={false}
-        enablePan={false}
+        enablePan={true}
+        panSpeed={0.8}
       />
     </Canvas>
   );
