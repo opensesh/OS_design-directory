@@ -6,21 +6,20 @@ import type { CategoryCluster } from '../../utils/orbital-layout';
 
 /**
  * Cloud configuration for volumetric nebula effect
- * Inspired by Red Stapler's Three.js nebula tutorial
+ * Using billboarded sprites for true 3D parallax
  */
 const CLOUD_CONFIG = {
-  PLANES_PER_CLUSTER: 40,      // Number of cloud planes per cluster
-  PLANE_SIZE: 25,              // Size of each plane
-  BASE_OPACITY: 0.18,          // Default opacity
-  ACTIVE_OPACITY: 0.25,        // Highlighted when category selected
-  MATCHED_OPACITY: 0.21,       // Matched via search
-  INACTIVE_OPACITY: 0.06,      // Faded when filtered out
-  ROTATION_SPEED: 0.0008,      // Slow drift animation
-  OPACITY_LERP_SPEED: 0.06,    // Smooth transitions
+  SPRITES_PER_CLUSTER: 50,    // Number of sprites per cluster (increased for better coverage)
+  SPRITE_SIZE: 20,            // Base size of each sprite
+  BASE_OPACITY: 0.18,         // Default opacity
+  ACTIVE_OPACITY: 0.25,       // Highlighted when category selected
+  MATCHED_OPACITY: 0.21,      // Matched via search
+  INACTIVE_OPACITY: 0.06,     // Faded when filtered out
+  OPACITY_LERP_SPEED: 0.06,   // Smooth transitions
 };
 
 /**
- * Seeded random number generator for deterministic plane positions
+ * Seeded random number generator for deterministic sprite positions
  */
 function seededRandom(seed: string): () => number {
   let hash = 0;
@@ -38,10 +37,9 @@ function seededRandom(seed: string): () => number {
   };
 }
 
-interface CloudPlaneData {
+interface CloudSpriteData {
   opacityFactor: number;
   position: THREE.Vector3;
-  rotation: THREE.Euler;
   scale: number;
 }
 
@@ -54,39 +52,42 @@ interface NebulaCloudProps {
 }
 
 /**
- * NebulaCloud - Volumetric cloud planes around a category cluster
+ * NebulaCloud - Volumetric billboarded sprites around a category cluster
  *
- * Renders multiple textured plane meshes with slow rotation
- * to create a volumetric, foggy nebula effect.
+ * Uses sprites that always face the camera, positioned at different depths
+ * within the cluster to create true 3D parallax when orbiting.
  */
 function NebulaCloud({ cluster, texture, isActive, isMatched, hasAnyFilter }: NebulaCloudProps) {
   const groupRef = useRef<THREE.Group>(null);
-  const materialsRef = useRef<THREE.MeshBasicMaterial[]>([]);
+  const materialsRef = useRef<THREE.SpriteMaterial[]>([]);
   const currentOpacityRef = useRef(CLOUD_CONFIG.BASE_OPACITY);
 
-  // Generate plane positions and rotations deterministically
-  const planes = useMemo<CloudPlaneData[]>(() => {
-    const result: CloudPlaneData[] = [];
-    const random = seededRandom(cluster.category + '-planes');
+  // Generate sprite positions deterministically with 3D Gaussian distribution
+  const sprites = useMemo<CloudSpriteData[]>(() => {
+    const result: CloudSpriteData[] = [];
+    const random = seededRandom(cluster.category + '-sprites');
 
-    for (let i = 0; i < CLOUD_CONFIG.PLANES_PER_CLUSTER; i++) {
-      // Random position within cluster radius using Gaussian-like distribution
+    for (let i = 0; i < CLOUD_CONFIG.SPRITES_PER_CLUSTER; i++) {
+      // Random position using Box-Muller for Gaussian distribution
       const u1 = random() || 0.0001;
       const u2 = random();
       const u3 = random() || 0.0001;
       const u4 = random();
 
-      const stdDev = cluster.radius * 0.7;
+      const stdDev = cluster.radius * 0.8;
 
-      // Box-Muller transform for Gaussian distribution
+      // Gaussian distributed offsets for 3D volumetric positioning
       const x = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2) * stdDev;
-      const y = Math.sqrt(-2 * Math.log(u1)) * Math.sin(2 * Math.PI * u2) * stdDev * 0.4; // Flatten Y
+      const y = Math.sqrt(-2 * Math.log(u1)) * Math.sin(2 * Math.PI * u2) * stdDev * 0.5;
       const z = Math.sqrt(-2 * Math.log(u3)) * Math.cos(2 * Math.PI * u4) * stdDev;
 
-      // Calculate distance-based opacity factor for volumetric effect
+      // Distance-based opacity: brighter at center, fade at edges
       const dist = Math.sqrt(x * x + y * y + z * z);
       const normalizedDist = dist / (cluster.radius * 1.5);
-      const opacityFactor = Math.max(0.3, 1.0 - normalizedDist * 0.7);
+      const opacityFactor = Math.max(0.2, 1.0 - normalizedDist * 0.8);
+
+      // Size varies inversely with opacity (outer sprites are larger but more transparent)
+      const sizeVariation = 0.4 + random() * 1.2;
 
       result.push({
         position: new THREE.Vector3(
@@ -94,46 +95,40 @@ function NebulaCloud({ cluster, texture, isActive, isMatched, hasAnyFilter }: Ne
           cluster.center.y + y,
           cluster.center.z + z
         ),
-        rotation: new THREE.Euler(
-          random() * Math.PI,              // Random X (0 to π)
-          random() * Math.PI * 2,          // Random Y (0 to 2π)
-          random() * Math.PI * 2           // Random Z (0 to 2π)
-        ),
-        opacityFactor: opacityFactor,
-        scale: 0.5 + random() * 1.0,  // Size variation (0.5 to 1.5)
+        opacityFactor,
+        scale: sizeVariation,
       });
     }
 
     return result;
   }, [cluster]);
 
-  // Create materials for each plane (tinted with cluster color)
+  // Create sprite materials (tinted with cluster color)
   const materials = useMemo(() => {
     const color = new THREE.Color(cluster.color);
-    const mats: THREE.MeshBasicMaterial[] = [];
+    const mats: THREE.SpriteMaterial[] = [];
 
-    for (let i = 0; i < planes.length; i++) {
-      const mat = new THREE.MeshBasicMaterial({
+    for (let i = 0; i < sprites.length; i++) {
+      const mat = new THREE.SpriteMaterial({
         map: texture,
         color: color,
         transparent: true,
-        opacity: CLOUD_CONFIG.BASE_OPACITY * planes[i].opacityFactor,
+        opacity: CLOUD_CONFIG.BASE_OPACITY * sprites[i].opacityFactor,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
-        side: THREE.DoubleSide,
       });
       mats.push(mat);
     }
 
     materialsRef.current = mats;
     return mats;
-  }, [cluster.color, texture, planes]);
+  }, [cluster.color, texture, sprites]);
 
-  // Animate rotation and opacity
-  useFrame((_state, _delta) => {
+  // Animate opacity transitions
+  useFrame(() => {
     if (!groupRef.current) return;
 
-    // Determine target opacity
+    // Determine target opacity based on filter state
     let targetOpacity = CLOUD_CONFIG.BASE_OPACITY;
 
     if (hasAnyFilter) {
@@ -146,42 +141,31 @@ function NebulaCloud({ cluster, texture, isActive, isMatched, hasAnyFilter }: Ne
       }
     }
 
-    // Lerp opacity
+    // Smooth lerp opacity
     const currentOpacity = currentOpacityRef.current;
     const newOpacity = currentOpacity + (targetOpacity - currentOpacity) * CLOUD_CONFIG.OPACITY_LERP_SPEED;
 
     if (Math.abs(newOpacity - currentOpacity) > 0.001) {
       currentOpacityRef.current = newOpacity;
       materialsRef.current.forEach((mat, i) => {
-        mat.opacity = newOpacity * planes[i].opacityFactor;
+        mat.opacity = newOpacity * sprites[i].opacityFactor;
       });
     }
-
-    // Rotate each plane slowly
-    groupRef.current.children.forEach((child) => {
-      if (child instanceof THREE.Mesh) {
-        child.rotation.z -= CLOUD_CONFIG.ROTATION_SPEED;
-      }
-    });
   });
-
-  // Shared geometry for all planes
-  const geometry = useMemo(() => {
-    return new THREE.PlaneGeometry(CLOUD_CONFIG.PLANE_SIZE, CLOUD_CONFIG.PLANE_SIZE);
-  }, []);
 
   return (
     <group ref={groupRef}>
-      {planes.map((plane, i) => (
-        <mesh
-          key={i}
-          position={plane.position}
-          rotation={plane.rotation}
-          scale={plane.scale}
-          geometry={geometry}
-          material={materials[i]}
-        />
-      ))}
+      {sprites.map((sprite, i) => {
+        const size = CLOUD_CONFIG.SPRITE_SIZE * sprite.scale;
+        return (
+          <sprite
+            key={i}
+            position={sprite.position}
+            scale={[size, size, 1]}
+            material={materials[i]}
+          />
+        );
+      })}
     </group>
   );
 }
@@ -195,15 +179,15 @@ interface NebulaPlanesProps {
 /**
  * NebulaPlanes Component
  *
- * Renders volumetric cloud planes around each category cluster.
- * Creates a realistic nebula effect using textured planes with
- * slow rotation animation and category-colored tinting.
+ * Renders volumetric nebula clouds around each category cluster using
+ * billboarded sprites for true 3D depth perception.
  *
  * Features:
- * - Plane-based volumetric clouds (vs particle-based NebulaClusters)
+ * - Billboarded sprites (always face camera) for 3D parallax
+ * - 3D Gaussian distribution creates volumetric appearance
+ * - Parallax motion when orbiting the galaxy
  * - Additive blending for ethereal glow
  * - Smooth opacity transitions on filter
- * - Slow z-axis rotation for organic feel
  */
 export default function NebulaPlanes({
   clusters,
