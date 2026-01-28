@@ -189,10 +189,10 @@ export default function Home() {
       {/* 3D Canvas - FIXED BELOW HEADERS (only in 3D mode) */}
       {displayMode === '3d' && (
         <div className="fixed inset-x-0 top-[124px] bottom-[220px] z-0">
-          {/* Top gradient fade for visual separation from headers */}
+          {/* Top gradient - aggressive fade from dark for seamless blend */}
           <div
-            className="absolute top-0 inset-x-0 h-24 pointer-events-none z-10"
-            style={{ background: 'linear-gradient(to bottom, rgba(20,20,20,0.95) 0%, transparent 100%)' }}
+            className="absolute top-0 inset-x-0 h-32 pointer-events-none z-10"
+            style={{ background: 'linear-gradient(to bottom, rgba(20,20,20,1) 0%, rgba(20,20,20,0.8) 40%, transparent 100%)' }}
           />
           <Suspense
             fallback={
@@ -257,7 +257,7 @@ export default function Home() {
             <img 
               src="/assets/logo-wordmark-vanilla.png" 
               alt="open session" 
-              className="h-9 w-auto"
+              className="h-14 w-auto"
             />
           </button>
           <div className="flex items-center gap-3">
@@ -491,6 +491,11 @@ export default function Home() {
             exit={{ opacity: 0, y: 30 }}
             transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
           >
+            {/* Bottom gradient - aggressive fade to dark for seamless blend */}
+            <div
+              className="absolute -top-32 left-0 right-0 h-32 pointer-events-none z-10"
+              style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(20,20,20,0.8) 60%, rgba(20,20,20,1) 100%)' }}
+            />
 
             <div className="w-full max-w-7xl mx-auto px-6 pt-2 pb-6 space-y-3 pointer-events-auto">
               {/* AI Response - absolutely positioned to overlay without pushing layout */}
