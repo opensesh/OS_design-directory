@@ -445,3 +445,269 @@ export function buildRingPositionMap(
 
   return positions;
 }
+
+// ============================================================
+// Galaxy Cluster Layout System
+// ============================================================
+
+/**
+ * Category cluster configuration for galaxy layout
+ */
+export interface CategoryCluster {
+  category: string;
+  center: { x: number; y: number; z: number };
+  radius: number;  // Cluster spread radius
+  color: string;
+  resourceCount: number;
+}
+
+/**
+ * Galaxy layout constants
+ */
+export const GALAXY_LAYOUT = {
+  MIN_CLUSTER_DISTANCE: 25,  // Minimum distance between cluster centers
+  MAX_CLUSTER_DISTANCE: 60,  // Maximum distance from origin for cluster centers
+  BASE_CLUSTER_RADIUS: 12,   // Base radius for clusters
+  MAX_CLUSTER_RADIUS: 20,    // Maximum cluster radius (for large categories)
+  PLACEMENT_ATTEMPTS: 50,    // Max attempts to place a cluster before using best position
+} as const;
+
+/**
+ * Seeded random for deterministic cluster placement
+ */
+function seededRandomCluster(seed: string): () => number {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    const char = seed.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+
+  let state = Math.abs(hash) || 1;
+
+  return () => {
+    state = (state * 1103515245 + 12345) & 0x7fffffff;
+    return state / 0x7fffffff;
+  };
+}
+
+/**
+ * Calculate distance between two 3D points
+ */
+function distance3D(
+  a: { x: number; y: number; z: number },
+  b: { x: number; y: number; z: number }
+): number {
+  const dx = a.x - b.x;
+  const dy = a.y - b.y;
+  const dz = a.z - b.z;
+  return Math.sqrt(dx * dx + dy * dy + dz * dz);
+}
+
+/**
+ * Calculate category clusters distributed in 3D space
+ *
+ * Algorithm:
+ * 1. For each category, generate random position in 3D space
+ * 2. Check distance to all existing cluster centers
+ * 3. If too close (< minDistance), regenerate position
+ * 4. Retry up to N times, then place at best available spot
+ *
+ * @param resources - Array of resources with category property
+ * @param categoryOrder - Ordered list of categories
+ * @param categoryColors - Map of category to color hex
+ * @returns Array of CategoryCluster with 3D positions
+ */
+export function calculateCategoryClusters(
+  resources: Array<{ category: string | null }>,
+  categoryOrder: readonly string[],
+  categoryColors: Record<string, string>
+): CategoryCluster[] {
+  // Count resources per category
+  const categoryCounts = new Map<string, number>();
+  for (const resource of resources) {
+    const cat = resource.category || 'Other';
+    categoryCounts.set(cat, (categoryCounts.get(cat) || 0) + 1);
+  }
+
+  // Filter to only categories that exist in the data
+  const activeCategories = categoryOrder.filter(cat => categoryCounts.has(cat));
+
+  if (activeCategories.length === 0) return [];
+
+  const clusters: CategoryCluster[] = [];
+  const placedCenters: Array<{ x: number; y: number; z: number }> = [];
+
+  for (const category of activeCategories) {
+    const resourceCount = categoryCounts.get(category) || 0;
+    const random = seededRandomCluster(category);
+
+    // Calculate cluster radius based on resource count (more resources = larger cluster)
+    const countFactor = Math.min(1, resourceCount / 30); // Normalize to max 30 resources
+    const clusterRadius = GALAXY_LAYOUT.BASE_CLUSTER_RADIUS +
+      countFactor * (GALAXY_LAYOUT.MAX_CLUSTER_RADIUS - GALAXY_LAYOUT.BASE_CLUSTER_RADIUS);
+
+    // Try to find a valid position
+    let bestPosition = { x: 0, y: 0, z: 0 };
+    let bestMinDistance = 0;
+
+    for (let attempt = 0; attempt < GALAXY_LAYOUT.PLACEMENT_ATTEMPTS; attempt++) {
+      // Generate random 3D position
+      // Use spherical coordinates for even distribution
+      const theta = random() * Math.PI * 2;
+      const phi = Math.acos(2 * random() - 1);
+      const r = GALAXY_LAYOUT.MIN_CLUSTER_DISTANCE +
+        random() * (GALAXY_LAYOUT.MAX_CLUSTER_DISTANCE - GALAXY_LAYOUT.MIN_CLUSTER_DISTANCE);
+
+      const candidate = {
+        x: r * Math.sin(phi) * Math.cos(theta),
+        y: r * Math.sin(phi) * Math.sin(theta) * 0.5, // Flatten Y for more disk-like galaxy
+        z: r * Math.cos(phi),
+      };
+
+      // Check distance to all placed clusters
+      let minDistToExisting = Infinity;
+      for (const existing of placedCenters) {
+        const dist = distance3D(candidate, existing);
+        minDistToExisting = Math.min(minDistToExisting, dist);
+      }
+
+      // If no other clusters yet, or distance is valid, use this position
+      if (placedCenters.length === 0 || minDistToExisting >= GALAXY_LAYOUT.MIN_CLUSTER_DISTANCE) {
+        bestPosition = candidate;
+        bestMinDistance = minDistToExisting;
+        break;
+      }
+
+      // Track best position found so far
+      if (minDistToExisting > bestMinDistance) {
+        bestMinDistance = minDistToExisting;
+        bestPosition = candidate;
+      }
+    }
+
+    placedCenters.push(bestPosition);
+
+    clusters.push({
+      category,
+      center: bestPosition,
+      radius: clusterRadius,
+      color: categoryColors[category] || '#9CA3AF',
+      resourceCount,
+    });
+  }
+
+  return clusters;
+}
+
+/**
+ * Seeded Gaussian random for consistent cluster distribution
+ */
+function seededGaussian(random: () => number): number {
+  const u1 = random();
+  const u2 = random();
+  const z0 = Math.sqrt(-2.0 * Math.log(u1 || 0.0001)) * Math.cos(2.0 * Math.PI * u2);
+  return z0;
+}
+
+/**
+ * Generate position for a resource within its category cluster
+ * Uses Gaussian distribution for organic nebula-like appearance
+ *
+ * @param resourceId - Unique identifier for consistent positioning
+ * @param cluster - The category cluster configuration
+ * @returns OrbitalPosition in 3D space
+ */
+export function generateClusterPosition(
+  resourceId: string,
+  cluster: CategoryCluster
+): OrbitalPosition {
+  const random = seededRandom(resourceId);
+  const stdDev = cluster.radius / 2.5;
+
+  // Gaussian distribution for nebula-like clustering
+  const offsetX = seededGaussian(random) * stdDev;
+  const offsetY = seededGaussian(random) * stdDev * 0.6; // Flatter on Y axis
+  const offsetZ = seededGaussian(random) * stdDev;
+
+  return {
+    x: cluster.center.x + offsetX,
+    y: cluster.center.y + offsetY,
+    z: cluster.center.z + offsetZ,
+  };
+}
+
+/**
+ * Build a lookup map for galaxy cluster positions
+ * Groups resources by category and calculates positions within clusters
+ *
+ * @param resources - Array of resources with id and category
+ * @param clusters - Category cluster configurations
+ * @returns Map of resource ID to position
+ */
+export function buildGalaxyPositionMap(
+  resources: Array<{ id: string | number; category: string | null }>,
+  clusters: CategoryCluster[]
+): Map<string, OrbitalPosition> {
+  const positions = new Map<string, OrbitalPosition>();
+
+  // Create a lookup for cluster by category
+  const clusterByCategory = new Map<string, CategoryCluster>();
+  for (const cluster of clusters) {
+    clusterByCategory.set(cluster.category, cluster);
+  }
+
+  // Calculate positions for each resource
+  for (const resource of resources) {
+    const cat = resource.category || 'Other';
+    const cluster = clusterByCategory.get(cat);
+
+    if (cluster) {
+      const pos = generateClusterPosition(String(resource.id), cluster);
+      positions.set(String(resource.id), pos);
+    } else {
+      // Fallback: position at origin if no cluster found
+      positions.set(String(resource.id), { x: 0, y: 0, z: 0 });
+    }
+  }
+
+  return positions;
+}
+
+/**
+ * Calculate bounding sphere for a set of positions
+ * Used for camera animation to encompass filtered nodes
+ *
+ * @param positions - Array of 3D positions
+ * @returns Center point and radius of bounding sphere
+ */
+export function calculateBoundingSphere(
+  positions: Array<{ x: number; y: number; z: number }>
+): { center: { x: number; y: number; z: number }; radius: number } {
+  if (positions.length === 0) {
+    return { center: { x: 0, y: 0, z: 0 }, radius: 50 };
+  }
+
+  // Calculate centroid
+  let sumX = 0, sumY = 0, sumZ = 0;
+  for (const pos of positions) {
+    sumX += pos.x;
+    sumY += pos.y;
+    sumZ += pos.z;
+  }
+  const center = {
+    x: sumX / positions.length,
+    y: sumY / positions.length,
+    z: sumZ / positions.length,
+  };
+
+  // Calculate maximum distance from centroid
+  let maxDistance = 0;
+  for (const pos of positions) {
+    const dist = distance3D(pos, center);
+    maxDistance = Math.max(maxDistance, dist);
+  }
+
+  // Add padding to ensure all nodes are visible
+  return { center, radius: maxDistance + 10 };
+}
