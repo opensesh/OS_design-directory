@@ -1,0 +1,178 @@
+import { useMemo, useRef } from 'react';
+import { useFrame } from '@react-three/fiber';
+import { useTexture } from '@react-three/drei';
+import * as THREE from 'three';
+import { generateStarfieldLayout } from '../../utils/particle-layouts';
+
+/**
+ * GalaxyBackground Component
+ *
+ * Creates an immersive space environment with:
+ * - Equirectangular skybox texture for 360° galaxy/nebula backdrop
+ * - 3D particle starfield for depth and parallax
+ */
+
+interface StarfieldProps {
+  count?: number;
+  radius?: number;
+}
+
+/**
+ * Starfield - 3D particle stars for depth
+ * Creates parallax effect on camera movement
+ */
+function Starfield({ count = 4000, radius = 200 }: StarfieldProps) {
+  const pointsRef = useRef<THREE.Points>(null);
+
+  // Generate star positions using existing starfield layout
+  const { positions, sizes, opacities } = useMemo(() => {
+    const posArray = generateStarfieldLayout(count, radius);
+    const sizeArray = new Float32Array(count);
+    const opacityArray = new Float32Array(count);
+
+    for (let i = 0; i < count; i++) {
+      // Varying sizes for visual interest (0.1 to 0.5)
+      sizeArray[i] = 0.1 + Math.random() * 0.4;
+      // Varying brightness (0.4 to 1.0)
+      opacityArray[i] = 0.4 + Math.random() * 0.6;
+    }
+
+    return {
+      positions: posArray,
+      sizes: sizeArray,
+      opacities: opacityArray,
+    };
+  }, [count, radius]);
+
+  // Slow rotation for subtle movement
+  useFrame((_, delta) => {
+    if (pointsRef.current) {
+      pointsRef.current.rotation.y += delta * 0.01;
+      pointsRef.current.rotation.x += delta * 0.005;
+    }
+  });
+
+  // Custom shader material for per-particle size and opacity
+  const shaderMaterial = useMemo(() => {
+    return new THREE.ShaderMaterial({
+      uniforms: {
+        color: { value: new THREE.Color('#ffffff') },
+      },
+      vertexShader: `
+        attribute float size;
+        attribute float opacity;
+        varying float vOpacity;
+
+        void main() {
+          vOpacity = opacity;
+          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+          gl_PointSize = size * (300.0 / -mvPosition.z);
+          gl_Position = projectionMatrix * mvPosition;
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 color;
+        varying float vOpacity;
+
+        void main() {
+          // Circular soft particle
+          float r = distance(gl_PointCoord, vec2(0.5));
+          if (r > 0.5) discard;
+
+          // Soft glow falloff
+          float alpha = vOpacity * (1.0 - smoothstep(0.0, 0.5, r));
+          gl_FragColor = vec4(color, alpha);
+        }
+      `,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+  }, []);
+
+  return (
+    <points ref={pointsRef} material={shaderMaterial}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={count}
+          array={positions}
+          itemSize={3}
+        />
+        <bufferAttribute
+          attach="attributes-size"
+          count={count}
+          array={sizes}
+          itemSize={1}
+        />
+        <bufferAttribute
+          attach="attributes-opacity"
+          count={count}
+          array={opacities}
+          itemSize={1}
+        />
+      </bufferGeometry>
+    </points>
+  );
+}
+
+interface SkyboxProps {
+  texturePath?: string;
+}
+
+/**
+ * Skybox - Equirectangular galaxy texture mapped to inside of sphere
+ */
+function Skybox({ texturePath = '/textures/galaxy/skybox.jpg' }: SkyboxProps) {
+  const texture = useTexture(texturePath);
+
+  // Configure texture for equirectangular mapping
+  useMemo(() => {
+    texture.mapping = THREE.EquirectangularReflectionMapping;
+    texture.colorSpace = THREE.SRGBColorSpace;
+  }, [texture]);
+
+  return (
+    <mesh scale={[-500, 500, 500]}>
+      <sphereGeometry args={[1, 64, 64]} />
+      <meshBasicMaterial
+        map={texture}
+        side={THREE.BackSide}
+        depthWrite={false}
+      />
+    </mesh>
+  );
+}
+
+interface GalaxyBackgroundProps {
+  starCount?: number;
+  starRadius?: number;
+  showSkybox?: boolean;
+  showStarfield?: boolean;
+}
+
+/**
+ * GalaxyBackground
+ *
+ * Combines skybox and starfield for immersive space environment.
+ * The skybox provides the distant galaxy/nebula backdrop,
+ * while the starfield adds depth with parallax on camera movement.
+ */
+export default function GalaxyBackground({
+  starCount = 4000,
+  starRadius = 200,
+  showSkybox = true,
+  showStarfield = true,
+}: GalaxyBackgroundProps) {
+  return (
+    <group>
+      {/* Galaxy/nebula skybox */}
+      {showSkybox && <Skybox />}
+
+      {/* 3D starfield for depth */}
+      {showStarfield && (
+        <Starfield count={starCount} radius={starRadius} />
+      )}
+    </group>
+  );
+}
