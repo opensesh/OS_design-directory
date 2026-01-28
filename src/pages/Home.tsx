@@ -185,7 +185,7 @@ export default function Home() {
   };
 
   return (
-    <div className="h-screen bg-os-bg-dark text-os-text-primary-dark font-sans overflow-hidden">
+    <div className={`h-screen text-os-text-primary-dark font-sans overflow-hidden ${displayMode === '3d' ? '' : 'bg-os-bg-dark'}`}>
       {/* 3D Canvas - FIXED FULL VIEWPORT (only in 3D mode) */}
       {displayMode === '3d' && (
         <div className="fixed inset-0 z-0">
