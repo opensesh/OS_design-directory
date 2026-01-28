@@ -254,9 +254,11 @@ export default function Home() {
               </svg>
             </div>
             {/* Open Session Wordmark */}
-            <span className="text-brand-vanilla font-display text-lg font-medium tracking-tight">
-              open session
-            </span>
+            <img 
+              src="/assets/logo-wordmark-vanilla.png" 
+              alt="open session" 
+              className="h-5 w-auto"
+            />
           </button>
           <div className="flex items-center gap-3">
             {/* Search Button - hidden on mobile, visible on desktop */}

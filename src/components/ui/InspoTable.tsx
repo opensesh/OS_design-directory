@@ -242,9 +242,9 @@ export function InspoTable({
         <div className="p-4 md:p-6 space-y-4">
           {/* Desktop: Flex row with filters right-aligned */}
           {/* Mobile: Stack vertically with labels visible */}
-          <div className="flex flex-col md:flex-row md:items-end md:justify-end gap-4">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             {/* Search Filter */}
-            <div className="w-full md:w-auto md:order-1">
+            <div className="w-full md:w-auto">
               <label htmlFor="search-filter" className="block text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark mb-2">
                 Search
               </label>
@@ -270,7 +270,7 @@ export function InspoTable({
             </div>
 
             {/* Filter Dropdowns - 3 columns on mobile, flex row on desktop */}
-            <div className="grid grid-cols-3 md:flex gap-3 md:gap-4 md:order-2">
+            <div className="grid grid-cols-3 md:flex gap-3 md:gap-4">
               {/* Category Filter */}
               <div className="flex flex-col">
                 <label htmlFor="category-filter" className="block text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark mb-2">
