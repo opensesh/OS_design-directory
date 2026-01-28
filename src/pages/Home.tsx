@@ -382,7 +382,7 @@ export default function Home() {
       </section>
 
       {/* Content Area - FLEX-1 fills remaining space */}
-      <div className="flex-1 relative min-h-0 pointer-events-auto">
+      <div className={`flex-1 relative min-h-0 ${displayMode === '3d' ? '' : 'pointer-events-auto'}`}>
         {/* Card View or Table View (3D mode uses empty spacer since canvas is fixed) */}
         <AnimatePresence mode="wait">
           {displayMode === '3d' && (
@@ -438,7 +438,7 @@ export default function Home() {
       <AnimatePresence>
         {displayMode === '3d' && (
           <motion.div
-            className="pointer-events-auto flex-shrink-0 relative z-20"
+            className="flex-shrink-0 relative z-20 bg-os-bg-dark/90 backdrop-blur-xl"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 30 }}
@@ -450,7 +450,7 @@ export default function Home() {
               style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(20,20,20,0.95) 100%)' }}
             />
 
-            <div className="w-full max-w-7xl mx-auto px-6 pt-2 pb-6 space-y-3 bg-os-bg-dark/90 backdrop-blur-xl">
+            <div className="w-full max-w-7xl mx-auto px-6 pt-2 pb-6 space-y-3 pointer-events-auto">
               {/* AI Response */}
               <AIFilterResponse
                 message={aiMessage}
