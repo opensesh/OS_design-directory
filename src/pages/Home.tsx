@@ -257,7 +257,7 @@ export default function Home() {
             <img 
               src="/assets/logo-wordmark-vanilla.png" 
               alt="open session" 
-              className="h-5 w-auto"
+              className="h-7 w-auto"
             />
           </button>
           <div className="flex items-center gap-3">
@@ -353,7 +353,7 @@ export default function Home() {
             </div>
 
             {/* Right: Description text (desktop only) */}
-            <div className="hidden md:block max-w-md text-right">
+            <div className="hidden md:block max-w-sm text-right">
               <AnimatePresence mode="wait">
                 <motion.p
                   key={`desc-${displayMode}`}
@@ -409,22 +409,20 @@ export default function Home() {
           </div>
 
           {/* Mobile description row */}
-          <div className="md:hidden mt-3">
+          <div className="md:hidden mt-2">
             <AnimatePresence mode="wait">
-              <motion.div
+              <motion.p
                 key={`mobile-desc-${displayMode}`}
                 initial={{ opacity: 0, y: 4 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -4 }}
                 transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-                className="inline-block bg-os-surface-dark/50 rounded-lg px-3 py-2 border border-os-border-dark"
+                className="text-xs text-os-text-secondary-dark leading-relaxed"
               >
-                <p className="text-xs text-os-text-secondary-dark leading-relaxed text-left">
-                  {displayMode === '3d' && 'Easily browse design resources by navigating from main categories to subcategories.'}
-                  {displayMode === 'card' && 'Easily browse design resources by navigating from main categories to subcategories.'}
-                  {displayMode === 'table' && 'Easily browse design resources by navigating from main categories to subcategories.'}
-                </p>
-              </motion.div>
+                {displayMode === '3d' && 'Easily browse design resources by navigating from main categories to subcategories.'}
+                {displayMode === 'card' && 'Easily browse design resources by navigating from main categories to subcategories.'}
+                {displayMode === 'table' && 'Easily browse design resources by navigating from main categories to subcategories.'}
+              </motion.p>
             </AnimatePresence>
           </div>
         </div>
