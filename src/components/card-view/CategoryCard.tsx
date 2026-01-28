@@ -1,13 +1,6 @@
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { getCategoryColor } from '../../types/resource';
-import {
-  Users,
-  Lightbulb,
-  GraduationCap,
-  LayoutTemplate,
-  Wrench,
-  Brain
-} from 'lucide-react';
 
 interface CategoryCardProps {
   category: string;
@@ -17,13 +10,13 @@ interface CategoryCardProps {
   onClick: () => void;
 }
 
-const CATEGORY_ICONS: Record<string, React.ElementType> = {
-  'Community': Users,
-  'Inspiration': Lightbulb,
-  'Learning': GraduationCap,
-  'Templates': LayoutTemplate,
-  'Tools': Wrench,
-  'AI': Brain,
+const CATEGORY_VIDEOS: Record<string, string> = {
+  'Community': '/videos/categories/community.mp4',
+  'Inspiration': '/videos/categories/inspiration.mp4',
+  'Learning': '/videos/categories/learning.mp4',
+  'Templates': '/videos/categories/templates.mp4',
+  'Tools': '/videos/categories/tools.mp4',
+  'AI': '/videos/categories/ai.mp4',
 };
 
 export function CategoryCard({
@@ -34,16 +27,37 @@ export function CategoryCard({
   onClick
 }: CategoryCardProps) {
   const categoryColor = getCategoryColor(category);
-  const Icon = CATEGORY_ICONS[category] || Wrench;
+  const [isHovered, setIsHovered] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Control video playback on hover
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (isHovered) {
+      video.play().catch(() => {
+        // Silently handle autoplay restrictions
+      });
+    } else {
+      video.pause();
+      video.currentTime = 0;
+    }
+  }, [isHovered]);
+
+  const videoSrc = CATEGORY_VIDEOS[category];
 
   return (
     <motion.button
       onClick={onClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       className={`
-        relative w-full p-6 rounded-xl text-left
+        relative w-full aspect-[4/5] rounded-xl text-left overflow-hidden
         bg-os-surface-dark/40 border border-os-border-dark
         transition-colors duration-200
-        focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:ring-offset-2 focus:ring-offset-os-bg-dark
+        focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 
+        focus:ring-offset-2 focus:ring-offset-os-bg-dark
         ${isExpanded ? 'ring-2' : ''}
       `}
       style={{
@@ -61,36 +75,55 @@ export function CategoryCard({
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.2 }}
     >
-      {/* Category icon with color background */}
-      <div
-        className="w-12 h-12 rounded-lg flex items-center justify-center mb-4"
-        style={{ backgroundColor: `${categoryColor}20` }}
-      >
-        <Icon
-          className="w-6 h-6"
-          style={{ color: categoryColor }}
+      {/* Layer 1: Video Background */}
+      {videoSrc && (
+        <video
+          ref={videoRef}
+          className="absolute inset-0 w-full h-full object-cover z-0"
+          src={videoSrc}
+          muted
+          loop
+          playsInline
+          preload="metadata"
         />
+      )}
+
+      {/* Layer 2: Vignette Overlay */}
+      <div
+        className="absolute inset-0 z-10 pointer-events-none"
+        style={{
+          background: `radial-gradient(
+            ellipse 70% 60% at center 40%,
+            transparent 0%,
+            rgba(28, 28, 28, 0.4) 50%,
+            rgba(28, 28, 28, 0.9) 80%,
+            rgba(28, 28, 28, 1) 100%
+          )`
+        }}
+      />
+
+      {/* Layer 3: Content */}
+      <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
+        {/* Category name */}
+        <h3 className="text-xl font-display font-semibold text-brand-vanilla mb-1">
+          {category}
+        </h3>
+
+        {/* Resource count with Offbit number */}
+        <p className="text-sm text-os-text-secondary-dark">
+          <span
+            className="font-accent font-bold"
+            style={{ color: categoryColor }}
+          >
+            {count}
+          </span>
+          {' '}resource{count !== 1 ? 's' : ''}
+        </p>
       </div>
-
-      {/* Category name */}
-      <h3 className="text-xl font-display font-semibold text-brand-vanilla mb-1">
-        {category}
-      </h3>
-
-      {/* Resource count */}
-      <p className="text-sm text-os-text-secondary-dark">
-        <span
-          className="font-semibold"
-          style={{ color: categoryColor }}
-        >
-          {count}
-        </span>
-        {' '}resource{count !== 1 ? 's' : ''}
-      </p>
 
       {/* Expand indicator */}
       <motion.div
-        className="absolute top-4 right-4"
+        className="absolute top-4 right-4 z-20"
         animate={{ rotate: isExpanded ? 180 : 0 }}
         transition={{ duration: 0.2 }}
       >
