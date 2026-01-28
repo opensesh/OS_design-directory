@@ -186,9 +186,14 @@ export default function Home() {
 
   return (
     <div className={`h-screen text-os-text-primary-dark font-sans overflow-hidden ${displayMode === '3d' ? '' : 'bg-os-bg-dark'}`}>
-      {/* 3D Canvas - FIXED FULL VIEWPORT (only in 3D mode) */}
+      {/* 3D Canvas - FIXED BELOW HEADERS (only in 3D mode) */}
       {displayMode === '3d' && (
-        <div className="fixed inset-0 z-0">
+        <div className="fixed inset-0 top-[124px] z-0">
+          {/* Top gradient fade for visual separation from headers */}
+          <div
+            className="absolute top-0 inset-x-0 h-24 pointer-events-none z-10"
+            style={{ background: 'linear-gradient(to bottom, rgba(20,20,20,0.95) 0%, transparent 100%)' }}
+          />
           <Suspense
             fallback={
               <div className="w-full h-full flex items-center justify-center bg-os-bg-dark">
