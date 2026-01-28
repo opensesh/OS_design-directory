@@ -89,17 +89,16 @@ export function CategoryCard({
           />
         )}
         
-        {/* Vignette overlay - only on video area */}
+        {/* Vignette overlay - edge gradients to blend into card */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: `radial-gradient(
-              ellipse 80% 70% at center 40%,
-              transparent 0%,
-              rgba(28, 28, 28, 0.2) 40%,
-              rgba(28, 28, 28, 0.6) 70%,
-              rgba(28, 28, 28, 0.9) 100%
-            )`
+            background: `
+              linear-gradient(to right, rgba(28, 28, 28, 0.8) 0%, transparent 15%),
+              linear-gradient(to left, rgba(28, 28, 28, 0.8) 0%, transparent 15%),
+              linear-gradient(to bottom, rgba(28, 28, 28, 0.8) 0%, transparent 20%),
+              linear-gradient(to top, rgba(28, 28, 28, 0.8) 0%, transparent 25%)
+            `
           }}
         />
       </div>
