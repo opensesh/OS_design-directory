@@ -3,9 +3,9 @@ import { useFrame } from '@react-three/fiber';
 import { useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 import {
-  buildRingPositionMap,
+  buildGalaxyPositionMap,
   scoreToSizeMultiplier,
-  type CategoryRingConfig,
+  type CategoryCluster,
 } from '../../utils/orbital-layout';
 import type { NormalizedResource } from '../../types/resource';
 import { getCategoryColor } from '../../types/resource';
@@ -62,7 +62,7 @@ export interface ResourceNodesHandle {
 
 interface ResourceNodesProps {
   resources: NormalizedResource[];
-  ringConfigs: CategoryRingConfig[];
+  clusters: CategoryCluster[];
   activeCategory?: string | null;
   activeFilter?: string | null;
   activeSubFilter?: string | null;
@@ -83,7 +83,7 @@ interface ResourceNodesProps {
 const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
   function ResourceNodes({
     resources,
-    ringConfigs,
+    clusters,
     activeCategory,
     activeFilter,
     activeSubFilter,
@@ -125,7 +125,7 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
     }));
 
     // Calculate FIXED positions, colors, size multipliers, and texture indices for ALL resources
-    // Resources are positioned on their category's ring
+    // Resources are positioned within their category's 3D cluster
     const { positions, colors, sizeMultipliers, textureIndices } = useMemo(() => {
       const count = resources.length;
       const posArray = new Float32Array(count * 3);
@@ -133,8 +133,8 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
       const sizeArray = new Float32Array(count);
       const texIndexArray = new Float32Array(count);
 
-      // Build position map using ring layout
-      const positionMap = buildRingPositionMap(resources, ringConfigs);
+      // Build position map using galaxy cluster layout
+      const positionMap = buildGalaxyPositionMap(resources, clusters);
 
       resources.forEach((resource, index) => {
         const pos = positionMap.get(String(resource.id)) || { x: 0, y: 0, z: 0 };
@@ -163,7 +163,7 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
         sizeMultipliers: sizeArray,
         textureIndices: texIndexArray,
       };
-    }, [resources, ringConfigs]);
+    }, [resources, clusters]);
 
     // Initialize opacity, hover scale, and entrance progress arrays
     useEffect(() => {
