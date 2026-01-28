@@ -3,6 +3,8 @@
  *
  * Generates contextual, helpful messages based on search results
  * and match quality. Makes the search feel intelligent and conversational.
+ * 
+ * Updated to use directMatchCount for honest result reporting.
  */
 
 import type { SearchMetadata, ScoredResult } from './semantic-search';
@@ -19,18 +21,20 @@ export interface AIResponse {
 
 /**
  * Generate a contextual AI response based on search results
+ * Uses directMatchCount for honest reporting (excludes low-relevance padding)
  */
 export function generateAIResponse(
   results: ScoredResult[],
   metadata: SearchMetadata
 ): AIResponse {
   const { quality, originalQuery } = metadata;
-  const matchCount = results.length;
+  // Use directMatchCount for honest reporting
+  const matchCount = metadata.directMatchCount ?? results.length;
 
-  // No results at all (shouldn't happen with fallbacks, but just in case)
+  // No results at all
   if (matchCount === 0) {
     return {
-      message: `I couldn't find any resources for "${originalQuery}". Try a different search term or browse by category.`,
+      message: 'No resources found for "' + originalQuery + '". Try a different search term or browse by category.',
       matchCount: 0,
     };
   }
@@ -38,16 +42,16 @@ export function generateAIResponse(
   // Generate response based on quality and context
   switch (quality) {
     case 'high':
-      return generateHighQualityResponse(results, metadata);
+      return generateHighQualityResponse(results, metadata, matchCount);
     case 'medium':
-      return generateMediumQualityResponse(results, metadata);
+      return generateMediumQualityResponse(results, metadata, matchCount);
     case 'low':
-      return generateLowQualityResponse(results, metadata);
+      return generateLowQualityResponse(results, metadata, matchCount);
     case 'fallback':
-      return generateFallbackResponse(results, metadata);
+      return generateFallbackResponse(metadata, matchCount);
     default:
       return {
-        message: `Found ${matchCount} resources for "${originalQuery}".`,
+        message: 'Found ' + matchCount + ' resources for "' + originalQuery + '".',
         matchCount,
       };
   }
@@ -58,11 +62,10 @@ export function generateAIResponse(
  */
 function generateHighQualityResponse(
   results: ScoredResult[],
-  metadata: SearchMetadata
+  metadata: SearchMetadata,
+  matchCount: number
 ): AIResponse {
   const { detectedConcepts, originalQuery, matchedPricing } = metadata;
-  // Note: detectedConcepts and matchedPricing are used in the function logic below
-  const matchCount = results.length;
   const topResult = results[0]?.resource;
 
   // Concept-based responses
@@ -73,7 +76,7 @@ function generateHighQualityResponse(
     if (conceptInfo) {
       const conceptName = formatConceptName(concept);
       return {
-        message: `Found ${matchCount} ${conceptName} tools. ${conceptInfo.description}.`,
+        message: 'Found ' + matchCount + ' ' + conceptName + ' tools. ' + conceptInfo.description + '.',
         matchCount,
         highlight: topResult?.name,
       };
@@ -82,8 +85,9 @@ function generateHighQualityResponse(
 
   // Exact name match
   if (topResult && results[0].matchReasons.includes('exact name match')) {
+    const desc = topResult.description ? ' – ' + truncate(topResult.description, 80) : '';
     return {
-      message: `Found ${topResult.name}${topResult.description ? ` – ${truncate(topResult.description, 80)}` : ''}.`,
+      message: 'Found ' + topResult.name + desc + '.',
       matchCount,
       highlight: topResult.name,
     };
@@ -92,12 +96,12 @@ function generateHighQualityResponse(
   // Category-specific response
   if (topResult?.category) {
     const categoryResponses: Record<string, string> = {
-      'AI': `Found ${matchCount} AI-powered tools that can supercharge your workflow.`,
-      'Tools': `Found ${matchCount} design tools to help you create amazing work.`,
-      'Inspiration': `Found ${matchCount} sources of design inspiration to spark your creativity.`,
-      'Learning': `Found ${matchCount} learning resources to level up your skills.`,
-      'Templates': `Found ${matchCount} templates and assets to jumpstart your projects.`,
-      'Community': `Found ${matchCount} design communities to connect and collaborate.`,
+      'AI': 'Found ' + matchCount + ' AI-powered tools.',
+      'Tools': 'Found ' + matchCount + ' design tools.',
+      'Inspiration': 'Found ' + matchCount + ' sources of design inspiration.',
+      'Learning': 'Found ' + matchCount + ' learning resources.',
+      'Templates': 'Found ' + matchCount + ' templates and assets.',
+      'Community': 'Found ' + matchCount + ' design communities.',
     };
 
     if (categoryResponses[topResult.category]) {
@@ -112,14 +116,14 @@ function generateHighQualityResponse(
   if (matchedPricing) {
     const pricingLabel = matchedPricing.toLowerCase();
     return {
-      message: `Found ${matchCount} ${pricingLabel} resources for "${originalQuery}".`,
+      message: 'Found ' + matchCount + ' ' + pricingLabel + ' resources for "' + originalQuery + '".',
       matchCount,
     };
   }
 
   // Generic high-quality response
   return {
-    message: `Found ${matchCount} resources for "${originalQuery}". Here are the best matches.`,
+    message: 'Found ' + matchCount + ' resources for "' + originalQuery + '".',
     matchCount,
     highlight: topResult?.name,
   };
@@ -130,25 +134,16 @@ function generateHighQualityResponse(
  */
 function generateMediumQualityResponse(
   results: ScoredResult[],
-  metadata: SearchMetadata
+  metadata: SearchMetadata,
+  matchCount: number
 ): AIResponse {
-  const { originalQuery, expandedTerms } = metadata;
-  const matchCount = results.length;
+  const { originalQuery } = metadata;
   const topResult = results[0]?.resource;
 
-  // Mention that we expanded the search
-  if (expandedTerms.length > 2) {
-    const relevantTerms = expandedTerms.slice(0, 3).join(', ');
-    return {
-      message: `Found ${matchCount} resources related to "${originalQuery}" (including ${relevantTerms}).`,
-      matchCount,
-    };
-  }
-
   // Tag-based match
-  if (results[0]?.matchReasons.some(r => r.includes('tag'))) {
+  if (results[0]?.matchReasons.some((r: string) => r.includes('tag'))) {
     return {
-      message: `Found ${matchCount} resources tagged with terms related to "${originalQuery}".`,
+      message: 'Found ' + matchCount + ' resources related to "' + originalQuery + '".',
       matchCount,
     };
   }
@@ -156,13 +151,13 @@ function generateMediumQualityResponse(
   // Description match
   if (results[0]?.matchReasons.includes('description contains query')) {
     return {
-      message: `Found ${matchCount} resources mentioning "${originalQuery}". Showing the most relevant.`,
+      message: 'Found ' + matchCount + ' resources mentioning "' + originalQuery + '".',
       matchCount,
     };
   }
 
   return {
-    message: `Found ${matchCount} resources related to "${originalQuery}".`,
+    message: 'Found ' + matchCount + ' resources related to "' + originalQuery + '".',
     matchCount,
     highlight: topResult?.name,
   };
@@ -173,60 +168,63 @@ function generateMediumQualityResponse(
  */
 function generateLowQualityResponse(
   results: ScoredResult[],
-  metadata: SearchMetadata
+  metadata: SearchMetadata,
+  matchCount: number
 ): AIResponse {
   const { originalQuery } = metadata;
-  const matchCount = results.length;
   const topResult = results[0]?.resource;
 
   // Fuzzy match acknowledgment
   if (results[0]?.matchReasons.includes('fuzzy name match')) {
     return {
-      message: `Did you mean "${topResult?.name}"? Showing ${matchCount} similar results.`,
+      message: 'Did you mean "' + topResult?.name + '"?',
       matchCount,
       highlight: topResult?.name,
     };
   }
 
+  // Single result
+  if (matchCount === 1 && topResult) {
+    return {
+      message: 'Found ' + topResult.name + ' for "' + originalQuery + '".',
+      matchCount: 1,
+      highlight: topResult.name,
+    };
+  }
+
   return {
-    message: `Found ${matchCount} resources that might relate to "${originalQuery}".`,
+    message: 'Found ' + matchCount + ' resources that might match "' + originalQuery + '".',
     matchCount,
   };
 }
 
 /**
- * Fallback responses - helpful suggestions when search fails
+ * Fallback responses - when no good matches found
  */
 function generateFallbackResponse(
-  results: ScoredResult[],
-  metadata: SearchMetadata
+  metadata: SearchMetadata,
+  matchCount: number
 ): AIResponse {
-  const { originalQuery, detectedConcepts, matchedCategory } = metadata;
-  const matchCount = results.length;
-
-  // Concept-related fallback
-  if (detectedConcepts.length > 0) {
-    const concept = detectedConcepts[0];
-    const conceptInfo = conceptMappings[concept];
-    if (conceptInfo) {
-      return {
-        message: `No exact matches for "${originalQuery}", but here are some ${conceptInfo.categories[0]} resources you might find useful.`,
-        matchCount,
-      };
-    }
-  }
+  const { originalQuery, matchedCategory } = metadata;
 
   // Category fallback
-  if (matchedCategory) {
+  if (matchedCategory && matchCount > 0) {
     return {
-      message: `No exact matches for "${originalQuery}". Showing popular ${matchedCategory} resources.`,
+      message: 'Showing ' + matchCount + ' ' + matchedCategory + ' resources.',
       matchCount,
     };
   }
 
-  // Generic popular fallback
+  // No results fallback
+  if (matchCount === 0) {
+    return {
+      message: 'No results for "' + originalQuery + '". Try browsing by category.',
+      matchCount: 0,
+    };
+  }
+
   return {
-    message: `No exact matches for "${originalQuery}". Here are some popular resources you might find useful.`,
+    message: 'Found ' + matchCount + ' resources.',
     matchCount,
   };
 }
@@ -264,10 +262,10 @@ export function generateCategoryResponse(
     'Community': 'Communities where designers connect and collaborate',
   };
 
-  const description = categoryDescriptions[category] || `resources in ${category}`;
+  const description = categoryDescriptions[category] || ('resources in ' + category);
 
   return {
-    message: `Showing ${resourceCount} ${description}.`,
+    message: 'Showing ' + resourceCount + ' ' + description + '.',
     matchCount: resourceCount,
   };
 }
@@ -300,7 +298,7 @@ export function generateFilterResponse(
     : 'all';
 
   return {
-    message: `Showing ${resourceCount} ${filterDescription} resources.`,
+    message: 'Showing ' + resourceCount + ' ' + filterDescription + ' resources.',
     matchCount: resourceCount,
   };
 }
