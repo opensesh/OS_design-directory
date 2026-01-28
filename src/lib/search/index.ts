@@ -47,3 +47,12 @@ export {
   hasAnyFuzzyWordMatch,
   getMultiTermFuzzyScore,
 } from './fuzzy-match';
+
+// Validation utilities (for build-time checks)
+export {
+  validateSearchData,
+  validateConceptMappings,
+  getValidationReport,
+  type ValidationError,
+  type ValidationResult,
+} from './validate-search-data';
