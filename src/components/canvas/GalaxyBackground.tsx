@@ -33,8 +33,8 @@ function Starfield({ count = 4000, radius = 200 }: StarfieldProps) {
     for (let i = 0; i < count; i++) {
       // Varying sizes for visual interest (0.1 to 0.5)
       sizeArray[i] = 0.1 + Math.random() * 0.4;
-      // Varying brightness (0.4 to 1.0)
-      opacityArray[i] = 0.4 + Math.random() * 0.6;
+      // Varying brightness (0.2 to 0.5) - reduced by 50%
+      opacityArray[i] = 0.2 + Math.random() * 0.3;
     }
 
     return {
@@ -139,6 +139,8 @@ function Skybox({ texturePath = '/textures/galaxy/skybox.jpg' }: SkyboxProps) {
         map={texture}
         side={THREE.BackSide}
         depthWrite={false}
+        transparent={true}
+        opacity={0.6}
       />
     </mesh>
   );

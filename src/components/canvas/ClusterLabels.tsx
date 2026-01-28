@@ -81,7 +81,6 @@ function ClusterLabel({ cluster, isActive, isMatched, hasAnyFilter }: ClusterLab
         cluster.center.z,
       ]}
       fontSize={2.5}
-      font="/fonts/NeueHaasDisplayMedium.woff2"
       material={material}
       anchorX="center"
       anchorY="middle"
