@@ -185,9 +185,37 @@ export default function Home() {
   };
 
   return (
-    <div className="h-screen bg-os-bg-dark text-os-text-primary-dark font-sans flex flex-col overflow-hidden">
-      {/* Header - Sticky with backdrop blur */}
-      <header className="flex-shrink-0 sticky top-0 z-30 bg-os-bg-dark/80 backdrop-blur-xl border-b border-os-border-dark h-16">
+    <div className="h-screen bg-os-bg-dark text-os-text-primary-dark font-sans overflow-hidden">
+      {/* 3D Canvas - FIXED FULL VIEWPORT (only in 3D mode) */}
+      {displayMode === '3d' && (
+        <div className="fixed inset-0 z-0">
+          <Suspense
+            fallback={
+              <div className="w-full h-full flex items-center justify-center bg-os-bg-dark">
+                <div className="flex flex-col items-center gap-4">
+                  <div className="w-10 h-10 border-2 border-brand-aperol border-t-transparent rounded-full animate-spin" />
+                  <span className="text-os-text-secondary-dark text-sm">Loading universe...</span>
+                </div>
+              </div>
+            }
+          >
+            <InspoCanvas
+              resources={resources}
+              activeCategory={activeCategory}
+              activeSubFilter={activeSubCategory}
+              filteredResourceIds={filteredResourceIds}
+              matchedCategories={matchedCategories}
+              onResourceClick={handleResourceClick}
+              onResourceHover={handleResourceHover}
+            />
+          </Suspense>
+        </div>
+      )}
+
+      {/* UI Overlay Container */}
+      <div className={`relative z-10 h-screen flex flex-col overflow-hidden ${displayMode === '3d' ? 'pointer-events-none' : ''}`}>
+        {/* Header - Semi-transparent with backdrop blur */}
+        <header className={`pointer-events-auto flex-shrink-0 sticky top-0 z-30 backdrop-blur-xl border-b border-os-border-dark/50 h-16 ${displayMode === '3d' ? 'bg-os-bg-dark/60' : 'bg-os-bg-dark/80'}`}>
         <div className="max-w-7xl mx-auto px-6 h-full">
           <div className="flex items-center justify-between h-full">
           <button
@@ -285,7 +313,7 @@ export default function Home() {
 
       {/* Subheader - View Mode Indicator */}
       <section
-        className="flex-shrink-0 bg-os-bg-dark border-b border-os-border-dark"
+        className={`pointer-events-auto flex-shrink-0 border-b border-os-border-dark/50 ${displayMode === '3d' ? 'bg-os-bg-dark/60 backdrop-blur-xl' : 'bg-os-bg-dark'}`}
         role="region"
         aria-label="Current view"
       >
@@ -353,51 +381,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Canvas Container - FLEX-1 fills remaining space */}
-      <div className="flex-1 relative min-h-0">
-        {/* Top gradient overlay - only in 3D mode */}
-        {displayMode === '3d' && (
-          <div
-            className="absolute top-0 inset-x-0 h-16 pointer-events-none z-10"
-            style={{ background: 'linear-gradient(to bottom, #141414 0%, transparent 100%)' }}
-          />
-        )}
-
-        {/* 3D Canvas, Card View, or Table View */}
+      {/* Content Area - FLEX-1 fills remaining space */}
+      <div className="flex-1 relative min-h-0 pointer-events-auto">
+        {/* Card View or Table View (3D mode uses empty spacer since canvas is fixed) */}
         <AnimatePresence mode="wait">
           {displayMode === '3d' && (
-            <motion.div
-              key="3d"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.02 }}
-              transition={{
-                duration: 0.4,
-                ease: [0.4, 0, 0.2, 1]
-              }}
-              className="w-full h-full"
-            >
-              <Suspense
-                fallback={
-                  <div className="w-full h-full flex items-center justify-center">
-                    <div className="flex flex-col items-center gap-4">
-                      <div className="w-10 h-10 border-2 border-brand-aperol border-t-transparent rounded-full animate-spin" />
-                      <span className="text-os-text-secondary-dark text-sm">Loading universe...</span>
-                    </div>
-                  </div>
-                }
-              >
-                <InspoCanvas
-                  resources={resources}
-                  activeCategory={activeCategory}
-                  activeSubFilter={activeSubCategory}
-                  filteredResourceIds={filteredResourceIds}
-                  matchedCategories={matchedCategories}
-                  onResourceClick={handleResourceClick}
-                  onResourceHover={handleResourceHover}
-                />
-              </Suspense>
-            </motion.div>
+            <div className="w-full h-full" />
           )}
 
           {displayMode === 'card' && (
@@ -443,33 +432,25 @@ export default function Home() {
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Bottom gradient overlay - only in 3D mode */}
-        {displayMode === '3d' && (
-          <div
-            className="absolute bottom-0 inset-x-0 h-32 pointer-events-none z-10"
-            style={{ background: 'linear-gradient(to top, #141414 0%, transparent 100%)' }}
-          />
-        )}
       </div>
 
       {/* Bottom Controls - Only show in 3D mode */}
       <AnimatePresence>
         {displayMode === '3d' && (
           <motion.div
-            className="flex-shrink-0 relative z-20 bg-os-bg-dark"
+            className="pointer-events-auto flex-shrink-0 relative z-20"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 30 }}
             transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
           >
-            {/* Top gradient overlap for seamless blend */}
+            {/* Gradient fade from transparent to dark */}
             <div
-              className="absolute -top-8 left-0 right-0 h-8 pointer-events-none"
-              style={{ background: 'linear-gradient(to bottom, transparent 0%, #141414 100%)' }}
+              className="absolute -top-24 left-0 right-0 h-24 pointer-events-none"
+              style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(20,20,20,0.95) 100%)' }}
             />
 
-            <div className="w-full max-w-7xl mx-auto px-6 pt-2 pb-6 space-y-3">
+            <div className="w-full max-w-7xl mx-auto px-6 pt-2 pb-6 space-y-3 bg-os-bg-dark/90 backdrop-blur-xl">
               {/* AI Response */}
               <AIFilterResponse
                 message={aiMessage}
@@ -504,14 +485,16 @@ export default function Home() {
           </motion.div>
         )}
       </AnimatePresence>
+      </div>
+      {/* End of UI Overlay Container */}
 
-      {/* Tooltip */}
+      {/* Tooltip - needs to be outside overlay for proper z-index */}
       <InspoResourceTooltip
         resource={hoveredResource}
         mousePosition={mousePosition}
       />
 
-      {/* Search Modal */}
+      {/* Search Modal - needs to be outside overlay for proper z-index */}
       <SearchModal
         isOpen={isSearchModalOpen}
         onClose={() => setIsSearchModalOpen(false)}
