@@ -357,6 +357,7 @@ function InteractionController({
  * Only animates once per filter change, then allows free user navigation.
  */
 interface CameraControllerProps {
+  isCameraAnimatingRef: React.MutableRefObject<boolean>;
   clusters: CategoryCluster[];
   activeCategory?: string | null;
   filteredResourceIds?: number[] | null;
@@ -365,6 +366,7 @@ interface CameraControllerProps {
 }
 
 function CameraController({
+  isCameraAnimatingRef,
   clusters,
   activeCategory,
   filteredResourceIds,
@@ -374,7 +376,7 @@ function CameraController({
   const { camera } = useThree();
   const targetPositionRef = useRef(CAMERA_ANIMATION.DEFAULT_POSITION.clone());
   const targetLookAtRef = useRef(CAMERA_ANIMATION.DEFAULT_TARGET.clone());
-  const isAnimatingRef = useRef(false);
+  // Using isCameraAnimatingRef from props instead of local ref
   const animationProgressRef = useRef(0);
   const startPositionRef = useRef(new THREE.Vector3());
   const startLookAtRef = useRef(new THREE.Vector3());
@@ -382,7 +384,7 @@ function CameraController({
   // Calculate target camera position and trigger animation when filters change
   useEffect(() => {
     // Don't interrupt animation that's more than 20% complete
-    if (isAnimatingRef.current && animationProgressRef.current > 0.2) {
+    if (isCameraAnimatingRef.current && animationProgressRef.current > 0.2) {
       return;
     }
 
@@ -448,7 +450,7 @@ function CameraController({
       camera.getWorldDirection(startLookAtRef.current);
       startLookAtRef.current.multiplyScalar(50).add(camera.position);
 
-      isAnimatingRef.current = true;
+      isCameraAnimatingRef.current = true;
       animationProgressRef.current = 0;
     }
     // Note: We no longer force camera back to default when filter is cleared
@@ -457,14 +459,14 @@ function CameraController({
 
   // Animate camera towards target (only when animating)
   useFrame((_, delta) => {
-    if (!isAnimatingRef.current) return;
+    if (!isCameraAnimatingRef.current) return;
 
     // Increment animation progress
     animationProgressRef.current += delta * 2; // ~0.5 second animation
 
     if (animationProgressRef.current >= 1) {
       // Animation complete - stop animating
-      isAnimatingRef.current = false;
+      isCameraAnimatingRef.current = false;
       animationProgressRef.current = 1;
     }
 
@@ -491,6 +493,7 @@ function CameraController({
  * Galaxy system - clusters and nodes
  */
 interface GalaxySystemProps {
+  isCameraAnimatingRef: React.MutableRefObject<boolean>;
   resources: NormalizedResource[];
   clusters: CategoryCluster[];
   activeCategory?: string | null;
@@ -504,6 +507,7 @@ interface GalaxySystemProps {
 }
 
 function GalaxySystem({
+  isCameraAnimatingRef,
   resources,
   clusters,
   activeCategory,
@@ -520,7 +524,7 @@ function GalaxySystem({
   // Slow rotation - pause when hovering for easier interaction
   useFrame((_, delta) => {
     if (!groupRef.current) return;
-    if (hoveredIndex === null) {
+    if (hoveredIndex === null && !isCameraAnimatingRef.current) {
       groupRef.current.rotation.y += delta * 0.02;
     }
   });
@@ -610,6 +614,7 @@ export default function InspoCanvas({
   const resourceNodesRef = useRef<ResourceNodesHandle>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
+  const isCameraAnimatingRef = useRef(false);
   const mousePosRef = useRef({ x: 0, y: 0 });
 
   // Calculate cluster configurations based on resources
@@ -700,6 +705,7 @@ export default function InspoCanvas({
 
       {/* Camera animation controller */}
       <CameraController
+        isCameraAnimatingRef={isCameraAnimatingRef}
         clusters={clusters}
         activeCategory={activeCategory}
         filteredResourceIds={filteredResourceIds}
@@ -710,6 +716,7 @@ export default function InspoCanvas({
       {/* Galaxy system - clusters and nodes */}
       <Suspense fallback={null}>
         <GalaxySystem
+          isCameraAnimatingRef={isCameraAnimatingRef}
           resources={resources}
           clusters={clusters}
           activeCategory={activeCategory}
