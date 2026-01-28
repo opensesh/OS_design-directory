@@ -260,7 +260,7 @@ function InteractionController({
  * CameraController
  *
  * Handles smooth camera animation when filters change.
- * Zooms out to encompass all visible nodes.
+ * Only animates once per filter change, then allows free user navigation.
  */
 interface CameraControllerProps {
   clusters: CategoryCluster[];
@@ -280,8 +280,12 @@ function CameraController({
   const { camera } = useThree();
   const targetPositionRef = useRef(CAMERA_ANIMATION.DEFAULT_POSITION.clone());
   const targetLookAtRef = useRef(CAMERA_ANIMATION.DEFAULT_TARGET.clone());
+  const isAnimatingRef = useRef(false);
+  const animationProgressRef = useRef(0);
+  const startPositionRef = useRef(new THREE.Vector3());
+  const startLookAtRef = useRef(new THREE.Vector3());
 
-  // Calculate target camera position based on filters
+  // Calculate target camera position and trigger animation when filters change
   useEffect(() => {
     // Collect visible positions based on filters
     const visiblePositions: Array<{ x: number; y: number; z: number }> = [];
@@ -338,23 +342,47 @@ function CameraController({
         bounds.center.y + distance * 0.2,
         bounds.center.z + distance
       );
-    } else {
-      // No filter: return to default position
-      targetPositionRef.current.copy(CAMERA_ANIMATION.DEFAULT_POSITION);
-      targetLookAtRef.current.copy(CAMERA_ANIMATION.DEFAULT_TARGET);
+
+      // Start animation from current position
+      startPositionRef.current.copy(camera.position);
+      startLookAtRef.current.set(0, 0, 0); // Will be computed from camera direction
+      camera.getWorldDirection(startLookAtRef.current);
+      startLookAtRef.current.multiplyScalar(50).add(camera.position);
+
+      isAnimatingRef.current = true;
+      animationProgressRef.current = 0;
     }
-  }, [clusters, activeCategory, filteredResourceIds, matchedCategories, resources]);
+    // Note: We no longer force camera back to default when filter is cleared
+    // This allows users to keep their current view
+  }, [clusters, activeCategory, filteredResourceIds, matchedCategories, resources, camera]);
 
-  // Animate camera towards target
-  useFrame(() => {
-    camera.position.lerp(targetPositionRef.current, CAMERA_ANIMATION.LERP_SPEED);
+  // Animate camera towards target (only when animating)
+  useFrame((_, delta) => {
+    if (!isAnimatingRef.current) return;
 
-    // Smoothly update lookAt by interpolating a target point
-    const currentLookAt = new THREE.Vector3();
-    camera.getWorldDirection(currentLookAt);
-    currentLookAt.multiplyScalar(50).add(camera.position);
-    currentLookAt.lerp(targetLookAtRef.current, CAMERA_ANIMATION.LERP_SPEED);
-    camera.lookAt(targetLookAtRef.current);
+    // Increment animation progress
+    animationProgressRef.current += delta * 2; // ~0.5 second animation
+
+    if (animationProgressRef.current >= 1) {
+      // Animation complete - stop animating
+      isAnimatingRef.current = false;
+      animationProgressRef.current = 1;
+    }
+
+    // Ease out cubic for smooth deceleration
+    const t = animationProgressRef.current;
+    const eased = 1 - Math.pow(1 - t, 3);
+
+    // Interpolate position
+    camera.position.lerpVectors(startPositionRef.current, targetPositionRef.current, eased);
+
+    // Interpolate lookAt
+    const currentLookAt = new THREE.Vector3().lerpVectors(
+      startLookAtRef.current,
+      targetLookAtRef.current,
+      eased
+    );
+    camera.lookAt(currentLookAt);
   });
 
   return null;
