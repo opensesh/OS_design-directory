@@ -5,59 +5,70 @@
  * - Synonym groups for word variations
  * - Concept mappings for abstract ideas
  * - Category aliases for flexible matching
+ * 
+ * IMPORTANT: Keep synonym groups tight to avoid false positives.
+ * Removed overly broad terms like "visual" from photo synonyms.
  */
 
 /**
  * Synonym Groups - Words that should match each other
  * Key is the canonical term, values are synonyms that expand to include the key
+ * 
+ * NOTE: Keep these tight! Broad terms like "visual" cause false positives.
  */
 export const synonymGroups: Record<string, string[]> = {
-  // Visual media
-  photo: ['photography', 'image', 'picture', 'visual', 'photos', 'images', 'pictures', 'pic', 'pics', 'photograph'],
-  video: ['film', 'movie', 'footage', 'clip', 'editing', 'videos', 'films', 'movies', 'clips', 'motion', 'cinematic'],
-  animation: ['animate', 'animated', 'motion', 'animations', 'motion graphics', 'lottie'],
+  // Visual media - REMOVED "visual" (too broad, matches everything)
+  photo: ['photography', 'image', 'picture', 'photos', 'images', 'pictures', 'pic', 'pics', 'photograph'],
+  video: ['film', 'movie', 'footage', 'clip', 'videos', 'films', 'movies', 'clips', 'motion', 'cinematic'],
+  animation: ['animate', 'animated', 'animations', 'motion graphics', 'lottie'],
 
-  // Design
-  design: ['designer', 'designing', 'designs', 'ui', 'ux', 'interface', 'visual'],
+  // Design - REMOVED "interface", "visual" (too broad)
+  design: ['designer', 'designing', 'designs', 'ui', 'ux'],
   prototype: ['prototyping', 'prototypes', 'mockup', 'mockups', 'wireframe', 'wireframes'],
   icon: ['icons', 'iconography', 'pictogram', 'pictograms', 'glyph', 'glyphs', 'symbol', 'symbols'],
-  illustration: ['illustrations', 'illustrator', 'drawing', 'drawings', 'artwork', 'art'],
+  illustration: ['illustrations', 'illustrator', 'drawing', 'drawings', 'artwork'],
 
   // Typography
-  font: ['fonts', 'typography', 'typeface', 'typefaces', 'type', 'lettering', 'typographic'],
+  font: ['fonts', 'typography', 'typeface', 'typefaces', 'lettering', 'typographic'],
 
   // 3D
   '3d': ['three-dimensional', 'webgl', 'modeling', 'render', 'rendering', 'three.js', 'threejs', 'blender', '3-d'],
 
-  // Code & Development
-  code: ['coding', 'programming', 'development', 'developer', 'dev', 'software', 'engineer', 'engineering'],
-  website: ['web', 'site', 'webpage', 'webpages', 'sites', 'websites', 'landing page', 'landing pages'],
-  component: ['components', 'ui kit', 'ui kits', 'design system', 'design systems'],
+  // Code & Development - REMOVED broad terms
+  code: ['coding', 'programming', 'development', 'developer', 'dev', 'software'],
+  website: ['web', 'site', 'webpage', 'sites', 'websites', 'landing page'],
+  component: ['components', 'ui kit', 'ui kits', 'design system'],
 
   // AI
-  ai: ['artificial intelligence', 'machine learning', 'ml', 'gpt', 'llm', 'neural', 'generative'],
+  ai: ['artificial intelligence', 'machine learning', 'ml', 'gpt', 'llm', 'generative'],
 
-  // Resources
-  free: ['freeware', 'gratis', 'no cost', 'open source', 'opensource', 'libre'],
+  // Resources - REMOVED "library" (too broad)
+  free: ['freeware', 'gratis', 'no cost', 'open source', 'opensource'],
   template: ['templates', 'starter', 'starters', 'boilerplate', 'scaffold', 'kit', 'kits'],
-  asset: ['assets', 'resource', 'resources', 'stock', 'library', 'libraries'],
+  asset: ['assets', 'resource', 'resources', 'stock'],
 
   // Learning
-  tutorial: ['tutorials', 'course', 'courses', 'lesson', 'lessons', 'guide', 'guides', 'learn', 'learning', 'education', 'educational'],
+  tutorial: ['tutorials', 'course', 'courses', 'lesson', 'lessons', 'guide', 'guides', 'learn', 'learning'],
 
   // Collaboration
-  collaboration: ['collaborate', 'collaborative', 'team', 'teams', 'teamwork', 'share', 'sharing', 'multiplayer'],
+  collaboration: ['collaborate', 'collaborative', 'team', 'teams', 'teamwork', 'share', 'sharing'],
 
   // Color
-  color: ['colors', 'colour', 'colours', 'palette', 'palettes', 'gradient', 'gradients', 'scheme', 'schemes'],
+  color: ['colors', 'colour', 'colours', 'palette', 'palettes', 'gradient', 'gradients', 'scheme'],
 
   // Audio
   audio: ['sound', 'sounds', 'music', 'soundtrack', 'sfx', 'sound effects'],
+  
+  // YouTube/Content creator specific
+  youtube: ['youtuber', 'youtubers', 'content creator', 'content creators', 'creator tools'],
+  thumbnail: ['thumbnails', 'thumb', 'thumbs'],
 };
 
 /**
  * Concept Mappings - Abstract ideas mapped to specific resources and categories
- * These capture user intent and map to relevant search terms
+ * 
+ * IMPORTANT: resourceNames MUST reference actual resources in resources.json
+ * Run validation script to check for mismatches.
  */
 export const conceptMappings: Record<string, {
   keywords: string[];
@@ -73,9 +84,10 @@ export const conceptMappings: Record<string, {
   },
   'youtube creator': {
     keywords: ['youtube', 'youtuber', 'content creator', 'video creator', 'creator tools', 'thumbnails'],
-    resourceNames: ['Runway', 'VEED.io', 'Descript', 'Capcut', 'Canva', 'Thumbnail AI'],
-    categories: ['Tools'],
-    description: 'Tools for YouTube content creation, editing, and thumbnails',
+    // FIXED: Only reference resources that exist in resources.json
+    resourceNames: ['Runway', 'VEED.io', 'Canva', 'Y2Mate', 'VidIQ', 'Social Blade'],
+    categories: ['AI', 'Tools'], // Include AI since Runway is in AI category
+    description: 'Tools for YouTube content creation, editing, and analytics',
   },
   'ai art': {
     keywords: ['ai art', 'ai image', 'ai generate', 'generate image', 'text to image', 'ai illustration'],
@@ -148,6 +160,13 @@ export const conceptMappings: Record<string, {
     resourceNames: ['Remove.bg', 'Photoroom', 'Unscreen', 'Clipping Magic'],
     categories: ['Tools', 'AI'],
     description: 'Background removal and image editing tools',
+  },
+  // NEW: Photography-specific concept
+  'photography': {
+    keywords: ['photography', 'photo', 'photos', 'photographer', 'stock photos', 'free photos'],
+    resourceNames: ['Unsplash', 'Pexels', 'Pixabay', 'Freepik'],
+    categories: ['Templates', 'Inspiration'],
+    description: 'Stock photography and photo resources',
   },
 };
 
