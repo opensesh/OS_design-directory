@@ -88,26 +88,59 @@ export function CategoryCard({
         />
       )}
 
-      {/* Layer 2: Vignette Overlay */}
+      {/* Layer 2: Vignette Overlay - enhanced bottom gradient */}
       <div
         className="absolute inset-0 z-10 pointer-events-none"
         style={{
-          background: `radial-gradient(
-            ellipse 70% 60% at center 40%,
-            transparent 0%,
-            rgba(28, 28, 28, 0.4) 50%,
-            rgba(28, 28, 28, 0.9) 80%,
-            rgba(28, 28, 28, 1) 100%
-          )`
+          background: `
+            radial-gradient(
+              ellipse 80% 50% at center 30%,
+              transparent 0%,
+              rgba(28, 28, 28, 0.3) 50%,
+              rgba(28, 28, 28, 0.7) 75%,
+              rgba(28, 28, 28, 0.95) 100%
+            ),
+            linear-gradient(
+              to top,
+              rgba(28, 28, 28, 1) 0%,
+              rgba(28, 28, 28, 0.95) 15%,
+              rgba(28, 28, 28, 0.7) 25%,
+              transparent 45%
+            )
+          `
         }}
       />
 
-      {/* Layer 3: Content */}
+      {/* Layer 3: Content - title, count, and chevron inline */}
       <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
-        {/* Category name */}
-        <h3 className="text-xl font-display font-semibold text-brand-vanilla mb-1">
-          {category}
-        </h3>
+        {/* Header row with title and chevron */}
+        <div className="flex items-center justify-between mb-1">
+          <h3 className="text-xl font-display font-semibold text-brand-vanilla">
+            {category}
+          </h3>
+          
+          {/* Expand indicator - now inline with title */}
+          <motion.div
+            animate={{ rotate: isExpanded ? 180 : 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              className="text-os-text-secondary-dark"
+            >
+              <path
+                d="M5 7.5L10 12.5L15 7.5"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </motion.div>
+        </div>
 
         {/* Resource count with Offbit number */}
         <p className="text-sm text-os-text-secondary-dark">
@@ -120,29 +153,6 @@ export function CategoryCard({
           {' '}resource{count !== 1 ? 's' : ''}
         </p>
       </div>
-
-      {/* Expand indicator */}
-      <motion.div
-        className="absolute top-4 right-4 z-20"
-        animate={{ rotate: isExpanded ? 180 : 0 }}
-        transition={{ duration: 0.2 }}
-      >
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 20 20"
-          fill="none"
-          className="text-os-text-secondary-dark"
-        >
-          <path
-            d="M5 7.5L10 12.5L15 7.5"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </motion.div>
     </motion.button>
   );
 }

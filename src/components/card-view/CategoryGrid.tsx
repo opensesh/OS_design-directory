@@ -36,6 +36,24 @@ export function CategoryGrid({
       });
   }, [resources]);
 
+  // Group categories into rows of 3 for desktop (md+) 
+  // SubcategoryRow will be inserted after the row containing the expanded card
+  const rows = useMemo(() => {
+    const result: { categories: typeof categoriesWithCounts; hasExpanded: boolean; expandedCategory: string | null }[] = [];
+    const columnsPerRow = 3; // This matches md:grid-cols-3
+    
+    for (let i = 0; i < categoriesWithCounts.length; i += columnsPerRow) {
+      const rowCategories = categoriesWithCounts.slice(i, i + columnsPerRow);
+      const expandedInRow = rowCategories.find(c => c.name === expandedCategory);
+      result.push({
+        categories: rowCategories,
+        hasExpanded: !!expandedInRow,
+        expandedCategory: expandedInRow?.name || null
+      });
+    }
+    return result;
+  }, [categoriesWithCounts, expandedCategory]);
+
   return (
     <motion.div
       className="grid grid-cols-2 md:grid-cols-3 gap-4"
@@ -49,27 +67,31 @@ export function CategoryGrid({
         }
       }}
     >
-      {categoriesWithCounts.map((category) => (
-        <Fragment key={category.name}>
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, y: 20 },
-              visible: { opacity: 1, y: 0 }
-            }}
-          >
-            <CategoryCard
-              category={category.name}
-              count={category.count}
-              isExpanded={expandedCategory === category.name}
-              isOtherExpanded={expandedCategory !== null && expandedCategory !== category.name}
-              onClick={() => onCategoryClick(category.name)}
-            />
-          </motion.div>
+      {rows.map((row, rowIndex) => (
+        <Fragment key={rowIndex}>
+          {/* Render all cards in this row */}
+          {row.categories.map((category) => (
+            <motion.div
+              key={category.name}
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0 }
+              }}
+            >
+              <CategoryCard
+                category={category.name}
+                count={category.count}
+                isExpanded={expandedCategory === category.name}
+                isOtherExpanded={expandedCategory !== null && expandedCategory !== category.name}
+                onClick={() => onCategoryClick(category.name)}
+              />
+            </motion.div>
+          ))}
 
-          {/* Insert SubcategoryRow directly after the expanded category card */}
-          {expandedCategory === category.name && (
+          {/* Insert SubcategoryRow after the complete row if any card in this row is expanded */}
+          {row.hasExpanded && row.expandedCategory && (
             <SubcategoryRow
-              category={expandedCategory}
+              category={row.expandedCategory}
               resources={resources}
               activeSubcategory={activeSubcategory}
               onSubcategoryClick={onSubcategoryClick}
