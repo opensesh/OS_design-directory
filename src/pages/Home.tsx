@@ -188,7 +188,7 @@ export default function Home() {
     <div className={`h-screen text-os-text-primary-dark font-sans overflow-hidden ${displayMode === '3d' ? '' : 'bg-os-bg-dark'}`}>
       {/* 3D Canvas - FIXED BELOW HEADERS (only in 3D mode) */}
       {displayMode === '3d' && (
-        <div className="fixed inset-0 top-[124px] z-0">
+        <div className="fixed inset-x-0 top-[124px] bottom-[220px] z-0">
           {/* Top gradient fade for visual separation from headers */}
           <div
             className="absolute top-0 inset-x-0 h-24 pointer-events-none z-10"
@@ -253,6 +253,10 @@ export default function Home() {
                 />
               </svg>
             </div>
+            {/* Open Session Wordmark */}
+            <span className="text-brand-vanilla font-display text-lg font-medium tracking-tight">
+              open session
+            </span>
           </button>
           <div className="flex items-center gap-3">
             {/* Search Button - hidden on mobile, visible on desktop */}
@@ -322,11 +326,11 @@ export default function Home() {
         role="region"
         aria-label="Current view"
       >
-        <div className="max-w-7xl mx-auto px-6 py-3 md:py-4">
+        <div className={`max-w-7xl mx-auto px-6 ${displayMode === '3d' ? 'py-4' : 'py-3'} md:py-4`}>
           <div className="flex items-center justify-between">
             {/* Left: Label + View Name */}
             <div className="flex flex-col gap-0.5">
-              <span className="text-caption font-accent uppercase tracking-wider text-os-text-secondary-dark">
+              <span className="text-caption font-text uppercase tracking-wider text-os-text-secondary-dark">
                 Design Directory
               </span>
               <AnimatePresence mode="wait">
@@ -336,13 +340,31 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-                  className="text-h4 md:text-h3 font-display text-brand-vanilla"
+                  className="text-h4 md:text-h3 font-accent font-bold text-brand-aperol"
                   aria-live="polite"
                 >
                   {displayMode === '3d' && 'Universe View'}
                   {displayMode === 'card' && 'Card View'}
                   {displayMode === 'table' && 'Table View'}
                 </motion.h2>
+              </AnimatePresence>
+            </div>
+
+            {/* Right: Description text (desktop only) */}
+            <div className="hidden md:block max-w-md text-right">
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key={`desc-${displayMode}`}
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+                  className="text-sm text-os-text-secondary-dark leading-relaxed"
+                >
+                  {displayMode === '3d' && 'You can easily browse design resources by navigating down from the main categories to the subcategories.'}
+                  {displayMode === 'card' && 'You can easily browse design resources by navigating down from the main categories to the subcategories.'}
+                  {displayMode === 'table' && 'You can easily browse design resources by navigating down from the main categories to the subcategories.'}
+                </motion.p>
               </AnimatePresence>
             </div>
 
@@ -382,6 +404,26 @@ export default function Home() {
                 <Table2 className="w-4 h-4" />
               </button>
             </div>
+          </div>
+
+          {/* Mobile description row */}
+          <div className="md:hidden mt-3">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`mobile-desc-${displayMode}`}
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+                className="inline-block bg-os-surface-dark/50 rounded-lg px-3 py-2 border border-os-border-dark"
+              >
+                <p className="text-xs text-os-text-secondary-dark leading-relaxed text-left">
+                  {displayMode === '3d' && 'You can easily browse design resources by navigating down from the main categories to the subcategories.'}
+                  {displayMode === 'card' && 'You can easily browse design resources by navigating down from the main categories to the subcategories.'}
+                  {displayMode === 'table' && 'You can easily browse design resources by navigating down from the main categories to the subcategories.'}
+                </p>
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
       </section>
@@ -449,11 +491,6 @@ export default function Home() {
             exit={{ opacity: 0, y: 30 }}
             transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
           >
-            {/* Gradient fade from transparent to dark */}
-            <div
-              className="absolute -top-24 left-0 right-0 h-24 pointer-events-none"
-              style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(20,20,20,0.95) 100%)' }}
-            />
 
             <div className="w-full max-w-7xl mx-auto px-6 pt-2 pb-6 space-y-3 pointer-events-auto">
               {/* AI Response - absolutely positioned to overlay without pushing layout */}
