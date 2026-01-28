@@ -9,12 +9,12 @@ import type { CategoryCluster } from '../../utils/orbital-layout';
  * Inspired by Red Stapler's Three.js nebula tutorial
  */
 const CLOUD_CONFIG = {
-  PLANES_PER_CLUSTER: 20,      // Number of cloud planes per cluster
-  PLANE_SIZE: 30,              // Size of each plane
-  BASE_OPACITY: 0.35,          // Default opacity
-  ACTIVE_OPACITY: 0.50,        // Highlighted when category selected
-  MATCHED_OPACITY: 0.42,       // Matched via search
-  INACTIVE_OPACITY: 0.12,      // Faded when filtered out
+  PLANES_PER_CLUSTER: 40,      // Number of cloud planes per cluster
+  PLANE_SIZE: 25,              // Size of each plane
+  BASE_OPACITY: 0.18,          // Default opacity
+  ACTIVE_OPACITY: 0.25,        // Highlighted when category selected
+  MATCHED_OPACITY: 0.21,       // Matched via search
+  INACTIVE_OPACITY: 0.06,      // Faded when filtered out
   ROTATION_SPEED: 0.0008,      // Slow drift animation
   OPACITY_LERP_SPEED: 0.06,    // Smooth transitions
 };
@@ -39,6 +39,7 @@ function seededRandom(seed: string): () => number {
 }
 
 interface CloudPlaneData {
+  opacityFactor: number;
   position: THREE.Vector3;
   rotation: THREE.Euler;
   scale: number;
@@ -82,6 +83,11 @@ function NebulaCloud({ cluster, texture, isActive, isMatched, hasAnyFilter }: Ne
       const y = Math.sqrt(-2 * Math.log(u1)) * Math.sin(2 * Math.PI * u2) * stdDev * 0.4; // Flatten Y
       const z = Math.sqrt(-2 * Math.log(u3)) * Math.cos(2 * Math.PI * u4) * stdDev;
 
+      // Calculate distance-based opacity factor for volumetric effect
+      const dist = Math.sqrt(x * x + y * y + z * z);
+      const normalizedDist = dist / (cluster.radius * 1.5);
+      const opacityFactor = Math.max(0.3, 1.0 - normalizedDist * 0.7);
+
       result.push({
         position: new THREE.Vector3(
           cluster.center.x + x,
@@ -93,7 +99,8 @@ function NebulaCloud({ cluster, texture, isActive, isMatched, hasAnyFilter }: Ne
           random() * Math.PI * 2,          // Random Y (0 to 2π)
           random() * Math.PI * 2           // Random Z (0 to 2π)
         ),
-        scale: 0.6 + random() * 0.8,  // Size variation (0.6 to 1.4)
+        opacityFactor: opacityFactor,
+        scale: 0.5 + random() * 1.0,  // Size variation (0.5 to 1.5)
       });
     }
 
@@ -105,12 +112,12 @@ function NebulaCloud({ cluster, texture, isActive, isMatched, hasAnyFilter }: Ne
     const color = new THREE.Color(cluster.color);
     const mats: THREE.MeshBasicMaterial[] = [];
 
-    for (let i = 0; i < CLOUD_CONFIG.PLANES_PER_CLUSTER; i++) {
+    for (let i = 0; i < planes.length; i++) {
       const mat = new THREE.MeshBasicMaterial({
         map: texture,
         color: color,
         transparent: true,
-        opacity: CLOUD_CONFIG.BASE_OPACITY,
+        opacity: CLOUD_CONFIG.BASE_OPACITY * planes[i].opacityFactor,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
         side: THREE.DoubleSide,
@@ -120,10 +127,10 @@ function NebulaCloud({ cluster, texture, isActive, isMatched, hasAnyFilter }: Ne
 
     materialsRef.current = mats;
     return mats;
-  }, [cluster.color, texture]);
+  }, [cluster.color, texture, planes]);
 
   // Animate rotation and opacity
-  useFrame((_, delta) => {
+  useFrame((_state, _delta) => {
     if (!groupRef.current) return;
 
     // Determine target opacity
@@ -145,8 +152,8 @@ function NebulaCloud({ cluster, texture, isActive, isMatched, hasAnyFilter }: Ne
 
     if (Math.abs(newOpacity - currentOpacity) > 0.001) {
       currentOpacityRef.current = newOpacity;
-      materialsRef.current.forEach((mat) => {
-        mat.opacity = newOpacity;
+      materialsRef.current.forEach((mat, i) => {
+        mat.opacity = newOpacity * planes[i].opacityFactor;
       });
     }
 
