@@ -207,8 +207,9 @@ function InteractionController({
         const index = intersects[0].instanceId;
         const opacity = resourceNodesRef.current.getOpacityAtIndex(index);
 
-        // Only trigger click if node is visible enough
-        if (opacity >= 0.1) {
+        // Only trigger click if node is fully visible (not filtered/dimmed)
+        // Must match MIN_HOVER_OPACITY in useFrame
+        if (opacity >= 0.5) {
           // Trigger click animation first
           if (onClickAnimation) {
             onClickAnimation(index);
@@ -261,21 +262,24 @@ function InteractionController({
 
     let newHovered: number | null = null;
 
+    // Opacity threshold for interaction (must be higher than FILTERED_OUT_OPACITY of 0.15)
+    const MIN_HOVER_OPACITY = 0.5;
+
     // First check: direct raycaster hit
     if (intersects.length > 0 && intersects[0].instanceId !== undefined) {
       const index = intersects[0].instanceId;
       const opacity = resourceNodesRef.current.getOpacityAtIndex(index);
 
-      // Only hover if node is visible enough
-      if (opacity >= 0.1) {
+      // Only hover if node is fully visible (not filtered/dimmed)
+      if (opacity >= MIN_HOVER_OPACITY) {
         newHovered = index;
       }
     }
 
-    // Second check: screen-space proximity for 2x hover radius
-    // This makes hovering feel more forgiving and delightful
+    // Second check: screen-space proximity for hover radius
+    // Reduced from 40px to 25px for less sensitive detection
     if (newHovered === null) {
-      const HOVER_RADIUS_PX = 40; // Approximate 2x visual radius in pixels
+      const HOVER_RADIUS_PX = 25;
       const canvas = gl.domElement;
       const canvasRect = canvas.getBoundingClientRect();
 
@@ -293,7 +297,7 @@ function InteractionController({
 
       for (let i = 0; i < instanceCount; i++) {
         const opacity = resourceNodesRef.current.getOpacityAtIndex(i) ?? 0;
-        if (opacity < 0.1) continue; // Skip filtered nodes
+        if (opacity < MIN_HOVER_OPACITY) continue; // Skip filtered/dimmed nodes
 
         // Get world position from instance matrix
         mesh.getMatrixAt(i, tempMatrix);
