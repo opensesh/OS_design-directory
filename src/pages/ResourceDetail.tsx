@@ -511,7 +511,7 @@ export default function ResourceDetail() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15 }}
-            className="space-y-6 mb-6"
+            className="space-y-12 mb-12"
           >
             {/* Rating Section */}
             {resource.gravityScore && (
@@ -611,7 +611,7 @@ export default function ResourceDetail() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25 }}
-              className="mb-6"
+              className="mb-12"
             >
               <h2 className="text-xs font-semibold text-[#FFFAEE] mb-3 uppercase tracking-wide flex items-center gap-2">
                 <span className="w-6 h-px bg-[#FE5102]" />
