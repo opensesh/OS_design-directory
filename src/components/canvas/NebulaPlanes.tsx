@@ -89,9 +89,9 @@ function NebulaCloud({ cluster, texture, isActive, isMatched, hasAnyFilter }: Ne
           cluster.center.z + z
         ),
         rotation: new THREE.Euler(
-          1.16,                        // X tilt (similar to article)
-          -0.12,                       // Y tilt
-          random() * Math.PI * 2       // Random Z rotation
+          random() * Math.PI,              // Random X (0 to π)
+          random() * Math.PI * 2,          // Random Y (0 to 2π)
+          random() * Math.PI * 2           // Random Z (0 to 2π)
         ),
         scale: 0.6 + random() * 0.8,  // Size variation (0.6 to 1.4)
       });
