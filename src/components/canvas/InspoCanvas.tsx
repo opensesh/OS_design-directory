@@ -2,155 +2,24 @@ import { useRef, useMemo, useEffect, useState, useCallback, Suspense } from 'rea
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Environment } from '@react-three/drei';
 import * as THREE from 'three';
-import { generateSphereLayout } from '../../utils/particle-layouts';
-import { calculateCategoryRings, type CategoryRingConfig } from '../../utils/orbital-layout';
+import { calculateCategoryClusters, calculateBoundingSphere, type CategoryCluster } from '../../utils/orbital-layout';
 import ResourceNodes, { type ResourceNodesHandle } from './ResourceNodes';
-import OrbitalRings from './OrbitalRings';
+import GalaxyBackground from './GalaxyBackground';
+import NebulaClusters from './NebulaClusters';
 import type { NormalizedResource } from '../../types/resource';
 import { CATEGORY_ORDER, CATEGORY_COLORS } from '../../types/resource';
 
 /**
- * Animation configuration for central sphere entrance
+ * Camera animation configuration
  */
-const SPHERE_ANIMATION = {
-  ENTRANCE_DURATION: 800,
-  LERP_SPEED: 0.08,
+const CAMERA_ANIMATION = {
+  DEFAULT_POSITION: new THREE.Vector3(0, 0, 80),
+  DEFAULT_TARGET: new THREE.Vector3(0, 0, 0),
+  LERP_SPEED: 0.05,
+  MIN_DISTANCE: 40,
+  MAX_DISTANCE: 150,
+  FOV: 60,
 };
-
-/**
- * CentralSphere - The "sun" that resource nodes orbit around
- */
-function CentralSphere() {
-  const meshRef = useRef<THREE.InstancedMesh>(null);
-  const groupRef = useRef<THREE.Group>(null);
-
-  const [isInitialized, setIsInitialized] = useState(false);
-  const entranceStartRef = useRef<number>(Date.now());
-  const currentScaleRef = useRef<number>(0);
-
-  const particleCount = 2000;
-  const radius = 10;
-  const particleSize = 0.12;
-  const innerColor = '#FFFAEE';
-  const outerColor = '#FE5102';
-
-  const positions = useMemo(() => generateSphereLayout(particleCount, radius), []);
-  const innerColorObj = useMemo(() => new THREE.Color(innerColor), []);
-  const outerColorObj = useMemo(() => new THREE.Color(outerColor), []);
-
-  const colors = useMemo(() => {
-    const colorArray = new Float32Array(particleCount * 3);
-    const tempColor = new THREE.Color();
-
-    let maxDistance = 0;
-    for (let i = 0; i < particleCount; i++) {
-      const x = positions[i * 3];
-      const y = positions[i * 3 + 1];
-      const z = positions[i * 3 + 2];
-      const distance = Math.sqrt(x * x + y * y + z * z);
-      if (distance > maxDistance) maxDistance = distance;
-    }
-
-    if (maxDistance === 0) maxDistance = 1;
-
-    for (let i = 0; i < particleCount; i++) {
-      const x = positions[i * 3];
-      const y = positions[i * 3 + 1];
-      const z = positions[i * 3 + 2];
-      const distance = Math.sqrt(x * x + y * y + z * z);
-      const t = distance / maxDistance;
-
-      tempColor.copy(innerColorObj).lerp(outerColorObj, t);
-
-      colorArray[i * 3] = tempColor.r;
-      colorArray[i * 3 + 1] = tempColor.g;
-      colorArray[i * 3 + 2] = tempColor.b;
-    }
-
-    return colorArray;
-  }, [positions, innerColorObj, outerColorObj]);
-
-  useEffect(() => {
-    if (!meshRef.current) return;
-
-    const dummy = new THREE.Object3D();
-
-    for (let i = 0; i < particleCount; i++) {
-      dummy.position.set(
-        positions[i * 3] || 0,
-        positions[i * 3 + 1] || 0,
-        positions[i * 3 + 2] || 0
-      );
-      dummy.scale.set(0, 0, 0);
-      dummy.updateMatrix();
-      meshRef.current.setMatrixAt(i, dummy.matrix);
-    }
-
-    meshRef.current.instanceMatrix.needsUpdate = true;
-
-    if (meshRef.current.geometry) {
-      const colorAttribute = new THREE.InstancedBufferAttribute(colors, 3);
-      meshRef.current.geometry.setAttribute('color', colorAttribute);
-    }
-
-    entranceStartRef.current = Date.now();
-  }, [positions, colors]);
-
-  useFrame((_, delta) => {
-    if (!groupRef.current || !meshRef.current) return;
-
-    groupRef.current.rotation.y += 0.5 * delta * 0.5;
-
-    const now = Date.now();
-    const timeSinceStart = now - entranceStartRef.current;
-
-    let targetScale = 1;
-    if (timeSinceStart < SPHERE_ANIMATION.ENTRANCE_DURATION) {
-      const progress = timeSinceStart / SPHERE_ANIMATION.ENTRANCE_DURATION;
-      targetScale = 1 - Math.pow(1 - progress, 3);
-    } else if (!isInitialized) {
-      setIsInitialized(true);
-    }
-
-    const currentScale = currentScaleRef.current;
-    const newScale = currentScale + (targetScale - currentScale) * SPHERE_ANIMATION.LERP_SPEED;
-
-    if (Math.abs(newScale - currentScale) > 0.001) {
-      currentScaleRef.current = newScale;
-
-      const dummy = new THREE.Object3D();
-      for (let i = 0; i < particleCount; i++) {
-        dummy.position.set(
-          positions[i * 3] || 0,
-          positions[i * 3 + 1] || 0,
-          positions[i * 3 + 2] || 0
-        );
-        dummy.scale.set(newScale, newScale, newScale);
-        dummy.updateMatrix();
-        meshRef.current.setMatrixAt(i, dummy.matrix);
-      }
-      meshRef.current.instanceMatrix.needsUpdate = true;
-    }
-  });
-
-  return (
-    <group ref={groupRef} position={[0, 0, 0]}>
-      <instancedMesh ref={meshRef} args={[undefined, undefined, particleCount]}>
-        <sphereGeometry args={[particleSize, 16, 16]} />
-        <meshPhysicalMaterial
-          vertexColors
-          transparent
-          opacity={1}
-          metalness={0.05}
-          roughness={0.35}
-          clearcoat={0.7}
-          clearcoatRoughness={0.2}
-          envMapIntensity={0.6}
-        />
-      </instancedMesh>
-    </group>
-  );
-}
 
 /**
  * CursorLight
@@ -388,12 +257,115 @@ function InteractionController({
 }
 
 /**
- * Shared rotation group for orbital elements
- * Both rings and nodes rotate together for visual consistency
+ * CameraController
+ *
+ * Handles smooth camera animation when filters change.
+ * Zooms out to encompass all visible nodes.
  */
-interface OrbitalSystemProps {
+interface CameraControllerProps {
+  clusters: CategoryCluster[];
+  activeCategory?: string | null;
+  filteredResourceIds?: number[] | null;
+  matchedCategories?: string[];
   resources: NormalizedResource[];
-  ringConfigs: CategoryRingConfig[];
+}
+
+function CameraController({
+  clusters,
+  activeCategory,
+  filteredResourceIds,
+  matchedCategories,
+  resources,
+}: CameraControllerProps) {
+  const { camera } = useThree();
+  const targetPositionRef = useRef(CAMERA_ANIMATION.DEFAULT_POSITION.clone());
+  const targetLookAtRef = useRef(CAMERA_ANIMATION.DEFAULT_TARGET.clone());
+
+  // Calculate target camera position based on filters
+  useEffect(() => {
+    // Collect visible positions based on filters
+    const visiblePositions: Array<{ x: number; y: number; z: number }> = [];
+
+    // If AI filter is active, show matched resources
+    if (filteredResourceIds && filteredResourceIds.length > 0) {
+      const clusterByCategory = new Map<string, CategoryCluster>();
+      for (const cluster of clusters) {
+        clusterByCategory.set(cluster.category, cluster);
+      }
+
+      for (const resource of resources) {
+        if (filteredResourceIds.includes(resource.id)) {
+          const cluster = clusterByCategory.get(resource.category || 'Other');
+          if (cluster) {
+            visiblePositions.push(cluster.center);
+          }
+        }
+      }
+    }
+    // If category filter is active, show that category's cluster
+    else if (activeCategory) {
+      const activeCluster = clusters.find(c => c.category === activeCategory);
+      if (activeCluster) {
+        visiblePositions.push(activeCluster.center);
+      }
+    }
+    // If matched categories from search, show those clusters
+    else if (matchedCategories && matchedCategories.length > 0) {
+      for (const category of matchedCategories) {
+        const cluster = clusters.find(c => c.category === category);
+        if (cluster) {
+          visiblePositions.push(cluster.center);
+        }
+      }
+    }
+
+    // Calculate bounding sphere and camera position
+    if (visiblePositions.length > 0) {
+      const bounds = calculateBoundingSphere(visiblePositions);
+
+      // Position camera to see all visible content
+      const distance = Math.max(
+        CAMERA_ANIMATION.MIN_DISTANCE,
+        Math.min(CAMERA_ANIMATION.MAX_DISTANCE, bounds.radius * 2.5)
+      );
+
+      // Look at center of visible content
+      targetLookAtRef.current.set(bounds.center.x, bounds.center.y, bounds.center.z);
+
+      // Position camera at offset from center
+      targetPositionRef.current.set(
+        bounds.center.x,
+        bounds.center.y + distance * 0.2,
+        bounds.center.z + distance
+      );
+    } else {
+      // No filter: return to default position
+      targetPositionRef.current.copy(CAMERA_ANIMATION.DEFAULT_POSITION);
+      targetLookAtRef.current.copy(CAMERA_ANIMATION.DEFAULT_TARGET);
+    }
+  }, [clusters, activeCategory, filteredResourceIds, matchedCategories, resources]);
+
+  // Animate camera towards target
+  useFrame(() => {
+    camera.position.lerp(targetPositionRef.current, CAMERA_ANIMATION.LERP_SPEED);
+
+    // Smoothly update lookAt by interpolating a target point
+    const currentLookAt = new THREE.Vector3();
+    camera.getWorldDirection(currentLookAt);
+    currentLookAt.multiplyScalar(50).add(camera.position);
+    currentLookAt.lerp(targetLookAtRef.current, CAMERA_ANIMATION.LERP_SPEED);
+    camera.lookAt(targetLookAtRef.current);
+  });
+
+  return null;
+}
+
+/**
+ * Galaxy system - clusters and nodes
+ */
+interface GalaxySystemProps {
+  resources: NormalizedResource[];
+  clusters: CategoryCluster[];
   activeCategory?: string | null;
   activeFilter?: string | null;
   activeSubFilter?: string | null;
@@ -404,9 +376,9 @@ interface OrbitalSystemProps {
   resourceNodesRef: React.RefObject<ResourceNodesHandle>;
 }
 
-function OrbitalSystem({
+function GalaxySystem({
   resources,
-  ringConfigs,
+  clusters,
   activeCategory,
   activeFilter,
   activeSubFilter,
@@ -415,23 +387,23 @@ function OrbitalSystem({
   hoveredIndex,
   clickedIndex,
   resourceNodesRef,
-}: OrbitalSystemProps) {
+}: GalaxySystemProps) {
   const groupRef = useRef<THREE.Group>(null);
 
-  // Slow orbital rotation - pause when hovering for easier interaction
+  // Slow rotation - pause when hovering for easier interaction
   useFrame((_, delta) => {
     if (!groupRef.current) return;
     if (hoveredIndex === null) {
-      groupRef.current.rotation.y += delta * 0.05;
+      groupRef.current.rotation.y += delta * 0.02;
     }
   });
 
   return (
     <group ref={groupRef}>
-      {/* Category rings */}
-      {ringConfigs.length > 0 && (
-        <OrbitalRings
-          ringConfigs={ringConfigs}
+      {/* Category cluster halos */}
+      {clusters.length > 0 && (
+        <NebulaClusters
+          clusters={clusters}
           activeCategory={activeCategory || null}
           matchedCategories={matchedCategories}
         />
@@ -442,7 +414,7 @@ function OrbitalSystem({
         <ResourceNodes
           ref={resourceNodesRef}
           resources={resources}
-          ringConfigs={ringConfigs}
+          clusters={clusters}
           activeCategory={activeCategory}
           activeFilter={activeFilter}
           activeSubFilter={activeSubFilter}
@@ -472,11 +444,11 @@ interface InspoCanvasProps {
 /**
  * InspoCanvas
  *
- * Main canvas component with:
- * - Central particle sphere (the "sun")
- * - Orbital resource nodes (the "planets")
- * - Orbital camera controls
- * - Raycasting for hover/click interactions
+ * Main canvas component with immersive galaxy view:
+ * - Galaxy skybox and starfield background
+ * - Category clusters distributed in 3D space
+ * - Resource nodes positioned within clusters
+ * - Camera animation on filter changes
  */
 export default function InspoCanvas({
   resources = [],
@@ -493,10 +465,10 @@ export default function InspoCanvas({
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
   const mousePosRef = useRef({ x: 0, y: 0 });
 
-  // Calculate ring configurations based on resources
-  const ringConfigs = useMemo(() => {
+  // Calculate cluster configurations based on resources
+  const clusters = useMemo(() => {
     if (resources.length === 0) return [];
-    return calculateCategoryRings(resources, CATEGORY_ORDER, CATEGORY_COLORS);
+    return calculateCategoryClusters(resources, CATEGORY_ORDER, CATEGORY_COLORS);
   }, [resources]);
 
   // Track mouse position for tooltip
@@ -552,32 +524,44 @@ export default function InspoCanvas({
     <Canvas
       className="w-full h-full"
       camera={{
-        position: [0, 0, 60],
-        fov: 60
+        position: [0, 0, 80],
+        fov: CAMERA_ANIMATION.FOV
       }}
-      gl={{ alpha: true }}
-      style={{ background: '#141414' }}
+      gl={{ alpha: false }}
+      style={{ background: '#0a0a0f' }}
     >
+      {/* Immersive galaxy background */}
+      <Suspense fallback={null}>
+        <GalaxyBackground />
+      </Suspense>
+
       {/* Lighting setup for physical materials */}
-      <ambientLight intensity={0.4} />
-      <directionalLight position={[10, 10, 5]} intensity={1.5} />
-      <directionalLight position={[-10, -5, -10]} intensity={0.5} color="#8090ff" />
-      <pointLight position={[0, 20, 0]} intensity={0.8} />
-      <pointLight position={[-15, -10, 15]} intensity={0.4} color="#ff9060" />
+      <ambientLight intensity={0.3} />
+      <directionalLight position={[10, 10, 5]} intensity={1.0} />
+      <directionalLight position={[-10, -5, -10]} intensity={0.4} color="#8090ff" />
+      <pointLight position={[0, 20, 0]} intensity={0.6} />
+      <pointLight position={[-15, -10, 15]} intensity={0.3} color="#ff9060" />
 
       {/* Cursor-following light for dynamic clearcoat reflections */}
       <CursorLight />
 
       {/* Environment map for clearcoat reflections */}
-      <Environment preset="city" background={false} />
+      <Environment preset="night" background={false} />
 
-      <CentralSphere />
+      {/* Camera animation controller */}
+      <CameraController
+        clusters={clusters}
+        activeCategory={activeCategory}
+        filteredResourceIds={filteredResourceIds}
+        matchedCategories={matchedCategories}
+        resources={resources}
+      />
 
-      {/* Orbital system - rings and nodes rotate together */}
+      {/* Galaxy system - clusters and nodes */}
       <Suspense fallback={null}>
-        <OrbitalSystem
+        <GalaxySystem
           resources={resources}
-          ringConfigs={ringConfigs}
+          clusters={clusters}
           activeCategory={activeCategory}
           activeFilter={activeFilter}
           activeSubFilter={activeSubFilter}
@@ -601,8 +585,8 @@ export default function InspoCanvas({
       <OrbitControls
         enableDamping
         dampingFactor={0.05}
-        minDistance={20}
-        maxDistance={150}
+        minDistance={30}
+        maxDistance={200}
         autoRotate={false}
         enablePan={false}
       />
