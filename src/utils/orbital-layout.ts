@@ -383,7 +383,7 @@ export function generateRingPosition(
  * Ratio: Score 9 / Score 5 = 3x (triple size for high performers)
  *
  * @param score - Gravity score (1-10)
- * @returns Size multiplier (0.4 to 2.0)
+ * @returns Size multiplier (0.25 to 2.50)
  */
 export function scoreToSizeMultiplier(score: number): number {
   // Clamp score to valid range
@@ -392,10 +392,10 @@ export function scoreToSizeMultiplier(score: number): number {
   // Normalize to 0-1 range
   const normalized = (clamped - 1) / 9;
 
-  // Steep power curve for dramatic high-score emphasis
-  // Score 1 → 0.4x, Score 5 → 0.6x, Score 9 → 1.8x, Score 10 → 2.0x
-  // Using power of 2 for steeper curve
-  return 0.4 + Math.pow(normalized, 2) * 1.6;
+  // Very steep power curve for dramatic high-score emphasis
+  // Score 1 → 0.25x, Score 5 → 0.46x, Score 9 → 2.24x, Score 10 → 2.50x
+  // Using power of 2.5 for steeper curve (4.9x ratio between score 5 and 9)
+  return 0.25 + Math.pow(normalized, 2.5) * 2.25;
 }
 
 /**
@@ -466,8 +466,8 @@ export interface CategoryCluster {
  * Galaxy layout constants
  */
 export const GALAXY_LAYOUT = {
-  MIN_CLUSTER_DISTANCE: 50,  // Minimum distance between cluster centers - ensures ~12-15 unit gap between edges
-  MAX_CLUSTER_DISTANCE: 110,  // Maximum distance from origin for cluster centers
+  MIN_CLUSTER_DISTANCE: 60,  // Minimum distance between cluster centers - increased for larger nodes
+  MAX_CLUSTER_DISTANCE: 120,  // Maximum distance from origin for cluster centers
   BASE_CLUSTER_RADIUS: 15,   // Base radius for clusters
   MAX_CLUSTER_RADIUS: 25,    // Maximum cluster radius
   PLACEMENT_ATTEMPTS: 50,    // Max attempts to place a cluster before using best position
