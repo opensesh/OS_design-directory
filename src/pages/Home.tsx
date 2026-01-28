@@ -361,9 +361,9 @@ export default function Home() {
                   transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
                   className="text-sm text-os-text-secondary-dark leading-relaxed"
                 >
-                  {displayMode === '3d' && 'You can easily browse design resources by navigating down from the main categories to the subcategories.'}
-                  {displayMode === 'card' && 'You can easily browse design resources by navigating down from the main categories to the subcategories.'}
-                  {displayMode === 'table' && 'You can easily browse design resources by navigating down from the main categories to the subcategories.'}
+                  {displayMode === '3d' && 'Easily browse design resources by navigating from main categories to subcategories.'}
+                  {displayMode === 'card' && 'Easily browse design resources by navigating from main categories to subcategories.'}
+                  {displayMode === 'table' && 'Easily browse design resources by navigating from main categories to subcategories.'}
                 </motion.p>
               </AnimatePresence>
             </div>
@@ -418,9 +418,9 @@ export default function Home() {
                 className="inline-block bg-os-surface-dark/50 rounded-lg px-3 py-2 border border-os-border-dark"
               >
                 <p className="text-xs text-os-text-secondary-dark leading-relaxed text-left">
-                  {displayMode === '3d' && 'You can easily browse design resources by navigating down from the main categories to the subcategories.'}
-                  {displayMode === 'card' && 'You can easily browse design resources by navigating down from the main categories to the subcategories.'}
-                  {displayMode === 'table' && 'You can easily browse design resources by navigating down from the main categories to the subcategories.'}
+                  {displayMode === '3d' && 'Easily browse design resources by navigating from main categories to subcategories.'}
+                  {displayMode === 'card' && 'Easily browse design resources by navigating from main categories to subcategories.'}
+                  {displayMode === 'table' && 'Easily browse design resources by navigating from main categories to subcategories.'}
                 </p>
               </motion.div>
             </AnimatePresence>
