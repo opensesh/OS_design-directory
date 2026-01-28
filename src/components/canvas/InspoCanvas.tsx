@@ -14,11 +14,11 @@ import { CATEGORY_ORDER, CATEGORY_COLORS } from '../../types/resource';
  * Camera animation configuration
  */
 const CAMERA_ANIMATION = {
-  DEFAULT_POSITION: new THREE.Vector3(0, 12, 115),
-  DEFAULT_TARGET: new THREE.Vector3(0, 0, 0),
+  DEFAULT_POSITION: new THREE.Vector3(0, 25, 125),
+  DEFAULT_TARGET: new THREE.Vector3(0, -5, 0),
   LERP_SPEED: 0.05,
-  MIN_DISTANCE: 55,
-  MAX_DISTANCE: 150,
+  MIN_DISTANCE: 60,
+  MAX_DISTANCE: 180,
   FOV: 60,
 };
 
@@ -661,7 +661,7 @@ export default function InspoCanvas({
     <Canvas
       className="w-full h-full"
       camera={{
-        position: [0, 12, 115],
+        position: [0, 25, 125],
         fov: CAMERA_ANIMATION.FOV
       }}
       gl={{ alpha: false }}
