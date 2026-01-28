@@ -466,8 +466,8 @@ export interface CategoryCluster {
  * Galaxy layout constants
  */
 export const GALAXY_LAYOUT = {
-  MIN_CLUSTER_DISTANCE: 38,  // Minimum distance between cluster centers - ensures ~3-8 unit gap between edges
-  MAX_CLUSTER_DISTANCE: 85,  // Maximum distance from origin for cluster centers
+  MIN_CLUSTER_DISTANCE: 50,  // Minimum distance between cluster centers - ensures ~12-15 unit gap between edges
+  MAX_CLUSTER_DISTANCE: 110,  // Maximum distance from origin for cluster centers
   BASE_CLUSTER_RADIUS: 15,   // Base radius for clusters
   MAX_CLUSTER_RADIUS: 25,    // Maximum cluster radius
   PLACEMENT_ATTEMPTS: 50,    // Max attempts to place a cluster before using best position
