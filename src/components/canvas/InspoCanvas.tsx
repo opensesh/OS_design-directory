@@ -6,6 +6,7 @@ import { calculateCategoryClusters, calculateBoundingSphere, type CategoryCluste
 import ResourceNodes, { type ResourceNodesHandle } from './ResourceNodes';
 import GalaxyBackground from './GalaxyBackground';
 import NebulaClusters from './NebulaClusters';
+import NebulaPlanes from './NebulaPlanes';
 import ClusterLabels from './ClusterLabels';
 import type { NormalizedResource } from '../../types/resource';
 import { CATEGORY_ORDER, CATEGORY_COLORS } from '../../types/resource';
@@ -526,7 +527,16 @@ function GalaxySystem({
 
   return (
     <group ref={groupRef}>
-      {/* Category cluster halos */}
+      {/* Volumetric nebula clouds (background layer) */}
+      {clusters.length > 0 && (
+        <NebulaPlanes
+          clusters={clusters}
+          activeCategory={activeCategory || null}
+          matchedCategories={matchedCategories}
+        />
+      )}
+
+      {/* Category cluster particle halos */}
       {clusters.length > 0 && (
         <NebulaClusters
           clusters={clusters}
