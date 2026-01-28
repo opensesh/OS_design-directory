@@ -257,7 +257,7 @@ export default function Home() {
             <img 
               src="/assets/logo-wordmark-vanilla.png" 
               alt="open session" 
-              className="h-7 w-auto"
+              className="h-9 w-auto"
             />
           </button>
           <div className="flex items-center gap-3">
@@ -342,7 +342,7 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-                  className="text-h4 md:text-h3 font-accent font-bold text-brand-aperol"
+                  className="text-h3 md:text-h3-tablet font-accent font-bold text-brand-aperol"
                   aria-live="polite"
                 >
                   {displayMode === '3d' && 'Universe View'}
