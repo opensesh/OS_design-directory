@@ -4,7 +4,7 @@
  * Three-layer search system:
  * 1. Concept & Synonym Expansion
  * 2. Multi-Strategy Matching with weighted scoring
- * 3. Intelligent Fallbacks (never empty results)
+ * 3. Intelligent Fallbacks (restricted to maintain relevance)
  */
 
 import type { NormalizedResource } from '../../types/resource';
@@ -46,6 +46,7 @@ export interface SearchMetadata {
   matchedCategory: string | null;
   matchedPricing: string | null;
   originalQuery: string;
+  directMatchCount: number; // NEW: count of results above relevance threshold
 }
 
 /**
@@ -57,23 +58,30 @@ export interface SearchResponse {
 }
 
 /**
+ * Minimum score threshold - results below this are filtered out
+ * This prevents irrelevant resources from appearing in results
+ */
+const MIN_RELEVANCE_THRESHOLD = 25;
+
+/**
  * Scoring weights for different match types
+ * Tuned to favor direct matches and reduce false positives
  */
 const SCORING_WEIGHTS = {
-  NAME_EXACT: 100,
-  CONCEPT_BOOST: 80,
-  NAME_STARTS_WITH: 70,
-  NAME_CONTAINS: 40,
-  TAG_EXACT: 30,
-  TAG_CONTAINS: 25,
-  CATEGORY_MATCH: 20,
-  SUBCATEGORY_MATCH: 15,
-  DESCRIPTION_CONTAINS: 10,
-  FUZZY_MAX: 40,
-  GRAVITY_MULTIPLIER: 2,
-  FEATURED_BONUS: 10,
-  SYNONYM_MATCH: 35,
-  PRICING_MATCH: 25,
+  NAME_EXACT: 100,        // Keep - exact name is highly relevant
+  CONCEPT_BOOST: 80,      // Keep - concept matches are intentional
+  NAME_STARTS_WITH: 70,   // Keep
+  NAME_CONTAINS: 40,      // Keep
+  TAG_EXACT: 50,          // INCREASED from 30 - exact tag is strong signal
+  TAG_CONTAINS: 15,       // DECREASED from 25 - partial tags cause false positives
+  CATEGORY_MATCH: 20,     // Keep
+  SUBCATEGORY_MATCH: 15,  // Keep
+  DESCRIPTION_CONTAINS: 3, // DECREASED from 10 - too many false positives from common words
+  FUZZY_MAX: 40,          // Keep
+  GRAVITY_MULTIPLIER: 1.5, // DECREASED from 2 - reduce gravity influence
+  FEATURED_BONUS: 5,      // DECREASED from 10 - featured shouldn't override relevance
+  SYNONYM_MATCH: 20,      // DECREASED from 35 - synonym matches are indirect
+  PRICING_MATCH: 25,      // Keep
 };
 
 /**
@@ -89,9 +97,9 @@ export function semanticSearch(
   } = {}
 ): SearchResponse {
   const {
-    minResults = 3,
+    minResults = 1, // CHANGED from 3 - don't pad with fallbacks by default
     maxResults = 50,
-    includeFallback = true,
+    includeFallback = false, // CHANGED from true - disabled by default
   } = options;
 
   const normalizedQuery = query.toLowerCase().trim();
@@ -108,6 +116,7 @@ export function semanticSearch(
         matchedCategory: null,
         matchedPricing: null,
         originalQuery: query,
+        directMatchCount: 0,
       },
     };
   }
@@ -151,7 +160,8 @@ export function semanticSearch(
       matchedPricing
     );
 
-    if (result.score > 0) {
+    // Only include results above the relevance threshold
+    if (result.score >= MIN_RELEVANCE_THRESHOLD) {
       scoredResults.push(result);
     }
   }
@@ -159,17 +169,24 @@ export function semanticSearch(
   // Sort by score (descending)
   scoredResults.sort((a, b) => b.score - a.score);
 
-  // Layer 3: Intelligent Fallbacks
+  // Track direct match count before any fallbacks
+  const directMatchCount = scoredResults.length;
+
+  // Layer 3: Intelligent Fallbacks (only for very short/generic queries)
   let finalResults = scoredResults.slice(0, maxResults);
   let quality: MatchQuality = determineQuality(scoredResults);
 
-  if (includeFallback && finalResults.length < minResults) {
+  // Only use fallback for very generic queries (2-3 chars) with no results
+  const isGenericQuery = normalizedQuery.length <= 3 && detectedConcepts.length === 0;
+  
+  if (includeFallback && isGenericQuery && finalResults.length < minResults) {
     const fallbackResults = generateFallbacks(
       resources,
       detectedConcepts,
       matchedCategory,
       new Set(finalResults.map(r => r.resource.id)),
-      minResults - finalResults.length
+      minResults - finalResults.length,
+      normalizedQuery
     );
     finalResults = [...finalResults, ...fallbackResults];
     quality = finalResults.length > 0 ? 'fallback' : 'low';
@@ -185,6 +202,7 @@ export function semanticSearch(
       matchedCategory,
       matchedPricing,
       originalQuery: query,
+      directMatchCount,
     },
   };
 }
@@ -227,29 +245,46 @@ function scoreResource(
     matchReasons.push('concept match');
   }
 
-  // 5. Tag matching
+  // 5. Tag matching - more restrictive, only count strong matches
   if (resource.tags?.length) {
+    let tagMatchFound = false;
+    
     for (const tag of resource.tags) {
       const tagLower = tag.toLowerCase();
 
-      // Check exact tag match with query terms
+      // Check exact tag match with query terms (strong signal)
       for (const token of queryTokens) {
         if (tagLower === token) {
           score += SCORING_WEIGHTS.TAG_EXACT;
           matchReasons.push(`exact tag: ${tag}`);
+          tagMatchFound = true;
           break;
-        } else if (tagLower.includes(token) || token.includes(tagLower)) {
-          score += SCORING_WEIGHTS.TAG_CONTAINS;
-          matchReasons.push(`partial tag: ${tag}`);
         }
       }
 
-      // Check synonym-expanded terms
-      for (const term of expandedTerms) {
-        if (tagLower === term || tagLower.includes(term)) {
-          score += SCORING_WEIGHTS.SYNONYM_MATCH;
-          matchReasons.push(`synonym tag: ${tag}`);
-          break;
+      // Only check partial matches if no exact match found
+      if (!tagMatchFound) {
+        for (const token of queryTokens) {
+          // Require minimum 4 chars for partial matching to reduce noise
+          if (token.length >= 4 && (tagLower.includes(token) || token.includes(tagLower))) {
+            score += SCORING_WEIGHTS.TAG_CONTAINS;
+            matchReasons.push(`partial tag: ${tag}`);
+            break;
+          }
+        }
+      }
+    }
+
+    // Synonym tag matching - only exact matches, not partial
+    if (!tagMatchFound) {
+      for (const tag of resource.tags) {
+        const tagLower = tag.toLowerCase();
+        for (const term of expandedTerms) {
+          if (tagLower === term) {
+            score += SCORING_WEIGHTS.SYNONYM_MATCH;
+            matchReasons.push(`synonym tag: ${tag}`);
+            break;
+          }
         }
       }
     }
@@ -283,21 +318,13 @@ function scoreResource(
     }
   }
 
-  // 8. Description matching (with expanded terms)
+  // 8. Description matching - only for direct query match, not expanded terms
+  // This reduces false positives from common words in descriptions
   if (resource.description) {
     const descriptionLower = resource.description.toLowerCase();
 
-    // Check expanded terms in description
-    for (const term of expandedTerms) {
-      if (descriptionLower.includes(term)) {
-        score += SCORING_WEIGHTS.DESCRIPTION_CONTAINS;
-        matchReasons.push(`description contains: ${term}`);
-        break; // Only count once per resource
-      }
-    }
-
-    // Direct query match in description
-    if (descriptionLower.includes(query)) {
+    // Direct query match in description (weak signal)
+    if (descriptionLower.includes(query) && query.length >= 4) {
       score += SCORING_WEIGHTS.DESCRIPTION_CONTAINS;
       matchReasons.push('description contains query');
     }
@@ -337,12 +364,12 @@ function scoreResource(
     }
   }
 
-  // Apply multipliers for important resources
+  // Apply multipliers for important resources (only if already matched)
   if (score > 0) {
-    // Gravity score bonus (higher gravity = more relevant)
+    // Gravity score bonus - reduced influence
     score *= 1 + (resource.gravityScore / 10) * (SCORING_WEIGHTS.GRAVITY_MULTIPLIER - 1);
 
-    // Featured bonus
+    // Featured bonus - small bump
     if (resource.featured) {
       score += SCORING_WEIGHTS.FEATURED_BONUS;
       matchReasons.push('featured');
@@ -373,39 +400,25 @@ function determineQuality(results: ScoredResult[]): MatchQuality {
 
 /**
  * Generate fallback results when primary search yields too few results
+ * Now much more restrictive - only for generic queries
  */
 function generateFallbacks(
   resources: NormalizedResource[],
   detectedConcepts: string[],
   matchedCategory: string | null,
   excludeIds: Set<number>,
-  count: number
+  count: number,
+  query: string
 ): ScoredResult[] {
   const fallbacks: ScoredResult[] = [];
-
-  // Strategy 1: Get resources from detected concept categories
-  if (detectedConcepts.length > 0) {
-    const conceptCategories = new Set<string>();
-    for (const concept of detectedConcepts) {
-      const mapping = conceptMappings[concept];
-      if (mapping) {
-        mapping.categories.forEach(cat => conceptCategories.add(cat));
-      }
-    }
-
-    for (const resource of resources) {
-      if (excludeIds.has(resource.id)) continue;
-      if (resource.category && conceptCategories.has(resource.category)) {
-        fallbacks.push({
-          resource,
-          score: resource.gravityScore * 5, // Use gravity as proxy for quality
-          matchReasons: ['related category fallback'],
-        });
-      }
-    }
+  
+  // For specific queries (concept detected or longer query), skip fallbacks entirely
+  const isSpecificQuery = detectedConcepts.length > 0 || query.length > 3;
+  if (isSpecificQuery) {
+    return []; // No fallbacks for specific queries
   }
 
-  // Strategy 2: Get resources from matched category
+  // Strategy 1: Get resources from matched category only
   if (matchedCategory && fallbacks.length < count) {
     for (const resource of resources) {
       if (excludeIds.has(resource.id)) continue;
@@ -417,33 +430,17 @@ function generateFallbacks(
           score: resource.gravityScore * 4,
           matchReasons: ['category fallback'],
         });
+        if (fallbacks.length >= count) break;
       }
     }
   }
 
-  // Strategy 3: Popular/featured resources
-  if (fallbacks.length < count) {
-    const popular = resources
-      .filter(r => !excludeIds.has(r.id) && !fallbacks.some(f => f.resource.id === r.id))
-      .sort((a, b) => {
-        // Sort by: featured first, then by gravity score
-        if (a.featured !== b.featured) return a.featured ? -1 : 1;
-        return b.gravityScore - a.gravityScore;
-      })
-      .slice(0, count - fallbacks.length);
+  // Strategy 2: REMOVED - No more "popular fallback" for generic searches
+  // This was the main source of irrelevant results
 
-    for (const resource of popular) {
-      fallbacks.push({
-        resource,
-        score: resource.gravityScore * 3,
-        matchReasons: ['popular fallback'],
-      });
-    }
-  }
-
-  // Sort fallbacks by score and limit
+  // Sort fallbacks by score and limit to max 3
   fallbacks.sort((a, b) => b.score - a.score);
-  return fallbacks.slice(0, count);
+  return fallbacks.slice(0, Math.min(count, 3));
 }
 
 /**
