@@ -529,13 +529,15 @@ function GalaxySystem({
         />
       )}
 
-      {/* Category labels in 3D space */}
+      {/* Category labels in 3D space - wrapped in own Suspense to prevent font loading from blocking other components */}
       {clusters.length > 0 && (
-        <ClusterLabels
-          clusters={clusters}
-          activeCategory={activeCategory || null}
-          matchedCategories={matchedCategories}
-        />
+        <Suspense fallback={null}>
+          <ClusterLabels
+            clusters={clusters}
+            activeCategory={activeCategory || null}
+            matchedCategories={matchedCategories}
+          />
+        </Suspense>
       )}
 
       {/* Resource nodes */}

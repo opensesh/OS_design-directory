@@ -1,8 +1,11 @@
 import { useRef, useMemo } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { Text } from '@react-three/drei';
+import { Text, useFont } from '@react-three/drei';
 import * as THREE from 'three';
 import type { CategoryCluster } from '../../utils/orbital-layout';
+
+// Preload font at module level to prevent suspension
+useFont.preload('/fonts/OffBit-Bold.woff2');
 
 /**
  * Animation configuration for cluster labels
