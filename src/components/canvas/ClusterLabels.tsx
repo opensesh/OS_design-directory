@@ -80,6 +80,7 @@ function ClusterLabel({ cluster, isActive, isMatched, hasAnyFilter }: ClusterLab
         cluster.center.y + cluster.radius + ANIMATION.LABEL_OFFSET_Y,
         cluster.center.z,
       ]}
+      font="/fonts/OffBit-Bold.woff2"
       fontSize={2.5}
       material={material}
       anchorX="center"
