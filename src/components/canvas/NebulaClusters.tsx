@@ -115,6 +115,7 @@ function ClusterHalo({ cluster, isActive, isMatched, hasAnyFilter }: ClusterHalo
         uOpacity: { value: ANIMATION.DEFAULT_OPACITY },
         uNoiseScale: { value: 1.2 },
         uSeed: { value: Math.random() * 100 },
+        uRadius: { value: cluster.radius * 1.4 },
       },
       vertexShader: `
         varying vec3 vPosition;
@@ -135,6 +136,7 @@ function ClusterHalo({ cluster, isActive, isMatched, hasAnyFilter }: ClusterHalo
         uniform float uOpacity;
         uniform float uNoiseScale;
         uniform float uSeed;
+        uniform float uRadius;
 
         varying vec3 vPosition;
         varying vec3 vNormal;
@@ -144,7 +146,7 @@ function ClusterHalo({ cluster, isActive, isMatched, hasAnyFilter }: ClusterHalo
 
         void main() {
           // Normalized distance from center (0 at center, 1 at edge)
-          float dist = length(vPosition);
+          float dist = length(vPosition) / uRadius;
 
           // Soft radial falloff - more gradual for wispy edges
           float falloff = 1.0 - smoothstep(0.2, 1.0, dist);
@@ -205,9 +207,9 @@ function ClusterHalo({ cluster, isActive, isMatched, hasAnyFilter }: ClusterHalo
         const pulse = Math.sin(pulsePhaseRef.current) * 0.03 + 0.12;
         targetOpacity = Math.max(ANIMATION.ACTIVE_OPACITY, pulse);
       } else if (isMatched) {
-        // Subtle pulse for matched categories
-        const pulse = Math.sin(pulsePhaseRef.current) * 0.02 + 0.10;
-        targetOpacity = pulse;
+        // Subtle pulse for matched categories (add pulse to base opacity)
+        const pulse = Math.sin(pulsePhaseRef.current) * 0.05;
+        targetOpacity = ANIMATION.MATCHED_OPACITY + pulse;
       } else {
         targetOpacity = ANIMATION.INACTIVE_OPACITY;
       }
@@ -263,6 +265,7 @@ function NebulaClustersCore({ cluster, isActive, isMatched, hasAnyFilter }: Nebu
         uColor: { value: color },
         uOpacity: { value: 0 },
         uSeed: { value: Math.random() * 100 + 50 },
+        uRadius: { value: cluster.radius * 0.4 },
       },
       vertexShader: `
         varying vec3 vPosition;
@@ -277,13 +280,14 @@ function NebulaClustersCore({ cluster, isActive, isMatched, hasAnyFilter }: Nebu
         uniform vec3 uColor;
         uniform float uOpacity;
         uniform float uSeed;
+        uniform float uRadius;
 
         varying vec3 vPosition;
 
         ${NOISE_GLSL}
 
         void main() {
-          float dist = length(vPosition);
+          float dist = length(vPosition) / uRadius;
 
           // Tighter, brighter core falloff
           float falloff = 1.0 - smoothstep(0.0, 1.0, dist);
