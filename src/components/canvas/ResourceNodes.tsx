@@ -56,6 +56,7 @@ export interface ResourceNodesHandle {
   getMesh: () => THREE.InstancedMesh | null;
   getResourceAtIndex: (index: number) => NormalizedResource | null;
   getOpacityAtIndex: (index: number) => number;
+  getTargetOpacityAtIndex: (index: number) => number;
   getGroupRotation: () => THREE.Euler | null;
   getVisibleCount: () => number;
 }
@@ -120,6 +121,7 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
       getMesh: () => meshRef.current,
       getResourceAtIndex: (index: number) => resources[index] || null,
       getOpacityAtIndex: (index: number) => currentOpacitiesRef.current?.[index] ?? 0,
+      getTargetOpacityAtIndex: (index: number) => targetOpacitiesRef.current?.[index] ?? 0,
       getGroupRotation: () => groupRef.current?.rotation || null,
       getVisibleCount: () => visibleCountRef.current,
     }));

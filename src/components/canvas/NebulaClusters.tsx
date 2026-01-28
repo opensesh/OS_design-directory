@@ -8,10 +8,10 @@ import type { CategoryCluster } from '../../utils/orbital-layout';
  */
 const ANIMATION = {
   OPACITY_LERP_SPEED: 0.08,
-  DEFAULT_OPACITY: 0.25,    // Visible glow when not filtered
-  ACTIVE_OPACITY: 0.40,     // Brighter when active/filtered
-  MATCHED_OPACITY: 0.30,    // Multi-category search match
-  INACTIVE_OPACITY: 0.12,   // Still visible when other category is active
+  DEFAULT_OPACITY: 0.65,    // Visible glow when not filtered (compensates for shader math)
+  ACTIVE_OPACITY: 0.90,     // Brighter when active/filtered
+  MATCHED_OPACITY: 0.75,    // Multi-category search match
+  INACTIVE_OPACITY: 0.30,   // Still visible when other category is active
 };
 
 /**
@@ -172,7 +172,7 @@ function ClusterHalo({ cluster, isActive, isMatched, hasAnyFilter }: ClusterHalo
 
           // Combine all factors for final alpha
           float alpha = falloff * n * wispyEdge * density * uOpacity;
-          alpha = pow(alpha, 0.7); // Soften overall
+          alpha = pow(alpha, 0.5); // Less aggressive darkening for better visibility
           alpha = clamp(alpha, 0.0, 1.0);
 
           // Add subtle color variation based on noise

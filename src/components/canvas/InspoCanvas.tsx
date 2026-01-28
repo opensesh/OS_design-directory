@@ -263,9 +263,9 @@ function InteractionController({
 
     let newHovered: number | null = null;
 
-    // Opacity threshold for interaction (must be higher than FILTERED_OUT_OPACITY of 0.15)
-    // Synced with ResourceNodes.MIN_OPACITY_FOR_INTERACTION
-    const MIN_HOVER_OPACITY = 0.2;
+    // Opacity threshold for interaction - excludes DIMMED (0.25) and FILTERED (0.15)
+    // Higher threshold prevents hover on nodes during opacity transition
+    const MIN_HOVER_OPACITY = 0.5;
 
     // First check: direct raycaster hit
     if (intersects.length > 0 && intersects[0].instanceId !== undefined) {
@@ -380,6 +380,11 @@ function CameraController({
 
   // Calculate target camera position and trigger animation when filters change
   useEffect(() => {
+    // Don't interrupt animation that's more than 20% complete
+    if (isAnimatingRef.current && animationProgressRef.current > 0.2) {
+      return;
+    }
+
     // Collect visible positions based on filters
     const visiblePositions: Array<{ x: number; y: number; z: number }> = [];
 
