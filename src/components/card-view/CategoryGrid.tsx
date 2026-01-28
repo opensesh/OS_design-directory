@@ -39,16 +39,23 @@ export function CategoryGrid({
   // Group categories into rows of 3 for desktop (md+) 
   // SubcategoryRow will be inserted after the row containing the expanded card
   const rows = useMemo(() => {
-    const result: { categories: typeof categoriesWithCounts; hasExpanded: boolean; expandedCategory: string | null }[] = [];
+    const result: { 
+      categories: typeof categoriesWithCounts; 
+      hasExpanded: boolean; 
+      expandedCategory: string | null;
+      expandedColumnIndex: number;
+    }[] = [];
     const columnsPerRow = 3; // This matches md:grid-cols-3
     
     for (let i = 0; i < categoriesWithCounts.length; i += columnsPerRow) {
       const rowCategories = categoriesWithCounts.slice(i, i + columnsPerRow);
-      const expandedInRow = rowCategories.find(c => c.name === expandedCategory);
+      const expandedIndex = rowCategories.findIndex(c => c.name === expandedCategory);
+      
       result.push({
         categories: rowCategories,
-        hasExpanded: !!expandedInRow,
-        expandedCategory: expandedInRow?.name || null
+        hasExpanded: expandedIndex !== -1,
+        expandedCategory: expandedIndex !== -1 ? rowCategories[expandedIndex].name : null,
+        expandedColumnIndex: expandedIndex
       });
     }
     return result;
@@ -95,6 +102,7 @@ export function CategoryGrid({
               resources={resources}
               activeSubcategory={activeSubcategory}
               onSubcategoryClick={onSubcategoryClick}
+              columnIndex={row.expandedColumnIndex}
             />
           )}
         </Fragment>
