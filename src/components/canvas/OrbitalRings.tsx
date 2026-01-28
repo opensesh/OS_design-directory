@@ -14,8 +14,8 @@ const ANIMATION = {
   ACTIVE_OPACITY: 0.8,       // Selected ring - prominent
   INACTIVE_OPACITY: 0.15,    // Non-selected rings - faded
   DEFAULT_STROKE_SCALE: 1.0,
-  ACTIVE_STROKE_SCALE: 2.0,  // 2x thicker when highlighted
-  FILL_OPACITY: 0.35,        // Medium fill opacity per user preference
+  ACTIVE_STROKE_SCALE: 1.1,  // Subtle 10% increase (uniform to stay circular)
+  FILL_OPACITY: 0.15,        // Lighter fill opacity (reduced from 0.35)
 };
 
 /**
@@ -145,8 +145,8 @@ function OrbitalRing({ config, activeCategory, matchedCategories }: OrbitalRingP
 
     if (Math.abs(newStrokeScale - currentStrokeScale) > 0.001) {
       currentStrokeScaleRef.current = newStrokeScale;
-      // Scale Y and Z to make the torus tube thicker
-      meshRef.current.scale.set(1, newStrokeScale, newStrokeScale);
+      // Uniform scaling to keep ring circular (non-uniform causes oval due to tilt)
+      meshRef.current.scale.set(newStrokeScale, newStrokeScale, newStrokeScale);
     }
   });
 
