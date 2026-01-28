@@ -14,10 +14,10 @@ import { CATEGORY_ORDER, CATEGORY_COLORS } from '../../types/resource';
  * Camera animation configuration
  */
 const CAMERA_ANIMATION = {
-  DEFAULT_POSITION: new THREE.Vector3(0, 0, 80),
+  DEFAULT_POSITION: new THREE.Vector3(0, 0, 115),
   DEFAULT_TARGET: new THREE.Vector3(0, 0, 0),
   LERP_SPEED: 0.05,
-  MIN_DISTANCE: 40,
+  MIN_DISTANCE: 55,
   MAX_DISTANCE: 150,
   FOV: 60,
 };
@@ -423,7 +423,7 @@ function CameraController({
       // Position camera to see all visible content
       const distance = Math.max(
         CAMERA_ANIMATION.MIN_DISTANCE,
-        Math.min(CAMERA_ANIMATION.MAX_DISTANCE, bounds.radius * 2.5)
+        Math.min(CAMERA_ANIMATION.MAX_DISTANCE, bounds.radius * 3.5)
       );
 
       // Look at center of visible content
@@ -432,7 +432,7 @@ function CameraController({
       // Position camera at offset from center
       targetPositionRef.current.set(
         bounds.center.x,
-        bounds.center.y + distance * 0.2,
+        bounds.center.y + distance * 0.1,
         bounds.center.z + distance
       );
 
@@ -656,7 +656,7 @@ export default function InspoCanvas({
     <Canvas
       className="w-full h-full"
       camera={{
-        position: [0, 0, 80],
+        position: [0, 0, 115],
         fov: CAMERA_ANIMATION.FOV
       }}
       gl={{ alpha: false }}

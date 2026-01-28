@@ -8,10 +8,10 @@ import type { CategoryCluster } from '../../utils/orbital-layout';
  */
 const ANIMATION = {
   OPACITY_LERP_SPEED: 0.08,
-  DEFAULT_OPACITY: 0.08,    // Subtle glow when not filtered
-  ACTIVE_OPACITY: 0.15,     // Brighter when active/filtered
-  MATCHED_OPACITY: 0.12,    // Multi-category search match
-  INACTIVE_OPACITY: 0.04,   // Very subtle when other category is active
+  DEFAULT_OPACITY: 0.25,    // Visible glow when not filtered
+  ACTIVE_OPACITY: 0.40,     // Brighter when active/filtered
+  MATCHED_OPACITY: 0.30,    // Multi-category search match
+  INACTIVE_OPACITY: 0.12,   // Still visible when other category is active
 };
 
 /**

@@ -456,13 +456,27 @@ export default function Home() {
             />
 
             <div className="w-full max-w-7xl mx-auto px-6 pt-2 pb-6 space-y-3 pointer-events-auto">
-              {/* AI Response */}
-              <AIFilterResponse
-                message={aiMessage}
-                isTyping={isAiTyping}
-                onDismiss={dismissAiResponse}
-                matchCount={filteredResourceIds ? filteredResourceIds.length : filteredResources.length}
-              />
+              {/* AI Response - absolutely positioned to overlay without pushing layout */}
+              <div className="relative">
+                <AnimatePresence>
+                  {aiMessage && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+                      className="absolute bottom-full left-0 right-0 mb-3 pointer-events-auto"
+                    >
+                      <AIFilterResponse
+                        message={aiMessage}
+                        isTyping={isAiTyping}
+                        onDismiss={dismissAiResponse}
+                        matchCount={filteredResourceIds ? filteredResourceIds.length : filteredResources.length}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
 
               {/* Search Input */}
               <InspoChat

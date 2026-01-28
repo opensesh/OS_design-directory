@@ -12,9 +12,9 @@ useFont.preload('/fonts/OffBit-Bold.woff2');
  */
 const ANIMATION = {
   OPACITY_LERP_SPEED: 0.08,
-  DEFAULT_OPACITY: 0.6,
+  DEFAULT_OPACITY: 0.85,
   ACTIVE_OPACITY: 1.0,
-  INACTIVE_OPACITY: 0.3,
+  INACTIVE_OPACITY: 0.45,
   LABEL_OFFSET_Y: 8, // Distance above cluster center
 };
 
