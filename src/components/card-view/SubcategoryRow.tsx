@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SubcategoryCard } from './SubcategoryCard';
 import type { NormalizedResource } from '../../types/resource';
@@ -8,34 +8,14 @@ interface SubcategoryRowProps {
   resources: NormalizedResource[];
   activeSubcategory: string | null;
   onSubcategoryClick: (subcategory: string) => void;
-  columnIndex: number;
 }
 
 export function SubcategoryRow({
   category,
   resources,
   activeSubcategory,
-  onSubcategoryClick,
-  columnIndex
+  onSubcategoryClick
 }: SubcategoryRowProps) {
-  const [isMobile, setIsMobile] = useState(false);
-
-  // Check for mobile breakpoint (matches Tailwind's md: breakpoint)
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  // Calculate responsive column index
-  // On mobile (2 cols): clamp to 0-1
-  // On desktop (3 cols): use 0-2
-  const responsiveColumnIndex = isMobile ? Math.min(columnIndex, 1) : columnIndex;
-
   // Extract unique subcategories with counts for this category
   const subcategories = useMemo(() => {
     const subcategoryMap = new Map<string, number>();
@@ -68,11 +48,6 @@ export function SubcategoryRow({
           opacity: { duration: 0.25 }
         }}
         className="overflow-hidden"
-        style={{
-          // Start from the selected card's column and span to end
-          // +1 because CSS grid columns are 1-indexed
-          gridColumn: `${responsiveColumnIndex + 1} / -1`
-        }}
       >
         <div className="py-4">
           <p className="text-xs text-os-text-secondary-dark mb-3 uppercase tracking-wider">

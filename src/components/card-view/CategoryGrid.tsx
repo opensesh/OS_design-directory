@@ -1,4 +1,4 @@
-import { useMemo, Fragment, useRef, useEffect } from 'react';
+import { useMemo, Fragment, useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { CategoryCard } from './CategoryCard';
 import { SubcategoryRow } from './SubcategoryRow';
@@ -22,6 +22,19 @@ export function CategoryGrid({
 }: CategoryGridProps) {
   // Ref to track the expanded card element
   const expandedCardRef = useRef<HTMLDivElement | null>(null);
+  
+  // Track actual column count based on viewport
+  const [columnCount, setColumnCount] = useState(3);
+
+  // Update column count on resize
+  useEffect(() => {
+    const updateColumns = () => {
+      setColumnCount(window.innerWidth < 768 ? 2 : 3);
+    };
+    updateColumns();
+    window.addEventListener('resize', updateColumns);
+    return () => window.removeEventListener('resize', updateColumns);
+  }, []);
 
   // Scroll to expanded card when it changes
   useEffect(() => {
@@ -53,34 +66,31 @@ export function CategoryGrid({
       });
   }, [resources]);
 
-  // Group categories into rows of 3 for desktop (md+) 
-  // SubcategoryRow will be inserted after the row containing the expanded card
+  // Group categories into visual rows based on actual column count
+  // This ensures SubcategoryRow appears directly below the correct row
   const rows = useMemo(() => {
     const result: { 
       categories: typeof categoriesWithCounts; 
       hasExpanded: boolean; 
       expandedCategory: string | null;
-      expandedColumnIndex: number;
     }[] = [];
-    const columnsPerRow = 3; // This matches md:grid-cols-3
     
-    for (let i = 0; i < categoriesWithCounts.length; i += columnsPerRow) {
-      const rowCategories = categoriesWithCounts.slice(i, i + columnsPerRow);
+    for (let i = 0; i < categoriesWithCounts.length; i += columnCount) {
+      const rowCategories = categoriesWithCounts.slice(i, i + columnCount);
       const expandedIndex = rowCategories.findIndex(c => c.name === expandedCategory);
       
       result.push({
         categories: rowCategories,
         hasExpanded: expandedIndex !== -1,
-        expandedCategory: expandedIndex !== -1 ? rowCategories[expandedIndex].name : null,
-        expandedColumnIndex: expandedIndex
+        expandedCategory: expandedIndex !== -1 ? rowCategories[expandedIndex].name : null
       });
     }
     return result;
-  }, [categoriesWithCounts, expandedCategory]);
+  }, [categoriesWithCounts, expandedCategory, columnCount]);
 
   return (
     <motion.div
-      className="grid grid-cols-2 md:grid-cols-3 gap-4"
+      className="flex flex-col gap-4"
       initial="hidden"
       animate="visible"
       variants={{
@@ -93,37 +103,38 @@ export function CategoryGrid({
     >
       {rows.map((row, rowIndex) => (
         <Fragment key={rowIndex}>
-          {/* Render all cards in this row */}
-          {row.categories.map((category) => {
-            const isExpanded = expandedCategory === category.name;
-            return (
-              <motion.div
-                key={category.name}
-                ref={isExpanded ? expandedCardRef : null}
-                variants={{
-                  hidden: { opacity: 0, y: 20 },
-                  visible: { opacity: 1, y: 0 }
-                }}
-              >
-                <CategoryCard
-                  category={category.name}
-                  count={category.count}
-                  isExpanded={isExpanded}
-                  isOtherExpanded={expandedCategory !== null && !isExpanded}
-                  onClick={() => onCategoryClick(category.name)}
-                />
-              </motion.div>
-            );
-          })}
+          {/* Each visual row is its own grid */}
+          <motion.div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {row.categories.map((category) => {
+              const isExpanded = expandedCategory === category.name;
+              return (
+                <motion.div
+                  key={category.name}
+                  ref={isExpanded ? expandedCardRef : null}
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 }
+                  }}
+                >
+                  <CategoryCard
+                    category={category.name}
+                    count={category.count}
+                    isExpanded={isExpanded}
+                    isOtherExpanded={expandedCategory !== null && !isExpanded}
+                    onClick={() => onCategoryClick(category.name)}
+                  />
+                </motion.div>
+              );
+            })}
+          </motion.div>
 
-          {/* Insert SubcategoryRow after the complete row if any card in this row is expanded */}
+          {/* SubcategoryRow appears directly below its row */}
           {row.hasExpanded && row.expandedCategory && (
             <SubcategoryRow
               category={row.expandedCategory}
               resources={resources}
               activeSubcategory={activeSubcategory}
               onSubcategoryClick={onSubcategoryClick}
-              columnIndex={row.expandedColumnIndex}
             />
           )}
         </Fragment>
