@@ -363,7 +363,7 @@ export default function ResourceDetail() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="mb-6"
+            className="mb-12"
           >
             {/* Icon + Title + Buttons Row */}
             <div className="flex items-start gap-4">
@@ -461,41 +461,41 @@ export default function ResourceDetail() {
                     </button>
                   </div>
                 </div>
-
-                {/* XS mobile action buttons - below title on very small screens */}
-                <div className="flex sm:hidden items-center gap-1.5 mt-3">
-                  <a
-                    href={resource.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#FE5102] text-white text-xs font-medium rounded-lg hover:bg-[#FE5102]/90 transition-colors"
-                  >
-                    Website
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </a>
-                  <button
-                    onClick={copyUrl}
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-2 rounded-lg border text-xs transition-all ${
-                      urlCopied
-                        ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                        : 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:bg-zinc-700'
-                    }`}
-                  >
-                    {urlCopied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                    <span>{urlCopied ? 'Copied' : 'Copy'}</span>
-                  </button>
-                </div>
               </div>
+            </div>
+
+            {/* XS mobile action buttons - below title, left-aligned with page */}
+            <div className="flex sm:hidden items-center gap-1.5 mt-3">
+              <a
+                href={resource.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#FE5102] text-white text-xs font-medium rounded-lg hover:bg-[#FE5102]/90 transition-colors"
+              >
+                Website
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </a>
+              <button
+                onClick={copyUrl}
+                className={`inline-flex items-center gap-1.5 px-2.5 py-2 rounded-lg border text-xs transition-all ${
+                  urlCopied
+                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                    : 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:bg-zinc-700'
+                }`}
+              >
+                {urlCopied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{urlCopied ? 'Copied' : 'Copy'}</span>
+              </button>
             </div>
 
             {/* Tags - Outside flex, aligned with icon's left edge */}
             {resource.tags && resource.tags.length > 0 && (
-              <div className="bg-zinc-800/30 border border-zinc-700/50 rounded-lg px-3 py-2 mt-4">
+              <div className="bg-zinc-800/20 rounded-lg px-3 py-2 mt-4">
                 <div className="flex flex-wrap gap-1.5">
                   {resource.tags.map((tag, idx) => (
                     <span
                       key={idx}
-                      className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded bg-zinc-800/60 border border-zinc-700/50 text-zinc-400"
+                      className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded bg-zinc-700/40 text-zinc-400"
                     >
                       <Tag className="w-2.5 h-2.5" />
                       {tag}
