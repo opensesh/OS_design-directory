@@ -167,15 +167,7 @@ export default function NebulaClusters({
   activeCategory,
   matchedCategories,
 }: NebulaClustersProps) {
-  // Determine active categories
-  const activeCategories = useMemo(() => {
-    const active = new Set<string>();
-    if (activeCategory) active.add(activeCategory);
-    matchedCategories?.forEach(c => active.add(c));
-    return active;
-  }, [activeCategory, matchedCategories]);
-
-  const hasAnyFilter = activeCategory !== null || (matchedCategories && matchedCategories.length > 0);
+  const hasAnyFilter = activeCategory !== null || (matchedCategories !== undefined && matchedCategories.length > 0);
 
   if (clusters.length === 0) return null;
 
