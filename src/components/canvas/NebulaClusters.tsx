@@ -8,11 +8,79 @@ import type { CategoryCluster } from '../../utils/orbital-layout';
  */
 const ANIMATION = {
   OPACITY_LERP_SPEED: 0.08,
-  DEFAULT_OPACITY: 0.05,    // Subtle glow when not filtered
-  ACTIVE_OPACITY: 0.12,     // Brighter when active/filtered
-  MATCHED_OPACITY: 0.10,    // Multi-category search match
-  INACTIVE_OPACITY: 0.03,   // Very subtle when other category is active
+  DEFAULT_OPACITY: 0.08,    // Subtle glow when not filtered
+  ACTIVE_OPACITY: 0.15,     // Brighter when active/filtered
+  MATCHED_OPACITY: 0.12,    // Multi-category search match
+  INACTIVE_OPACITY: 0.04,   // Very subtle when other category is active
 };
+
+/**
+ * Simplex 3D noise GLSL code for organic nebula shapes
+ */
+const NOISE_GLSL = `
+  vec4 permute(vec4 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
+  vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+
+  float snoise(vec3 v) {
+    const vec2 C = vec2(1.0/6.0, 1.0/3.0);
+    const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
+
+    vec3 i  = floor(v + dot(v, C.yyy));
+    vec3 x0 = v - i + dot(i, C.xxx);
+
+    vec3 g = step(x0.yzx, x0.xyz);
+    vec3 l = 1.0 - g;
+    vec3 i1 = min(g.xyz, l.zxy);
+    vec3 i2 = max(g.xyz, l.zxy);
+
+    vec3 x1 = x0 - i1 + C.xxx;
+    vec3 x2 = x0 - i2 + C.yyy;
+    vec3 x3 = x0 - D.yyy;
+
+    i = mod(i, 289.0);
+    vec4 p = permute(permute(permute(
+              i.z + vec4(0.0, i1.z, i2.z, 1.0))
+            + i.y + vec4(0.0, i1.y, i2.y, 1.0))
+            + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+
+    float n_ = 1.0/7.0;
+    vec3 ns = n_ * D.wyz - D.xzx;
+
+    vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
+
+    vec4 x_ = floor(j * ns.z);
+    vec4 y_ = floor(j - 7.0 * x_);
+
+    vec4 x = x_ * ns.x + ns.yyyy;
+    vec4 y = y_ * ns.x + ns.yyyy;
+    vec4 h = 1.0 - abs(x) - abs(y);
+
+    vec4 b0 = vec4(x.xy, y.xy);
+    vec4 b1 = vec4(x.zw, y.zw);
+
+    vec4 s0 = floor(b0)*2.0 + 1.0;
+    vec4 s1 = floor(b1)*2.0 + 1.0;
+    vec4 sh = -step(h, vec4(0.0));
+
+    vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy;
+    vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;
+
+    vec3 p0 = vec3(a0.xy, h.x);
+    vec3 p1 = vec3(a0.zw, h.y);
+    vec3 p2 = vec3(a1.xy, h.z);
+    vec3 p3 = vec3(a1.zw, h.w);
+
+    vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2,p2), dot(p3,p3)));
+    p0 *= norm.x;
+    p1 *= norm.y;
+    p2 *= norm.z;
+    p3 *= norm.w;
+
+    vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+    m = m * m;
+    return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
+  }
+`;
 
 interface ClusterHaloProps {
   cluster: CategoryCluster;
@@ -22,9 +90,9 @@ interface ClusterHaloProps {
 }
 
 /**
- * ClusterHalo - Soft spherical glow around a category cluster
+ * ClusterHalo - Organic nebula cloud around a category cluster
  *
- * Uses additive blending for ethereal nebula-like effect.
+ * Uses noise-based shader for wispy, organic edges instead of perfect circles.
  * Opacity changes based on filter state for visual hierarchy.
  */
 function ClusterHalo({ cluster, isActive, isMatched, hasAnyFilter }: ClusterHaloProps) {
@@ -32,21 +100,96 @@ function ClusterHalo({ cluster, isActive, isMatched, hasAnyFilter }: ClusterHalo
   const currentOpacityRef = useRef(ANIMATION.DEFAULT_OPACITY);
   const pulsePhaseRef = useRef(Math.random() * Math.PI * 2);
 
-  // Create material with category color and additive blending
+  // Create shader material with noise for organic nebula effect
   const material = useMemo(() => {
-    return new THREE.MeshBasicMaterial({
-      color: cluster.color,
+    const color = new THREE.Color(cluster.color);
+
+    return new THREE.ShaderMaterial({
       transparent: true,
-      opacity: ANIMATION.DEFAULT_OPACITY,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
       side: THREE.DoubleSide,
+      uniforms: {
+        uTime: { value: 0 },
+        uColor: { value: color },
+        uOpacity: { value: ANIMATION.DEFAULT_OPACITY },
+        uNoiseScale: { value: 1.2 },
+        uSeed: { value: Math.random() * 100 },
+      },
+      vertexShader: `
+        varying vec3 vPosition;
+        varying vec3 vNormal;
+        varying vec3 vWorldPosition;
+
+        void main() {
+          vPosition = position;
+          vNormal = normalize(normalMatrix * normal);
+          vec4 worldPos = modelMatrix * vec4(position, 1.0);
+          vWorldPosition = worldPos.xyz;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform float uTime;
+        uniform vec3 uColor;
+        uniform float uOpacity;
+        uniform float uNoiseScale;
+        uniform float uSeed;
+
+        varying vec3 vPosition;
+        varying vec3 vNormal;
+        varying vec3 vWorldPosition;
+
+        ${NOISE_GLSL}
+
+        void main() {
+          // Normalized distance from center (0 at center, 1 at edge)
+          float dist = length(vPosition);
+
+          // Soft radial falloff - more gradual for wispy edges
+          float falloff = 1.0 - smoothstep(0.2, 1.0, dist);
+          falloff = pow(falloff, 1.5);
+
+          // Multi-octave noise for organic, cloudy shape
+          vec3 noiseCoord = vPosition * uNoiseScale + uSeed;
+          float slowTime = uTime * 0.03;
+
+          // Layered noise at different scales
+          float n = 0.0;
+          n += snoise(noiseCoord + slowTime) * 0.5;
+          n += snoise(noiseCoord * 2.0 + slowTime * 0.7) * 0.25;
+          n += snoise(noiseCoord * 4.0 + slowTime * 0.5) * 0.125;
+          n = n * 0.5 + 0.5; // Normalize to 0-1
+
+          // Edge turbulence for wispy, nebula-like boundaries
+          float edgeDist = smoothstep(0.4, 0.95, dist);
+          float edgeNoise = snoise(vPosition * 3.0 + uSeed + slowTime * 0.5);
+          float wispyEdge = mix(1.0, max(0.0, edgeNoise * 0.6 + 0.4), edgeDist);
+
+          // Volumetric density variation
+          float density = snoise(vPosition * 1.5 + uSeed * 2.0 + slowTime * 0.2);
+          density = density * 0.3 + 0.7;
+
+          // Combine all factors for final alpha
+          float alpha = falloff * n * wispyEdge * density * uOpacity;
+          alpha = pow(alpha, 0.7); // Soften overall
+          alpha = clamp(alpha, 0.0, 1.0);
+
+          // Add subtle color variation based on noise
+          vec3 colorVariation = uColor * (0.9 + density * 0.2);
+
+          gl_FragColor = vec4(colorVariation, alpha);
+        }
+      `,
     });
   }, [cluster.color]);
 
-  // Animate opacity based on filter state
+  // Animate opacity and time uniform
   useFrame((_, delta) => {
-    if (!meshRef.current) return;
+    if (!meshRef.current || !material.uniforms) return;
+
+    // Update time for noise animation
+    material.uniforms.uTime.value += delta;
 
     // Update pulse phase for active/matched clusters
     if (isActive || isMatched) {
@@ -58,12 +201,12 @@ function ClusterHalo({ cluster, isActive, isMatched, hasAnyFilter }: ClusterHalo
 
     if (hasAnyFilter) {
       if (isActive) {
-        // Pulse between 0.08 and 0.12 when active
-        const pulse = Math.sin(pulsePhaseRef.current) * 0.02 + 0.10;
+        // Pulse when active
+        const pulse = Math.sin(pulsePhaseRef.current) * 0.03 + 0.12;
         targetOpacity = Math.max(ANIMATION.ACTIVE_OPACITY, pulse);
       } else if (isMatched) {
         // Subtle pulse for matched categories
-        const pulse = Math.sin(pulsePhaseRef.current) * 0.015 + 0.085;
+        const pulse = Math.sin(pulsePhaseRef.current) * 0.02 + 0.10;
         targetOpacity = pulse;
       } else {
         targetOpacity = ANIMATION.INACTIVE_OPACITY;
@@ -76,7 +219,7 @@ function ClusterHalo({ cluster, isActive, isMatched, hasAnyFilter }: ClusterHalo
 
     if (Math.abs(newOpacity - currentOpacity) > 0.0005) {
       currentOpacityRef.current = newOpacity;
-      material.opacity = newOpacity;
+      material.uniforms.uOpacity.value = newOpacity;
     }
   });
 
@@ -86,7 +229,7 @@ function ClusterHalo({ cluster, isActive, isMatched, hasAnyFilter }: ClusterHalo
       position={[cluster.center.x, cluster.center.y, cluster.center.z]}
       material={material}
     >
-      <sphereGeometry args={[cluster.radius * 1.3, 32, 32]} />
+      <sphereGeometry args={[cluster.radius * 1.4, 48, 48]} />
     </mesh>
   );
 }
@@ -101,35 +244,80 @@ interface NebulaClustersCoreProps {
 /**
  * NebulaClustersCore - Inner bright core for active clusters
  *
- * Smaller, brighter sphere at cluster center for emphasis
+ * Denser, brighter nebula at cluster center for emphasis when active.
+ * Uses same noise-based shader as outer halo for visual consistency.
  */
 function NebulaClustersCore({ cluster, isActive, isMatched, hasAnyFilter }: NebulaClustersCoreProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const currentOpacityRef = useRef(0);
 
   const material = useMemo(() => {
-    return new THREE.MeshBasicMaterial({
-      color: cluster.color,
+    const color = new THREE.Color(cluster.color);
+
+    return new THREE.ShaderMaterial({
       transparent: true,
-      opacity: 0,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
+      uniforms: {
+        uTime: { value: Math.random() * 100 },
+        uColor: { value: color },
+        uOpacity: { value: 0 },
+        uSeed: { value: Math.random() * 100 + 50 },
+      },
+      vertexShader: `
+        varying vec3 vPosition;
+
+        void main() {
+          vPosition = position;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform float uTime;
+        uniform vec3 uColor;
+        uniform float uOpacity;
+        uniform float uSeed;
+
+        varying vec3 vPosition;
+
+        ${NOISE_GLSL}
+
+        void main() {
+          float dist = length(vPosition);
+
+          // Tighter, brighter core falloff
+          float falloff = 1.0 - smoothstep(0.0, 1.0, dist);
+          falloff = pow(falloff, 2.0);
+
+          // Subtle noise for organic feel
+          vec3 noiseCoord = vPosition * 2.0 + uSeed;
+          float n = snoise(noiseCoord + uTime * 0.05) * 0.3 + 0.7;
+
+          float alpha = falloff * n * uOpacity;
+          alpha = clamp(alpha, 0.0, 1.0);
+
+          gl_FragColor = vec4(uColor, alpha);
+        }
+      `,
     });
   }, [cluster.color]);
 
-  useFrame(() => {
-    if (!meshRef.current) return;
+  useFrame((_, delta) => {
+    if (!meshRef.current || !material.uniforms) return;
+
+    // Update time for subtle animation
+    material.uniforms.uTime.value += delta;
 
     // Only show core when active or matched
     const shouldShow = hasAnyFilter && (isActive || isMatched);
-    const targetOpacity = shouldShow ? 0.15 : 0;
+    const targetOpacity = shouldShow ? 0.2 : 0;
 
     const currentOpacity = currentOpacityRef.current;
     const newOpacity = currentOpacity + (targetOpacity - currentOpacity) * 0.1;
 
     if (Math.abs(newOpacity - currentOpacity) > 0.001) {
       currentOpacityRef.current = newOpacity;
-      material.opacity = newOpacity;
+      material.uniforms.uOpacity.value = newOpacity;
     }
   });
 
@@ -139,7 +327,7 @@ function NebulaClustersCore({ cluster, isActive, isMatched, hasAnyFilter }: Nebu
       position={[cluster.center.x, cluster.center.y, cluster.center.z]}
       material={material}
     >
-      <sphereGeometry args={[cluster.radius * 0.3, 24, 24]} />
+      <sphereGeometry args={[cluster.radius * 0.4, 32, 32]} />
     </mesh>
   );
 }

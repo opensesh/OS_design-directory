@@ -264,7 +264,8 @@ function InteractionController({
     let newHovered: number | null = null;
 
     // Opacity threshold for interaction (must be higher than FILTERED_OUT_OPACITY of 0.15)
-    const MIN_HOVER_OPACITY = 0.5;
+    // Synced with ResourceNodes.MIN_OPACITY_FOR_INTERACTION
+    const MIN_HOVER_OPACITY = 0.2;
 
     // First check: direct raycaster hit
     if (intersects.length > 0 && intersects[0].instanceId !== undefined) {
@@ -717,6 +718,7 @@ export default function InspoCanvas({
       )}
 
       <OrbitControls
+        makeDefault
         enableDamping
         dampingFactor={0.05}
         minDistance={30}

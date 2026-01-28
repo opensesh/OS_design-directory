@@ -46,7 +46,7 @@ const ANIMATION = {
   HIDDEN_OPACITY: 0.0,           // Keep for semantic clarity (fully hidden)
   FILTERED_OUT_OPACITY: 0.15,    // Filtered nodes stay visible but faded
   DIMMED_OPACITY: 0.25,          // Non-selected category nodes
-  HOVER_SCALE: 1.3,
+  HOVER_SCALE: 1.6,
   CLICK_SCALE: 1.5,
   NORMAL_SCALE: 1.0,
   MIN_OPACITY_FOR_INTERACTION: 0.2,  // Above FILTERED_OUT_OPACITY (0.15) so filtered nodes aren't hoverable
@@ -500,9 +500,13 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
 
           // Hover intensity controls category color prominence
           // Default (0): 10% category, 90% textured (muted, texture-dominant)
-          // Hover (1): 60% category, 40% textured (category color prominent)
-          float colorMix = mix(0.1, 0.6, vHoverIntensity);
+          // Hover (1): 70% category, 30% textured (category color prominent)
+          float colorMix = mix(0.1, 0.7, vHoverIntensity);
           diffuseColor.rgb = mix(texturedColor, diffuseColor.rgb, colorMix);
+
+          // Add emissive glow boost on hover for visibility
+          float emissiveBoost = vHoverIntensity * 0.4;
+          diffuseColor.rgb += diffuseColor.rgb * emissiveBoost;
 
           // Apply per-instance opacity for filter fading
           diffuseColor.a *= vInstanceOpacity;`
