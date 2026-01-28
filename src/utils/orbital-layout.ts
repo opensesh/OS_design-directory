@@ -374,16 +374,16 @@ export function generateRingPosition(
  * Convert gravity score to size multiplier
  * Higher scores = larger nodes (more visual prominence)
  *
- * Uses power curve for dramatic high-score emphasis:
- * Score 1.0  → 0.50x (smallest)
- * Score 5.0  → 0.75x (medium)
- * Score 9.0  → 1.42x (very large)
- * Score 10.0 → 1.50x (largest)
+ * Uses steep power curve for dramatic high-score emphasis:
+ * Score 1.0  → 0.40x (smallest)
+ * Score 5.0  → 0.60x (medium)
+ * Score 9.0  → 1.80x (very large)
+ * Score 10.0 → 2.00x (largest)
  *
- * Ratio: Score 9 / Score 5 = ~1.9x (approximately 2x per user request)
+ * Ratio: Score 9 / Score 5 = 3x (triple size for high performers)
  *
  * @param score - Gravity score (1-10)
- * @returns Size multiplier (0.5 to 1.5)
+ * @returns Size multiplier (0.4 to 2.0)
  */
 export function scoreToSizeMultiplier(score: number): number {
   // Clamp score to valid range
@@ -392,9 +392,10 @@ export function scoreToSizeMultiplier(score: number): number {
   // Normalize to 0-1 range
   const normalized = (clamped - 1) / 9;
 
-  // Power curve for dramatic high-score emphasis
-  // Score 1 → 0.5x, Score 5 → 0.75x, Score 9 → 1.42x, Score 10 → 1.5x
-  return 0.5 + Math.pow(normalized, 1.3) * 1.0;
+  // Steep power curve for dramatic high-score emphasis
+  // Score 1 → 0.4x, Score 5 → 0.6x, Score 9 → 1.8x, Score 10 → 2.0x
+  // Using power of 2 for steeper curve
+  return 0.4 + Math.pow(normalized, 2) * 1.6;
 }
 
 /**
@@ -465,10 +466,10 @@ export interface CategoryCluster {
  * Galaxy layout constants
  */
 export const GALAXY_LAYOUT = {
-  MIN_CLUSTER_DISTANCE: 25,  // Minimum distance between cluster centers
-  MAX_CLUSTER_DISTANCE: 60,  // Maximum distance from origin for cluster centers
-  BASE_CLUSTER_RADIUS: 12,   // Base radius for clusters
-  MAX_CLUSTER_RADIUS: 20,    // Maximum cluster radius (for large categories)
+  MIN_CLUSTER_DISTANCE: 30,  // Minimum distance between cluster centers (increased from 25)
+  MAX_CLUSTER_DISTANCE: 70,  // Maximum distance from origin for cluster centers (increased from 60)
+  BASE_CLUSTER_RADIUS: 15,   // Base radius for clusters (increased from 12)
+  MAX_CLUSTER_RADIUS: 25,    // Maximum cluster radius (increased from 20)
   PLACEMENT_ATTEMPTS: 50,    // Max attempts to place a cluster before using best position
 } as const;
 
@@ -623,11 +624,12 @@ export function generateClusterPosition(
   cluster: CategoryCluster
 ): OrbitalPosition {
   const random = seededRandom(resourceId);
-  const stdDev = cluster.radius / 2.5;
+  // Increased spread: was cluster.radius / 2.5, now / 1.6 for more spacing
+  const stdDev = cluster.radius / 1.6;
 
   // Gaussian distribution for nebula-like clustering
   const offsetX = seededGaussian(random) * stdDev;
-  const offsetY = seededGaussian(random) * stdDev * 0.6; // Flatter on Y axis
+  const offsetY = seededGaussian(random) * stdDev * 0.7; // Slightly more Y spread
   const offsetZ = seededGaussian(random) * stdDev;
 
   return {
