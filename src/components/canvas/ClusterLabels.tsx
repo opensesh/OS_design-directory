@@ -12,10 +12,11 @@ useFont.preload('/fonts/OffBit-Bold.woff2');
  */
 const ANIMATION = {
   OPACITY_LERP_SPEED: 0.08,
-  DEFAULT_OPACITY: 0.85,
+  DEFAULT_OPACITY: 0.9,
   ACTIVE_OPACITY: 1.0,
-  INACTIVE_OPACITY: 0.45,
-  LABEL_OFFSET_Y: 8, // Distance above cluster center
+  INACTIVE_OPACITY: 0.5,
+  LABEL_OFFSET_Y: 12, // Distance above cluster center
+  FONT_SIZE: 6,
 };
 
 interface ClusterLabelProps {
@@ -84,10 +85,12 @@ function ClusterLabel({ cluster, isActive, isMatched, hasAnyFilter }: ClusterLab
         cluster.center.z,
       ]}
       font="/fonts/OffBit-Bold.woff2"
-      fontSize={4.5}
+      fontSize={ANIMATION.FONT_SIZE}
       material={material}
       anchorX="center"
       anchorY="middle"
+      outlineWidth={0.15}
+      outlineColor="#000000"
     >
       {cluster.category}
     </Text>

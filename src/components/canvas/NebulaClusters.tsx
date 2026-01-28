@@ -120,13 +120,16 @@ function ClusterHalo({ cluster, isActive, isMatched, hasAnyFilter }: ClusterHalo
       vertexShader: `
         varying vec3 vPosition;
         varying vec3 vNormal;
-        varying vec3 vWorldPosition;
+        varying vec3 vViewDir;
 
         void main() {
           vPosition = position;
           vNormal = normalize(normalMatrix * normal);
+
+          // Calculate view direction for fresnel
           vec4 worldPos = modelMatrix * vec4(position, 1.0);
-          vWorldPosition = worldPos.xyz;
+          vViewDir = normalize(cameraPosition - worldPos.xyz);
+
           gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
         }
       `,
@@ -140,20 +143,20 @@ function ClusterHalo({ cluster, isActive, isMatched, hasAnyFilter }: ClusterHalo
 
         varying vec3 vPosition;
         varying vec3 vNormal;
-        varying vec3 vWorldPosition;
+        varying vec3 vViewDir;
 
         ${NOISE_GLSL}
 
         void main() {
-          // Normalized distance from center (0 at center, 1 at edge)
-          float dist = length(vPosition) / uRadius;
+          // Fresnel effect - glow strongest at edges (perpendicular to view)
+          float fresnel = 1.0 - abs(dot(vNormal, vViewDir));
+          fresnel = pow(fresnel, 1.2);
 
-          // Soft radial falloff - more gradual for wispy edges
-          float falloff = 1.0 - smoothstep(0.2, 1.0, dist);
-          falloff = pow(falloff, 1.5);
+          // Also add center glow based on view alignment
+          float centerGlow = pow(abs(dot(vNormal, vViewDir)), 2.0) * 0.4;
 
           // Multi-octave noise for organic, cloudy shape
-          vec3 noiseCoord = vPosition * uNoiseScale + uSeed;
+          vec3 noiseCoord = vPosition * uNoiseScale * 0.08 + uSeed;
           float slowTime = uTime * 0.03;
 
           // Layered noise at different scales
@@ -163,19 +166,20 @@ function ClusterHalo({ cluster, isActive, isMatched, hasAnyFilter }: ClusterHalo
           n += snoise(noiseCoord * 4.0 + slowTime * 0.5) * 0.125;
           n = n * 0.5 + 0.5; // Normalize to 0-1
 
-          // Edge turbulence for wispy, nebula-like boundaries
-          float edgeDist = smoothstep(0.4, 0.95, dist);
-          float edgeNoise = snoise(vPosition * 3.0 + uSeed + slowTime * 0.5);
-          float wispyEdge = mix(1.0, max(0.0, edgeNoise * 0.6 + 0.4), edgeDist);
+          // Edge turbulence for wispy boundaries
+          float edgeNoise = snoise(vPosition * 0.15 + uSeed + slowTime * 0.5);
+          float wispyEdge = max(0.0, edgeNoise * 0.5 + 0.6);
 
           // Volumetric density variation
-          float density = snoise(vPosition * 1.5 + uSeed * 2.0 + slowTime * 0.2);
+          float density = snoise(vPosition * 0.1 + uSeed * 2.0 + slowTime * 0.2);
           density = density * 0.3 + 0.7;
 
-          // Combine all factors for final alpha
-          float alpha = falloff * n * wispyEdge * density * uOpacity;
-          alpha = pow(alpha, 0.5); // Less aggressive darkening for better visibility
-          alpha = clamp(alpha, 0.0, 1.0);
+          // Combine fresnel edge glow with center glow and noise
+          float glow = (fresnel * 0.7 + centerGlow) * n * wispyEdge * density;
+
+          // Apply opacity
+          float alpha = glow * uOpacity;
+          alpha = clamp(alpha, 0.0, 0.85);
 
           // Add subtle color variation based on noise
           vec3 colorVariation = uColor * (0.9 + density * 0.2);
@@ -269,9 +273,16 @@ function NebulaClustersCore({ cluster, isActive, isMatched, hasAnyFilter }: Nebu
       },
       vertexShader: `
         varying vec3 vPosition;
+        varying vec3 vNormal;
+        varying vec3 vViewDir;
 
         void main() {
           vPosition = position;
+          vNormal = normalize(normalMatrix * normal);
+
+          vec4 worldPos = modelMatrix * vec4(position, 1.0);
+          vViewDir = normalize(cameraPosition - worldPos.xyz);
+
           gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
         }
       `,
@@ -283,22 +294,21 @@ function NebulaClustersCore({ cluster, isActive, isMatched, hasAnyFilter }: Nebu
         uniform float uRadius;
 
         varying vec3 vPosition;
+        varying vec3 vNormal;
+        varying vec3 vViewDir;
 
         ${NOISE_GLSL}
 
         void main() {
-          float dist = length(vPosition) / uRadius;
-
-          // Tighter, brighter core falloff
-          float falloff = 1.0 - smoothstep(0.0, 1.0, dist);
-          falloff = pow(falloff, 2.0);
+          // Center glow - brightest when looking directly at surface
+          float centerGlow = pow(abs(dot(vNormal, vViewDir)), 1.5);
 
           // Subtle noise for organic feel
-          vec3 noiseCoord = vPosition * 2.0 + uSeed;
+          vec3 noiseCoord = vPosition * 0.15 + uSeed;
           float n = snoise(noiseCoord + uTime * 0.05) * 0.3 + 0.7;
 
-          float alpha = falloff * n * uOpacity;
-          alpha = clamp(alpha, 0.0, 1.0);
+          float alpha = centerGlow * n * uOpacity;
+          alpha = clamp(alpha, 0.0, 0.8);
 
           gl_FragColor = vec4(uColor, alpha);
         }
