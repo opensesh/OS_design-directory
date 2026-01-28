@@ -89,15 +89,15 @@ export function CategoryCard({
           />
         )}
         
-        {/* Vignette overlay - edge gradients to blend into card */}
+        {/* Vignette overlay - aggressive edge gradients for embedded look */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background: `
-              linear-gradient(to right, rgba(28, 28, 28, 0.8) 0%, transparent 15%),
-              linear-gradient(to left, rgba(28, 28, 28, 0.8) 0%, transparent 15%),
-              linear-gradient(to bottom, rgba(28, 28, 28, 0.8) 0%, transparent 20%),
-              linear-gradient(to top, rgba(28, 28, 28, 0.8) 0%, transparent 25%)
+              linear-gradient(to right, rgba(28, 28, 28, 1) 0%, transparent 30%),
+              linear-gradient(to left, rgba(28, 28, 28, 1) 0%, transparent 30%),
+              linear-gradient(to bottom, rgba(28, 28, 28, 1) 0%, transparent 35%),
+              linear-gradient(to top, rgba(28, 28, 28, 1) 0%, transparent 40%)
             `
           }}
         />
