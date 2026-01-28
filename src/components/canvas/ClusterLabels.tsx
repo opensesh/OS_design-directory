@@ -1,4 +1,4 @@
-import { useRef, useMemo } from 'react';
+import { useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { Text, useFont } from '@react-three/drei';
 import * as THREE from 'three';
@@ -31,22 +31,13 @@ interface ClusterLabelProps {
  *
  * Renders above the cluster center, always facing the camera.
  * Opacity changes based on filter state.
+ * Uses Text component's built-in color/opacity props for proper rendering.
  */
 function ClusterLabel({ cluster, isActive, isMatched, hasAnyFilter }: ClusterLabelProps) {
   const textRef = useRef<THREE.Mesh>(null);
   const { camera } = useThree();
+  const [opacity, setOpacity] = useState(ANIMATION.DEFAULT_OPACITY);
   const currentOpacityRef = useRef(ANIMATION.DEFAULT_OPACITY);
-
-  // Material for the text
-  const material = useMemo(() => {
-    return new THREE.MeshBasicMaterial({
-      color: cluster.color,
-      transparent: true,
-      opacity: ANIMATION.DEFAULT_OPACITY,
-      depthWrite: false,
-      side: THREE.DoubleSide,
-    });
-  }, [cluster.color]);
 
   // Animate opacity and billboard effect
   useFrame(() => {
@@ -72,7 +63,7 @@ function ClusterLabel({ cluster, isActive, isMatched, hasAnyFilter }: ClusterLab
 
     if (Math.abs(newOpacity - currentOpacity) > 0.001) {
       currentOpacityRef.current = newOpacity;
-      material.opacity = newOpacity;
+      setOpacity(newOpacity);
     }
   });
 
@@ -86,11 +77,14 @@ function ClusterLabel({ cluster, isActive, isMatched, hasAnyFilter }: ClusterLab
       ]}
       font="/fonts/OffBit-Bold.woff2"
       fontSize={ANIMATION.FONT_SIZE}
-      material={material}
+      color={cluster.color}
+      fillOpacity={opacity}
       anchorX="center"
       anchorY="middle"
-      outlineWidth={0.15}
+      outlineWidth={0.2}
       outlineColor="#000000"
+      renderOrder={100}
+      depthOffset={-1}
     >
       {cluster.category}
     </Text>
