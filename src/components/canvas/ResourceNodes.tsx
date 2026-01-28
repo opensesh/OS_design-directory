@@ -49,7 +49,7 @@ const ANIMATION = {
   HOVER_SCALE: 1.3,
   CLICK_SCALE: 1.5,
   NORMAL_SCALE: 1.0,
-  MIN_OPACITY_FOR_INTERACTION: 0.1,
+  MIN_OPACITY_FOR_INTERACTION: 0.2,  // Above FILTERED_OUT_OPACITY (0.15) so filtered nodes aren't hoverable
 };
 
 export interface ResourceNodesHandle {
@@ -103,9 +103,11 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
     const currentOpacitiesRef = useRef<Float32Array | null>(null);
     const targetOpacitiesRef = useRef<Float32Array | null>(null);
     const currentHoverScalesRef = useRef<Float32Array | null>(null);
+    const currentHoverIntensityRef = useRef<Float32Array | null>(null);  // For color enhancement on hover
     const entranceProgressRef = useRef<Float32Array | null>(null);  // Separate entrance progress from opacity
     const entranceStartTimeRef = useRef<number | null>(null);
     const opacityAttributeRef = useRef<THREE.InstancedBufferAttribute | null>(null);
+    const hoverIntensityAttributeRef = useRef<THREE.InstancedBufferAttribute | null>(null);
 
     // Visible count for external access
     const visibleCountRef = useRef(0);
@@ -171,6 +173,7 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
         currentOpacitiesRef.current = new Float32Array(resourceCount).fill(0);
         targetOpacitiesRef.current = new Float32Array(resourceCount).fill(ANIMATION.VISIBLE_OPACITY);
         currentHoverScalesRef.current = new Float32Array(resourceCount).fill(ANIMATION.NORMAL_SCALE);
+        currentHoverIntensityRef.current = new Float32Array(resourceCount).fill(0);  // Start muted
         entranceProgressRef.current = new Float32Array(resourceCount).fill(0);  // Track entrance separately
         entranceStartTimeRef.current = Date.now();
         setIsInitialized(false);
@@ -259,6 +262,13 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
         opacityAttribute.setUsage(THREE.DynamicDrawUsage);  // Will be updated frequently
         meshRef.current.geometry.setAttribute('instanceOpacity', opacityAttribute);
         opacityAttributeRef.current = opacityAttribute;
+
+        // Add per-instance hover intensity attribute for color enhancement
+        const hoverIntensityArray = new Float32Array(resourceCount).fill(0);
+        const hoverIntensityAttribute = new THREE.InstancedBufferAttribute(hoverIntensityArray, 1);
+        hoverIntensityAttribute.setUsage(THREE.DynamicDrawUsage);
+        meshRef.current.geometry.setAttribute('hoverIntensity', hoverIntensityAttribute);
+        hoverIntensityAttributeRef.current = hoverIntensityAttribute;
       }
     }, [positions, colors, textureIndices, resourceCount]);
 
@@ -266,7 +276,8 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
     useFrame(() => {
       if (!meshRef.current || !groupRef.current || resourceCount === 0) return;
       if (!currentOpacitiesRef.current || !targetOpacitiesRef.current || !currentHoverScalesRef.current) return;
-      if (!entranceProgressRef.current || !opacityAttributeRef.current) return;
+      if (!currentHoverIntensityRef.current) return;
+      if (!entranceProgressRef.current || !opacityAttributeRef.current || !hoverIntensityAttributeRef.current) return;
 
       // Note: Rotation is now handled by parent OrbitalSystem group
       // Note: Camera position stays fixed - no zoom on filter
@@ -336,6 +347,17 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           hasChanges = true;
         }
 
+        // Hover intensity for color enhancement (0 = muted, 1 = full color)
+        const targetHoverIntensity = isHovered ? 1.0 : 0.0;
+        const currentHoverIntensity = currentHoverIntensityRef.current[i];
+        const newHoverIntensity = currentHoverIntensity + (targetHoverIntensity - currentHoverIntensity) * ANIMATION.HOVER_LERP_SPEED;
+
+        if (Math.abs(newHoverIntensity - currentHoverIntensity) > 0.001) {
+          currentHoverIntensityRef.current[i] = newHoverIntensity;
+          hoverIntensityAttributeRef.current.setX(i, newHoverIntensity);
+          opacityChanged = true;  // Reuse flag to mark attribute update needed
+        }
+
         // Final scale = entrance scale * hover/click scale * size multiplier
         // Opacity is now handled separately via shader attribute
         const scoreSizeMultiplier = sizeMultipliers[i] || 1;
@@ -360,6 +382,7 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
 
       if (opacityChanged || hasChanges) {
         opacityAttributeRef.current.needsUpdate = true;
+        hoverIntensityAttributeRef.current.needsUpdate = true;
       }
 
       // Check entrance completion
@@ -411,17 +434,20 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           `#include <common>
           attribute float texIndex;
           attribute float instanceOpacity;
+          attribute float hoverIntensity;
           varying float vTexIndex;
           varying float vInstanceOpacity;
+          varying float vHoverIntensity;
           varying vec2 vPlanetUv;`
         );
 
-        // Pass texture index, opacity, and compute spherical UV in vertex shader
+        // Pass texture index, opacity, hover intensity, and compute spherical UV in vertex shader
         shader.vertexShader = shader.vertexShader.replace(
           '#include <begin_vertex>',
           `#include <begin_vertex>
           vTexIndex = texIndex;
           vInstanceOpacity = instanceOpacity;
+          vHoverIntensity = hoverIntensity;
           // Compute spherical UV from position for sphere mapping
           vec3 normalizedPos = normalize(position);
           vPlanetUv = vec2(
@@ -444,6 +470,7 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           uniform sampler2D planetTex7;
           varying float vTexIndex;
           varying float vInstanceOpacity;
+          varying float vHoverIntensity;
           varying vec2 vPlanetUv;
 
           vec4 samplePlanetTexture(vec2 uv, float idx) {
@@ -467,11 +494,16 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           vec4 planetColor = samplePlanetTexture(vPlanetUv, vTexIndex);
           // Extract luminance for detail
           float luminance = dot(planetColor.rgb, vec3(0.299, 0.587, 0.114));
-          // Blend: vertex color tinted by texture detail
-          // Increased texture influence from 30% to 50% for more visible surface variation
+          // Create texture-influenced version for blending
           vec3 textureInfluence = mix(vec3(luminance), planetColor.rgb, 0.5);
-          // Stronger blend: 30% base + 70% texture influence (was 40%/60%)
-          diffuseColor.rgb = diffuseColor.rgb * (0.3 + textureInfluence * 0.7);
+          vec3 texturedColor = diffuseColor.rgb * (0.3 + textureInfluence * 0.7);
+
+          // Hover intensity controls category color prominence
+          // Default (0): 10% category, 90% textured (muted, texture-dominant)
+          // Hover (1): 60% category, 40% textured (category color prominent)
+          float colorMix = mix(0.1, 0.6, vHoverIntensity);
+          diffuseColor.rgb = mix(texturedColor, diffuseColor.rgb, colorMix);
+
           // Apply per-instance opacity for filter fading
           diffuseColor.a *= vInstanceOpacity;`
         );
