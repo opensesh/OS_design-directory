@@ -53,8 +53,8 @@ export function CategoryCard({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={`
-        relative w-full aspect-[4/5] rounded-xl text-left overflow-hidden
-        bg-os-surface-dark/40 border border-os-border-dark
+        relative w-full aspect-square rounded-xl text-left overflow-hidden
+        bg-os-surface-dark border border-os-border-dark
         transition-colors duration-200
         focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 
         focus:ring-offset-2 focus:ring-offset-os-bg-dark
@@ -75,58 +75,51 @@ export function CategoryCard({
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.2 }}
     >
-      {/* Layer 1: Video Background */}
-      {videoSrc && (
-        <video
-          ref={videoRef}
-          className="absolute inset-0 w-full h-full object-cover z-0"
-          src={videoSrc}
-          muted
-          loop
-          playsInline
-          preload="metadata"
-        />
-      )}
-
-      {/* Layer 2: Vignette Overlay - enhanced bottom gradient */}
-      <div
-        className="absolute inset-0 z-10 pointer-events-none"
-        style={{
-          background: `
-            radial-gradient(
-              ellipse 80% 50% at center 30%,
+      {/* Video container - upper portion with padding */}
+      <div className="absolute top-3 left-3 right-3 h-[68%] rounded-lg overflow-hidden">
+        {videoSrc && (
+          <video
+            ref={videoRef}
+            className="w-full h-full object-cover"
+            src={videoSrc}
+            muted
+            loop
+            playsInline
+            preload="metadata"
+          />
+        )}
+        
+        {/* Vignette overlay - only on video area */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: `radial-gradient(
+              ellipse 80% 70% at center 40%,
               transparent 0%,
-              rgba(28, 28, 28, 0.3) 50%,
-              rgba(28, 28, 28, 0.7) 75%,
-              rgba(28, 28, 28, 0.95) 100%
-            ),
-            linear-gradient(
-              to top,
-              rgba(28, 28, 28, 1) 0%,
-              rgba(28, 28, 28, 0.95) 15%,
-              rgba(28, 28, 28, 0.7) 25%,
-              transparent 45%
-            )
-          `
-        }}
-      />
+              rgba(28, 28, 28, 0.2) 40%,
+              rgba(28, 28, 28, 0.6) 70%,
+              rgba(28, 28, 28, 0.9) 100%
+            )`
+          }}
+        />
+      </div>
 
-      {/* Layer 3: Content - title, count, and chevron inline */}
-      <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
+      {/* Text section - solid background at bottom */}
+      <div className="absolute bottom-0 left-0 right-0 px-4 pb-4 pt-2">
         {/* Header row with title and chevron */}
-        <div className="flex items-center justify-between mb-1">
-          <h3 className="text-xl font-display font-semibold text-brand-vanilla">
+        <div className="flex items-center justify-between mb-0.5">
+          <h3 className="text-lg font-display font-semibold text-brand-vanilla">
             {category}
           </h3>
           
-          {/* Expand indicator - now inline with title */}
+          {/* Expand indicator */}
           <motion.div
             animate={{ rotate: isExpanded ? 180 : 0 }}
             transition={{ duration: 0.2 }}
           >
             <svg
-              width="20"
-              height="20"
+              width="18"
+              height="18"
               viewBox="0 0 20 20"
               fill="none"
               className="text-os-text-secondary-dark"
@@ -150,7 +143,7 @@ export function CategoryCard({
           >
             {count}
           </span>
-          {' '}resource{count !== 1 ? 's' : ''}
+          {' '}Resource{count !== 1 ? 's' : ''}
         </p>
       </div>
     </motion.button>
