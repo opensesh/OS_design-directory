@@ -466,10 +466,10 @@ export interface CategoryCluster {
  * Galaxy layout constants
  */
 export const GALAXY_LAYOUT = {
-  MIN_CLUSTER_DISTANCE: 38,  // Minimum distance between cluster centers - ensures ~3-8 unit gap between edges
-  MAX_CLUSTER_DISTANCE: 85,  // Maximum distance from origin for cluster centers
-  BASE_CLUSTER_RADIUS: 15,   // Base radius for clusters
-  MAX_CLUSTER_RADIUS: 25,    // Maximum cluster radius
+  MIN_CLUSTER_DISTANCE: 50,  // Increased to accommodate larger planets with Saturn rings
+  MAX_CLUSTER_DISTANCE: 105, // Expanded for better spread with larger elements
+  BASE_CLUSTER_RADIUS: 20,   // Increased for ring clearance
+  MAX_CLUSTER_RADIUS: 32,    // Increased for large clusters with rings
   PLACEMENT_ATTEMPTS: 50,    // Max attempts to place a cluster before using best position
 } as const;
 
@@ -625,7 +625,7 @@ export function generateClusterPosition(
 ): OrbitalPosition {
   const random = seededRandom(resourceId);
   // Increased spread: was cluster.radius / 2.5, now / 1.6 for more spacing
-  const stdDev = cluster.radius / 1.6;
+  const stdDev = cluster.radius / 1.3;  // More spread within clusters for ring clearance
 
   // Gaussian distribution for nebula-like clustering
   const offsetX = seededGaussian(random) * stdDev;
