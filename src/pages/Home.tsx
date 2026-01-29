@@ -279,43 +279,6 @@ export default function Home() {
               <kbd className="hidden lg:inline text-[10px] px-1.5 py-0.5 bg-os-bg-dark rounded border border-os-border-dark">⌘K</kbd>
             </button>
 
-          {/* View mode toggles - hidden on mobile, visible on desktop */}
-          <div className="hidden md:flex items-center bg-os-surface-dark/50 rounded-lg p-1 border border-os-border-dark">
-            <button
-              onClick={() => setSearchParams({})}
-              className={`p-2 rounded-md transition-all ${
-                displayMode === '3d'
-                  ? 'bg-brand-aperol text-white'
-                  : 'text-os-text-secondary-dark hover:text-brand-vanilla'
-              }`}
-              aria-label="3D View"
-            >
-              <Box className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => setSearchParams({ display: 'card' })}
-              className={`p-2 rounded-md transition-all ${
-                displayMode === 'card'
-                  ? 'bg-brand-aperol text-white'
-                  : 'text-os-text-secondary-dark hover:text-brand-vanilla'
-              }`}
-              aria-label="Card View"
-            >
-              <LayoutGrid className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => setSearchParams({ display: 'table' })}
-              className={`p-2 rounded-md transition-all ${
-                displayMode === 'table'
-                  ? 'bg-brand-aperol text-white'
-                  : 'text-os-text-secondary-dark hover:text-brand-vanilla'
-              }`}
-              aria-label="Table View"
-            >
-              <Table2 className="w-4 h-4" />
-            </button>
-          </div>
-
           {/* Search button - visible on mobile only */}
           <button
             onClick={() => setIsSearchModalOpen(true)}
@@ -373,8 +336,8 @@ export default function Home() {
               </AnimatePresence>
             </div>
 
-            {/* Right: View toggle (mobile only) */}
-            <div className="flex md:hidden items-center bg-os-surface-dark/50 rounded-lg p-1 border border-os-border-dark">
+            {/* Right: View toggle (all screen sizes) */}
+            <div className="flex items-center bg-os-surface-dark/50 rounded-lg p-1 border border-os-border-dark">
               <button
                 onClick={() => setSearchParams({})}
                 className={`p-2 rounded-md transition-all ${
