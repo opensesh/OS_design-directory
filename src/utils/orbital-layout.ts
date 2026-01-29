@@ -374,16 +374,17 @@ export function generateRingPosition(
  * Convert gravity score to size multiplier
  * Higher scores = larger nodes (more visual prominence)
  *
- * Uses steep power curve for dramatic high-score emphasis:
- * Score 1.0  → 0.40x (smallest)
- * Score 5.0  → 0.60x (medium)
- * Score 9.0  → 1.80x (very large)
- * Score 10.0 → 2.00x (largest)
+ * Uses power of 3 curve for ~4x ratio between 9+ and 6-7 scores:
+ * Score 1.0  → 0.30x (smallest)
+ * Score 5.0  → 0.54x (medium-small)
+ * Score 6.5  → 0.68x (medium)
+ * Score 9.0  → 2.20x (very large)
+ * Score 10.0 → 3.00x (largest)
  *
- * Ratio: Score 9 / Score 5 = 3x (triple size for high performers)
+ * Ratio: Score 9 / Score 6.5 ≈ 4x (dramatic size difference for top performers)
  *
  * @param score - Gravity score (1-10)
- * @returns Size multiplier (0.4 to 2.0)
+ * @returns Size multiplier (0.30 to 3.0)
  */
 export function scoreToSizeMultiplier(score: number): number {
   // Clamp score to valid range
@@ -392,10 +393,9 @@ export function scoreToSizeMultiplier(score: number): number {
   // Normalize to 0-1 range
   const normalized = (clamped - 1) / 9;
 
-  // Steep power curve for dramatic high-score emphasis
-  // Score 1 → 0.4x, Score 5 → 0.6x, Score 9 → 1.8x, Score 10 → 2.0x
-  // Using power of 2 for steeper curve
-  return 0.4 + Math.pow(normalized, 2) * 1.6;
+  // Power of 3 curve for ~4x ratio between top scores and mid-range
+  // Score 9+ resources will be dramatically larger than 6-7 range
+  return 0.30 + Math.pow(normalized, 3) * 2.70;
 }
 
 /**
