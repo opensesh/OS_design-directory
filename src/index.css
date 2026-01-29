@@ -108,9 +108,11 @@ body {
 
 #root {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;  /* Fallback for older browsers */
+  min-height: 100dvh; /* Dynamic viewport for mobile - adjusts to actual visible area */
+  height: 100vh;      /* Fallback for older browsers */
+  height: 100dvh;     /* Modern browsers use this - fixes mobile toolbar issues */
 }
-
 /* Custom scrollbar for webkit browsers */
 ::-webkit-scrollbar {
   width: 8px;
