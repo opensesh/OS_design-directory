@@ -374,28 +374,36 @@ export function generateRingPosition(
  * Convert gravity score to size multiplier
  * Higher scores = larger nodes (more visual prominence)
  *
- * Uses steep power curve for dramatic high-score emphasis:
- * Score 1.0  → 0.40x (smallest)
- * Score 5.0  → 0.60x (medium)
- * Score 9.0  → 1.80x (very large)
- * Score 10.0 → 2.00x (largest)
+ * Uses tiered linear scaling for predictable size ratios:
+ * Score 6 → 0.5x (base reference for ratios)
+ * Score 7 → 1.5x (3x of score 6)
+ * Score 9 → 3.0x (6x of score 6, 2x of score 7)
+ * Score 10 → 3.5x (7x of score 6)
  *
- * Ratio: Score 9 / Score 5 = 3x (triple size for high performers)
+ * Target ratios:
+ * - Score 9 / Score 7 = 2x ✓
+ * - Score 9 / Score 6 = 6x ✓
  *
  * @param score - Gravity score (1-10)
- * @returns Size multiplier (0.25 to 2.50)
+ * @returns Size multiplier (0.3 to 3.5)
  */
 export function scoreToSizeMultiplier(score: number): number {
-  // Clamp score to valid range
   const clamped = Math.max(1, Math.min(10, score));
 
-  // Normalize to 0-1 range
-  const normalized = (clamped - 1) / 9;
-
-  // Very steep power curve for dramatic high-score emphasis
-  // Score 1 → 0.25x, Score 5 → 0.36x, Score 9 → 2.05x, Score 10 → 2.50x
-  // Using power of 3.5 for dramatic high-score emphasis (5.7x ratio between score 5 and 9)
-  return 0.25 + Math.pow(normalized, 3.5) * 2.25;
+  // Tiered linear scaling for predictable ratios
+  if (clamped >= 9) {
+    // Industry leaders: 3.0x → 3.5x
+    return 3.0 + (clamped - 9) * 0.5;
+  } else if (clamped >= 7) {
+    // Excellent: 1.5x → 3.0x
+    return 1.5 + (clamped - 7) * 0.75;
+  } else if (clamped >= 5) {
+    // Good/Niche: 0.5x → 1.5x
+    return 0.5 + (clamped - 5) * 0.5;
+  } else {
+    // Limited: 0.3x → 0.5x
+    return 0.3 + (clamped - 1) * 0.05;
+  }
 }
 
 /**
