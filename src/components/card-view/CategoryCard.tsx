@@ -93,7 +93,7 @@ export function CategoryCard({
         
         {/* Vignette overlay - aggressive edge gradients for embedded look */}
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="absolute -inset-1 pointer-events-none"
           style={{
             background: `
               linear-gradient(to right, rgba(28, 28, 28, 1) 0%, transparent 30%),
