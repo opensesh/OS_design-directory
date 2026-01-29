@@ -67,8 +67,8 @@ export function CardView({ resources }: CardViewProps) {
   }, [activeCategory, setSearchParams]);
 
   return (
-    <div className="h-full overflow-auto">
-      <div className="max-w-5xl mx-auto px-6 py-6">
+    <div className="h-full overflow-auto pb-6">
+      <div className="max-w-5xl mx-auto px-6">
         {/* Breadcrumbs */}
         <CardViewBreadcrumbs
           category={activeCategory}
