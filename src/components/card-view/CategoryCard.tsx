@@ -59,11 +59,14 @@ export function CategoryCard({
         focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 
         focus:ring-offset-2 focus:ring-offset-os-bg-dark
         aspect-[4/3] sm:aspect-square
+        transform-gpu
         ${isExpanded ? 'ring-2' : ''}
       `}
       style={{
         borderColor: isExpanded ? categoryColor : undefined,
         boxShadow: isExpanded ? `0 0 30px ${categoryColor}20` : undefined,
+        backfaceVisibility: 'hidden',
+        WebkitBackfaceVisibility: 'hidden',
       }}
       animate={{
         opacity: isOtherExpanded && !isExpanded ? 0.5 : 1,
@@ -76,8 +79,14 @@ export function CategoryCard({
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.2 }}
     >
-      {/* Video container - upper portion with padding */}
-      <div className="absolute top-3 left-3 right-3 bottom-[4.5rem] sm:bottom-auto sm:h-[68%] rounded-lg overflow-hidden">
+      {/* Video container - upper portion with padding and bg to prevent edge bleed */}
+      <div 
+        className="absolute top-3 left-3 right-3 bottom-[4.5rem] sm:bottom-auto sm:h-[68%] rounded-lg overflow-hidden bg-os-surface-dark"
+        style={{
+          // Isolate compositing to prevent sub-pixel bleed during transforms
+          isolation: 'isolate',
+        }}
+      >
         {videoSrc && (
           <video
             ref={videoRef}
@@ -87,12 +96,16 @@ export function CategoryCard({
             loop
             playsInline
             preload="metadata"
+            style={{
+              // Prevent video from bleeding outside rounded corners during scale
+              borderRadius: 'inherit',
+            }}
           />
         )}
         
         {/* Vignette overlay - aggressive edge gradients for embedded look */}
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0 pointer-events-none rounded-lg"
           style={{
             background: `
               linear-gradient(to right, rgba(28, 28, 28, 1) 0%, transparent 30%),
