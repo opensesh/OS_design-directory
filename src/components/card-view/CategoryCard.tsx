@@ -65,8 +65,6 @@ export function CategoryCard({
       style={{
         borderColor: isExpanded ? categoryColor : undefined,
         boxShadow: isExpanded ? `0 0 30px ${categoryColor}20` : undefined,
-        backfaceVisibility: 'hidden',
-        WebkitBackfaceVisibility: 'hidden',
       }}
       animate={{
         opacity: isOtherExpanded && !isExpanded ? 0.5 : 1,
@@ -79,33 +77,23 @@ export function CategoryCard({
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.2 }}
     >
-      {/* Video container - upper portion with padding and bg to prevent edge bleed */}
-      <div 
-        className="absolute top-3 left-3 right-3 bottom-[4.5rem] sm:bottom-auto sm:h-[68%] rounded-lg overflow-hidden bg-os-surface-dark"
-        style={{
-          // Isolate compositing to prevent sub-pixel bleed during transforms
-          isolation: 'isolate',
-        }}
-      >
+      {/* Video container - upper portion with padding */}
+      <div className="absolute top-3 left-3 right-3 bottom-[4.5rem] sm:bottom-auto sm:h-[68%] rounded-lg overflow-hidden">
         {videoSrc && (
           <video
             ref={videoRef}
-            className="w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover scale-105"
             src={videoSrc}
             muted
             loop
             playsInline
             preload="metadata"
-            style={{
-              // Prevent video from bleeding outside rounded corners during scale
-              borderRadius: 'inherit',
-            }}
           />
         )}
         
         {/* Vignette overlay - aggressive edge gradients for embedded look */}
         <div
-          className="absolute inset-0 pointer-events-none rounded-lg"
+          className="absolute inset-0 pointer-events-none"
           style={{
             background: `
               linear-gradient(to right, rgba(28, 28, 28, 1) 0%, transparent 30%),
