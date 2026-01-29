@@ -140,8 +140,8 @@ function Skybox({ texturePath = '/textures/galaxy/skybox.hdr' }: SkyboxProps) {
         side={THREE.BackSide}
         depthWrite={false}
         transparent={true}
-        opacity={0.85}
-        toneMapped={true}
+        opacity={1}
+        toneMapped={false}
       />
     </mesh>
   );

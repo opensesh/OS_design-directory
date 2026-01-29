@@ -395,7 +395,7 @@ export function scoreToSizeMultiplier(score: number): number {
   // Very steep power curve for dramatic high-score emphasis
   // Score 1 → 0.25x, Score 5 → 0.46x, Score 9 → 2.24x, Score 10 → 2.50x
   // Using power of 2.5 for steeper curve (4.9x ratio between score 5 and 9)
-  return 0.25 + Math.pow(normalized, 2.5) * 2.25;
+  return 0.25 + Math.pow(normalized, 3.5) * 2.25;
 }
 
 /**

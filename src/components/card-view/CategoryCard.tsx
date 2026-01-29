@@ -53,11 +53,12 @@ export function CategoryCard({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={`
-        relative w-full aspect-square rounded-xl text-left overflow-hidden
+        relative w-full rounded-xl text-left overflow-hidden
         bg-os-surface-dark border border-os-border-dark
         transition-colors duration-200
         focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 
         focus:ring-offset-2 focus:ring-offset-os-bg-dark
+        aspect-[4/3] sm:aspect-square
         ${isExpanded ? 'ring-2' : ''}
       `}
       style={{
@@ -76,7 +77,7 @@ export function CategoryCard({
       transition={{ duration: 0.2 }}
     >
       {/* Video container - upper portion with padding */}
-      <div className="absolute top-3 left-3 right-3 h-[68%] rounded-lg overflow-hidden">
+      <div className="absolute top-3 left-3 right-3 bottom-[4.5rem] sm:bottom-auto sm:h-[68%] rounded-lg overflow-hidden">
         {videoSrc && (
           <video
             ref={videoRef}

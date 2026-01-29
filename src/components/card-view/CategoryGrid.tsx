@@ -24,12 +24,19 @@ export function CategoryGrid({
   const subcategoryRowRef = useRef<HTMLDivElement | null>(null);
   
   // Track actual column count based on viewport
+  // Mobile (<640px): 1 column, Tablet (640-1024px): 2 columns, Desktop (1024px+): 3 columns
   const [columnCount, setColumnCount] = useState(3);
 
   // Update column count on resize
   useEffect(() => {
     const updateColumns = () => {
-      setColumnCount(window.innerWidth < 768 ? 2 : 3);
+      if (window.innerWidth < 640) {
+        setColumnCount(1);
+      } else if (window.innerWidth < 1024) {
+        setColumnCount(2);
+      } else {
+        setColumnCount(3);
+      }
     };
     updateColumns();
     window.addEventListener('resize', updateColumns);
@@ -105,8 +112,8 @@ export function CategoryGrid({
     >
       {rows.map((row, rowIndex) => (
         <Fragment key={rowIndex}>
-          {/* Each visual row is its own grid */}
-          <motion.div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {/* Each visual row is its own grid - 1 col mobile, 2 tablet, 3 desktop */}
+          <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {row.categories.map((category) => {
               const isExpanded = expandedCategory === category.name;
               return (
