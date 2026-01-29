@@ -400,17 +400,17 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
     });
 
     // Create custom material with planet texture blending
-    // Reduced clearcoat and increased roughness to show textures better
+    // Natural matte appearance - removed clearcoat to eliminate balloon-like glossiness
     const customMaterial = useMemo(() => {
       const material = new THREE.MeshPhysicalMaterial({
         vertexColors: true,
         transparent: true,
         opacity: 1,
-        metalness: 0.05,          // Reduced from 0.1
-        roughness: 0.45,          // Increased from 0.3 for less shine
-        clearcoat: 0.3,           // Reduced from 0.8 - less glassy
-        clearcoatRoughness: 0.4,  // Increased from 0.2 - diffuse the coating
-        envMapIntensity: 0.4,     // Reduced from 0.6
+        metalness: 0.0,           // No metallic sheen
+        roughness: 0.8,           // Much rougher for natural matte look
+        clearcoat: 0.0,           // Removed entirely - main cause of balloon appearance
+        clearcoatRoughness: 1.0,  // Max roughness as fallback
+        envMapIntensity: 0.12,    // Minimal environment reflection
       });
 
       // Set up texture uniforms
@@ -498,7 +498,7 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           float luminance = dot(planetColor.rgb, vec3(0.299, 0.587, 0.114));
           // Create texture-influenced version for blending
           vec3 textureInfluence = mix(vec3(luminance), planetColor.rgb, 0.5);
-          vec3 texturedColor = diffuseColor.rgb * (0.3 + textureInfluence * 0.7);
+          vec3 texturedColor = diffuseColor.rgb * (0.5 + textureInfluence * 0.5);
 
           // Hover intensity controls category color prominence
           // Default (0): 10% category, 90% textured (muted, texture-dominant)
