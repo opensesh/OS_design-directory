@@ -479,7 +479,7 @@ export default function Home() {
             {/* Bottom gradient - aggressive fade to dark for seamless blend */}
             <div
               className="absolute -top-32 left-0 right-0 h-32 pointer-events-none z-10"
-              style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(28,28,28,0.8) 60%, rgba(28,28,28,1) 100%)' }}
+              style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(20,20,20,0.8) 60%, rgba(20,20,20,1) 100%)' }}
             />
 
             <div className="relative z-20 w-full max-w-7xl mx-auto px-6 pt-2 pb-6 space-y-3 pointer-events-auto">
