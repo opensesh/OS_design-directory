@@ -322,20 +322,6 @@ export default function Home() {
                   {displayMode === 'table' && 'Table View'}
                 </motion.h2>
               </AnimatePresence>
-              <AnimatePresence mode="wait">
-                <motion.p
-                  key={`desc-${displayMode}`}
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-                  className="text-sm text-os-text-secondary-dark"
-                >
-                  {displayMode === '3d' && 'Navigate galaxy of resources'}
-                  {displayMode === 'card' && 'Filter by category levels'}
-                  {displayMode === 'table' && 'Browse each resource'}
-                </motion.p>
-              </AnimatePresence>
             </div>
 
             {/* Right: View toggle (all screen sizes) */}
