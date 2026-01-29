@@ -185,7 +185,7 @@ export default function Home() {
   };
 
   return (
-    <div className={`h-screen text-os-text-primary-dark font-sans overflow-hidden ${displayMode === '3d' ? '' : 'bg-os-bg-dark'}`}>
+    <div className={`h-dvh text-os-text-primary-dark font-sans overflow-hidden ${displayMode === '3d' ? '' : 'bg-os-bg-dark'}`}>
       {/* 3D Canvas - FIXED BELOW HEADERS (only in 3D mode) */}
       {displayMode === '3d' && (
         <div className="fixed inset-x-0 top-[124px] bottom-[220px] z-0">
@@ -218,7 +218,7 @@ export default function Home() {
       )}
 
       {/* UI Overlay Container */}
-      <div className={`relative z-10 h-screen flex flex-col overflow-hidden ${displayMode === '3d' ? 'pointer-events-none' : ''}`}>
+      <div className={`relative z-10 h-full flex flex-col overflow-hidden ${displayMode === '3d' ? 'pointer-events-none' : ''}`}>
         {/* Header - Semi-transparent with backdrop blur */}
         <header className={`pointer-events-auto flex-shrink-0 sticky top-0 z-30 backdrop-blur-xl border-b border-os-border-dark/50 h-16 ${displayMode === '3d' ? 'bg-os-bg-dark/60' : 'bg-os-bg-dark/80'}`}>
         <div className="max-w-5xl mx-auto px-6 h-full">
