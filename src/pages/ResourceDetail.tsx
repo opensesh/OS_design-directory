@@ -544,7 +544,7 @@ export default function ResourceDetail() {
               </div>
 
               {/* Right Column: Rating + Details (1/3 width on desktop) */}
-              <div className="md:col-span-1 order-1 md:order-2 space-y-8">
+              <div className="md:col-span-1 order-1 md:order-2 space-y-12">
                 {/* Rating Section */}
                 {resource.gravityScore && (
                   <div>
