@@ -236,7 +236,7 @@ export default function Home() {
             className="flex items-center gap-3 hover:opacity-80 transition-opacity"
           >
             {/* Open Session Brand Mark in styled container matching toggle/search */}
-            <div className="flex items-center justify-center w-10 h-10 bg-os-surface-dark/50 rounded-lg border border-os-border-dark">
+            <div className="flex items-center justify-center w-10 h-[39px] bg-os-surface-dark/50 rounded-md border border-os-border-dark">
               <svg
                 width="24"
                 height="24"
@@ -485,7 +485,7 @@ export default function Home() {
       <AnimatePresence>
         {displayMode === '3d' && (
           <motion.div
-            className="flex-shrink-0 relative z-20 bg-os-bg-dark/90 backdrop-blur-xl"
+            className="flex-shrink-0 relative z-20 bg-os-surface-dark backdrop-blur-xl"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 30 }}
@@ -494,10 +494,10 @@ export default function Home() {
             {/* Bottom gradient - aggressive fade to dark for seamless blend */}
             <div
               className="absolute -top-32 left-0 right-0 h-32 pointer-events-none z-10"
-              style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(20,20,20,0.8) 60%, rgba(20,20,20,1) 100%)' }}
+              style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(28,28,28,0.8) 60%, rgba(28,28,28,1) 100%)' }}
             />
 
-            <div className="w-full max-w-7xl mx-auto px-6 pt-2 pb-6 space-y-3 pointer-events-auto">
+            <div className="relative z-20 w-full max-w-7xl mx-auto px-6 pt-2 pb-6 space-y-3 pointer-events-auto">
               {/* AI Response - absolutely positioned to overlay without pushing layout */}
               <div className="relative">
                 <AnimatePresence>
