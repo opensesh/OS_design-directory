@@ -233,7 +233,7 @@ export default function Home() {
               setFilteredResourceIds(null);
               setMatchedCategories([]);
             }}
-            className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+            className="flex items-center gap-3 min-w-0 hover:opacity-80 transition-opacity"
           >
             {/* Open Session Brand Mark in styled container matching toggle/search */}
             <div className="flex items-center justify-center w-10 h-[39px] bg-os-surface-dark/50 rounded-md border border-os-border-dark">
@@ -255,7 +255,7 @@ export default function Home() {
             </div>
             {/* Open Session Wordmark - SVG with cropped viewBox */}
             <svg
-              className="h-6 w-auto"
+              className="h-6 w-auto shrink min-w-0"
               viewBox="61 260 480 80"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
