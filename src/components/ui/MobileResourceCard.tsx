@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ExternalLink } from 'lucide-react';
+import { GravityScoreBadge } from './GravityScoreBadge';
 import type { NormalizedResource } from '../../types/resource';
 
 // Get favicon URL from domain using Google's service
@@ -97,17 +97,18 @@ export function MobileResourceCard({ resource, onClick }: MobileResourceCardProp
         )}
       </div>
 
-      {/* Column 4: External Link Button (fixed width) */}
-      <a
-        href={resource.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={(e) => e.stopPropagation()}
-        className="shrink-0 flex items-center justify-center w-9 h-9 rounded-lg bg-os-surface-dark border border-os-border-dark text-os-text-secondary-dark active:text-brand-aperol active:border-brand-aperol/30 transition-all"
-        title={`Visit ${resource.name}`}
-      >
-        <ExternalLink className="w-4 h-4" />
-      </a>
+      {/* Column 4: Rating (fixed width) */}
+      <div className="shrink-0 flex items-center justify-center">
+        {resource.gravityScore ? (
+          <GravityScoreBadge
+            score={resource.gravityScore}
+            size="sm"
+            showTooltip={false}
+          />
+        ) : (
+          <span className="text-xs text-os-text-secondary-dark">-</span>
+        )}
+      </div>
     </div>
   );
 }
