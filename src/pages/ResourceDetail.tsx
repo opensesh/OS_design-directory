@@ -289,11 +289,8 @@ export default function ResourceDetail() {
       <section className="border-b border-os-border-dark/50 bg-os-bg-dark">
         <div className="max-w-5xl mx-auto px-6 py-3 md:py-4">
           <div className="flex items-center justify-between">
-            {/* Left spacer for centering balance */}
-            <div className="w-[104px] flex-shrink-0 hidden sm:block" />
-
-            {/* Center: Breadcrumbs */}
-            <nav className="flex items-center gap-1.5 text-sm min-w-0 justify-center flex-1 sm:flex-none">
+            {/* Left: Breadcrumbs */}
+            <nav className="flex items-center gap-1.5 text-sm min-w-0">
               <button
                 onClick={() => navigate(-1)}
                 className="text-zinc-400 hover:text-brand-vanilla transition-colors flex-shrink-0"
