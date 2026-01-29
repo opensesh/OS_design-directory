@@ -289,32 +289,29 @@ export default function ResourceDetail() {
       <section className="border-b border-os-border-dark/50 bg-os-bg-dark">
         <div className="max-w-5xl mx-auto px-6 py-3 md:py-4">
           <div className="flex items-center justify-between">
-            {/* Left: Label + Breadcrumbs */}
-            <div className="flex flex-col gap-0.5 min-w-0">
-              <span className="text-caption font-text uppercase tracking-wider text-os-text-secondary-dark">
-                Design Directory
+            {/* Left spacer for centering balance */}
+            <div className="w-[104px] flex-shrink-0 hidden sm:block" />
+
+            {/* Center: Breadcrumbs */}
+            <nav className="flex items-center gap-1.5 text-sm min-w-0 justify-center flex-1 sm:flex-none">
+              <button
+                onClick={() => navigate(-1)}
+                className="text-zinc-400 hover:text-brand-vanilla transition-colors flex-shrink-0"
+                aria-label="Go back"
+              >
+                <ArrowLeft className="w-4 h-4" />
+              </button>
+              <Link
+                to={`/?display=table&category=${encodeURIComponent(resource.category || '')}`}
+                className="text-zinc-400 hover:text-brand-vanilla truncate transition-colors"
+              >
+                {resource.category || 'Resource'}
+              </Link>
+              <ChevronRight className="w-3 h-3 shrink-0 text-zinc-600" />
+              <span className="text-brand-vanilla truncate">
+                {resource.subCategory || resource.name}
               </span>
-              {/* Breadcrumbs with back arrow */}
-              <nav className="flex items-center gap-1.5 text-sm min-w-0">
-                <button
-                  onClick={() => navigate(-1)}
-                  className="text-zinc-400 hover:text-brand-vanilla transition-colors flex-shrink-0"
-                  aria-label="Go back"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                </button>
-                <Link
-                  to={`/?display=table&category=${encodeURIComponent(resource.category || '')}`}
-                  className="text-zinc-400 hover:text-brand-vanilla truncate transition-colors"
-                >
-                  {resource.category || 'Resource'}
-                </Link>
-                <ChevronRight className="w-3 h-3 shrink-0 text-zinc-600" />
-                <span className="text-brand-vanilla truncate">
-                  {resource.subCategory || resource.name}
-                </span>
-              </nav>
-            </div>
+            </nav>
 
             {/* Right: View toggle */}
             <div className="flex items-center bg-os-surface-dark/50 rounded-lg p-1 border border-os-border-dark flex-shrink-0">
