@@ -4,6 +4,7 @@ import { OrbitControls, Environment } from '@react-three/drei';
 import * as THREE from 'three';
 import { calculateCategoryClusters, calculateBoundingSphere, type CategoryCluster } from '../../utils/orbital-layout';
 import ResourceNodes, { type ResourceNodesHandle } from './ResourceNodes';
+import SaturnRings from './SaturnRings';
 import GalaxyBackground from './GalaxyBackground';
 import NebulaClusters from './NebulaClusters';
 import NebulaPlanes from './NebulaPlanes';
@@ -564,6 +565,20 @@ function GalaxySystem({
       {resources.length > 0 && (
         <ResourceNodes
           ref={resourceNodesRef}
+          resources={resources}
+          clusters={clusters}
+          activeCategory={activeCategory}
+          activeFilter={activeFilter}
+          activeSubFilter={activeSubFilter}
+          filteredResourceIds={filteredResourceIds}
+          hoveredIndex={hoveredIndex}
+          clickedIndex={clickedIndex}
+        />
+      )}
+
+      {/* Saturn rings for high-score resources (9+) */}
+      {resources.length > 0 && (
+        <SaturnRings
           resources={resources}
           clusters={clusters}
           activeCategory={activeCategory}
