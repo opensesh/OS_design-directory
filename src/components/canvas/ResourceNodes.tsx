@@ -98,6 +98,9 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
     const materialRef = useRef<THREE.MeshPhysicalMaterial | null>(null);
     const shaderRef = useRef<{ uniforms: { uTime: { value: number } } } | null>(null);
 
+    // Saturn rings for industry leaders (score 9+)
+    const ringMeshRef = useRef<THREE.InstancedMesh>(null);
+
     // Load planet textures using drei's useTexture (handles Suspense gracefully)
     const planetTextures = useTexture(PLANET_TEXTURES);
 
@@ -117,6 +120,15 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
 
     const nodeRadius = 0.5;
     const resourceCount = resources.length;
+
+    // Saturn ring configuration
+    const RING_CONFIG = {
+      innerRadius: 0.7,   // Inner edge of ring (relative to node)
+      outerRadius: 1.1,   // Outer edge of ring (relative to node)
+      tiltAngle: Math.PI * 0.14, // ~25° tilt
+      opacity: 0.5,
+      rotationSpeed: 0.15, // Slow rotation
+    };
 
     // Expose mesh and resource lookup for raycasting
     useImperativeHandle(ref, () => ({
@@ -179,6 +191,33 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
         tierLevels: tierLevelArray,
       };
     }, [resources, clusters]);
+
+    // Compute industry leaders data for Saturn rings
+    const industryLeaderData = useMemo(() => {
+      const leaders: Array<{
+        resourceIndex: number;
+        position: { x: number; y: number; z: number };
+        color: THREE.Color;
+        sizeMultiplier: number;
+      }> = [];
+
+      resources.forEach((resource, index) => {
+        if (isIndustryLeader(resource.gravityScore)) {
+          leaders.push({
+            resourceIndex: index,
+            position: {
+              x: positions[index * 3] || 0,
+              y: positions[index * 3 + 1] || 0,
+              z: positions[index * 3 + 2] || 0,
+            },
+            color: new THREE.Color(getCategoryColor(resource.category)),
+            sizeMultiplier: sizeMultipliers[index] || 1,
+          });
+        }
+      });
+
+      return leaders;
+    }, [resources, positions, sizeMultipliers]);
 
     // Initialize opacity, hover scale, and entrance progress arrays
     useEffect(() => {
@@ -290,6 +329,46 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
         hoverIntensityAttributeRef.current = hoverIntensityAttribute;
       }
     }, [positions, colors, textureIndices, tierLevels, resourceCount]);
+
+    // Initialize Saturn ring matrices for industry leaders
+    useEffect(() => {
+      if (!ringMeshRef.current || industryLeaderData.length === 0) return;
+
+      const dummy = new THREE.Object3D();
+      const ringCount = industryLeaderData.length;
+
+      // Create color attribute for rings
+      const ringColors = new Float32Array(ringCount * 3);
+
+      industryLeaderData.forEach((leader, ringIndex) => {
+        // Position ring at node location
+        dummy.position.set(leader.position.x, leader.position.y, leader.position.z);
+        
+        // Apply tilt rotation
+        dummy.rotation.set(RING_CONFIG.tiltAngle, 0, 0);
+        
+        // Scale ring based on node size
+        const ringScale = nodeRadius * leader.sizeMultiplier;
+        dummy.scale.set(ringScale, ringScale, ringScale);
+        
+        dummy.updateMatrix();
+        ringMeshRef.current!.setMatrixAt(ringIndex, dummy.matrix);
+
+        // Set ring color (golden/amber tint mixed with category color)
+        const ringColor = leader.color.clone().lerp(new THREE.Color('#FFD700'), 0.4);
+        ringColors[ringIndex * 3] = ringColor.r;
+        ringColors[ringIndex * 3 + 1] = ringColor.g;
+        ringColors[ringIndex * 3 + 2] = ringColor.b;
+      });
+
+      ringMeshRef.current.instanceMatrix.needsUpdate = true;
+
+      // Add color attribute
+      if (ringMeshRef.current.geometry) {
+        const colorAttribute = new THREE.InstancedBufferAttribute(ringColors, 3);
+        ringMeshRef.current.geometry.setAttribute('color', colorAttribute);
+      }
+    }, [industryLeaderData, nodeRadius]);
 
     // Animation loop
     useFrame((state) => {
@@ -407,6 +486,47 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
       if (opacityChanged || hasChanges) {
         opacityAttributeRef.current.needsUpdate = true;
         hoverIntensityAttributeRef.current.needsUpdate = true;
+      }
+
+      // Update Saturn ring matrices for industry leaders
+      if (ringMeshRef.current && industryLeaderData.length > 0) {
+        const ringDummy = new THREE.Object3D();
+        const elapsedTime = state.clock.elapsedTime;
+
+        industryLeaderData.forEach((leader, ringIndex) => {
+          const nodeIndex = leader.resourceIndex;
+          
+          // Get current node scale from the animation state
+          const entranceScale = entranceProgressRef.current?.[nodeIndex] ?? 1;
+          const hoverScale = currentHoverScalesRef.current?.[nodeIndex] ?? 1;
+          const opacity = currentOpacitiesRef.current?.[nodeIndex] ?? 1;
+
+          // Position ring at node location
+          ringDummy.position.set(leader.position.x, leader.position.y, leader.position.z);
+          
+          // Apply tilt and slow rotation
+          ringDummy.rotation.set(
+            RING_CONFIG.tiltAngle,
+            elapsedTime * RING_CONFIG.rotationSpeed,
+            0
+          );
+          
+          // Scale ring with node (entrance + hover + score multiplier)
+          const nodeScale = Math.max(0.001, entranceScale) * hoverScale * leader.sizeMultiplier;
+          const ringScale = nodeRadius * nodeScale;
+          
+          // Fade ring opacity with node
+          ringDummy.scale.set(
+            ringScale * (opacity > 0.3 ? 1 : opacity / 0.3),
+            ringScale * (opacity > 0.3 ? 1 : opacity / 0.3),
+            ringScale * (opacity > 0.3 ? 1 : opacity / 0.3)
+          );
+          
+          ringDummy.updateMatrix();
+          ringMeshRef.current!.setMatrixAt(ringIndex, ringDummy.matrix);
+        });
+
+        ringMeshRef.current.instanceMatrix.needsUpdate = true;
       }
 
       // Check entrance completion
@@ -573,6 +693,17 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
 
     if (resourceCount === 0) return null;
 
+    // Create ring material
+    const ringMaterial = useMemo(() => {
+      return new THREE.MeshBasicMaterial({
+        vertexColors: true,
+        transparent: true,
+        opacity: RING_CONFIG.opacity,
+        side: THREE.DoubleSide,
+        depthWrite: false, // Prevent z-fighting
+      });
+    }, []);
+
     return (
       <group ref={groupRef}>
         <instancedMesh
@@ -583,6 +714,18 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
         >
           <sphereGeometry args={[nodeRadius, 32, 32]} />
         </instancedMesh>
+
+        {/* Saturn rings for industry leaders */}
+        {industryLeaderData.length > 0 && (
+          <instancedMesh
+            ref={ringMeshRef}
+            args={[undefined, undefined, industryLeaderData.length]}
+            frustumCulled={false}
+            material={ringMaterial}
+          >
+            <ringGeometry args={[RING_CONFIG.innerRadius, RING_CONFIG.outerRadius, 64]} />
+          </instancedMesh>
+        )}
       </group>
     );
   }
