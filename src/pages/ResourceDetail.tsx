@@ -492,7 +492,7 @@ export default function ResourceDetail() {
 
             {/* Tags - Outside flex, aligned with icon's left edge */}
             {resource.tags && resource.tags.length > 0 && (
-              <div className="bg-zinc-800/20 rounded-lg px-3 py-2 mt-4">
+              <div className="mt-4">
                 <div className="flex flex-wrap gap-1.5">
                   {resource.tags.map((tag, idx) => (
                     <span
@@ -544,7 +544,7 @@ export default function ResourceDetail() {
               </div>
 
               {/* Right Column: Rating + Details (1/3 width on desktop) */}
-              <div className="md:col-span-1 order-1 md:order-2 space-y-12">
+              <div className="md:col-span-1 order-1 md:order-2 bg-zinc-800/20 rounded-lg p-4 space-y-8">
                 {/* Rating Section */}
                 {resource.gravityScore && (
                   <div>
