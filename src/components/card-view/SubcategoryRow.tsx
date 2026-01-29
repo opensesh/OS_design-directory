@@ -58,8 +58,8 @@ export const SubcategoryRow = forwardRef<HTMLDivElement, SubcategoryRowProps>(
           }}
           className="overflow-hidden"
         >
-          {/* Use matching grid structure to align with cards */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 py-4">
+          {/* Use matching grid structure to align with cards - 1 col mobile, 2 tablet, 3 desktop */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 py-4">
             <div 
               style={{ 
                 gridColumn: gridColumnStart + ' / -1'
