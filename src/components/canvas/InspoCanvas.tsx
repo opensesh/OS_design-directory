@@ -383,8 +383,8 @@ function CameraController({
 
   // Calculate target camera position and trigger animation when filters change
   useEffect(() => {
-    // Don't interrupt animation that's more than 20% complete
-    if (isCameraAnimatingRef.current && animationProgressRef.current > 0.2) {
+    // Skip entirely if animation in progress - prevents mid-animation restarts
+    if (isCameraAnimatingRef.current) {
       return;
     }
 
@@ -455,7 +455,7 @@ function CameraController({
     }
     // Note: We no longer force camera back to default when filter is cleared
     // This allows users to keep their current view
-  }, [clusters, activeCategory, filteredResourceIds, matchedCategories, resources, camera]);
+  }, [clusters, activeCategory, filteredResourceIds, matchedCategories, resources]);
 
   // Animate camera towards target (only when animating)
   useFrame((_, delta) => {
