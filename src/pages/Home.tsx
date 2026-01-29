@@ -330,7 +330,7 @@ export default function Home() {
       >
         <div className={`max-w-7xl mx-auto px-6 ${displayMode === '3d' ? 'py-4' : 'py-3'} md:py-4`}>
           <div className="flex items-center justify-between">
-            {/* Left: Label + View Name */}
+            {/* Left: Label + View Name + Description */}
             <div className="flex flex-col gap-0.5">
               <span className="text-caption font-text uppercase tracking-wider text-os-text-secondary-dark">
                 Design Directory
@@ -350,10 +350,6 @@ export default function Home() {
                   {displayMode === 'table' && 'Table View'}
                 </motion.h2>
               </AnimatePresence>
-            </div>
-
-            {/* Right: Description text (desktop only) */}
-            <div className="hidden md:block max-w-sm text-right">
               <AnimatePresence mode="wait">
                 <motion.p
                   key={`desc-${displayMode}`}
@@ -361,11 +357,11 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-                  className="text-sm text-os-text-secondary-dark leading-relaxed"
+                  className="text-sm text-os-text-secondary-dark"
                 >
-                  {displayMode === '3d' && 'Easily browse design resources by navigating from main categories to subcategories.'}
-                  {displayMode === 'card' && 'Easily browse design resources by navigating from main categories to subcategories.'}
-                  {displayMode === 'table' && 'Easily browse design resources by navigating from main categories to subcategories.'}
+                  {displayMode === '3d' && 'Navigate galaxy of resources'}
+                  {displayMode === 'card' && 'Filter by category levels'}
+                  {displayMode === 'table' && 'Browse each resource'}
                 </motion.p>
               </AnimatePresence>
             </div>
@@ -406,24 +402,6 @@ export default function Home() {
                 <Table2 className="w-4 h-4" />
               </button>
             </div>
-          </div>
-
-          {/* Mobile description row */}
-          <div className="md:hidden mt-2">
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={`mobile-desc-${displayMode}`}
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-                className="text-xs text-os-text-secondary-dark leading-relaxed"
-              >
-                {displayMode === '3d' && 'Easily browse design resources by navigating from main categories to subcategories.'}
-                {displayMode === 'card' && 'Easily browse design resources by navigating from main categories to subcategories.'}
-                {displayMode === 'table' && 'Easily browse design resources by navigating from main categories to subcategories.'}
-              </motion.p>
-            </AnimatePresence>
           </div>
         </div>
       </section>
@@ -485,7 +463,7 @@ export default function Home() {
       <AnimatePresence>
         {displayMode === '3d' && (
           <motion.div
-            className="flex-shrink-0 relative z-20 bg-os-surface-dark backdrop-blur-xl"
+            className="flex-shrink-0 relative z-20 bg-os-bg-dark/90 backdrop-blur-xl"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 30 }}
