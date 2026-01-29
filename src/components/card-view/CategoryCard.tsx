@@ -77,40 +77,33 @@ export function CategoryCard({
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.2 }}
     >
-      {/* Video container - upper portion with padding */}
-      <div 
-        className="absolute top-3 left-3 right-3 bottom-[4.5rem] sm:bottom-auto sm:h-[68%] rounded-lg overflow-hidden"
-        style={{
-          boxShadow: 'inset 0 0 20px 12px rgba(28, 28, 28, 1)'
-        }}
-      >
-        {videoSrc && (
-          <video
-            ref={videoRef}
-            className="absolute object-cover"
-            style={{
-              top: '-8px',
-              left: '-8px',
-              width: 'calc(100% + 16px)',
-              height: 'calc(100% + 16px)'
-            }}
-            src={videoSrc}
-            muted
-            loop
-            playsInline
-            preload="metadata"
-          />
-        )}
+      {/* Outer container - positioning and visual frame */}
+      <div className="absolute top-3 left-3 right-3 bottom-[4.5rem] sm:bottom-auto sm:h-[68%] rounded-lg">
+        {/* Inner clipping container - 2px smaller on all sides */}
+        <div className="absolute inset-[2px] rounded-md overflow-hidden">
+          {videoSrc && (
+            <video
+              ref={videoRef}
+              className="absolute inset-0 w-full h-full object-cover"
+              src={videoSrc}
+              muted
+              loop
+              playsInline
+              preload="metadata"
+            />
+          )}
+        </div>
         
-        {/* Vignette overlay - aggressive edge gradients for embedded look */}
+        {/* Vignette overlay - covers full outer container, overlaps inner edges */}
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0 pointer-events-none rounded-lg"
           style={{
+            boxShadow: 'inset 0 0 25px 15px rgba(28, 28, 28, 1)',
             background: `
-              linear-gradient(to right, rgba(28, 28, 28, 1) 0%, transparent 30%),
-              linear-gradient(to left, rgba(28, 28, 28, 1) 0%, transparent 30%),
-              linear-gradient(to bottom, rgba(28, 28, 28, 1) 0%, transparent 35%),
-              linear-gradient(to top, rgba(28, 28, 28, 1) 0%, transparent 40%)
+              linear-gradient(to right, rgba(28, 28, 28, 1) 0%, transparent 25%),
+              linear-gradient(to left, rgba(28, 28, 28, 1) 0%, transparent 25%),
+              linear-gradient(to bottom, rgba(28, 28, 28, 1) 0%, transparent 30%),
+              linear-gradient(to top, rgba(28, 28, 28, 1) 0%, transparent 35%)
             `
           }}
         />
