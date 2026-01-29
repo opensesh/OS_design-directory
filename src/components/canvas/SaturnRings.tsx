@@ -202,7 +202,7 @@ export function SaturnRings({
 
   // Create shader material for banded ring texture
   const ringMaterial = useMemo(() => {
-    return new THREE.ShaderMaterial({
+    const material = new THREE.ShaderMaterial({
       vertexShader: `
         attribute vec3 instanceColor;
         attribute float instanceOpacity;
@@ -215,10 +215,14 @@ export function SaturnRings({
           vUv = uv;
           vColor = instanceColor;
           vOpacity = instanceOpacity;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          // For instanced mesh, we need to apply the instance matrix
+          vec4 mvPosition = modelViewMatrix * instanceMatrix * vec4(position, 1.0);
+          gl_Position = projectionMatrix * mvPosition;
         }
       `,
       fragmentShader: `
+        precision highp float;
+        
         varying vec2 vUv;
         varying vec3 vColor;
         varying float vOpacity;
@@ -248,6 +252,8 @@ export function SaturnRings({
       side: THREE.DoubleSide,
       depthWrite: false,
     });
+    
+    return material;
   }, []);
 
   // Create ring geometry with proper UV mapping for radial bands
