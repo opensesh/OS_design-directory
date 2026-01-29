@@ -68,12 +68,7 @@ export function CardView({ resources }: CardViewProps) {
 
   return (
     <div className="h-full overflow-auto">
-      <div className="max-w-7xl mx-auto px-6 py-6">
-        {/* Header */}
-        <h2 className="text-2xl font-display font-bold text-brand-vanilla mb-6">
-          Browse Resources
-        </h2>
-
+      <div className="max-w-5xl mx-auto px-6 py-6">
         {/* Breadcrumbs */}
         <CardViewBreadcrumbs
           category={activeCategory}
