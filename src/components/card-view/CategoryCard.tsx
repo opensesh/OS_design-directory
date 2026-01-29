@@ -87,7 +87,13 @@ export function CategoryCard({
         {videoSrc && (
           <video
             ref={videoRef}
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute object-cover"
+            style={{
+              top: '-8px',
+              left: '-8px',
+              width: 'calc(100% + 16px)',
+              height: 'calc(100% + 16px)'
+            }}
             src={videoSrc}
             muted
             loop
