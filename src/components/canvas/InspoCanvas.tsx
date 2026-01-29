@@ -1,6 +1,7 @@
 import { useRef, useMemo, useEffect, useState, useCallback, Suspense } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Environment } from '@react-three/drei';
+import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import * as THREE from 'three';
 import { calculateCategoryClusters, calculateBoundingSphere, type CategoryCluster } from '../../utils/orbital-layout';
 import ResourceNodes, { type ResourceNodesHandle } from './ResourceNodes';
@@ -358,6 +359,7 @@ function InteractionController({
  * Only animates once per filter change, then allows free user navigation.
  */
 interface CameraControllerProps {
+  controlsRef: React.RefObject<OrbitControlsImpl | null>;
   isCameraAnimatingRef: React.MutableRefObject<boolean>;
   clusters: CategoryCluster[];
   activeCategory?: string | null;
@@ -367,6 +369,7 @@ interface CameraControllerProps {
 }
 
 function CameraController({
+  controlsRef,
   isCameraAnimatingRef,
   clusters,
   activeCategory,
@@ -451,6 +454,10 @@ function CameraController({
       camera.getWorldDirection(startLookAtRef.current);
       startLookAtRef.current.multiplyScalar(50).add(camera.position);
 
+      // Disable OrbitControls during animation to prevent interference
+      if (controlsRef.current) {
+        controlsRef.current.enabled = false;
+      }
       isCameraAnimatingRef.current = true;
       animationProgressRef.current = 0;
     }
@@ -466,6 +473,10 @@ function CameraController({
     animationProgressRef.current += delta * 2; // ~0.5 second animation
 
     if (animationProgressRef.current >= 1) {
+      // Re-enable OrbitControls after animation completes
+      if (controlsRef.current) {
+        controlsRef.current.enabled = true;
+      }
       // Animation complete - stop animating
       isCameraAnimatingRef.current = false;
       animationProgressRef.current = 1;
@@ -485,6 +496,11 @@ function CameraController({
       eased
     );
     camera.lookAt(currentLookAt);
+    
+    // Sync OrbitControls target to prevent "pull back" effect
+    if (controlsRef.current) {
+      controlsRef.current.target.copy(currentLookAt);
+    }
   });
 
   return null;
@@ -630,6 +646,7 @@ export default function InspoCanvas({
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
   const isCameraAnimatingRef = useRef(false);
+  const controlsRef = useRef<OrbitControlsImpl | null>(null);
   const mousePosRef = useRef({ x: 0, y: 0 });
 
   // Calculate cluster configurations based on resources
@@ -720,6 +737,7 @@ export default function InspoCanvas({
 
       {/* Camera animation controller */}
       <CameraController
+        controlsRef={controlsRef}
         isCameraAnimatingRef={isCameraAnimatingRef}
         clusters={clusters}
         activeCategory={activeCategory}
@@ -755,6 +773,7 @@ export default function InspoCanvas({
       )}
 
       <OrbitControls
+        ref={controlsRef}
         makeDefault
         enableDamping
         dampingFactor={0.05}
