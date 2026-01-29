@@ -394,7 +394,7 @@ export function scoreToSizeMultiplier(score: number): number {
 
   // Very steep power curve for dramatic high-score emphasis
   // Score 1 → 0.25x, Score 5 → 0.36x, Score 9 → 2.05x, Score 10 → 2.50x
-  // Using power of 2.5 for steeper curve (4.9x ratio between score 5 and 9)
+  // Using power of 3.5 for dramatic high-score emphasis (5.7x ratio between score 5 and 9)
   return 0.25 + Math.pow(normalized, 3.5) * 2.25;
 }
 
@@ -712,4 +712,15 @@ export function calculateBoundingSphere(
 
   // Add padding to ensure all nodes are visible
   return { center, radius: maxDistance + 10 };
+}
+
+/**
+ * Check if a gravity score qualifies as industry leader (9+)
+ * Used for visual differentiation (rings, glow effects)
+ *
+ * @param score - Gravity score (1-10)
+ * @returns true if score >= 9.0
+ */
+export function isIndustryLeader(score: number): boolean {
+  return score >= 9.0;
 }
