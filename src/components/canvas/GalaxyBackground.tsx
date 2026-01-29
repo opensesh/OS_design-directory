@@ -1,7 +1,7 @@
 import { useMemo, useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { useTexture } from '@react-three/drei';
+import { useFrame, useLoader } from '@react-three/fiber';
 import * as THREE from 'three';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 import { generateStarfieldLayout } from '../../utils/particle-layouts';
 
 /**
@@ -121,19 +121,15 @@ interface SkyboxProps {
 }
 
 /**
- * Skybox - Equirectangular galaxy texture mapped to inside of sphere
+ * Skybox - Equirectangular HDR texture mapped to inside of sphere
+ * Uses RGBELoader for proper HDR tone mapping
  */
-function Skybox({ texturePath = '/textures/galaxy/skybox.jpg' }: SkyboxProps) {
-  const texture = useTexture(texturePath);
+function Skybox({ texturePath = '/textures/galaxy/skybox.hdr' }: SkyboxProps) {
+  const texture = useLoader(RGBELoader, texturePath);
 
-  // Configure texture for equirectangular mapping with seamless wrapping
+  // Configure texture for equirectangular mapping
   useMemo(() => {
     texture.mapping = THREE.EquirectangularReflectionMapping;
-    texture.colorSpace = THREE.SRGBColorSpace;
-    // Seamless wrapping and quality improvements
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.ClampToEdgeWrapping;
-    texture.anisotropy = 16;
   }, [texture]);
 
   return (
@@ -145,6 +141,7 @@ function Skybox({ texturePath = '/textures/galaxy/skybox.jpg' }: SkyboxProps) {
         depthWrite={false}
         transparent={true}
         opacity={0.35}
+        toneMapped={true}
       />
     </mesh>
   );
