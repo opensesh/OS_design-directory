@@ -1,44 +1,47 @@
-# CSV Data Structure & Particle Mapping
+# Data Structure & Particle Mapping
 
 ## Overview
 
-Your 3D particle system is now fully connected to the **Design Resources.csv** file. Each of the 1000 particles is mapped to one of the 100 design resources from the CSV.
+Your 3D particle system is connected to the **resources.json** file. Each of the 1000 particles is mapped to one of the design resources from the JSON data.
 
 ---
 
-## CSV Structure
+## Data Structure
 
-**Location:** `/public/Design Resources.csv`
+**Location:** `src/data/resources.json`
 
-**Total Resources:** 100 design tools, websites, and platforms
+**Total Resources:** 100+ design tools, websites, and platforms
 
-### CSV Columns:
+### Resource Fields:
 
-| Column | Type | Description | Example Values |
-|--------|------|-------------|----------------|
-| `ID` | number | Unique identifier | 1, 2, 3... |
-| `Name` | string | Resource name | "Figma", "Coolors", "React" |
-| `URL` | string | Website URL | "https://figma.com" |
-| `Description` | string | Short description | "Collaborative design tool" |
-| `Category` | string | Main category | "Brand", "UX", "Art", "Code" |
-| `Section` | string | Subcategory | "Colors", "Design Tools", "Icons" |
-| `Pricing` | string | Price model | "free", "freemium", "paid" |
-| `Featured` | boolean | Featured status | TRUE, FALSE |
-| `OpenSource` | boolean | Open source? | TRUE, FALSE |
-| `Tags` | string | Comma-separated tags | "colors,palette,generator" |
-| `Count` | string | Asset count | "∞ palettes", "1,000+ icons" |
-| `Tier` | number | Priority tier | 1, 2, 3 |
+| Field | Type | Description | Example Values |
+|-------|------|-------------|----------------|
+| `id` | string | Unique identifier | "figma", "coolors" |
+| `name` | string | Resource name | "Figma", "Coolors" |
+| `url` | string | Website URL | "https://figma.com" |
+| `description` | string | Short description | "Collaborative design tool" |
+| `category` | string | Main category | "Brand", "UX", "Art", "Code" |
+| `subCategory` | string | Subcategory | "Colors", "Design Tools", "Icons" |
+| `pricing` | string | Price model | "free", "freemium", "paid" |
+| `featured` | boolean | Featured status | true, false |
+| `opensource` | boolean | Open source? | true, false |
+| `tags` | string[] | Tag array | ["colors", "palette", "generator"] |
+| `tier` | number | Priority tier | 1, 2, 3 |
+| `thumbnail` | string | Thumbnail path | "/assets/screenshots/figma.png" |
+| `screenshot` | string | Screenshot path | "/assets/screenshots/figma.png" |
+| `gravityScore` | number | Relevance score | 85 |
+| `gravityRationale` | string | Score explanation | "Essential design tool..." |
 
 ---
 
 ## Category Breakdown
 
-Your 100 resources are distributed across 4 categories:
+Resources are distributed across categories:
 
-- **Brand** (23 resources): Color tools, typography, brand guidelines
-- **UX** (19 resources): Design tools, prototyping, user testing, accessibility
-- **Art** (41 resources): Icons, illustrations, photos, patterns, videos
-- **Code** (17 resources): Frameworks, UI kits, AI tools, mockups
+- **Brand**: Color tools, typography, brand guidelines
+- **UX**: Design tools, prototyping, user testing, accessibility
+- **Art**: Icons, illustrations, photos, patterns, videos
+- **Code**: Frameworks, UI kits, AI tools, mockups
 
 ---
 
@@ -50,61 +53,41 @@ Your 100 resources are distributed across 4 categories:
 src/
 ├── types/
 │   └── resource.ts          # TypeScript interface for Resource
-├── utils/
-│   └── loadResources.ts     # CSV parser using papaparse
+├── data/
+│   ├── index.ts             # Data export
+│   └── resources.json       # Main data source
 ├── store/
 │   └── useAppStore.ts       # Zustand store with resources array
-├── components/
-│   └── 3d/
-│       └── ParticleSystem.tsx  # Particle renderer with data mapping
-└── App.tsx                  # Loads CSV on mount
+└── components/
+    └── canvas/
+        └── ResourceNodes.tsx  # Particle renderer with data mapping
 ```
 
 ### Data Flow:
 
-1. **App.tsx loads CSV on mount:**
+1. **Data imported from JSON:**
    ```typescript
-   useEffect(() => {
-     loadResources()
-       .then((data) => setResources(data))
-       .catch(console.error)
-   }, [])
+   import resourcesData from './resources.json';
+   export const resources: NormalizedResource[] = resourcesData;
    ```
 
-2. **loadResources() parses CSV:**
-   - Fetches `/public/Design Resources.csv`
-   - Uses papaparse to convert CSV → JSON
-   - Transforms data to match `Resource` TypeScript interface
-   - Returns array of 100 Resource objects
-
-3. **Data stored in Zustand:**
+2. **Data stored in Zustand:**
    ```typescript
-   const resources = useAppStore((state) => state.resources)  // Array of 100 resources
+   const resources = useAppStore((state) => state.resources)
    ```
 
-4. **ParticleSystem maps particles to resources:**
+3. **Particles map to resources:**
    ```typescript
    const getResourceForParticle = (index: number) => {
      return resources[index % resources.length]
    }
    ```
 
-### Mapping Example:
-
-With 1000 particles and 100 resources:
-- Particle 0 → Resource 0 (Coolors)
-- Particle 1 → Resource 1 (Google Fonts)
-- Particle 50 → Resource 50 (Humaaans)
-- Particle 100 → Resource 0 (Coolors) ← cycles back
-- Particle 999 → Resource 99 (Diagram)
-
-Each resource is represented by **10 particles** in the sphere.
-
 ---
 
 ## Accessing Resource Data
 
-### In ParticleSystem.tsx:
+### In Components:
 
 ```typescript
 // Get resource for a specific particle
@@ -126,15 +109,7 @@ console.log(resource?.tier)        // 1
 const isBrandResource = getResourceForParticle(index)?.category === 'Brand'
 ```
 
-**2. Show resource info on click:**
-```typescript
-const handleClick = (particleIndex: number) => {
-  const resource = getResourceForParticle(particleIndex)
-  setSelectedResource(resource?.id)
-}
-```
-
-**3. Color particles by category:**
+**2. Color particles by category:**
 ```typescript
 const getCategoryColor = (category: string) => {
   const colors = {
@@ -147,83 +122,17 @@ const getCategoryColor = (category: string) => {
 }
 ```
 
-**4. Filter by featured status:**
-```typescript
-const isFeatured = getResourceForParticle(index)?.featured
-if (isFeatured) {
-  // Make particle larger or different color
-}
-```
-
-**5. Sort by tier:**
-```typescript
-const tier = getResourceForParticle(index)?.tier
-// Tier 1 = highest priority, show closest to center
-```
-
----
-
-## Data Validation
-
-The system includes:
-
-✅ **TypeScript type safety** - Resource interface enforces structure
-✅ **Null checks** - `getResourceForParticle()` returns null if resources not loaded
-✅ **Console logging** - Logs when resources load and shows example mappings
-✅ **Error handling** - Catches CSV parsing errors
-
-### Debug in Browser Console:
-
-After page load, you'll see:
-```
-Loaded resources: 100
-✅ Particle-Resource Mapping:
-   Total Resources: 100
-   Total Particles: 1000
-   Example mappings:
-   - Particle 0: Coolors (Brand)
-   - Particle 50: Humaaans (Art)
-   - Particle 100: Coolors (Brand)
-```
-
----
-
-## Next Steps
-
-Now that particles are mapped to CSV data, you can:
-
-1. **Add interactivity:**
-   - Click particles → show resource card
-   - Hover particles → display resource name
-   - Filter particles by category
-
-2. **Visual encoding:**
-   - Color particles by category
-   - Size particles by tier (featured resources larger)
-   - Highlight free vs paid resources
-
-3. **Search & Filter:**
-   - Filter by tags
-   - Search by name
-   - Show only featured resources
-
-4. **Data updates:**
-   - Edit CSV file → refresh page → see changes
-   - Add new resources → they automatically appear
-   - No code changes needed for data updates
-
 ---
 
 ## File Locations
 
-- **CSV Data:** `public/Design Resources.csv`
+- **Data:** `src/data/resources.json`
 - **Types:** `src/types/resource.ts`
-- **Loader:** `src/utils/loadResources.ts`
 - **Store:** `src/store/useAppStore.ts`
-- **Particle System:** `src/components/3d/ParticleSystem.tsx`
+- **Particle System:** `src/components/canvas/ResourceNodes.tsx`
 
 ---
 
 **✅ Status: Fully Connected & Working**
 
-Your particles are now data-driven! Each particle has metadata from your CSV file.
+Your particles are data-driven - each particle has metadata from the JSON file.
