@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import {
   buildGalaxyPositionMap,
   scoreToSizeMultiplier,
+  isIndustryLeader,
   type CategoryCluster,
 } from '../../utils/orbital-layout';
 import type { NormalizedResource } from '../../types/resource';
@@ -95,6 +96,7 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
     const meshRef = useRef<THREE.InstancedMesh>(null);
     const groupRef = useRef<THREE.Group>(null);
     const materialRef = useRef<THREE.MeshPhysicalMaterial | null>(null);
+    const shaderRef = useRef<{ uniforms: { uTime: { value: number } } } | null>(null);
 
     // Load planet textures using drei's useTexture (handles Suspense gracefully)
     const planetTextures = useTexture(PLANET_TEXTURES);
@@ -128,12 +130,13 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
 
     // Calculate FIXED positions, colors, size multipliers, and texture indices for ALL resources
     // Resources are positioned within their category's 3D cluster
-    const { positions, colors, sizeMultipliers, textureIndices } = useMemo(() => {
+    const { positions, colors, sizeMultipliers, textureIndices, tierLevels } = useMemo(() => {
       const count = resources.length;
       const posArray = new Float32Array(count * 3);
       const colorArray = new Float32Array(count * 3);
       const sizeArray = new Float32Array(count);
       const texIndexArray = new Float32Array(count);
+      const tierLevelArray = new Float32Array(count);
 
       // Build position map using galaxy cluster layout
       const positionMap = buildGalaxyPositionMap(resources, clusters);
@@ -152,11 +155,20 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
         colorArray[index * 3 + 1] = color.g;
         colorArray[index * 3 + 2] = color.b;
 
-        // Score-based size multiplier (0.8x to 1.4x)
+        // Score-based size multiplier
         sizeArray[index] = scoreToSizeMultiplier(resource.gravityScore);
 
         // Seeded random texture index based on resource ID for consistency
         texIndexArray[index] = Math.floor(seededRandom(resource.id) * PLANET_TEXTURES.length);
+
+        // Tier level for visual effects (0 = normal, 1 = excellent, 2 = industry leader)
+        if (isIndustryLeader(resource.gravityScore)) {
+          tierLevelArray[index] = 2.0;
+        } else if (resource.gravityScore >= 7.5) {
+          tierLevelArray[index] = 1.0;
+        } else {
+          tierLevelArray[index] = 0.0;
+        }
       });
 
       return {
@@ -164,6 +176,7 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
         colors: colorArray,
         sizeMultipliers: sizeArray,
         textureIndices: texIndexArray,
+        tierLevels: tierLevelArray,
       };
     }, [resources, clusters]);
 
@@ -258,6 +271,10 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
         const texIndexAttribute = new THREE.InstancedBufferAttribute(textureIndices, 1);
         meshRef.current.geometry.setAttribute('texIndex', texIndexAttribute);
 
+        // Add tier level attribute for visual effects (glow for industry leaders)
+        const tierLevelAttribute = new THREE.InstancedBufferAttribute(tierLevels, 1);
+        meshRef.current.geometry.setAttribute('tierLevel', tierLevelAttribute);
+
         // Add per-instance opacity attribute
         const opacityArray = new Float32Array(resourceCount).fill(1.0);
         const opacityAttribute = new THREE.InstancedBufferAttribute(opacityArray, 1);
@@ -272,10 +289,15 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
         meshRef.current.geometry.setAttribute('hoverIntensity', hoverIntensityAttribute);
         hoverIntensityAttributeRef.current = hoverIntensityAttribute;
       }
-    }, [positions, colors, textureIndices, resourceCount]);
+    }, [positions, colors, textureIndices, tierLevels, resourceCount]);
 
     // Animation loop
-    useFrame(() => {
+    useFrame((state) => {
+      // Update time uniform for shader animations
+      if (shaderRef.current?.uniforms?.uTime) {
+        shaderRef.current.uniforms.uTime.value = state.clock.elapsedTime;
+      }
+      
       if (!meshRef.current || !groupRef.current || resourceCount === 0) return;
       if (!currentOpacitiesRef.current || !targetOpacitiesRef.current || !currentHoverScalesRef.current) return;
       if (!currentHoverIntensityRef.current) return;
@@ -406,11 +428,14 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
         vertexColors: true,
         transparent: true,
         opacity: 1,
-        metalness: 0.05,          // Reduced from 0.1
-        roughness: 0.45,          // Increased from 0.3 for less shine
-        clearcoat: 0.3,           // Reduced from 0.8 - less glassy
-        clearcoatRoughness: 0.4,  // Increased from 0.2 - diffuse the coating
-        envMapIntensity: 0.4,     // Reduced from 0.6
+        metalness: 0.02,          // Further reduced for more solid feel
+        roughness: 0.55,          // Increased for more diffuse look
+        clearcoat: 0.2,           // Reduced for less glassy
+        clearcoatRoughness: 0.5,  // More diffuse coating
+        envMapIntensity: 0.3,     // Reduced environment reflections
+        sheen: 0.15,              // Subtle subsurface scattering feel
+        sheenRoughness: 0.6,
+        sheenColor: new THREE.Color('#ffffff'),
       });
 
       // Set up texture uniforms
@@ -420,7 +445,8 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
 
       // Inject custom shader code to sample planet textures
       material.onBeforeCompile = (shader) => {
-        // Add texture uniforms
+        // Add texture uniforms and time for animations
+        shader.uniforms.uTime = { value: 0.0 };
         shader.uniforms.planetTex0 = { value: planetTextures[0] };
         shader.uniforms.planetTex1 = { value: planetTextures[1] };
         shader.uniforms.planetTex2 = { value: planetTextures[2] };
@@ -437,10 +463,13 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           attribute float texIndex;
           attribute float instanceOpacity;
           attribute float hoverIntensity;
+          attribute float tierLevel;
           varying float vTexIndex;
           varying float vInstanceOpacity;
           varying float vHoverIntensity;
-          varying vec2 vPlanetUv;`
+          varying float vTierLevel;
+          varying vec2 vPlanetUv;
+          varying vec3 vViewPosition;`
         );
 
         // Pass texture index, opacity, hover intensity, and compute spherical UV in vertex shader
@@ -450,18 +479,23 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           vTexIndex = texIndex;
           vInstanceOpacity = instanceOpacity;
           vHoverIntensity = hoverIntensity;
+          vTierLevel = tierLevel;
           // Compute spherical UV from position for sphere mapping
           vec3 normalizedPos = normalize(position);
           vPlanetUv = vec2(
             atan(normalizedPos.z, normalizedPos.x) / (2.0 * 3.14159265) + 0.5,
             asin(normalizedPos.y) / 3.14159265 + 0.5
-          );`
+          );
+          // View position for fresnel rim glow
+          vec4 mvPos = modelViewMatrix * vec4(transformed, 1.0);
+          vViewPosition = -mvPos.xyz;`
         );
 
         // Add texture uniforms and varying to fragment shader
         shader.fragmentShader = shader.fragmentShader.replace(
           '#include <common>',
           `#include <common>
+          uniform float uTime;
           uniform sampler2D planetTex0;
           uniform sampler2D planetTex1;
           uniform sampler2D planetTex2;
@@ -473,7 +507,9 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           varying float vTexIndex;
           varying float vInstanceOpacity;
           varying float vHoverIntensity;
+          varying float vTierLevel;
           varying vec2 vPlanetUv;
+          varying vec3 vViewPosition;
 
           vec4 samplePlanetTexture(vec2 uv, float idx) {
             int texIdx = int(idx);
@@ -510,9 +546,25 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           float emissiveBoost = vHoverIntensity * 0.4;
           diffuseColor.rgb += diffuseColor.rgb * emissiveBoost;
 
+          // Fresnel rim glow - atmospheric edge effect
+          vec3 viewDir = normalize(vViewPosition);
+          float fresnel = pow(1.0 - max(dot(viewDir, normal), 0.0), 2.5);
+          vec3 rimColor = mix(vec3(0.4, 0.6, 1.0), diffuseColor.rgb, 0.3);
+          diffuseColor.rgb += rimColor * fresnel * 0.35;
+
+          // Industry leader (9+ score) emissive glow
+          if (vTierLevel >= 2.0) {
+            float pulse = 0.6 + 0.4 * sin(uTime * 1.5);
+            vec3 glowColor = vec3(1.0, 0.85, 0.4); // Golden glow
+            diffuseColor.rgb += glowColor * pulse * 0.25;
+          }
+
           // Apply per-instance opacity for filter fading
           diffuseColor.a *= vInstanceOpacity;`
         );
+        
+        // Store shader reference for time uniform updates
+        shaderRef.current = shader;
       };
 
       materialRef.current = material;
