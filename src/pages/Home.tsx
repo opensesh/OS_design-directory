@@ -365,7 +365,7 @@ export default function Home() {
       </section>
 
       {/* Content Area - FLEX-1 fills remaining space */}
-      <div className={`flex-1 relative min-h-0 ${displayMode === '3d' ? '' : 'pointer-events-auto'}`}>
+      <div className={`flex-1 relative min-h-0 overflow-hidden ${displayMode === '3d' ? '' : 'pointer-events-auto'}`}>
         {/* Card View or Table View (3D mode uses empty spacer since canvas is fixed) */}
         <AnimatePresence mode="wait">
           {displayMode === '3d' && (
