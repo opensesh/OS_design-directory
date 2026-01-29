@@ -3,6 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { ChevronUp, ChevronDown, ChevronsUpDown, ExternalLink, Search, X } from 'lucide-react';
 import type { NormalizedResource } from '../../types/resource';
 import { MobileResourceCard } from './MobileResourceCard';
+import { GravityScoreBadge } from './GravityScoreBadge';
+
+// Rating range filter options
+const RATING_RANGES = [
+  { value: 'all', label: 'All', min: 0, max: 10 },
+  { value: '9-10', label: '9-10', min: 9.0, max: 10.0 },
+  { value: '8-9', label: '8-9', min: 8.0, max: 8.99 },
+  { value: '7-8', label: '7-8', min: 7.0, max: 7.99 },
+  { value: '6-7', label: '6-7', min: 6.0, max: 6.99 },
+  { value: 'below-6', label: 'Below 6', min: 0, max: 5.99 },
+] as const;
 
 // Get favicon URL from domain using Google's service
 function getFaviconUrl(url: string): string {
@@ -71,7 +82,7 @@ interface InspoTableProps {
   isFromUrl?: boolean;
 }
 
-type SortField = 'name' | 'category' | 'subCategory' | 'pricing';
+type SortField = 'name' | 'category' | 'subCategory' | 'pricing' | 'gravityScore';
 type SortDirection = 'asc' | 'desc' | null;
 
 export function InspoTable({
@@ -90,6 +101,7 @@ export function InspoTable({
   const [categoryFilter, setCategoryFilter] = useState<string>(initialCategory || 'all');
   const [subCategoryFilter, setSubCategoryFilter] = useState<string>(initialSubCategory || 'all');
   const [pricingFilter, setPricingFilter] = useState<string>(initialPricing || 'all');
+  const [ratingFilter, setRatingFilter] = useState<string>('all');
   const [tierFilter, _setTierFilter] = useState<string>(initialTier || 'all');
   const [featuredFilter, _setFeaturedFilter] = useState<string>(initialFeatured || 'all');
   const [opensourceFilter, _setOpensourceFilter] = useState<string>(initialOpensource || 'all');
@@ -104,11 +116,12 @@ export function InspoTable({
     if (categoryFilter !== 'all') labels.push(categoryFilter);
     if (subCategoryFilter !== 'all') labels.push(subCategoryFilter);
     if (pricingFilter !== 'all') labels.push(pricingFilter);
+    if (ratingFilter !== 'all') labels.push(`Rating ${ratingFilter}`);
     if (tierFilter !== 'all') labels.push(`Tier ${tierFilter}`);
     if (featuredFilter === 'true') labels.push('Featured');
     if (opensourceFilter === 'true') labels.push('Open Source');
     return labels.join(', ');
-  }, [categoryFilter, subCategoryFilter, pricingFilter, tierFilter, featuredFilter, opensourceFilter]);
+  }, [categoryFilter, subCategoryFilter, pricingFilter, ratingFilter, tierFilter, featuredFilter, opensourceFilter]);
 
   const hasActiveFilters = activeFilterLabel.length > 0;
   const showFilterBanner = isFromUrl && hasActiveFilters && !userHasModifiedFilters;
@@ -118,6 +131,7 @@ export function InspoTable({
     setCategoryFilter('all');
     setSubCategoryFilter('all');
     setPricingFilter('all');
+    setRatingFilter('all');
     setUserHasModifiedFilters(true);
   };
 
@@ -134,6 +148,11 @@ export function InspoTable({
 
   const handlePricingChange = (value: string) => {
     setPricingFilter(value);
+    setUserHasModifiedFilters(true);
+  };
+
+  const handleRatingChange = (value: string) => {
+    setRatingFilter(value);
     setUserHasModifiedFilters(true);
   };
 
@@ -170,28 +189,43 @@ export function InspoTable({
       const featuredMatch = featuredFilter === 'all' || (featuredFilter === 'true' && resource.featured);
       const opensourceMatch = opensourceFilter === 'all' || (opensourceFilter === 'true' && resource.opensource);
 
+      // Rating filter
+      const ratingRange = RATING_RANGES.find(r => r.value === ratingFilter);
+      const ratingMatch = !ratingRange || ratingFilter === 'all' || 
+        (resource.gravityScore >= ratingRange.min && resource.gravityScore <= ratingRange.max);
+
       // Search filter
       const searchMatch = !searchQuery ||
         resource.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         resource.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         resource.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
 
-      return categoryMatch && subCategoryMatch && pricingMatch && tierMatch && featuredMatch && opensourceMatch && searchMatch;
+      return categoryMatch && subCategoryMatch && pricingMatch && tierMatch && featuredMatch && opensourceMatch && searchMatch && ratingMatch;
     });
 
     // Apply sorting
     if (sortField && sortDirection) {
       filtered = [...filtered].sort((a, b) => {
-        const aValue = a[sortField] || '';
-        const bValue = b[sortField] || '';
-
-        const comparison = aValue.toString().localeCompare(bValue.toString());
+        const aValue = a[sortField];
+        const bValue = b[sortField];
+        
+        // Handle numeric sorting for gravityScore
+        if (sortField === 'gravityScore') {
+          const aNum = typeof aValue === 'number' ? aValue : 0;
+          const bNum = typeof bValue === 'number' ? bValue : 0;
+          return sortDirection === 'asc' ? aNum - bNum : bNum - aNum;
+        }
+        
+        // String comparison for other fields
+        const aStr = aValue?.toString() || '';
+        const bStr = bValue?.toString() || '';
+        const comparison = aStr.localeCompare(bStr);
         return sortDirection === 'asc' ? comparison : -comparison;
       });
     }
 
     return filtered;
-  }, [resources, categoryFilter, subCategoryFilter, pricingFilter, tierFilter, featuredFilter, opensourceFilter, searchQuery, sortField, sortDirection]);
+  }, [resources, categoryFilter, subCategoryFilter, pricingFilter, ratingFilter, tierFilter, featuredFilter, opensourceFilter, searchQuery, sortField, sortDirection]);
 
   // Handle sort toggle
   const handleSort = (field: SortField) => {
@@ -269,8 +303,8 @@ export function InspoTable({
               </div>
             </div>
 
-            {/* Filter Dropdowns - 3 columns on mobile, flex row on desktop */}
-            <div className="grid grid-cols-3 md:flex gap-3 md:gap-4">
+            {/* Filter Dropdowns - 4 columns on mobile, flex row on desktop */}
+            <div className="grid grid-cols-4 md:flex gap-3 md:gap-4">
               {/* Category Filter */}
               <div className="flex flex-col">
                 <label htmlFor="category-filter" className="block text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark mb-2">
@@ -280,7 +314,7 @@ export function InspoTable({
                   id="category-filter"
                   value={categoryFilter}
                   onChange={(e) => handleCategoryChange(e.target.value)}
-                  className="px-2 sm:px-3 py-2 bg-os-surface-dark border border-os-border-dark rounded-lg text-xs sm:text-sm text-os-text-primary-dark focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30"
+                  className="px-2 sm:px-3 py-2 bg-os-surface-dark border border-os-border-dark rounded-lg text-xs sm:text-sm text-os-text-primary-dark focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30 truncate"
                 >
                   <option value="all">All</option>
                   {filterOptions.categories.map((category) => (
@@ -300,7 +334,7 @@ export function InspoTable({
                   id="subcategory-filter"
                   value={subCategoryFilter}
                   onChange={(e) => handleSubCategoryChange(e.target.value)}
-                  className="px-2 sm:px-3 py-2 bg-os-surface-dark border border-os-border-dark rounded-lg text-xs sm:text-sm text-os-text-primary-dark focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30"
+                  className="px-2 sm:px-3 py-2 bg-os-surface-dark border border-os-border-dark rounded-lg text-xs sm:text-sm text-os-text-primary-dark focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30 truncate"
                 >
                   <option value="all">All</option>
                   {filterOptions.subCategories.map((subCategory) => (
@@ -320,12 +354,31 @@ export function InspoTable({
                   id="pricing-filter"
                   value={pricingFilter}
                   onChange={(e) => handlePricingChange(e.target.value)}
-                  className="px-2 sm:px-3 py-2 bg-os-surface-dark border border-os-border-dark rounded-lg text-xs sm:text-sm text-os-text-primary-dark focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30"
+                  className="px-2 sm:px-3 py-2 bg-os-surface-dark border border-os-border-dark rounded-lg text-xs sm:text-sm text-os-text-primary-dark focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30 truncate"
                 >
                   <option value="all">All</option>
                   {filterOptions.pricings.map((pricing) => (
                     <option key={pricing} value={pricing}>
                       {pricing}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Rating Filter */}
+              <div className="flex flex-col">
+                <label htmlFor="rating-filter" className="block text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark mb-2">
+                  Rating
+                </label>
+                <select
+                  id="rating-filter"
+                  value={ratingFilter}
+                  onChange={(e) => handleRatingChange(e.target.value)}
+                  className="px-2 sm:px-3 py-2 bg-os-surface-dark border border-os-border-dark rounded-lg text-xs sm:text-sm text-os-text-primary-dark focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30 truncate"
+                >
+                  {RATING_RANGES.map((range) => (
+                    <option key={range.value} value={range.value}>
+                      {range.label}
                     </option>
                   ))}
                 </select>
@@ -393,7 +446,7 @@ export function InspoTable({
               </th>
 
               {/* Sub-category Header */}
-              <th className="text-left p-4 bg-os-bg-dark">
+              <th className="text-left p-4 bg-os-bg-dark hidden lg:table-cell">
                 <button
                   onClick={() => handleSort('subCategory')}
                   className="flex items-center gap-2 text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark hover:text-brand-aperol transition-colors group"
@@ -414,6 +467,17 @@ export function InspoTable({
                 </button>
               </th>
 
+              {/* Rating Header */}
+              <th className="text-left p-4 bg-os-bg-dark">
+                <button
+                  onClick={() => handleSort('gravityScore')}
+                  className="flex items-center gap-2 text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark hover:text-brand-aperol transition-colors group"
+                >
+                  Rating
+                  {getSortIcon('gravityScore')}
+                </button>
+              </th>
+
               {/* Actions Header */}
               <th className="w-20 p-4 bg-os-bg-dark">
                 <span className="sr-only">Actions</span>
@@ -423,7 +487,7 @@ export function InspoTable({
           <tbody>
             {filteredAndSortedResources.length === 0 ? (
               <tr>
-                <td colSpan={6} className="p-12 text-center text-os-text-secondary-dark">
+                <td colSpan={7} className="p-12 text-center text-os-text-secondary-dark">
                   No resources match the selected filters.
                 </td>
               </tr>
@@ -452,7 +516,7 @@ export function InspoTable({
                   </td>
 
                   {/* Sub-category Column */}
-                  <td className="p-4 text-os-text-secondary-dark">
+                  <td className="p-4 text-os-text-secondary-dark hidden lg:table-cell">
                     {resource.subCategory || '-'}
                   </td>
 
@@ -462,6 +526,19 @@ export function InspoTable({
                       <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-os-surface-dark text-xs font-accent font-bold uppercase text-os-text-primary-dark border border-os-border-dark">
                         {resource.pricing}
                       </span>
+                    ) : (
+                      <span className="text-os-text-secondary-dark">-</span>
+                    )}
+                  </td>
+
+                  {/* Rating Column */}
+                  <td className="p-4">
+                    {resource.gravityScore ? (
+                      <GravityScoreBadge
+                        score={resource.gravityScore}
+                        size="sm"
+                        showTooltip={false}
+                      />
                     ) : (
                       <span className="text-os-text-secondary-dark">-</span>
                     )}
