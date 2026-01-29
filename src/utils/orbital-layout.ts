@@ -374,36 +374,28 @@ export function generateRingPosition(
  * Convert gravity score to size multiplier
  * Higher scores = larger nodes (more visual prominence)
  *
- * Uses tiered linear scaling for predictable size ratios:
- * Score 6 → 0.5x (base reference for ratios)
- * Score 7 → 1.5x (3x of score 6)
- * Score 9 → 3.0x (6x of score 6, 2x of score 7)
- * Score 10 → 3.5x (7x of score 6)
+ * Uses steep power curve for dramatic high-score emphasis:
+ * Score 1.0  → 0.40x (smallest)
+ * Score 5.0  → 0.60x (medium)
+ * Score 9.0  → 1.80x (very large)
+ * Score 10.0 → 2.00x (largest)
  *
- * Target ratios:
- * - Score 9 / Score 7 = 2x ✓
- * - Score 9 / Score 6 = 6x ✓
+ * Ratio: Score 9 / Score 5 = 3x (triple size for high performers)
  *
  * @param score - Gravity score (1-10)
- * @returns Size multiplier (0.3 to 3.5)
+ * @returns Size multiplier (0.4 to 2.0)
  */
 export function scoreToSizeMultiplier(score: number): number {
+  // Clamp score to valid range
   const clamped = Math.max(1, Math.min(10, score));
 
-  // Tiered linear scaling for predictable ratios
-  if (clamped >= 9) {
-    // Industry leaders: 3.0x → 3.5x
-    return 3.0 + (clamped - 9) * 0.5;
-  } else if (clamped >= 7) {
-    // Excellent: 1.5x → 3.0x
-    return 1.5 + (clamped - 7) * 0.75;
-  } else if (clamped >= 5) {
-    // Good/Niche: 0.5x → 1.5x
-    return 0.5 + (clamped - 5) * 0.5;
-  } else {
-    // Limited: 0.3x → 0.5x
-    return 0.3 + (clamped - 1) * 0.05;
-  }
+  // Normalize to 0-1 range
+  const normalized = (clamped - 1) / 9;
+
+  // Steep power curve for dramatic high-score emphasis
+  // Score 1 → 0.4x, Score 5 → 0.6x, Score 9 → 1.8x, Score 10 → 2.0x
+  // Using power of 2 for steeper curve
+  return 0.4 + Math.pow(normalized, 2) * 1.6;
 }
 
 /**
@@ -474,8 +466,8 @@ export interface CategoryCluster {
  * Galaxy layout constants
  */
 export const GALAXY_LAYOUT = {
-  MIN_CLUSTER_DISTANCE: 60,  // Minimum distance between cluster centers - increased for larger nodes
-  MAX_CLUSTER_DISTANCE: 120,  // Maximum distance from origin for cluster centers
+  MIN_CLUSTER_DISTANCE: 38,  // Minimum distance between cluster centers - ensures ~3-8 unit gap between edges
+  MAX_CLUSTER_DISTANCE: 85,  // Maximum distance from origin for cluster centers
   BASE_CLUSTER_RADIUS: 15,   // Base radius for clusters
   MAX_CLUSTER_RADIUS: 25,    // Maximum cluster radius
   PLACEMENT_ATTEMPTS: 50,    // Max attempts to place a cluster before using best position
@@ -720,15 +712,4 @@ export function calculateBoundingSphere(
 
   // Add padding to ensure all nodes are visible
   return { center, radius: maxDistance + 10 };
-}
-
-/**
- * Check if a gravity score qualifies as industry leader (9+)
- * Used for visual differentiation (rings, glow effects)
- *
- * @param score - Gravity score (1-10)
- * @returns true if score >= 9.0
- */
-export function isIndustryLeader(score: number): boolean {
-  return score >= 9.0;
 }

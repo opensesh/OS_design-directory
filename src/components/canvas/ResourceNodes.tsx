@@ -5,7 +5,6 @@ import * as THREE from 'three';
 import {
   buildGalaxyPositionMap,
   scoreToSizeMultiplier,
-  isIndustryLeader,
   type CategoryCluster,
 } from '../../utils/orbital-layout';
 import type { NormalizedResource } from '../../types/resource';
@@ -96,10 +95,6 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
     const meshRef = useRef<THREE.InstancedMesh>(null);
     const groupRef = useRef<THREE.Group>(null);
     const materialRef = useRef<THREE.MeshPhysicalMaterial | null>(null);
-    const shaderRef = useRef<{ uniforms: { uTime: { value: number } } } | null>(null);
-
-    // Saturn rings for industry leaders (score 9+)
-    const ringMeshRef = useRef<THREE.InstancedMesh>(null);
 
     // Load planet textures using drei's useTexture (handles Suspense gracefully)
     const planetTextures = useTexture(PLANET_TEXTURES);
@@ -121,15 +116,6 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
     const nodeRadius = 0.5;
     const resourceCount = resources.length;
 
-    // Saturn ring configuration
-    const RING_CONFIG = {
-      innerRadius: 0.7,   // Inner edge of ring (relative to node)
-      outerRadius: 1.1,   // Outer edge of ring (relative to node)
-      tiltAngle: Math.PI * 0.14, // ~25° tilt
-      opacity: 0.5,
-      rotationSpeed: 0.15, // Slow rotation
-    };
-
     // Expose mesh and resource lookup for raycasting
     useImperativeHandle(ref, () => ({
       getMesh: () => meshRef.current,
@@ -142,13 +128,12 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
 
     // Calculate FIXED positions, colors, size multipliers, and texture indices for ALL resources
     // Resources are positioned within their category's 3D cluster
-    const { positions, colors, sizeMultipliers, textureIndices, tierLevels } = useMemo(() => {
+    const { positions, colors, sizeMultipliers, textureIndices } = useMemo(() => {
       const count = resources.length;
       const posArray = new Float32Array(count * 3);
       const colorArray = new Float32Array(count * 3);
       const sizeArray = new Float32Array(count);
       const texIndexArray = new Float32Array(count);
-      const tierLevelArray = new Float32Array(count);
 
       // Build position map using galaxy cluster layout
       const positionMap = buildGalaxyPositionMap(resources, clusters);
@@ -167,20 +152,11 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
         colorArray[index * 3 + 1] = color.g;
         colorArray[index * 3 + 2] = color.b;
 
-        // Score-based size multiplier
+        // Score-based size multiplier (0.8x to 1.4x)
         sizeArray[index] = scoreToSizeMultiplier(resource.gravityScore);
 
         // Seeded random texture index based on resource ID for consistency
         texIndexArray[index] = Math.floor(seededRandom(resource.id) * PLANET_TEXTURES.length);
-
-        // Tier level for visual effects (0 = normal, 1 = excellent, 2 = industry leader)
-        if (isIndustryLeader(resource.gravityScore)) {
-          tierLevelArray[index] = 2.0;
-        } else if (resource.gravityScore >= 7.5) {
-          tierLevelArray[index] = 1.0;
-        } else {
-          tierLevelArray[index] = 0.0;
-        }
       });
 
       return {
@@ -188,36 +164,8 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
         colors: colorArray,
         sizeMultipliers: sizeArray,
         textureIndices: texIndexArray,
-        tierLevels: tierLevelArray,
       };
     }, [resources, clusters]);
-
-    // Compute industry leaders data for Saturn rings
-    const industryLeaderData = useMemo(() => {
-      const leaders: Array<{
-        resourceIndex: number;
-        position: { x: number; y: number; z: number };
-        color: THREE.Color;
-        sizeMultiplier: number;
-      }> = [];
-
-      resources.forEach((resource, index) => {
-        if (isIndustryLeader(resource.gravityScore)) {
-          leaders.push({
-            resourceIndex: index,
-            position: {
-              x: positions[index * 3] || 0,
-              y: positions[index * 3 + 1] || 0,
-              z: positions[index * 3 + 2] || 0,
-            },
-            color: new THREE.Color(getCategoryColor(resource.category)),
-            sizeMultiplier: sizeMultipliers[index] || 1,
-          });
-        }
-      });
-
-      return leaders;
-    }, [resources, positions, sizeMultipliers]);
 
     // Initialize opacity, hover scale, and entrance progress arrays
     useEffect(() => {
@@ -310,10 +258,6 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
         const texIndexAttribute = new THREE.InstancedBufferAttribute(textureIndices, 1);
         meshRef.current.geometry.setAttribute('texIndex', texIndexAttribute);
 
-        // Add tier level attribute for visual effects (glow for industry leaders)
-        const tierLevelAttribute = new THREE.InstancedBufferAttribute(tierLevels, 1);
-        meshRef.current.geometry.setAttribute('tierLevel', tierLevelAttribute);
-
         // Add per-instance opacity attribute
         const opacityArray = new Float32Array(resourceCount).fill(1.0);
         const opacityAttribute = new THREE.InstancedBufferAttribute(opacityArray, 1);
@@ -328,55 +272,10 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
         meshRef.current.geometry.setAttribute('hoverIntensity', hoverIntensityAttribute);
         hoverIntensityAttributeRef.current = hoverIntensityAttribute;
       }
-    }, [positions, colors, textureIndices, tierLevels, resourceCount]);
-
-    // Initialize Saturn ring matrices for industry leaders
-    useEffect(() => {
-      if (!ringMeshRef.current || industryLeaderData.length === 0) return;
-
-      const dummy = new THREE.Object3D();
-      const ringCount = industryLeaderData.length;
-
-      // Create color attribute for rings
-      const ringColors = new Float32Array(ringCount * 3);
-
-      industryLeaderData.forEach((leader, ringIndex) => {
-        // Position ring at node location
-        dummy.position.set(leader.position.x, leader.position.y, leader.position.z);
-        
-        // Apply tilt rotation
-        dummy.rotation.set(RING_CONFIG.tiltAngle, 0, 0);
-        
-        // Scale ring based on node size
-        const ringScale = nodeRadius * leader.sizeMultiplier;
-        dummy.scale.set(ringScale, ringScale, ringScale);
-        
-        dummy.updateMatrix();
-        ringMeshRef.current!.setMatrixAt(ringIndex, dummy.matrix);
-
-        // Set ring color (golden/amber tint mixed with category color)
-        const ringColor = leader.color.clone().lerp(new THREE.Color('#FFD700'), 0.4);
-        ringColors[ringIndex * 3] = ringColor.r;
-        ringColors[ringIndex * 3 + 1] = ringColor.g;
-        ringColors[ringIndex * 3 + 2] = ringColor.b;
-      });
-
-      ringMeshRef.current.instanceMatrix.needsUpdate = true;
-
-      // Add color attribute
-      if (ringMeshRef.current.geometry) {
-        const colorAttribute = new THREE.InstancedBufferAttribute(ringColors, 3);
-        ringMeshRef.current.geometry.setAttribute('color', colorAttribute);
-      }
-    }, [industryLeaderData, nodeRadius]);
+    }, [positions, colors, textureIndices, resourceCount]);
 
     // Animation loop
-    useFrame((state) => {
-      // Update time uniform for shader animations
-      if (shaderRef.current?.uniforms?.uTime) {
-        shaderRef.current.uniforms.uTime.value = state.clock.elapsedTime;
-      }
-      
+    useFrame(() => {
       if (!meshRef.current || !groupRef.current || resourceCount === 0) return;
       if (!currentOpacitiesRef.current || !targetOpacitiesRef.current || !currentHoverScalesRef.current) return;
       if (!currentHoverIntensityRef.current) return;
@@ -488,47 +387,6 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
         hoverIntensityAttributeRef.current.needsUpdate = true;
       }
 
-      // Update Saturn ring matrices for industry leaders
-      if (ringMeshRef.current && industryLeaderData.length > 0) {
-        const ringDummy = new THREE.Object3D();
-        const elapsedTime = state.clock.elapsedTime;
-
-        industryLeaderData.forEach((leader, ringIndex) => {
-          const nodeIndex = leader.resourceIndex;
-          
-          // Get current node scale from the animation state
-          const entranceScale = entranceProgressRef.current?.[nodeIndex] ?? 1;
-          const hoverScale = currentHoverScalesRef.current?.[nodeIndex] ?? 1;
-          const opacity = currentOpacitiesRef.current?.[nodeIndex] ?? 1;
-
-          // Position ring at node location
-          ringDummy.position.set(leader.position.x, leader.position.y, leader.position.z);
-          
-          // Apply tilt and slow rotation
-          ringDummy.rotation.set(
-            RING_CONFIG.tiltAngle,
-            elapsedTime * RING_CONFIG.rotationSpeed,
-            0
-          );
-          
-          // Scale ring with node (entrance + hover + score multiplier)
-          const nodeScale = Math.max(0.001, entranceScale) * hoverScale * leader.sizeMultiplier;
-          const ringScale = nodeRadius * nodeScale;
-          
-          // Fade ring opacity with node
-          ringDummy.scale.set(
-            ringScale * (opacity > 0.3 ? 1 : opacity / 0.3),
-            ringScale * (opacity > 0.3 ? 1 : opacity / 0.3),
-            ringScale * (opacity > 0.3 ? 1 : opacity / 0.3)
-          );
-          
-          ringDummy.updateMatrix();
-          ringMeshRef.current!.setMatrixAt(ringIndex, ringDummy.matrix);
-        });
-
-        ringMeshRef.current.instanceMatrix.needsUpdate = true;
-      }
-
       // Check entrance completion
       if (!isInitialized) {
         const lastNodeEntranceEnd = ANIMATION.ENTRANCE_DELAY +
@@ -548,14 +406,11 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
         vertexColors: true,
         transparent: true,
         opacity: 1,
-        metalness: 0.02,          // Further reduced for more solid feel
-        roughness: 0.55,          // Increased for more diffuse look
-        clearcoat: 0.2,           // Reduced for less glassy
-        clearcoatRoughness: 0.5,  // More diffuse coating
-        envMapIntensity: 0.3,     // Reduced environment reflections
-        sheen: 0.15,              // Subtle subsurface scattering feel
-        sheenRoughness: 0.6,
-        sheenColor: new THREE.Color('#ffffff'),
+        metalness: 0.05,          // Reduced from 0.1
+        roughness: 0.45,          // Increased from 0.3 for less shine
+        clearcoat: 0.3,           // Reduced from 0.8 - less glassy
+        clearcoatRoughness: 0.4,  // Increased from 0.2 - diffuse the coating
+        envMapIntensity: 0.4,     // Reduced from 0.6
       });
 
       // Set up texture uniforms
@@ -565,8 +420,7 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
 
       // Inject custom shader code to sample planet textures
       material.onBeforeCompile = (shader) => {
-        // Add texture uniforms and time for animations
-        shader.uniforms.uTime = { value: 0.0 };
+        // Add texture uniforms
         shader.uniforms.planetTex0 = { value: planetTextures[0] };
         shader.uniforms.planetTex1 = { value: planetTextures[1] };
         shader.uniforms.planetTex2 = { value: planetTextures[2] };
@@ -583,14 +437,10 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           attribute float texIndex;
           attribute float instanceOpacity;
           attribute float hoverIntensity;
-          attribute float tierLevel;
           varying float vTexIndex;
           varying float vInstanceOpacity;
           varying float vHoverIntensity;
-          varying float vTierLevel;
-          varying vec2 vPlanetUv;
-          varying vec3 vViewPosition;
-          varying vec3 vNormal;`
+          varying vec2 vPlanetUv;`
         );
 
         // Pass texture index, opacity, hover intensity, and compute spherical UV in vertex shader
@@ -600,25 +450,18 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           vTexIndex = texIndex;
           vInstanceOpacity = instanceOpacity;
           vHoverIntensity = hoverIntensity;
-          vTierLevel = tierLevel;
           // Compute spherical UV from position for sphere mapping
           vec3 normalizedPos = normalize(position);
           vPlanetUv = vec2(
             atan(normalizedPos.z, normalizedPos.x) / (2.0 * 3.14159265) + 0.5,
             asin(normalizedPos.y) / 3.14159265 + 0.5
-          );
-          // View position for fresnel rim glow
-          vec4 mvPos = modelViewMatrix * vec4(transformed, 1.0);
-          vViewPosition = -mvPos.xyz;
-          // Pass normal to fragment shader for fresnel
-          vNormal = normalize(normalMatrix * normal);`
+          );`
         );
 
         // Add texture uniforms and varying to fragment shader
         shader.fragmentShader = shader.fragmentShader.replace(
           '#include <common>',
           `#include <common>
-          uniform float uTime;
           uniform sampler2D planetTex0;
           uniform sampler2D planetTex1;
           uniform sampler2D planetTex2;
@@ -630,10 +473,7 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           varying float vTexIndex;
           varying float vInstanceOpacity;
           varying float vHoverIntensity;
-          varying float vTierLevel;
           varying vec2 vPlanetUv;
-          varying vec3 vViewPosition;
-          varying vec3 vNormal;
 
           vec4 samplePlanetTexture(vec2 uv, float idx) {
             int texIdx = int(idx);
@@ -670,25 +510,9 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           float emissiveBoost = vHoverIntensity * 0.4;
           diffuseColor.rgb += diffuseColor.rgb * emissiveBoost;
 
-          // Fresnel rim glow - atmospheric edge effect
-          vec3 viewDir = normalize(vViewPosition);
-          float fresnel = pow(1.0 - max(dot(viewDir, vNormal), 0.0), 2.5);
-          vec3 rimColor = mix(vec3(0.4, 0.6, 1.0), diffuseColor.rgb, 0.3);
-          diffuseColor.rgb += rimColor * fresnel * 0.35;
-
-          // Industry leader (9+ score) emissive glow
-          if (vTierLevel >= 2.0) {
-            float pulse = 0.6 + 0.4 * sin(uTime * 1.5);
-            vec3 glowColor = vec3(1.0, 0.85, 0.4); // Golden glow
-            diffuseColor.rgb += glowColor * pulse * 0.25;
-          }
-
           // Apply per-instance opacity for filter fading
           diffuseColor.a *= vInstanceOpacity;`
         );
-        
-        // Store shader reference for time uniform updates
-        shaderRef.current = shader;
       };
 
       materialRef.current = material;
@@ -696,17 +520,6 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
     }, [planetTextures]);
 
     if (resourceCount === 0) return null;
-
-    // Create ring material
-    const ringMaterial = useMemo(() => {
-      return new THREE.MeshBasicMaterial({
-        vertexColors: true,
-        transparent: true,
-        opacity: RING_CONFIG.opacity,
-        side: THREE.DoubleSide,
-        depthWrite: false, // Prevent z-fighting
-      });
-    }, []);
 
     return (
       <group ref={groupRef}>
@@ -718,18 +531,6 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
         >
           <sphereGeometry args={[nodeRadius, 32, 32]} />
         </instancedMesh>
-
-        {/* Saturn rings for industry leaders */}
-        {industryLeaderData.length > 0 && (
-          <instancedMesh
-            ref={ringMeshRef}
-            args={[undefined, undefined, industryLeaderData.length]}
-            frustumCulled={false}
-            material={ringMaterial}
-          >
-            <ringGeometry args={[RING_CONFIG.innerRadius, RING_CONFIG.outerRadius, 64]} />
-          </instancedMesh>
-        )}
       </group>
     );
   }
