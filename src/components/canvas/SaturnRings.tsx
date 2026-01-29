@@ -16,9 +16,9 @@ const RING_CONFIG = {
   INNER_RADIUS_RATIO: 1.4,    // Ring starts at 1.4x planet radius
   OUTER_RADIUS_RATIO: 2.2,    // Ring extends to 2.2x planet radius
   THETA_SEGMENTS: 48,         // Smooth ring circumference
-  PHI_SEGMENTS: 1,            // Single ring thickness
+  PHI_SEGMENTS: 8,            // Better UV interpolation for radial bands
   TILT_RANGE: Math.PI * 0.15, // ±27° random tilt variation
-  SCORE_THRESHOLD: 9.0,       // Only show rings for 9+ scores
+  SCORE_THRESHOLD: 9.5,       // Only show rings for 9.5+ scores
 } as const;
 
 /**
@@ -59,7 +59,7 @@ interface SaturnRingsProps {
 /**
  * SaturnRings
  *
- * Renders Saturn-like rings around high-score resources (9.0+).
+ * Renders Saturn-like rings around high-score resources (9.5+).
  * Syncs with ResourceNodes for position, opacity, and hover animations.
  */
 export function SaturnRings({
@@ -122,8 +122,19 @@ export function SaturnRings({
       posArray[index * 3 + 1] = pos.y;
       posArray[index * 3 + 2] = pos.z;
 
+      // Get base category color and add slight variation per resource
       const colorHex = getCategoryColor(resource.category);
       const color = new THREE.Color(colorHex);
+
+      // Add per-resource hue variation for visual variety within same category
+      const hsl = { h: 0, s: 0, l: 0 };
+      color.getHSL(hsl);
+      const hueShift = (seededRandom(resource.id * 17) - 0.5) * 0.1; // ±5% hue shift
+      color.setHSL(
+        (hsl.h + hueShift + 1) % 1, // Wrap hue around
+        Math.min(1, hsl.s * 1.1),    // Slightly boost saturation
+        hsl.l
+      );
 
       colorArray[index * 3] = color.r;
       colorArray[index * 3 + 1] = color.g;
@@ -189,28 +200,79 @@ export function SaturnRings({
     });
   }, [ringResources, ringCount, activeCategory, activeFilter, activeSubFilter, filteredResourceIds]);
 
-  // Create ring material with vertex colors
+  // Create shader material for banded ring texture
   const ringMaterial = useMemo(() => {
-    return new THREE.MeshStandardMaterial({
-      vertexColors: true,
+    return new THREE.ShaderMaterial({
+      vertexShader: `
+        attribute vec3 instanceColor;
+        attribute float instanceOpacity;
+        
+        varying vec2 vUv;
+        varying vec3 vColor;
+        varying float vOpacity;
+        
+        void main() {
+          vUv = uv;
+          vColor = instanceColor;
+          vOpacity = instanceOpacity;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        varying vec2 vUv;
+        varying vec3 vColor;
+        varying float vOpacity;
+        
+        void main() {
+          // Radial position (0 = inner edge, 1 = outer edge)
+          float r = vUv.x;
+          
+          // Create multiple band frequencies for realistic Saturn-like appearance
+          float band1 = sin(r * 25.0) * 0.5 + 0.5;
+          float band2 = sin(r * 45.0 + 1.5) * 0.3 + 0.7;
+          float band3 = sin(r * 70.0 + 3.0) * 0.2 + 0.8;
+          
+          // Combine bands with slight variation
+          float bands = band1 * band2 * band3;
+          
+          // Smooth edge fade for softer appearance
+          float edgeFade = smoothstep(0.0, 0.2, r) * smoothstep(1.0, 0.8, r);
+          
+          // Final alpha combines bands, edge fade, and instance opacity
+          float alpha = bands * edgeFade * vOpacity;
+          
+          gl_FragColor = vec4(vColor, alpha);
+        }
+      `,
       transparent: true,
-      opacity: 1,
       side: THREE.DoubleSide,
-      metalness: 0.1,
-      roughness: 0.7,
-      depthWrite: false, // Better blending with transparent rings
+      depthWrite: false,
     });
   }, []);
 
-  // Create ring geometry
+  // Create ring geometry with proper UV mapping for radial bands
   const ringGeometry = useMemo(() => {
-    // RingGeometry: innerRadius, outerRadius, thetaSegments, phiSegments
+    const innerRadius = nodeRadius * RING_CONFIG.INNER_RADIUS_RATIO;
+    const outerRadius = nodeRadius * RING_CONFIG.OUTER_RADIUS_RATIO;
+    
     const geo = new THREE.RingGeometry(
-      nodeRadius * RING_CONFIG.INNER_RADIUS_RATIO,
-      nodeRadius * RING_CONFIG.OUTER_RADIUS_RATIO,
+      innerRadius,
+      outerRadius,
       RING_CONFIG.THETA_SEGMENTS,
       RING_CONFIG.PHI_SEGMENTS
     );
+
+    // Fix UV mapping: vUv.x = 0 at inner edge, 1 at outer edge
+    const pos = geo.attributes.position;
+    const uv = geo.attributes.uv;
+    const v3 = new THREE.Vector3();
+    
+    for (let i = 0; i < pos.count; i++) {
+      v3.fromBufferAttribute(pos, i);
+      const radius = v3.length();
+      const normalized = (radius - innerRadius) / (outerRadius - innerRadius);
+      uv.setXY(i, normalized, 0.5);
+    }
 
     // Rotate geometry so rings are horizontal by default
     geo.rotateX(-Math.PI / 2);
@@ -222,8 +284,14 @@ export function SaturnRings({
   useEffect(() => {
     if (!meshRef.current || ringCount === 0) return;
 
+    // Color attribute
     const colorAttribute = new THREE.InstancedBufferAttribute(colors, 3);
-    meshRef.current.geometry.setAttribute('color', colorAttribute);
+    meshRef.current.geometry.setAttribute('instanceColor', colorAttribute);
+    
+    // Opacity attribute (initialize to visible)
+    const opacityArray = new Float32Array(ringCount).fill(ANIMATION.VISIBLE_OPACITY);
+    const opacityAttribute = new THREE.InstancedBufferAttribute(opacityArray, 1);
+    meshRef.current.geometry.setAttribute('instanceOpacity', opacityAttribute);
   }, [colors, ringCount]);
 
   // Animation frame
@@ -323,24 +391,18 @@ export function SaturnRings({
       dummy.updateMatrix();
       meshRef.current.setMatrixAt(i, dummy.matrix);
 
-      // Update color with opacity
-      const colorAttr = meshRef.current.geometry.getAttribute('color') as THREE.BufferAttribute;
-      if (colorAttr) {
-        // We can't easily modify opacity per-instance without a shader, so we'll adjust the color brightness
-        const baseR = colors[i * 3];
-        const baseG = colors[i * 3 + 1];
-        const baseB = colors[i * 3 + 2];
-
-        // Modulate color by opacity for visual fade effect
-        colorAttr.setXYZ(i, baseR * newOpacity, baseG * newOpacity, baseB * newOpacity);
+      // Update instance opacity directly
+      const opacityAttr = meshRef.current.geometry.getAttribute('instanceOpacity') as THREE.BufferAttribute;
+      if (opacityAttr) {
+        opacityAttr.setX(i, newOpacity);
       }
     }
 
     if (hasChanges) {
       meshRef.current.instanceMatrix.needsUpdate = true;
-      const colorAttr = meshRef.current.geometry.getAttribute('color');
-      if (colorAttr) {
-        colorAttr.needsUpdate = true;
+      const opacityAttr = meshRef.current.geometry.getAttribute('instanceOpacity');
+      if (opacityAttr) {
+        opacityAttr.needsUpdate = true;
       }
     }
 
