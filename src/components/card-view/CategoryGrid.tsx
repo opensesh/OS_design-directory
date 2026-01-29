@@ -20,8 +20,8 @@ export function CategoryGrid({
   onCategoryClick,
   onSubcategoryClick
 }: CategoryGridProps) {
-  // Ref to track the expanded card element
-  const expandedCardRef = useRef<HTMLDivElement | null>(null);
+  // Ref to track the subcategory row element for scrolling
+  const subcategoryRowRef = useRef<HTMLDivElement | null>(null);
   
   // Track actual column count based on viewport
   const [columnCount, setColumnCount] = useState(3);
@@ -36,16 +36,16 @@ export function CategoryGrid({
     return () => window.removeEventListener('resize', updateColumns);
   }, []);
 
-  // Scroll to expanded card when it changes
+  // Scroll to subcategory row when category expands to ensure subcategories are visible
   useEffect(() => {
-    if (expandedCategory && expandedCardRef.current) {
-      // Small delay to allow the SubcategoryRow animation to start
+    if (expandedCategory && subcategoryRowRef.current) {
+      // Delay to allow the height animation to start
       const timer = setTimeout(() => {
-        expandedCardRef.current?.scrollIntoView({
+        subcategoryRowRef.current?.scrollIntoView({
           behavior: 'smooth',
-          block: 'start'
+          block: 'nearest'
         });
-      }, 100);
+      }, 150);
       return () => clearTimeout(timer);
     }
   }, [expandedCategory]);
@@ -73,6 +73,7 @@ export function CategoryGrid({
       categories: typeof categoriesWithCounts; 
       hasExpanded: boolean; 
       expandedCategory: string | null;
+      expandedColumnIndex: number;
     }[] = [];
     
     for (let i = 0; i < categoriesWithCounts.length; i += columnCount) {
@@ -82,7 +83,8 @@ export function CategoryGrid({
       result.push({
         categories: rowCategories,
         hasExpanded: expandedIndex !== -1,
-        expandedCategory: expandedIndex !== -1 ? rowCategories[expandedIndex].name : null
+        expandedCategory: expandedIndex !== -1 ? rowCategories[expandedIndex].name : null,
+        expandedColumnIndex: expandedIndex
       });
     }
     return result;
@@ -110,7 +112,6 @@ export function CategoryGrid({
               return (
                 <motion.div
                   key={category.name}
-                  ref={isExpanded ? expandedCardRef : null}
                   variants={{
                     hidden: { opacity: 0, y: 20 },
                     visible: { opacity: 1, y: 0 }
@@ -128,10 +129,13 @@ export function CategoryGrid({
             })}
           </motion.div>
 
-          {/* SubcategoryRow appears directly below its row */}
+          {/* SubcategoryRow appears directly below its row, aligned with expanded card */}
           {row.hasExpanded && row.expandedCategory && (
             <SubcategoryRow
+              ref={subcategoryRowRef}
               category={row.expandedCategory}
+              columnIndex={row.expandedColumnIndex}
+              columnCount={columnCount}
               resources={resources}
               activeSubcategory={activeSubcategory}
               onSubcategoryClick={onSubcategoryClick}
