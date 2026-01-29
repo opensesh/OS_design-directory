@@ -78,11 +78,16 @@ export function CategoryCard({
       transition={{ duration: 0.2 }}
     >
       {/* Video container - upper portion with padding */}
-      <div className="absolute top-3 left-3 right-3 bottom-[4.5rem] sm:bottom-auto sm:h-[68%] rounded-lg overflow-hidden">
+      <div 
+        className="absolute top-3 left-3 right-3 bottom-[4.5rem] sm:bottom-auto sm:h-[68%] rounded-lg overflow-hidden"
+        style={{
+          boxShadow: 'inset 0 0 20px 12px rgba(28, 28, 28, 1)'
+        }}
+      >
         {videoSrc && (
           <video
             ref={videoRef}
-            className="absolute inset-0 w-full h-full object-cover scale-105"
+            className="absolute inset-0 w-full h-full object-cover"
             src={videoSrc}
             muted
             loop
@@ -93,7 +98,7 @@ export function CategoryCard({
         
         {/* Vignette overlay - aggressive edge gradients for embedded look */}
         <div
-          className="absolute -inset-1 pointer-events-none"
+          className="absolute inset-0 pointer-events-none"
           style={{
             background: `
               linear-gradient(to right, rgba(28, 28, 28, 1) 0%, transparent 30%),
