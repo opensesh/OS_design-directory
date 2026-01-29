@@ -1,5 +1,4 @@
 import { useMemo, Fragment, useRef, useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import { CategoryCard } from './CategoryCard';
 import { SubcategoryRow } from './SubcategoryRow';
 import { CATEGORY_COLORS } from '../../types/resource';
@@ -98,32 +97,15 @@ export function CategoryGrid({
   }, [categoriesWithCounts, expandedCategory, columnCount]);
 
   return (
-    <motion.div
-      className="flex flex-col gap-4"
-      initial="hidden"
-      animate="visible"
-      variants={{
-        hidden: { opacity: 0 },
-        visible: {
-          opacity: 1,
-          transition: { staggerChildren: 0.08 }
-        }
-      }}
-    >
+    <div className="flex flex-col gap-4">
       {rows.map((row, rowIndex) => (
         <Fragment key={rowIndex}>
           {/* Each visual row is its own grid - 1 col mobile, 2 tablet, 3 desktop */}
-          <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {row.categories.map((category) => {
               const isExpanded = expandedCategory === category.name;
               return (
-                <motion.div
-                  key={category.name}
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 }
-                  }}
-                >
+                <div key={category.name}>
                   <CategoryCard
                     category={category.name}
                     count={category.count}
@@ -131,10 +113,10 @@ export function CategoryGrid({
                     isOtherExpanded={expandedCategory !== null && !isExpanded}
                     onClick={() => onCategoryClick(category.name)}
                   />
-                </motion.div>
+                </div>
               );
             })}
-          </motion.div>
+          </div>
 
           {/* SubcategoryRow appears directly below its row, aligned with expanded card */}
           {row.hasExpanded && row.expandedCategory && (
@@ -150,6 +132,6 @@ export function CategoryGrid({
           )}
         </Fragment>
       ))}
-    </motion.div>
+    </div>
   );
 }
