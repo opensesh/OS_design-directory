@@ -589,7 +589,8 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           varying float vHoverIntensity;
           varying float vTierLevel;
           varying vec2 vPlanetUv;
-          varying vec3 vViewPosition;`
+          varying vec3 vViewPosition;
+          varying vec3 vNormal;`
         );
 
         // Pass texture index, opacity, hover intensity, and compute spherical UV in vertex shader
@@ -608,7 +609,9 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           );
           // View position for fresnel rim glow
           vec4 mvPos = modelViewMatrix * vec4(transformed, 1.0);
-          vViewPosition = -mvPos.xyz;`
+          vViewPosition = -mvPos.xyz;
+          // Pass normal to fragment shader for fresnel
+          vNormal = normalize(normalMatrix * normal);`
         );
 
         // Add texture uniforms and varying to fragment shader
@@ -630,6 +633,7 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
           varying float vTierLevel;
           varying vec2 vPlanetUv;
           varying vec3 vViewPosition;
+          varying vec3 vNormal;
 
           vec4 samplePlanetTexture(vec2 uv, float idx) {
             int texIdx = int(idx);
@@ -668,7 +672,7 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
 
           // Fresnel rim glow - atmospheric edge effect
           vec3 viewDir = normalize(vViewPosition);
-          float fresnel = pow(1.0 - max(dot(viewDir, normal), 0.0), 2.5);
+          float fresnel = pow(1.0 - max(dot(viewDir, vNormal), 0.0), 2.5);
           vec3 rimColor = mix(vec3(0.4, 0.6, 1.0), diffuseColor.rgb, 0.3);
           diffuseColor.rgb += rimColor * fresnel * 0.35;
 
