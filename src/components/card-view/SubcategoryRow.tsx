@@ -16,7 +16,7 @@ export const SubcategoryRow = forwardRef<HTMLDivElement, SubcategoryRowProps>(
   function SubcategoryRow({
     category,
     columnIndex,
-    columnCount,
+    columnCount: _columnCount,
     resources,
     activeSubcategory,
     onSubcategoryClick
