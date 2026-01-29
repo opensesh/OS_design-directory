@@ -371,31 +371,36 @@ export function generateRingPosition(
 }
 
 /**
- * Convert gravity score to size multiplier
- * Higher scores = larger nodes (more visual prominence)
- *
- * Uses power of 3 curve for ~4x ratio between 9+ and 6-7 scores:
+ * Convert gravity score to a size multiplier for node rendering
+ * 
+ * Elite tier (9.5+) nodes are dramatically larger (4x the old maximum)
+ * to create immediate visual hierarchy for top resources.
+ * 
+ * New scale ranges:
  * Score 1.0  → 0.30x (smallest)
- * Score 5.0  → 0.54x (medium-small)
- * Score 6.5  → 0.68x (medium)
- * Score 9.0  → 2.20x (very large)
- * Score 10.0 → 3.00x (largest)
- *
- * Ratio: Score 9 / Score 6.5 ≈ 4x (dramatic size difference for top performers)
+ * Score 5.0  → ~0.50x (small)
+ * Score 7.0  → ~0.90x (medium)
+ * Score 9.0  → ~2.20x (large)
+ * Score 9.5  → 6.00x (elite threshold - 2x old max)
+ * Score 10.0 → 12.00x (maximum - 4x old max)
  *
  * @param score - Gravity score (1-10)
- * @returns Size multiplier (0.30 to 3.0)
+ * @returns Size multiplier (0.30 to 12.0)
  */
 export function scoreToSizeMultiplier(score: number): number {
-  // Clamp score to valid range
   const clamped = Math.max(1, Math.min(10, score));
-
-  // Normalize to 0-1 range
-  const normalized = (clamped - 1) / 9;
-
-  // Power of 3 curve for ~4x ratio between top scores and mid-range
-  // Score 9+ resources will be dramatically larger than 6-7 range
-  return 0.30 + Math.pow(normalized, 3) * 2.70;
+  
+  // Elite tier (9.5+): Dramatically larger for immediate visual impact
+  if (clamped >= 9.5) {
+    // Linear interpolation from 9.5 to 10 within elite range
+    // 9.5 = 6.0x, 10.0 = 12.0x
+    const eliteProgress = (clamped - 9.5) / 0.5;
+    return 6.0 + eliteProgress * 6.0;
+  }
+  
+  // Standard tier (1-9.49): Power curve for gradual scaling
+  const normalized = (clamped - 1) / 8.5; // Normalize to 9.5 range
+  return 0.30 + Math.pow(normalized, 3) * 2.20;
 }
 
 /**
