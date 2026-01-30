@@ -102,6 +102,11 @@ export function useVoiceRecognition(
         setError('No speech detected');
       } else if (event.error === 'not-allowed') {
         setError('Microphone access denied');
+      } else if (event.error === 'network') {
+        setError('Network error - ensure HTTPS is enabled');
+      } else if (event.error === 'aborted') {
+        // User or system aborted - no error message needed
+        setError(null);
       } else {
         setError(`Speech recognition error: ${event.error}`);
       }
