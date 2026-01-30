@@ -19,6 +19,11 @@ const CATEGORY_VIDEOS: Record<string, string> = {
   'AI': '/videos/categories/ai.mp4',
 };
 
+const CATEGORY_VIDEO_POSITIONS: Record<string, string> = {
+  'AI': 'center 30%',
+  'Inspiration': 'center 30%',
+};
+
 export function CategoryCard({
   category,
   count,
@@ -85,6 +90,7 @@ export function CategoryCard({
             <video
               ref={videoRef}
               className="absolute inset-0 w-full h-full object-cover"
+              style={{ objectPosition: CATEGORY_VIDEO_POSITIONS[category] }}
               src={videoSrc}
               muted
               loop
