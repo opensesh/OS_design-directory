@@ -21,6 +21,7 @@ import { performLLMSearch } from '../hooks/useLLMSearch';
 
 // Lazy load the 3D canvas for better initial load
 const InspoCanvas = lazy(() => import('../components/canvas/InspoCanvas'));
+import { UniverseLegend } from '../components/canvas/UniverseLegend';
 import { LoadingState } from '../components/ui/LoadingState';
 
 /**
@@ -313,6 +314,8 @@ export default function Home() {
               />
             </motion.div>
           </Suspense>
+          {/* Universe Legend */}
+          <UniverseLegend />
         </div>
       )}
 
