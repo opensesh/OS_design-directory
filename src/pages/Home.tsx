@@ -279,7 +279,7 @@ export default function Home() {
     <div className={`h-dvh text-os-text-primary-dark font-sans overflow-hidden ${displayMode === '3d' ? '' : 'bg-os-bg-dark'}`}>
       {/* 3D Canvas - FIXED BELOW HEADERS (only in 3D mode) */}
       {displayMode === '3d' && (
-        <div className="fixed inset-x-0 top-[124px] bottom-[220px] z-0">
+        <div className="fixed inset-0 top-[124px] bottom-[220px] z-0">
           {/* Top gradient - aggressive fade from dark for seamless blend */}
           <div
             className="absolute top-0 inset-x-0 h-32 pointer-events-none z-10"

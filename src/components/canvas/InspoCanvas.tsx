@@ -3,7 +3,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Environment } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import * as THREE from 'three';
-import { calculateCategoryClusters, calculateBoundingSphere, type CategoryCluster } from '../../utils/orbital-layout';
+import { calculateCategoryClusters, calculateBoundingSphere, generateClusterPosition, type CategoryCluster } from '../../utils/orbital-layout';
 import ResourceNodes, { type ResourceNodesHandle } from './ResourceNodes';
 import SaturnRings from './SaturnRings';
 import GalaxyBackground from './GalaxyBackground';
@@ -415,7 +415,13 @@ function CameraController({
     else if (activeCategory) {
       const activeCluster = clusters.find(c => c.category === activeCategory);
       if (activeCluster) {
-        visiblePositions.push(activeCluster.center);
+        // Add all resource positions for this category, not just cluster center
+        for (const resource of resources) {
+          if (resource.category === activeCategory) {
+            const pos = generateClusterPosition(String(resource.id), activeCluster);
+            visiblePositions.push(pos);
+          }
+        }
       }
     }
     // If matched categories from search, show those clusters
@@ -712,7 +718,7 @@ export default function InspoCanvas({
         fov: CAMERA_ANIMATION.FOV
       }}
       gl={{ alpha: false }}
-      style={{ background: '#0a0a0f' }}
+      style={{ background: '#141414' }}
     >
       {/* Immersive galaxy background */}
       <Suspense fallback={null}>

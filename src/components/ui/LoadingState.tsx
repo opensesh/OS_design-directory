@@ -58,7 +58,7 @@ export function LoadingState({
         duration={animationPresets[currentAnimIndex].duration}
         repeatCount={animationPresets[currentAnimIndex].repeatCount}
         onComplete={handleAnimationComplete}
-        dotClassName="bg-[#FE5102]/20 [&.active]:bg-[#FE5102]"
+        dotClassName="bg-[#6B7280] [&.active]:bg-[#FE5102]"
       />
       
       <p className="text-sm text-os-text-secondary-dark font-mono lowercase">
