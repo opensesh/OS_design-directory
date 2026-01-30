@@ -1,6 +1,6 @@
 import { useState, useMemo, lazy, Suspense, useCallback, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Box, Table2, Search, LayoutGrid, ArrowUpDown, Info } from 'lucide-react';
+import { Box, Table2, Search, LayoutGrid, Info } from 'lucide-react';
 import { SearchModal } from '../components/search/SearchModal';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -597,27 +597,13 @@ export default function Home() {
                 onSubCategoryChange={handleSubCategoryChange}
               />
 
-              {/* Resource count and mobile sort */}
-              <div className="flex items-center justify-center gap-3">
+              {/* Resource count */}
+              <div className="flex items-center justify-center">
                 <p className="text-sm text-os-text-secondary-dark">
-                  <span className="font-semibold text-brand-aperol">
+                  <span className="text-lg font-semibold text-brand-aperol">
                     {filteredResourceIds ? filteredResourceIds.length : filteredResources.length}
-                  </span> inspiration resources
+                  </span>{' '}design resources
                 </p>
-                
-                {/* Mobile sort dropdown */}
-                <div className="md:hidden relative">
-                  <select
-                    value={mobileSortOption}
-                    onChange={(e) => setMobileSortOption(e.target.value as MobileSortOption)}
-                    className="appearance-none bg-os-surface-dark/50 border border-os-border-dark rounded-lg pl-3 pr-8 py-1.5 text-xs text-os-text-secondary-dark focus:outline-none focus:border-brand-aperol/50"
-                  >
-                    <option value="rating">Top Rated</option>
-                    <option value="free-first">Free First</option>
-                    <option value="paid-first">Paid First</option>
-                  </select>
-                  <ArrowUpDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-os-text-tertiary-dark pointer-events-none" />
-                </div>
               </div>
             </div>
           </motion.div>
