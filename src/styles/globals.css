@@ -265,7 +265,7 @@
   }
 }
 
-/* DotLoader active state - smooth opacity transition for dots */
+/* DotLoader active state */
 .active {
   opacity: 1 !important;
   transition: opacity 60ms ease-in-out;

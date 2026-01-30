@@ -1,6 +1,6 @@
 import { useState, useMemo, lazy, Suspense, useCallback, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Box, Table2, Search, LayoutGrid, ArrowUpDown } from 'lucide-react';
+import { Box, Table2, Search, LayoutGrid, ArrowUpDown, Info } from 'lucide-react';
 import { SearchModal } from '../components/search/SearchModal';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -18,11 +18,12 @@ import {
   generateCategoryResponse,
 } from '../lib/search';
 import { performLLMSearch } from '../hooks/useLLMSearch';
+import { DotLoader } from '../components/ui/dot-loader';
+import { animationPresets } from '../lib/animation-frames';
 
 // Lazy load the 3D canvas for better initial load
 const InspoCanvas = lazy(() => import('../components/canvas/InspoCanvas'));
 import { UniverseLegend } from '../components/canvas/UniverseLegend';
-import { LoadingState } from '../components/ui/LoadingState';
 
 /**
  * Home Page
@@ -36,6 +37,7 @@ import { LoadingState } from '../components/ui/LoadingState';
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const [legendOpen, setLegendOpen] = useState(false);
 
   // Display mode from URL params
   type DisplayMode = '3d' | 'table' | 'card';
@@ -279,7 +281,7 @@ export default function Home() {
     <div className={`h-dvh text-os-text-primary-dark font-sans overflow-hidden ${displayMode === '3d' ? '' : 'bg-os-bg-dark'}`}>
       {/* 3D Canvas - FIXED BELOW HEADERS (only in 3D mode) */}
       {displayMode === '3d' && (
-        <div className="fixed inset-0 top-[124px] bottom-[220px] z-0">
+        <div className="fixed inset-x-0 top-[124px] bottom-[220px] z-0">
           {/* Top gradient - aggressive fade from dark for seamless blend */}
           <div
             className="absolute top-0 inset-x-0 h-32 pointer-events-none z-10"
@@ -288,34 +290,28 @@ export default function Home() {
           <Suspense
             fallback={
               <div className="w-full h-full flex items-center justify-center bg-os-bg-dark">
-                <LoadingState loadingText="Loading universe" />
+                <div className="flex flex-col items-center gap-4">
+                  <DotLoader
+                    frames={animationPresets[0].frames}
+                    duration={animationPresets[0].duration}
+                    repeatCount={animationPresets[0].repeatCount}
+                    dotClassName="bg-brand-aperol/20 [&.active]:bg-brand-aperol"
+                  />
+                  <span className="text-os-text-secondary-dark text-sm">Loading universe...</span>
+                </div>
               </div>
             }
           >
-            <motion.div
-              key="canvas"
-              initial={{ opacity: 0, y: 20, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{
-                duration: 0.6,
-                ease: [0.4, 0, 0.2, 1],
-                delay: 0.1
-              }}
-              className="w-full h-full"
-            >
-              <InspoCanvas
-                resources={resources}
-                activeCategory={activeCategory}
-                activeSubFilter={activeSubCategory}
-                filteredResourceIds={filteredResourceIds}
-                matchedCategories={matchedCategories}
-                onResourceClick={handleResourceClick}
-                onResourceHover={handleResourceHover}
-              />
-            </motion.div>
+            <InspoCanvas
+              resources={resources}
+              activeCategory={activeCategory}
+              activeSubFilter={activeSubCategory}
+              filteredResourceIds={filteredResourceIds}
+              matchedCategories={matchedCategories}
+              onResourceClick={handleResourceClick}
+              onResourceHover={handleResourceHover}
+            />
           </Suspense>
-          {/* Universe Legend */}
-          <UniverseLegend />
         </div>
       )}
 
@@ -469,6 +465,25 @@ export default function Home() {
                 <Table2 className="w-4 h-4" />
               </button>
             </div>
+            
+            {/* Legend Button - Only in 3D View */}
+            {displayMode === '3d' && (
+              <div className="relative ml-3">
+                <motion.button
+                  onClick={() => setLegendOpen(!legendOpen)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                  aria-label="Open legend"
+                  className="p-2.5 bg-os-surface-dark/80 backdrop-blur-xl rounded-lg border border-os-border-dark hover:border-os-border-dark/60 text-os-text-secondary-dark hover:text-brand-aperol transition-all"
+                >
+                  <Info className="w-5 h-5" />
+                </motion.button>
+                
+                {/* Legend Dropdown */}
+                <UniverseLegend isOpen={legendOpen} onClose={() => setLegendOpen(false)} />
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -545,10 +560,9 @@ export default function Home() {
             <div className="relative z-20 w-full max-w-5xl mx-auto px-6 pt-2 pb-6 space-y-3 pointer-events-auto">
               {/* AI Response - absolutely positioned to overlay without pushing layout */}
               <div className="relative">
-                <AnimatePresence mode="wait">
+                <AnimatePresence>
                   {aiMessage && (
                     <motion.div
-                      key={aiMessage.id}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
