@@ -74,9 +74,9 @@ export const DotLoader = ({
     }, [frames, isPlaying, applyFrameToDots, duration, repeatCount, onComplete]);
 
     return (
-        <div {...props} ref={gridRef} className={cn("grid w-fit grid-cols-7 gap-px", className)}>
+        <div {...props} ref={gridRef} className={cn("grid w-fit grid-cols-7 gap-1", className)}>
             {Array.from({ length: 49 }).map((_, i) => (
-                <div key={i} className={cn("size-[3px] rounded-[1px]", dotClassName)} />
+                <div key={i} className={cn("size-[8px] rounded-[1px]", dotClassName)} />
             ))}
         </div>
     );
