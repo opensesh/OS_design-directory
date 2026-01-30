@@ -58,7 +58,7 @@ export function LoadingState({
         duration={animationPresets[currentAnimIndex].duration}
         repeatCount={animationPresets[currentAnimIndex].repeatCount}
         onComplete={handleAnimationComplete}
-        dotClassName="bg-[var(--brand-aperol)]/20 [&.active]:bg-[var(--brand-aperol)]"
+        dotClassName="bg-[#FE5102]/20 [&.active]:bg-[#FE5102]"
       />
       
       <p className="text-sm text-os-text-secondary-dark font-mono lowercase">
@@ -67,7 +67,7 @@ export function LoadingState({
           <motion.span
             animate={{ opacity: [1, 0] }}
             transition={{ duration: 0.5, repeat: Infinity }}
-            className="inline-block w-0.5 h-4 bg-[var(--brand-aperol)] ml-0.5 align-middle"
+            className="inline-block w-0.5 h-4 bg-[#FE5102] ml-0.5 align-middle"
           />
         )}
       </p>
