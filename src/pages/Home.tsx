@@ -17,6 +17,7 @@ import {
   generateAIResponse,
   generateCategoryResponse,
 } from '../lib/search';
+import { performLLMSearch } from '../hooks/useLLMSearch';
 
 // Lazy load the 3D canvas for better initial load
 const InspoCanvas = lazy(() => import('../components/canvas/InspoCanvas'));
@@ -27,6 +28,8 @@ const InspoCanvas = lazy(() => import('../components/canvas/InspoCanvas'));
  * Main view for the design resource universe.
  * Features 3D orbital visualization or table view,
  * with search, filtering, and category navigation.
+ *
+ * Enhanced with LLM-powered search for complex queries.
  */
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -131,33 +134,83 @@ export default function Home() {
     }
   }, [filteredResources, mobileSortOption]);
 
-  // Handle search submission with semantic search
-  const handleSearch = (query: string) => {
+  /**
+   * Handle search submission with LLM-enhanced semantic search
+   *
+   * For simple queries (tool names, short terms): uses fast local search
+   * For complex queries (filters, concepts, comparisons): uses Claude for parsing
+   */
+  const handleSearch = useCallback(async (query: string) => {
     setSearchQuery(query);
     setIsAiTyping(true);
 
-    // Perform semantic search on ALL resources (not pre-filtered)
-    const { results, metadata } = semanticSearch(resources, query, {
-      minResults: 3,
-      maxResults: 50,
-      includeFallback: true,
-    });
+    try {
+      // Use LLM-enhanced search for intelligent query parsing
+      const searchResult = await performLLMSearch(query, {
+        enableLLM: true,
+        timeout: 5000,
+      });
 
-    // Extract matched resource IDs for filtering
-    const ids = results.map(r => r.resource.id);
-    setFilteredResourceIds(ids);
+      const { results, metadata, aiResponse, isLLMEnhanced } = searchResult;
 
-    // Extract matched categories for multi-ring highlighting
-    const categories = [...new Set(results.map(r => r.resource.category).filter(Boolean))] as string[];
-    setMatchedCategories(categories);
+      // Extract matched resource IDs for filtering
+      const ids = results.map(r => r.resource.id);
+      setFilteredResourceIds(ids);
 
-    // Generate contextual AI response based on search results and metadata
-    const aiResponse = generateAIResponse(results, metadata);
+      // Extract matched categories for multi-ring highlighting
+      const categories = [...new Set(results.map(r => r.resource.category).filter(Boolean))] as string[];
+      setMatchedCategories(categories);
 
-    messageIdRef.current += 1;
-    setAiMessage({ id: messageIdRef.current, text: aiResponse.message });
-    setIsAiTyping(false);
-  };
+      // Build response message with filter context
+      let message = aiResponse.message;
+      
+      // Add context about applied filters if LLM was used
+      if (isLLMEnhanced && metadata.appliedFilters) {
+        const filters = metadata.appliedFilters;
+        const filterParts: string[] = [];
+        
+        if (filters.pricing?.length) {
+          filterParts.push(`${filters.pricing.join(' or ')} resources`);
+        }
+        if (filters.minGravityScore !== undefined) {
+          filterParts.push(`rated ${filters.minGravityScore}+`);
+        }
+        if (filters.categories?.length) {
+          filterParts.push(`in ${filters.categories.join(', ')}`);
+        }
+        
+        if (filterParts.length > 0 && results.length > 0) {
+          message = `Found ${results.length} ${filterParts.join(', ')}.`;
+        } else if (results.length === 0 && filterParts.length > 0) {
+          message = `No resources match: ${filterParts.join(', ')}. Try broadening your search.`;
+        }
+      }
+
+      messageIdRef.current += 1;
+      setAiMessage({ id: messageIdRef.current, text: message });
+    } catch (error) {
+      console.error('Search error:', error);
+      
+      // Fallback to basic search on error
+      const { results, metadata } = semanticSearch(resources, query, {
+        minResults: 3,
+        maxResults: 50,
+        includeFallback: true,
+      });
+
+      const ids = results.map(r => r.resource.id);
+      setFilteredResourceIds(ids);
+
+      const categories = [...new Set(results.map(r => r.resource.category).filter(Boolean))] as string[];
+      setMatchedCategories(categories);
+
+      const aiResponse = generateAIResponse(results, metadata);
+      messageIdRef.current += 1;
+      setAiMessage({ id: messageIdRef.current, text: aiResponse.message });
+    } finally {
+      setIsAiTyping(false);
+    }
+  }, []);
 
   // Handle resource click
   const handleResourceClick = (resource: NormalizedResource) => {

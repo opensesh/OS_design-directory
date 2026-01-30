@@ -9,10 +9,13 @@ export {
   semanticSearch,
   quickSearch,
   getSuggestions,
+  applyHardFilters,
   type ScoredResult,
   type MatchQuality,
   type SearchMetadata,
   type SearchResponse,
+  type SearchOptions,
+  type HardFilters,
 } from './semantic-search';
 
 // AI response generation
@@ -56,3 +59,17 @@ export {
   type ValidationError,
   type ValidationResult,
 } from './validate-search-data';
+
+// LLM-enhanced search (NEW)
+export {
+  classifyQueryComplexity,
+  isSimpleQuery,
+  isComplexQuery,
+  type QueryClassification,
+} from './query-classifier';
+
+export {
+  parseQueryWithLLM,
+  createFallbackParse,
+  type ParsedQuery,
+} from './llm-query-parser';

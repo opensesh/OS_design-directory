@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { getCategoryColor } from '../../types/resource';
 
@@ -34,17 +34,57 @@ export function CategoryCard({
   const categoryColor = getCategoryColor(category);
   const [isHovered, setIsHovered] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const isReversingRef = useRef(false);
+  const animationFrameRef = useRef<number | null>(null);
+  const lastTimeRef = useRef<number>(0);
 
-  // Control video playback on hover
+  // Reverse playback using requestAnimationFrame
+  const reversePlayback = useCallback((timestamp: number) => {
+    const video = videoRef.current;
+    if (!video || !isReversingRef.current) return;
+
+    // Calculate time delta for smooth reverse (~60fps)
+    const delta = lastTimeRef.current
+      ? (timestamp - lastTimeRef.current) / 1000
+      : 0.016;
+    lastTimeRef.current = timestamp;
+
+    const newTime = video.currentTime - delta;
+
+    if (newTime <= 0) {
+      // Reached start, switch to forward playback
+      video.currentTime = 0;
+      isReversingRef.current = false;
+      video.play().catch(() => {});
+    } else {
+      video.currentTime = newTime;
+      animationFrameRef.current = requestAnimationFrame(reversePlayback);
+    }
+  }, []);
+
+  // Handle video ending - start reverse playback
+  const handleVideoEnded = useCallback(() => {
+    isReversingRef.current = true;
+    lastTimeRef.current = 0;
+    animationFrameRef.current = requestAnimationFrame(reversePlayback);
+  }, [reversePlayback]);
+
+  // Control video playback on hover with ping-pong effect
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
     if (isHovered) {
+      isReversingRef.current = false;
       video.play().catch(() => {
         // Silently handle autoplay restrictions
       });
     } else {
+      // Cancel any reverse animation
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+      isReversingRef.current = false;
       video.pause();
       video.currentTime = 0;
     }
@@ -93,9 +133,9 @@ export function CategoryCard({
               style={{ objectPosition: CATEGORY_VIDEO_POSITIONS[category] }}
               src={videoSrc}
               muted
-              loop
               playsInline
               preload="metadata"
+              onEnded={handleVideoEnded}
             />
           )}
         </div>

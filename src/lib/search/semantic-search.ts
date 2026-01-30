@@ -5,6 +5,10 @@
  * 1. Concept & Synonym Expansion
  * 2. Multi-Strategy Matching with weighted scoring
  * 3. Intelligent Fallbacks (restricted to maintain relevance)
+ *
+ * Enhanced with LLM support:
+ * - Hard filters for explicit criteria (pricing, rating, etc.)
+ * - LLM-extracted concept matching
  */
 
 import type { NormalizedResource } from '../../types/resource';
@@ -36,6 +40,20 @@ export interface ScoredResult {
 export type MatchQuality = 'high' | 'medium' | 'low' | 'fallback';
 
 /**
+ * Hard filters from LLM parsing - must match exactly
+ */
+export interface HardFilters {
+  pricing?: string[];
+  categories?: string[];
+  subCategories?: string[];
+  minGravityScore?: number;
+  maxGravityScore?: number;
+  tags?: string[];
+  featured?: boolean;
+  opensource?: boolean;
+}
+
+/**
  * Metadata about the search results
  */
 export interface SearchMetadata {
@@ -46,7 +64,13 @@ export interface SearchMetadata {
   matchedCategory: string | null;
   matchedPricing: string | null;
   originalQuery: string;
-  directMatchCount: number; // NEW: count of results above relevance threshold
+  directMatchCount: number;
+  /** Number of resources after hard filters applied */
+  filteredPoolSize?: number;
+  /** Filters that were applied */
+  appliedFilters?: HardFilters;
+  /** LLM concepts used for matching */
+  llmConcepts?: string[];
 }
 
 /**
@@ -55,6 +79,19 @@ export interface SearchMetadata {
 export interface SearchResponse {
   results: ScoredResult[];
   metadata: SearchMetadata;
+}
+
+/**
+ * Search options including LLM-enhanced features
+ */
+export interface SearchOptions {
+  minResults?: number;
+  maxResults?: number;
+  includeFallback?: boolean;
+  /** Hard filters that resources MUST match */
+  hardFilters?: HardFilters;
+  /** LLM-extracted semantic concepts for boosting */
+  llmConcepts?: string[];
 }
 
 /**
@@ -82,7 +119,79 @@ const SCORING_WEIGHTS = {
   FEATURED_BONUS: 5,      // DECREASED from 10 - featured shouldn't override relevance
   SYNONYM_MATCH: 20,      // DECREASED from 35 - synonym matches are indirect
   PRICING_MATCH: 25,      // Keep
+  LLM_CONCEPT_MATCH: 40,  // NEW - LLM-extracted concept matches
 };
+
+/**
+ * Apply hard filters to resources BEFORE scoring
+ * This ensures results MUST match the filter criteria
+ */
+export function applyHardFilters(
+  resources: NormalizedResource[],
+  filters: HardFilters | undefined
+): NormalizedResource[] {
+  if (!filters) return resources;
+
+  return resources.filter(resource => {
+    // Pricing filter (OR logic - matches any specified pricing)
+    if (filters.pricing && filters.pricing.length > 0) {
+      if (!resource.pricing) return false;
+      const resourcePricing = resource.pricing.toLowerCase();
+      const matchesPricing = filters.pricing.some(
+        p => resourcePricing === p.toLowerCase()
+      );
+      if (!matchesPricing) return false;
+    }
+
+    // Category filter (OR logic)
+    if (filters.categories && filters.categories.length > 0) {
+      if (!resource.category) return false;
+      const resourceCategory = resource.category.toLowerCase();
+      const matchesCategory = filters.categories.some(
+        c => resourceCategory === c.toLowerCase()
+      );
+      if (!matchesCategory) return false;
+    }
+
+    // SubCategory filter (OR logic)
+    if (filters.subCategories && filters.subCategories.length > 0) {
+      if (!resource.subCategory) return false;
+      const resourceSubCategory = resource.subCategory.toLowerCase();
+      const matchesSubCategory = filters.subCategories.some(
+        sc => resourceSubCategory === sc.toLowerCase()
+      );
+      if (!matchesSubCategory) return false;
+    }
+
+    // Gravity score filters (range)
+    if (filters.minGravityScore !== undefined) {
+      if (resource.gravityScore < filters.minGravityScore) return false;
+    }
+    if (filters.maxGravityScore !== undefined) {
+      if (resource.gravityScore > filters.maxGravityScore) return false;
+    }
+
+    // Tag filter (OR logic - resource must have at least one matching tag)
+    if (filters.tags && filters.tags.length > 0) {
+      if (!resource.tags || resource.tags.length === 0) return false;
+      const resourceTags = resource.tags.map(t => t.toLowerCase());
+      const matchesTag = filters.tags.some(
+        filterTag => resourceTags.some(rt => rt.includes(filterTag.toLowerCase()))
+      );
+      if (!matchesTag) return false;
+    }
+
+    // Boolean flags
+    if (filters.featured !== undefined) {
+      if (resource.featured !== filters.featured) return false;
+    }
+    if (filters.opensource !== undefined) {
+      if (resource.opensource !== filters.opensource) return false;
+    }
+
+    return true;
+  });
+}
 
 /**
  * Main semantic search function
@@ -90,16 +199,14 @@ const SCORING_WEIGHTS = {
 export function semanticSearch(
   resources: NormalizedResource[],
   query: string,
-  options: {
-    minResults?: number;
-    maxResults?: number;
-    includeFallback?: boolean;
-  } = {}
+  options: SearchOptions = {}
 ): SearchResponse {
   const {
-    minResults = 1, // CHANGED from 3 - don't pad with fallbacks by default
+    minResults = 1,
     maxResults = 50,
-    includeFallback = false, // CHANGED from true - disabled by default
+    includeFallback = false,
+    hardFilters,
+    llmConcepts,
   } = options;
 
   const normalizedQuery = query.toLowerCase().trim();
@@ -121,6 +228,29 @@ export function semanticSearch(
     };
   }
 
+  // Apply hard filters FIRST (before any scoring)
+  const filteredResources = applyHardFilters(resources, hardFilters);
+  const filteredPoolSize = filteredResources.length;
+
+  // If hard filters eliminated all resources, return empty with explanation
+  if (filteredPoolSize === 0 && hardFilters) {
+    return {
+      results: [],
+      metadata: {
+        quality: 'fallback',
+        totalResults: 0,
+        detectedConcepts: [],
+        expandedTerms: [],
+        matchedCategory: null,
+        matchedPricing: null,
+        originalQuery: query,
+        directMatchCount: 0,
+        filteredPoolSize: 0,
+        appliedFilters: hardFilters,
+      },
+    };
+  }
+
   // Layer 1: Concept & Synonym Expansion
   const detectedConcepts = detectConcepts(normalizedQuery);
   const queryTokens = tokenize(normalizedQuery);
@@ -131,11 +261,11 @@ export function semanticSearch(
     expandSynonyms(token).forEach(term => expandedTerms.add(term));
   }
 
-  // Detect category and pricing filters
+  // Detect category and pricing filters (for boosting, not hard filtering)
   const matchedCategory = resolveCategory(normalizedQuery);
   const matchedPricing = resolvePricing(normalizedQuery);
 
-  // Collect concept-boosted resource names
+  // Collect concept-boosted resource names (from static mappings)
   const conceptBoostedNames = new Set<string>();
   for (const concept of detectedConcepts) {
     const mapping = conceptMappings[concept];
@@ -149,7 +279,7 @@ export function semanticSearch(
   // Layer 2: Multi-Strategy Matching
   const scoredResults: ScoredResult[] = [];
 
-  for (const resource of resources) {
+  for (const resource of filteredResources) {
     const result = scoreResource(
       resource,
       normalizedQuery,
@@ -157,7 +287,8 @@ export function semanticSearch(
       Array.from(expandedTerms),
       conceptBoostedNames,
       matchedCategory,
-      matchedPricing
+      matchedPricing,
+      llmConcepts // Pass LLM concepts for additional scoring
     );
 
     // Only include results above the relevance threshold
@@ -181,7 +312,7 @@ export function semanticSearch(
   
   if (includeFallback && isGenericQuery && finalResults.length < minResults) {
     const fallbackResults = generateFallbacks(
-      resources,
+      filteredResources, // Use filtered pool for fallbacks too
       detectedConcepts,
       matchedCategory,
       new Set(finalResults.map(r => r.resource.id)),
@@ -203,6 +334,9 @@ export function semanticSearch(
       matchedPricing,
       originalQuery: query,
       directMatchCount,
+      filteredPoolSize,
+      appliedFilters: hardFilters,
+      llmConcepts,
     },
   };
 }
@@ -217,7 +351,8 @@ function scoreResource(
   expandedTerms: string[],
   conceptBoostedNames: Set<string>,
   matchedCategory: string | null,
-  matchedPricing: string | null
+  matchedPricing: string | null,
+  llmConcepts?: string[]
 ): ScoredResult {
   let score = 0;
   const matchReasons: string[] = [];
@@ -243,6 +378,30 @@ function scoreResource(
   if (conceptBoostedNames.has(nameLower)) {
     score += SCORING_WEIGHTS.CONCEPT_BOOST;
     matchReasons.push('concept match');
+  }
+
+  // 4b. LLM-extracted concept matching (NEW)
+  if (llmConcepts && llmConcepts.length > 0) {
+    const descriptionLower = (resource.description || '').toLowerCase();
+    const tagsLower = (resource.tags || []).map(t => t.toLowerCase());
+    
+    for (const concept of llmConcepts) {
+      const conceptLower = concept.toLowerCase();
+      
+      // Check if concept appears in description or tags
+      if (descriptionLower.includes(conceptLower)) {
+        score += SCORING_WEIGHTS.LLM_CONCEPT_MATCH;
+        matchReasons.push(`llm concept: ${concept}`);
+        break; // Only count once per resource
+      }
+      
+      // Check tags for concept match
+      if (tagsLower.some(tag => tag.includes(conceptLower) || conceptLower.includes(tag))) {
+        score += SCORING_WEIGHTS.LLM_CONCEPT_MATCH;
+        matchReasons.push(`llm concept tag: ${concept}`);
+        break;
+      }
+    }
   }
 
   // 5. Tag matching - more restrictive, only count strong matches
@@ -330,7 +489,7 @@ function scoreResource(
     }
   }
 
-  // 9. Pricing matching
+  // 9. Pricing matching (soft boost - hard filter is applied earlier)
   if (matchedPricing && resource.pricing) {
     const pricingLower = resource.pricing.toLowerCase();
     if (
