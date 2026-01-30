@@ -3,6 +3,11 @@
  *
  * Securely proxies Claude API calls to parse search queries
  * into structured filters and semantic concepts.
+ *
+ * Features:
+ * - Claude Sonnet for high-quality query understanding
+ * - Per-IP rate limiting (10 req/min, 100 req/day)
+ * - Graceful fallback on errors
  */
 
 import Anthropic from '@anthropic-ai/sdk';
@@ -10,6 +15,65 @@ import Anthropic from '@anthropic-ai/sdk';
 export const config = {
   runtime: 'edge',
 };
+
+/**
+ * Rate limiting configuration
+ */
+const RATE_LIMITS = {
+  REQUESTS_PER_MINUTE: 10,
+  REQUESTS_PER_DAY: 100,
+};
+
+/**
+ * In-memory rate limit tracking (resets on cold start)
+ * For production, consider using Vercel KV or Redis
+ */
+const rateLimitStore = new Map<string, {
+  minuteCount: number;
+  minuteResetTime: number;
+  dayCount: number;
+  dayResetTime: number;
+}>();
+
+/**
+ * Check and update rate limits for an IP
+ */
+function checkRateLimit(ip: string): { allowed: boolean; reason?: string } {
+  const now = Date.now();
+  const record = rateLimitStore.get(ip) || {
+    minuteCount: 0,
+    minuteResetTime: now + 60000,      // 1 minute
+    dayCount: 0,
+    dayResetTime: now + 86400000,      // 24 hours
+  };
+
+  // Reset minute counter if window expired
+  if (now > record.minuteResetTime) {
+    record.minuteCount = 0;
+    record.minuteResetTime = now + 60000;
+  }
+
+  // Reset day counter if window expired
+  if (now > record.dayResetTime) {
+    record.dayCount = 0;
+    record.dayResetTime = now + 86400000;
+  }
+
+  // Check limits
+  if (record.minuteCount >= RATE_LIMITS.REQUESTS_PER_MINUTE) {
+    return { allowed: false, reason: 'Rate limit exceeded: too many requests per minute' };
+  }
+  if (record.dayCount >= RATE_LIMITS.REQUESTS_PER_DAY) {
+    return { allowed: false, reason: 'Rate limit exceeded: daily limit reached' };
+  }
+
+  // Increment counters
+  record.minuteCount++;
+  record.dayCount++;
+  rateLimitStore.set(ip, record);
+
+  return { allowed: true };
+}
 
 /**
  * System prompt for query parsing
@@ -62,7 +126,7 @@ Return JSON with this structure:
 
 Examples:
 - "free tools rated over 9" → {"intent":"filter","filters":{"pricing":["Free"],"minGravityScore":9},"concepts":[],"semanticTerms":["tools"],"confidence":"high"}
-- "mood board tools" → {"intent":"find","filters":{},"concepts":["visual inspiration","design curation","image collection","pinterest-like","collage"],"semanticTerms":["mood board"],"confidence":"medium"}
+- "mood board tools" → {"intent":"find","filters":{},"concepts":["visual inspiration","design curation","image collection","pinterest-like","collage","moodboard"],"semanticTerms":["mood board"],"confidence":"medium"}
 - "alternatives to Figma" → {"intent":"compare","filters":{"categories":["Tools"]},"concepts":["design tool","ui design","prototyping"],"semanticTerms":[],"confidence":"high","comparisonTarget":"Figma"}
 
 Now parse: "${query}"`;
@@ -75,6 +139,33 @@ export default async function handler(req: Request): Promise<Response> {
       status: 405,
       headers: { 'Content-Type': 'application/json' },
     });
+  }
+
+  // Get client IP for rate limiting
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+             req.headers.get('x-real-ip') ||
+             'unknown';
+
+  // Check rate limit
+  const rateLimitResult = checkRateLimit(ip);
+  if (!rateLimitResult.allowed) {
+    return new Response(
+      JSON.stringify({ 
+        error: rateLimitResult.reason,
+        intent: 'find',
+        filters: {},
+        concepts: [],
+        semanticTerms: [],
+        confidence: 'low',
+      }),
+      {
+        status: 429,
+        headers: { 
+          'Content-Type': 'application/json',
+          'Retry-After': '60',
+        },
+      }
+    );
   }
 
   // Parse request body
@@ -114,9 +205,9 @@ export default async function handler(req: Request): Promise<Response> {
       apiKey,
     });
 
-    // Call Claude Haiku for fast, cost-effective parsing
+    // Call Claude Sonnet for high-quality query understanding
     const response = await anthropic.messages.create({
-      model: 'claude-3-5-haiku-20241022',
+      model: 'claude-sonnet-4-20250514',
       max_tokens: 500,
       system: SYSTEM_PROMPT,
       messages: [
