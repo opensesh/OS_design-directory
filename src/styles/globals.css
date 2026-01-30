@@ -264,3 +264,9 @@
     -webkit-text-stroke: 0.5px rgba(255, 250, 238, 0.15);
   }
 }
+
+/* DotLoader active state - smooth opacity transition for dots */
+.active {
+  opacity: 1 !important;
+  transition: opacity 60ms ease-in-out;
+}

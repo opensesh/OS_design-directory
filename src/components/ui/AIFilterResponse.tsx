@@ -70,7 +70,7 @@ export function AIFilterResponse({
     };
 
     // Start typing after a brief delay
-    const startTimeout = setTimeout(typeNextChar, 300);
+    const startTimeout = setTimeout(typeNextChar, 100);
 
     return () => clearTimeout(startTimeout);
   }, [message, messageId]);
@@ -105,15 +105,9 @@ export function AIFilterResponse({
   }, [isComplete, message, messageId, autoFadeDelay, onDismiss]);
 
   return (
-    <AnimatePresence>
+    <>
       {message && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.25, ease: 'easeOut' }}
-          className="w-full max-w-3xl mx-auto"
-        >
+        <div className="w-full max-w-3xl mx-auto">
           <div className="bg-os-surface-dark/80 backdrop-blur-sm rounded-lg border border-os-border-dark p-3 relative">
             {/* Dismiss button */}
             <button
@@ -154,8 +148,8 @@ export function AIFilterResponse({
               )}
             </AnimatePresence>
           </div>
-        </motion.div>
+        </div>
       )}
-    </AnimatePresence>
+    </>
   );
 }

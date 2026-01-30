@@ -21,6 +21,7 @@ import { performLLMSearch } from '../hooks/useLLMSearch';
 
 // Lazy load the 3D canvas for better initial load
 const InspoCanvas = lazy(() => import('../components/canvas/InspoCanvas'));
+import { LoadingState } from '../components/ui/LoadingState';
 
 /**
  * Home Page
@@ -286,22 +287,31 @@ export default function Home() {
           <Suspense
             fallback={
               <div className="w-full h-full flex items-center justify-center bg-os-bg-dark">
-                <div className="flex flex-col items-center gap-4">
-                  <div className="w-10 h-10 border-2 border-brand-aperol border-t-transparent rounded-full animate-spin" />
-                  <span className="text-os-text-secondary-dark text-sm">Loading universe...</span>
-                </div>
+                <LoadingState loadingText="Loading universe" />
               </div>
             }
           >
-            <InspoCanvas
-              resources={resources}
-              activeCategory={activeCategory}
-              activeSubFilter={activeSubCategory}
-              filteredResourceIds={filteredResourceIds}
-              matchedCategories={matchedCategories}
-              onResourceClick={handleResourceClick}
-              onResourceHover={handleResourceHover}
-            />
+            <motion.div
+              key="canvas"
+              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{
+                duration: 0.6,
+                ease: [0.4, 0, 0.2, 1],
+                delay: 0.1
+              }}
+              className="w-full h-full"
+            >
+              <InspoCanvas
+                resources={resources}
+                activeCategory={activeCategory}
+                activeSubFilter={activeSubCategory}
+                filteredResourceIds={filteredResourceIds}
+                matchedCategories={matchedCategories}
+                onResourceClick={handleResourceClick}
+                onResourceHover={handleResourceHover}
+              />
+            </motion.div>
           </Suspense>
         </div>
       )}
@@ -532,9 +542,10 @@ export default function Home() {
             <div className="relative z-20 w-full max-w-5xl mx-auto px-6 pt-2 pb-6 space-y-3 pointer-events-auto">
               {/* AI Response - absolutely positioned to overlay without pushing layout */}
               <div className="relative">
-                <AnimatePresence>
+                <AnimatePresence mode="wait">
                   {aiMessage && (
                     <motion.div
+                      key={aiMessage.id}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
