@@ -57,7 +57,8 @@ export default function Home() {
   const [matchedCategories, setMatchedCategories] = useState<string[]>([]);
 
   // AI response state
-  const [aiMessage, setAiMessage] = useState<string | null>(null);
+  const messageIdRef = useRef(0);
+  const [aiMessage, setAiMessage] = useState<{ id: number; text: string } | null>(null);
   const [isAiTyping, setIsAiTyping] = useState(false);
 
   // Tooltip state
@@ -189,7 +190,8 @@ export default function Home() {
     if (category) {
       const categoryResources = resources.filter(r => r.category === category);
       const response = generateCategoryResponse(category, categoryResources.length);
-      setAiMessage(response.message);
+      messageIdRef.current += 1;
+      setAiMessage({ id: messageIdRef.current, text: response.message });
     } else {
       setAiMessage(null);
     }
@@ -204,12 +206,14 @@ export default function Home() {
       const filtered = resources.filter(
         r => r.category === activeCategory && r.subCategory === subCategory
       );
-      setAiMessage(`Showing ${filtered.length} ${subCategory.toLowerCase()} resources.`);
+      messageIdRef.current += 1;
+      setAiMessage({ id: messageIdRef.current, text: `Showing ${filtered.length} ${subCategory.toLowerCase()} resources.` });
     } else if (activeCategory) {
       // Reset to just category message
       const categoryResources = resources.filter(r => r.category === activeCategory);
       const response = generateCategoryResponse(activeCategory, categoryResources.length);
-      setAiMessage(response.message);
+      messageIdRef.current += 1;
+      setAiMessage({ id: messageIdRef.current, text: response.message });
     } else {
       setAiMessage(null);
     }
