@@ -3,10 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 
 interface AIFilterResponseProps {
+  messageId?: number;
   message: string | null;
   isTyping: boolean;
   onDismiss: () => void;
   matchCount?: number;
+  autoFadeDelay?: number;
 }
 
 /**
@@ -16,15 +18,19 @@ interface AIFilterResponseProps {
  * Shows when the user asks a natural language question to filter resources.
  */
 export function AIFilterResponse({
+  messageId,
   message,
   isTyping: _isTyping,
   onDismiss,
   matchCount,
+  autoFadeDelay = 4000,
 }: AIFilterResponseProps) {
   // Note: _isTyping is available for future loading state UI
   const [displayedText, setDisplayedText] = useState('');
   const [isComplete, setIsComplete] = useState(false);
   const charIndexRef = useRef(0);
+  const autoFadeTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const currentMessageIdRef = useRef<number | undefined>(undefined);
 
   // Typewriter effect
   useEffect(() => {
@@ -67,7 +73,36 @@ export function AIFilterResponse({
     const startTimeout = setTimeout(typeNextChar, 300);
 
     return () => clearTimeout(startTimeout);
-  }, [message]);
+  }, [message, messageId]);
+
+  // Auto-fade timer - dismiss message after delay when typing completes
+  useEffect(() => {
+    // Clear any existing timer
+    if (autoFadeTimerRef.current) {
+      clearTimeout(autoFadeTimerRef.current);
+      autoFadeTimerRef.current = null;
+    }
+
+    // Track current message ID to prevent stale dismissals
+    currentMessageIdRef.current = messageId;
+
+    // Only start auto-fade timer when typing is complete
+    if (isComplete && message) {
+      autoFadeTimerRef.current = setTimeout(() => {
+        // Only dismiss if this is still the current message
+        if (currentMessageIdRef.current === messageId) {
+          onDismiss();
+        }
+      }, autoFadeDelay);
+    }
+
+    return () => {
+      if (autoFadeTimerRef.current) {
+        clearTimeout(autoFadeTimerRef.current);
+        autoFadeTimerRef.current = null;
+      }
+    };
+  }, [isComplete, message, messageId, autoFadeDelay, onDismiss]);
 
   return (
     <AnimatePresence>
