@@ -599,10 +599,11 @@ export default function Home() {
 
               {/* Resource count */}
               <div className="flex items-center justify-center">
-                <p className="text-sm text-os-text-secondary-dark">
+                <p className="flex items-center gap-2 text-sm text-os-text-secondary-dark">
                   <span className="text-lg font-semibold text-brand-aperol">
                     {filteredResourceIds ? filteredResourceIds.length : filteredResources.length}
-                  </span>{' '}design resources
+                  </span>
+                  <span>design resources</span>
                 </p>
               </div>
             </div>
