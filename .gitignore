@@ -29,5 +29,3 @@ dist-ssr
 .env.*.local
 .env.development
 .env.production
-.vercel
-.env*.local

@@ -1,0 +1,16 @@
+{
+  "projectId": "prj_jbCAnabDMZarGVm0mgtRchLwnBNd",
+  "orgId": "team_YecnL2AUsfoaE4aiZ3EcNnMf",
+  "projectName": "design-directory",
+  "settings": {
+    "createdAt": 1769797201176,
+    "framework": "vite",
+    "devCommand": null,
+    "installCommand": null,
+    "buildCommand": null,
+    "outputDirectory": null,
+    "rootDirectory": null,
+    "directoryListing": false,
+    "nodeVersion": "24.x"
+  }
+}

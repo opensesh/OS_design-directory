@@ -3,7 +3,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Environment } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import * as THREE from 'three';
-import { calculateCategoryClusters, calculateBoundingSphere, generateClusterPosition, type CategoryCluster } from '../../utils/orbital-layout';
+import { calculateCategoryClusters, calculateBoundingSphere, type CategoryCluster } from '../../utils/orbital-layout';
 import ResourceNodes, { type ResourceNodesHandle } from './ResourceNodes';
 import SaturnRings from './SaturnRings';
 import GalaxyBackground from './GalaxyBackground';
@@ -415,13 +415,7 @@ function CameraController({
     else if (activeCategory) {
       const activeCluster = clusters.find(c => c.category === activeCategory);
       if (activeCluster) {
-        // Add all resource positions for this category, not just cluster center
-        for (const resource of resources) {
-          if (resource.category === activeCategory) {
-            const pos = generateClusterPosition(String(resource.id), activeCluster);
-            visiblePositions.push(pos);
-          }
-        }
+        visiblePositions.push(activeCluster.center);
       }
     }
     // If matched categories from search, show those clusters
@@ -479,13 +473,148 @@ function CameraController({
     animationProgressRef.current += delta * 2; // ~0.5 second animation
 
     if (animationProgressRef.current >= 1) {
-      // Re-enable OrbitControls after animation completes
-      if (controlsRef.current) {
-        controlsRef.current.enabled = true;
-      }
-      // Animation complete - stop animating
+      // Animation complete
       isCameraAnimatingRef.current = false;
       animationProgressRef.current = 1;
+      
+      // Final position/lookAt sync (eliminate floating-point drift)
+      camera.position.copy(targetPositionRef.current);
+      camera.lookAt(targetLookAtRef.current);
+      
+      // Sync OrbitControls target to final lookAt position
+      if (controlsRef.current) {
+        controlsRef.current.target.copy(targetLookAtRef.current);
+        controlsRef.current.update(); // Force recalculate controls state
+        controlsRef.current.enabled = true; // Re-enable after sync
+      }
+      
+      return; // Exit early, don't run interpolation
+    }
+    if (animationProgressRef.current >= 1) {
+      // Animation complete
+      isCameraAnimatingRef.current = false;
+      animationProgressRef.current = 1;
+      
+      // Final position/lookAt sync (eliminate floating-point drift)
+      camera.position.copy(targetPositionRef.current);
+      camera.lookAt(targetLookAtRef.current);
+      
+      // Sync OrbitControls target to final lookAt position
+      if (controlsRef.current) {
+        controlsRef.current.target.copy(targetLookAtRef.current);
+        controlsRef.current.update(); // Force recalculate controls state
+        controlsRef.current.enabled = true; // Re-enable after sync
+      }
+      
+      return; // Exit early, don't run interpolation
+    }
+    if (animationProgressRef.current >= 1) {
+      // Animation complete
+      isCameraAnimatingRef.current = false;
+      animationProgressRef.current = 1;
+      
+      // Final position/lookAt sync (eliminate floating-point drift)
+      camera.position.copy(targetPositionRef.current);
+      camera.lookAt(targetLookAtRef.current);
+      
+      // Sync OrbitControls target to final lookAt position
+      if (controlsRef.current) {
+        controlsRef.current.target.copy(targetLookAtRef.current);
+        controlsRef.current.update(); // Force recalculate controls state
+        controlsRef.current.enabled = true; // Re-enable after sync
+      }
+      
+      return; // Exit early, don't run interpolation
+    }
+    if (animationProgressRef.current >= 1) {
+      // Animation complete
+      isCameraAnimatingRef.current = false;
+      animationProgressRef.current = 1;
+      
+      // Final position/lookAt sync (eliminate floating-point drift)
+      camera.position.copy(targetPositionRef.current);
+      camera.lookAt(targetLookAtRef.current);
+      
+      // Sync OrbitControls target to final lookAt position
+      if (controlsRef.current) {
+        controlsRef.current.target.copy(targetLookAtRef.current);
+        controlsRef.current.update(); // Force recalculate controls state
+        controlsRef.current.enabled = true; // Re-enable after sync
+      }
+      
+      return; // Exit early, don't run interpolation
+    }
+    if (animationProgressRef.current >= 1) {
+      // Animation complete
+      isCameraAnimatingRef.current = false;
+      animationProgressRef.current = 1;
+      
+      // Final position/lookAt sync (eliminate floating-point drift)
+      camera.position.copy(targetPositionRef.current);
+      camera.lookAt(targetLookAtRef.current);
+      
+      // Sync OrbitControls target to final lookAt position
+      if (controlsRef.current) {
+        controlsRef.current.target.copy(targetLookAtRef.current);
+        controlsRef.current.update(); // Force recalculate controls state
+        controlsRef.current.enabled = true; // Re-enable after sync
+      }
+      
+      return; // Exit early, don't run interpolation
+    }
+    if (animationProgressRef.current >= 1) {
+      // Animation complete
+      isCameraAnimatingRef.current = false;
+      animationProgressRef.current = 1;
+      
+      // Final position/lookAt sync (eliminate floating-point drift)
+      camera.position.copy(targetPositionRef.current);
+      camera.lookAt(targetLookAtRef.current);
+      
+      // Sync OrbitControls target to final lookAt position
+      if (controlsRef.current) {
+        controlsRef.current.target.copy(targetLookAtRef.current);
+        controlsRef.current.update(); // Force recalculate controls state
+        controlsRef.current.enabled = true; // Re-enable after sync
+      }
+      
+      return; // Exit early, don't run interpolation
+    }
+    if (animationProgressRef.current >= 1) {
+      // Animation complete
+      isCameraAnimatingRef.current = false;
+      animationProgressRef.current = 1;
+      
+      // Final position/lookAt sync (eliminate floating-point drift)
+      camera.position.copy(targetPositionRef.current);
+      camera.lookAt(targetLookAtRef.current);
+      
+      // Sync OrbitControls target to final lookAt position
+      if (controlsRef.current) {
+        controlsRef.current.target.copy(targetLookAtRef.current);
+        controlsRef.current.update(); // Force recalculate controls state
+        controlsRef.current.enabled = true; // Re-enable after sync
+      }
+      
+      return; // Exit early, don't run interpolation
+    }
+    if (animationProgressRef.current >= 1) {
+      // Animation complete
+      isCameraAnimatingRef.current = false;
+      animationProgressRef.current = 1;
+      
+      // Final position/lookAt sync (eliminate floating-point drift)
+      camera.position.copy(targetPositionRef.current);
+      camera.lookAt(targetLookAtRef.current);
+      
+      // Sync OrbitControls target to final lookAt position
+      if (controlsRef.current) {
+        controlsRef.current.target.copy(targetLookAtRef.current);
+        controlsRef.current.update(); // Force recalculate controls state
+        controlsRef.current.enabled = true; // Re-enable after sync
+      }
+      
+      return; // Exit early, don't run interpolation
     }
 
     // Ease out cubic for smooth deceleration
@@ -718,7 +847,7 @@ export default function InspoCanvas({
         fov: CAMERA_ANIMATION.FOV
       }}
       gl={{ alpha: false }}
-      style={{ background: '#141414' }}
+      style={{ background: '#0a0a0f' }}
     >
       {/* Immersive galaxy background */}
       <Suspense fallback={null}>

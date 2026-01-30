@@ -197,10 +197,8 @@ export default function NebulaPlanes({
   // Load smoke texture
   const texture = useTexture('/textures/clouds/smoke.png');
 
-  const hasAnyFilter = useMemo(() => {
+  const hasAnyFilter = activeCategory !== null || (matchedCategories !== undefined && matchedCategories.length > 0);
 
-    return activeCategory !== null || (matchedCategories !== undefined && matchedCategories.length > 0);
-  }, [activeCategory, matchedCategories]);
   if (clusters.length === 0) return null;
 
   return (
