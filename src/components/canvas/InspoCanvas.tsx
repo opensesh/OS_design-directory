@@ -32,21 +32,21 @@ const CAMERA_ANIMATION = {
 const LAYER_TIMING = {
   skybox: {
     startDelay: 0,
-    duration: 1000,
+    duration: 800,    // Faster fade-in
   },
   nebula: {
-    startDelay: 400,    // Overlaps with skybox
-    duration: 800,
+    startDelay: 100,  // Much sooner (was 400)
+    duration: 600,
   },
   nodes: {
-    startDelay: 800,    // Overlaps with nebula
-    staggerDelay: 15,   // Faster stagger for smoother wave
-    duration: 600,
+    startDelay: 200,  // Much sooner (was 800)
+    staggerDelay: 12, // Slightly faster stagger
+    duration: 500,
   },
   saturnRings: {
-    startDelay: 1000,   // Starts as nodes begin appearing
-    staggerDelay: 15,
-    duration: 600,
+    startDelay: 300,  // Much sooner (was 1000)
+    staggerDelay: 12,
+    duration: 500,
   },
 } as const;
 
@@ -788,7 +788,7 @@ export default function InspoCanvas({
         fov: CAMERA_ANIMATION.FOV
       }}
       gl={{ alpha: false }}
-      style={{ background: '#0a0a0f' }}
+      style={{ background: '#141414' }}
     >
       {/* Immersive galaxy background */}
       <Suspense fallback={null}>

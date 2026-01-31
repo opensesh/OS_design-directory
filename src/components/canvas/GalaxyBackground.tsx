@@ -10,7 +10,7 @@ import { generateStarfieldLayout } from '../../utils/particle-layouts';
 const LAYER_TIMING = {
   skybox: {
     startDelay: 0,
-    duration: 1000,
+    duration: 800,    // Faster fade-in
   },
 } as const;
 
@@ -197,7 +197,7 @@ export default function GalaxyBackground({
   showStarfield = true,
   masterStartTime,
 }: GalaxyBackgroundProps) {
-  const [skyboxOpacity, setSkyboxOpacity] = useState(0);
+  const [skyboxOpacity, setSkyboxOpacity] = useState(0.15);
 
   // Calculate opacity based on master timeline
   useFrame(() => {
