@@ -719,6 +719,26 @@ export default function Home() {
         }}
       />
 
+      {/* Legend Dropdown - needs to be outside overlay for proper z-index */}
+      <AnimatePresence>
+        {legendOpen && legendButtonRect && (
+          <motion.div
+            key="legend-dropdown"
+            className="fixed z-[300]"
+            style={{
+              top: legendButtonRect.bottom + 8,
+              right: window.innerWidth - legendButtonRect.right,
+            }}
+            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            transition={{ duration: 0.15 }}
+          >
+            <UniverseLegend isOpen={legendOpen} onClose={() => setLegendOpen(false)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 }
