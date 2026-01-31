@@ -304,7 +304,7 @@ export default function Home() {
           </Suspense>
           
           {/* Legend Button - Aligned with content container */}
-          <div className="absolute top-16 inset-x-0 z-20 pointer-events-none">
+          <div className="absolute top-20 md:top-10 lg:top-12 inset-x-0 z-20 pointer-events-none">
             <div className="max-w-7xl mx-auto px-6">
               <div className="flex justify-end pointer-events-auto">
                 <div className="relative">
@@ -320,11 +320,20 @@ export default function Home() {
                   </motion.button>
                   
                   {/* Legend Dropdown - positioned absolutely below button */}
-                  {legendOpen && (
-                    <div className="absolute top-full right-0 mt-2">
-                      <UniverseLegend isOpen={legendOpen} onClose={() => setLegendOpen(false)} />
-                    </div>
-                  )}
+                  <AnimatePresence>
+                    {legendOpen && (
+                      <motion.div
+                        key="legend-dropdown"
+                        className="absolute top-full right-0 mt-2"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.15 }}
+                      >
+                        <UniverseLegend isOpen={legendOpen} onClose={() => setLegendOpen(false)} />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
             </div>
