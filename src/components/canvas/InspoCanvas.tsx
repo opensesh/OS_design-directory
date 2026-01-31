@@ -613,6 +613,7 @@ interface GalaxySystemProps {
   clickedIndex: number | null;
   masterStartTime: number;
   resourceNodesRef: React.RefObject<ResourceNodesHandle>;
+  onReady?: () => void;
 }
 
 function GalaxySystem({
@@ -628,12 +629,16 @@ function GalaxySystem({
   clickedIndex,
   masterStartTime,
   resourceNodesRef,
+  onReady,
 }: GalaxySystemProps) {
   const groupRef = useRef<THREE.Group>(null);
   
   // Layer progress for smooth overlapping transitions
   const layerProgressRef = useRef({ skybox: 0, nebula: 0, nodes: 0, rings: 0 });
   const [layerProgress, setLayerProgress] = useState({ skybox: 0, nebula: 0, nodes: 0, rings: 0 });
+  
+  // Track whether onReady has been called
+  const hasCalledOnReady = useRef(false);
 
   // Slow rotation - pause when hovering for easier interaction
   useFrame((_, delta) => {
@@ -666,6 +671,17 @@ function GalaxySystem({
     ) {
       layerProgressRef.current = newProgress;
       setLayerProgress(newProgress);
+    }
+    
+    // Check if ready to fire onReady callback
+    if (
+      !hasCalledOnReady.current &&
+      layerProgressRef.current.skybox >= 0.95 &&
+      layerProgressRef.current.nebula >= 0.95 &&
+      layerProgressRef.current.nodes >= 0.5
+    ) {
+      hasCalledOnReady.current = true;
+      onReady?.();
     }
   });
 
@@ -748,6 +764,7 @@ interface InspoCanvasProps {
   matchedCategories?: string[];
   onResourceHover?: (resource: NormalizedResource | null, mousePosition: { x: number; y: number }) => void;
   onResourceClick?: (resource: NormalizedResource) => void;
+  onReady?: () => void;
 }
 
 /**
@@ -768,6 +785,7 @@ export default function InspoCanvas({
   matchedCategories,
   onResourceHover,
   onResourceClick,
+  onReady,
 }: InspoCanvasProps) {
   
   const masterStartTimeRef = useRef<number>(Date.now());
@@ -893,6 +911,7 @@ export default function InspoCanvas({
           clickedIndex={clickedIndex}
           masterStartTime={masterStartTimeRef.current}
           resourceNodesRef={resourceNodesRef}
+          onReady={onReady}
         />
       </Suspense>
 
