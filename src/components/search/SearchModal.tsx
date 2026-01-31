@@ -27,6 +27,8 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
   const [mounted, setMounted] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   const { query, setQuery, groupedResults, defaultResults, isSearching, clearSearch } = useResourceSearch({
     debounceMs: 100,
@@ -68,10 +70,14 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
     setMounted(true);
   }, []);
 
-  // Focus input when modal opens
+  // Focus input when modal opens, restore focus on close
   useEffect(() => {
-    if (isOpen && inputRef.current) {
+    if (isOpen) {
+      previousFocusRef.current = document.activeElement as HTMLElement;
       setTimeout(() => inputRef.current?.focus(), 50);
+    } else if (previousFocusRef.current) {
+      previousFocusRef.current.focus();
+      previousFocusRef.current = null;
     }
   }, [isOpen]);
 
@@ -108,6 +114,15 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         onClose();
+      } else if (e.key === 'Tab') {
+        // Focus trap: cycle between input and close button
+        if (e.shiftKey && document.activeElement === inputRef.current) {
+          e.preventDefault();
+          closeButtonRef.current?.focus();
+        } else if (!e.shiftKey && document.activeElement === closeButtonRef.current) {
+          e.preventDefault();
+          inputRef.current?.focus();
+        }
       } else if (e.key === 'ArrowDown') {
         e.preventDefault();
         setSelectedIndex(prev =>
@@ -229,6 +244,9 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
 
           {/* Modal - centered using flex */}
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="search-modal-title"
             className="fixed inset-0 z-[201] flex items-start justify-center pt-[12vh] px-4"
             onClick={onClose}
           >
@@ -248,6 +266,7 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
               onClick={(e) => e.stopPropagation()}
             >
               {/* Search Input */}
+              <h2 id="search-modal-title" className="sr-only">Search resources</h2>
               <div className="flex items-center gap-3 px-5 py-4 border-b border-os-border-dark">
                 <Search className="w-5 h-5 text-os-text-secondary-dark flex-shrink-0" />
                 <input
@@ -270,7 +289,9 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
                     <Command className="w-2.5 h-2.5" />K
                   </kbd>
                   <button
+                    ref={closeButtonRef}
                     onClick={onClose}
+                    aria-label="Close search"
                     className="
                       p-1 rounded-md
                       text-os-text-secondary-dark hover:text-os-text-primary-dark
