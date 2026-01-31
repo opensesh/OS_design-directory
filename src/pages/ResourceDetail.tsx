@@ -443,7 +443,7 @@ export default function ResourceDetail() {
                       href={resource.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group inline-flex items-center gap-2"
+                      className="group flex items-center gap-2"
                     >
                       <h1 className="text-2xl md:text-3xl font-bold tracking-tight group-hover:text-[#FE5102] transition-colors">
                         {resource.name}
@@ -461,7 +461,7 @@ export default function ResourceDetail() {
                       href={resource.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group inline-flex items-center gap-1.5 text-zinc-400 hover:text-[#FE5102] transition-colors mt-1"
+                      className="group flex items-center gap-1.5 text-zinc-400 hover:text-[#FE5102] transition-colors mt-1"
                     >
                       <Globe className="w-3.5 h-3.5" />
                       <span className="text-sm truncate">{domain}</span>
