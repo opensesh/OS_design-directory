@@ -21,6 +21,7 @@ import { performLLMSearch } from '../hooks/useLLMSearch';
 
 // Lazy load the 3D canvas for better initial load
 const InspoCanvas = lazy(() => import('../components/canvas/InspoCanvas'));
+import { AILoader } from '../components/ui/AILoader';
 import { UniverseLegend } from '../components/canvas/UniverseLegend';
 
 /**
@@ -36,6 +37,10 @@ export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [legendOpen, setLegendOpen] = useState(false);
+  
+  // Universe loading state - only for initial 3D load
+  const [universeReady, setUniverseReady] = useState(false);
+  const [showLoader, setShowLoader] = useState(true);
 
   // Display mode from URL params
   type DisplayMode = '3d' | 'table' | 'card';
@@ -327,23 +332,44 @@ export default function Home() {
             className="absolute top-0 inset-x-0 h-32 pointer-events-none z-10"
             style={{ background: 'linear-gradient(to bottom, rgba(20,20,20,1) 0%, rgba(20,20,20,0.8) 40%, transparent 100%)' }}
           />
-          <Suspense
-            fallback={
-              <div className="w-full h-full flex items-center justify-center bg-os-bg-dark">
-                <span className="text-os-text-secondary-dark text-sm">Loading universe...</span>
-              </div>
-            }
+          {/* Loader overlay */}
+          <AnimatePresence>
+            {showLoader && (
+              <motion.div
+                key="loader"
+                initial={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+                className="absolute inset-0 z-50 bg-os-bg-dark"
+              >
+                <AILoader />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Universe with fade-in */}
+          <motion.div
+            className="w-full h-full"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: universeReady ? 1 : 0 }}
+            transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
           >
-            <InspoCanvas
-              resources={resources}
-              activeCategory={activeCategory}
-              activeSubFilter={activeSubCategory}
-              filteredResourceIds={filteredResourceIds}
-              matchedCategories={matchedCategories}
-              onResourceClick={handleResourceClick}
-              onResourceHover={handleResourceHover}
-            />
-          </Suspense>
+            <Suspense fallback={null}>
+              <InspoCanvas
+                resources={resources}
+                activeCategory={activeCategory}
+                activeSubFilter={activeSubCategory}
+                filteredResourceIds={filteredResourceIds}
+                matchedCategories={matchedCategories}
+                onResourceClick={handleResourceClick}
+                onResourceHover={handleResourceHover}
+                onReady={() => {
+                  setUniverseReady(true);
+                  setTimeout(() => setShowLoader(false), 300);
+                }}
+              />
+            </Suspense>
+          </motion.div>
           
           {/* Legend Button - Aligned with content container */}
           <div className="absolute top-10 inset-x-0 z-20 pointer-events-none">
