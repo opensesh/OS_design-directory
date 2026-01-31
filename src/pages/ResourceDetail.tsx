@@ -221,7 +221,7 @@ export default function ResourceDetail() {
     <div className="min-h-screen bg-[#141414] text-[#FFFAEE]">
       {/* Header - Consistent with Home */}
       <header className="sticky top-0 z-10 bg-os-bg-dark/80 backdrop-blur-xl border-b border-os-border-dark/50">
-        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           {/* Left: Logo + Wordmark */}
           <Link
             to="/"
@@ -287,7 +287,7 @@ export default function ResourceDetail() {
 
       {/* Subheader - Visible on all viewports */}
       <section className="border-b border-os-border-dark/50 bg-os-bg-dark">
-        <div className="max-w-5xl mx-auto px-6 py-3 md:py-4">
+        <div className="max-w-7xl mx-auto px-6 py-3 md:py-4">
           <div className="flex items-center justify-between">
             {/* Left: Breadcrumbs */}
             <nav className="flex items-center gap-1.5 text-sm min-w-0">
