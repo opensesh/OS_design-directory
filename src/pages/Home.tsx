@@ -253,12 +253,25 @@ export default function Home() {
     setFilteredResourceIds(null);  // Clear search filter
     setMatchedCategories([]);       // Clear matched categories
 
+    // Update URL params to stay in sync
     if (category) {
+      setSearchParams(prev => {
+        const next = new URLSearchParams(prev);
+        next.set('category', category);
+        next.delete('subCategory');
+        return next;
+      });
       const categoryResources = resources.filter(r => r.category === category);
       const response = generateCategoryResponse(category, categoryResources.length);
       messageIdRef.current += 1;
       setAiMessage({ id: messageIdRef.current, text: response.message });
     } else {
+      setSearchParams(prev => {
+        const next = new URLSearchParams(prev);
+        next.delete('category');
+        next.delete('subCategory');
+        return next;
+      });
       setAiMessage(null);
     }
   };
@@ -268,13 +281,24 @@ export default function Home() {
     setActiveSubCategory(subCategory);
     setSearchQuery('');
 
+    // Update URL params to stay in sync
     if (subCategory && activeCategory) {
+      setSearchParams(prev => {
+        const next = new URLSearchParams(prev);
+        next.set('subCategory', subCategory);
+        return next;
+      });
       const filtered = resources.filter(
         r => r.category === activeCategory && r.subCategory === subCategory
       );
       messageIdRef.current += 1;
       setAiMessage({ id: messageIdRef.current, text: `Showing ${filtered.length} ${subCategory.toLowerCase()} resources.` });
     } else if (activeCategory) {
+      setSearchParams(prev => {
+        const next = new URLSearchParams(prev);
+        next.delete('subCategory');
+        return next;
+      });
       // Reset to just category message
       const categoryResources = resources.filter(r => r.category === activeCategory);
       const response = generateCategoryResponse(activeCategory, categoryResources.length);
