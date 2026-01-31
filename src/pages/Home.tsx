@@ -259,7 +259,6 @@ export default function Home() {
     setSearchQuery('');
     setFilteredResourceIds(null);  // Clear search filter
     setMatchedCategories([]);       // Clear matched categories
-    setHoveredResource(null);       // Clear tooltip to prevent stuck state
 
     // Update URL params to stay in sync
     if (category) {
@@ -288,7 +287,6 @@ export default function Home() {
   const handleSubCategoryChange = (subCategory: string | null) => {
     setActiveSubCategory(subCategory);
     setSearchQuery('');
-    setHoveredResource(null);       // Clear tooltip to prevent stuck state
 
     // Update URL params to stay in sync
     if (subCategory && activeCategory) {
@@ -381,13 +379,7 @@ export default function Home() {
               <div className="flex justify-end pointer-events-auto">
                 <div className="relative">
                   <motion.button
-                    ref={legendButtonRef}
-                    onClick={() => {
-                      if (legendButtonRef.current) {
-                        setLegendButtonRect(legendButtonRef.current.getBoundingClientRect());
-                      }
-                      setLegendOpen(!legendOpen);
-                    }}
+                    onClick={() => setLegendOpen(!legendOpen)}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     transition={{ type: 'spring', stiffness: 400, damping: 17 }}
@@ -397,7 +389,21 @@ export default function Home() {
                     {legendOpen ? <X className="w-5 h-5" /> : <Info className="w-5 h-5" />}
                   </motion.button>
                   
-
+                  {/* Legend Dropdown - positioned absolutely below button */}
+                  <AnimatePresence>
+                    {legendOpen && (
+                      <motion.div
+                        key="legend-dropdown"
+                        className="absolute top-full right-0 mt-2"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.15 }}
+                      >
+                        <UniverseLegend isOpen={legendOpen} onClose={() => setLegendOpen(false)} />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
             </div>
