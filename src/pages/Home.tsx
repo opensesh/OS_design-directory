@@ -392,7 +392,7 @@ export default function Home() {
                     {legendOpen && (
                       <motion.div
                         key="legend-dropdown"
-                        className="absolute top-full right-0 mt-2 z-[100]"
+                        className="absolute top-full right-0 mt-2"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
