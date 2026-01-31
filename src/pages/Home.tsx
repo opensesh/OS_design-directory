@@ -304,7 +304,7 @@ export default function Home() {
           </Suspense>
           
           {/* Legend Button - Aligned with content container */}
-          <div className="absolute top-4 inset-x-0 z-20 pointer-events-none">
+          <div className="absolute top-6 inset-x-0 z-20 pointer-events-none">
             <div className="max-w-5xl mx-auto px-6">
               <div className="flex justify-end pointer-events-auto">
                 <div className="relative">
