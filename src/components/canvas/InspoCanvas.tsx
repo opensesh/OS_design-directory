@@ -550,17 +550,59 @@ function CameraController({
  * Adjusts camera distance based on viewport aspect ratio.
  * On ultra-wide displays, moves camera closer to fill the viewport.
  * On narrow/portrait displays, moves camera further back.
+ * 
+ * IMPORTANT: Only applies responsive adjustment when user hasn't manually zoomed.
+ * This allows free zoom/pan after user interaction while preserving initial framing.
  */
 interface ResponsiveCameraProps {
   isCameraAnimatingRef: React.MutableRefObject<boolean>;
+  controlsRef: React.RefObject<OrbitControlsImpl | null>;
+  activeCategory?: string | null;
 }
 
-function ResponsiveCamera({ isCameraAnimatingRef }: ResponsiveCameraProps) {
+function ResponsiveCamera({ 
+  isCameraAnimatingRef, 
+  controlsRef,
+  activeCategory 
+}: ResponsiveCameraProps) {
   const { camera, size } = useThree();
   const targetZRef = useRef(CAMERA_ANIMATION.DEFAULT_POSITION.z);
+  const userHasInteractedRef = useRef(false);
+  const lastSizeRef = useRef({ width: 0, height: 0 });
+  const initialLoadRef = useRef(true);
 
-  // Calculate target Z based on aspect ratio
+  // Listen for user interaction via OrbitControls
   useEffect(() => {
+    const controls = controlsRef.current;
+    if (!controls) return;
+
+    const handleChange = () => {
+      // Only mark as interacted if not during programmatic animation
+      if (!isCameraAnimatingRef.current) {
+        userHasInteractedRef.current = true;
+      }
+    };
+
+    controls.addEventListener('change', handleChange);
+    return () => controls.removeEventListener('change', handleChange);
+  }, [controlsRef, isCameraAnimatingRef]);
+
+  // Reset interaction state when category changes (allows camera to frame filtered content)
+  useEffect(() => {
+    userHasInteractedRef.current = false;
+  }, [activeCategory]);
+
+  // Calculate target Z based on aspect ratio - only on actual resize
+  useEffect(() => {
+    // Skip if size hasn't actually changed
+    if (
+      size.width === lastSizeRef.current.width && 
+      size.height === lastSizeRef.current.height
+    ) {
+      return;
+    }
+    lastSizeRef.current = { width: size.width, height: size.height };
+
     const aspectRatio = size.width / size.height;
     const baseZ = CAMERA_ANIMATION.DEFAULT_POSITION.z; // 125
 
@@ -580,11 +622,18 @@ function ResponsiveCamera({ isCameraAnimatingRef }: ResponsiveCameraProps) {
     }
 
     targetZRef.current = newZ;
-  }, [size.width, size.height]);
 
-  // Smoothly interpolate camera Z when not animating for filters
+    // Snap to position on initial load only
+    if (initialLoadRef.current) {
+      camera.position.z = newZ;
+      initialLoadRef.current = false;
+    }
+  }, [size.width, size.height, camera]);
+
+  // Only lerp if user hasn't interacted - allows free zoom after user input
   useFrame(() => {
     if (isCameraAnimatingRef.current) return;
+    if (userHasInteractedRef.current) return;  // Don't fight user zoom
 
     const currentZ = camera.position.z;
     const targetZ = targetZRef.current;
@@ -894,7 +943,11 @@ export default function InspoCanvas({
       />
 
       {/* Responsive camera for ultra-wide viewports */}
-      <ResponsiveCamera isCameraAnimatingRef={isCameraAnimatingRef} />
+      <ResponsiveCamera 
+        isCameraAnimatingRef={isCameraAnimatingRef}
+        controlsRef={controlsRef}
+        activeCategory={activeCategory}
+      />
 
       {/* Galaxy system - clusters and nodes */}
       <Suspense fallback={null}>
