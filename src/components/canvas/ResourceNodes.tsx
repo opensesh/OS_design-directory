@@ -36,8 +36,7 @@ function seededRandom(seed: number): number {
  * Animation configuration
  */
 const ANIMATION = {
-  ENTRANCE_DELAY: 400,
-  STAGGER_DELAY: 20,
+  STAGGER_DELAY: 15,         // ms between each node start
   ENTRANCE_DURATION: 600,
   FILTER_LERP_SPEED: 0.1,
   HOVER_LERP_SPEED: 0.15,
@@ -50,6 +49,16 @@ const ANIMATION = {
   CLICK_SCALE: 1.5,
   NORMAL_SCALE: 1.0,
   MIN_OPACITY_FOR_INTERACTION: 0.2,  // Above FILTERED_OUT_OPACITY (0.15) so filtered nodes aren't hoverable
+};
+
+/**
+ * Easing function with subtle overshoot for pop-in effect
+ */
+const easeOutBack = (t: number): number => {
+  const c1 = 1.70158;
+  const c3 = c1 + 1;
+  const clamped = Math.min(1, Math.max(0, t));
+  return 1 + c3 * Math.pow(clamped - 1, 3) + c1 * Math.pow(clamped - 1, 2);
 };
 
 export interface ResourceNodesHandle {
@@ -68,6 +77,7 @@ interface ResourceNodesProps {
   activeFilter?: string | null;
   activeSubFilter?: string | null;
   filteredResourceIds?: number[] | null;
+  entranceProgress?: number;        // 0-1 progress from parent timeline
   hoveredIndex?: number | null;
   clickedIndex?: number | null;
 }
@@ -80,6 +90,7 @@ interface ResourceNodesProps {
  * - Score-based sizing: higher gravity scores = larger nodes (~2x range)
  * - Smooth opacity transitions on filter (no size/camera changes)
  * - Hover and click scale animations
+ * - Synchronized entrance animation via entranceProgress prop
  */
 const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
   function ResourceNodes({
@@ -89,6 +100,7 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
     activeFilter,
     activeSubFilter,
     filteredResourceIds,
+    entranceProgress = 0,
     hoveredIndex,
     clickedIndex
   }, ref) {
@@ -105,8 +117,7 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
     const targetOpacitiesRef = useRef<Float32Array | null>(null);
     const currentHoverScalesRef = useRef<Float32Array | null>(null);
     const currentHoverIntensityRef = useRef<Float32Array | null>(null);  // For color enhancement on hover
-    const entranceProgressRef = useRef<Float32Array | null>(null);  // Separate entrance progress from opacity
-    const entranceStartTimeRef = useRef<number | null>(null);
+    const entranceProgressRef = useRef<Float32Array | null>(null);  // Per-node entrance progress
     const opacityAttributeRef = useRef<THREE.InstancedBufferAttribute | null>(null);
     const hoverIntensityAttributeRef = useRef<THREE.InstancedBufferAttribute | null>(null);
 
@@ -177,7 +188,6 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
         currentHoverScalesRef.current = new Float32Array(resourceCount).fill(ANIMATION.NORMAL_SCALE);
         currentHoverIntensityRef.current = new Float32Array(resourceCount).fill(0);  // Start muted
         entranceProgressRef.current = new Float32Array(resourceCount).fill(0);  // Track entrance separately
-        entranceStartTimeRef.current = Date.now();
         setIsInitialized(false);
       }
     }, [resourceCount]);
@@ -281,38 +291,28 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
       if (!currentHoverIntensityRef.current) return;
       if (!entranceProgressRef.current || !opacityAttributeRef.current || !hoverIntensityAttributeRef.current) return;
 
-      // Note: Rotation is now handled by parent OrbitalSystem group
-      // Note: Camera position stays fixed - no zoom on filter
-
-      const now = Date.now();
-      const entranceStart = entranceStartTimeRef.current || now;
-      const timeSinceStart = now - entranceStart;
-
       const dummy = new THREE.Object3D();
       let hasChanges = false;
       let opacityChanged = false;
+      let allComplete = true;
 
       for (let i = 0; i < resourceCount; i++) {
-        // Entrance animation - track progress separately for scale
-        const nodeEntranceDelay = ANIMATION.ENTRANCE_DELAY + (i * ANIMATION.STAGGER_DELAY);
-        const timeSinceNodeStart = timeSinceStart - nodeEntranceDelay;
-
+        // Calculate per-node entrance progress based on global progress and stagger
+        // Each node starts slightly later than the previous
+        const staggerOffset = (i * ANIMATION.STAGGER_DELAY) / 1000; // Convert to 0-1 range based on total duration
+        const nodeProgress = Math.max(0, (entranceProgress - staggerOffset * 0.5) / (1 - staggerOffset * 0.5));
+        
+        // Apply easing with subtle overshoot
         let entranceScale = entranceProgressRef.current[i];
         if (!isInitialized) {
-          if (timeSinceNodeStart <= 0) {
-            entranceScale = 0;
-          } else if (timeSinceNodeStart < ANIMATION.ENTRANCE_DURATION) {
-            const progress = timeSinceNodeStart / ANIMATION.ENTRANCE_DURATION;
-            // Ease out quad for smooth pop-in
-            entranceScale = progress < 0.5
-              ? 2 * progress * progress
-              : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-          } else {
-            entranceScale = 1.0;
-          }
-          if (Math.abs(entranceScale - entranceProgressRef.current[i]) > 0.001) {
-            entranceProgressRef.current[i] = entranceScale;
+          const newEntranceScale = easeOutBack(nodeProgress);
+          if (Math.abs(newEntranceScale - entranceScale) > 0.001) {
+            entranceProgressRef.current[i] = newEntranceScale;
+            entranceScale = newEntranceScale;
             hasChanges = true;
+          }
+          if (nodeProgress < 1) {
+            allComplete = false;
           }
         } else {
           entranceScale = 1.0;
@@ -388,14 +388,8 @@ const ResourceNodes = forwardRef<ResourceNodesHandle, ResourceNodesProps>(
       }
 
       // Check entrance completion
-      if (!isInitialized) {
-        const lastNodeEntranceEnd = ANIMATION.ENTRANCE_DELAY +
-          ((resourceCount - 1) * ANIMATION.STAGGER_DELAY) +
-          ANIMATION.ENTRANCE_DURATION;
-
-        if (timeSinceStart > lastNodeEntranceEnd) {
-          setIsInitialized(true);
-        }
+      if (!isInitialized && allComplete && entranceProgress >= 1) {
+        setIsInitialized(true);
       }
     });
 

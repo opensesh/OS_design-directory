@@ -43,6 +43,7 @@ interface ParticleNebulaProps {
   isActive: boolean;
   isMatched: boolean;
   hasAnyFilter: boolean;
+  globalOpacity: number;
 }
 
 /**
@@ -51,7 +52,13 @@ interface ParticleNebulaProps {
  * Uses Points-based geometry with Gaussian distribution for organic,
  * cloud-like appearance. Particles are denser near center and sparse at edges.
  */
-function ParticleNebula({ cluster, isActive, isMatched, hasAnyFilter }: ParticleNebulaProps) {
+function ParticleNebula({ 
+  cluster, 
+  isActive, 
+  isMatched, 
+  hasAnyFilter,
+  globalOpacity,
+}: ParticleNebulaProps) {
   const pointsRef = useRef<THREE.Points>(null);
   const currentOpacityRef = useRef(ANIMATION.DEFAULT_OPACITY);
   const pulsePhaseRef = useRef(Math.random() * Math.PI * 2);
@@ -166,9 +173,10 @@ function ParticleNebula({ cluster, isActive, isMatched, hasAnyFilter }: Particle
     const currentOpacity = currentOpacityRef.current;
     const newOpacity = currentOpacity + (targetOpacity - currentOpacity) * ANIMATION.OPACITY_LERP_SPEED;
 
-    if (Math.abs(newOpacity - currentOpacity) > 0.0005) {
+    if (Math.abs(newOpacity - currentOpacity) > 0.0005 || globalOpacity < 1) {
       currentOpacityRef.current = newOpacity;
-      material.uniforms.uOpacity.value = newOpacity;
+      // Apply both filter opacity AND global fade-in opacity
+      material.uniforms.uOpacity.value = newOpacity * globalOpacity;
     }
   });
 
@@ -202,6 +210,7 @@ interface NebulaClustersProps {
   clusters: CategoryCluster[];
   activeCategory?: string | null;
   matchedCategories?: string[];
+  globalOpacity?: number;
 }
 
 /**
@@ -215,15 +224,19 @@ interface NebulaClustersProps {
  * - Soft additive blending for glowing appearance
  * - Smooth opacity transitions on filter
  * - Pulse animation for active/matched clusters
+ * 
+ * Uses globalOpacity prop for synchronized fade-in with other layers.
  */
 export default function NebulaClusters({
   clusters,
   activeCategory,
   matchedCategories,
+  globalOpacity = 1,
 }: NebulaClustersProps) {
   const hasAnyFilter = activeCategory !== null || (matchedCategories !== undefined && matchedCategories.length > 0);
 
-  if (clusters.length === 0) return null;
+  // Don't render if not visible yet
+  if (globalOpacity <= 0 || clusters.length === 0) return null;
 
   return (
     <group>
@@ -238,6 +251,7 @@ export default function NebulaClusters({
             isActive={isActive}
             isMatched={isMatched}
             hasAnyFilter={hasAnyFilter}
+            globalOpacity={globalOpacity}
           />
         );
       })}

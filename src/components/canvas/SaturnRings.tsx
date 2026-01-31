@@ -25,8 +25,7 @@ const RING_CONFIG = {
  * Animation configuration (mirrors ResourceNodes)
  */
 const ANIMATION = {
-  ENTRANCE_DELAY: 400,
-  STAGGER_DELAY: 20,
+  STAGGER_DELAY: 15,          // ms between each ring start
   ENTRANCE_DURATION: 600,
   FILTER_LERP_SPEED: 0.1,
   HOVER_LERP_SPEED: 0.15,
@@ -45,6 +44,16 @@ function seededRandom(seed: number): number {
   return x - Math.floor(x);
 }
 
+/**
+ * Easing function with subtle overshoot for pop-in effect
+ */
+const easeOutBack = (t: number): number => {
+  const c1 = 1.70158;
+  const c3 = c1 + 1;
+  const clamped = Math.min(1, Math.max(0, t));
+  return 1 + c3 * Math.pow(clamped - 1, 3) + c1 * Math.pow(clamped - 1, 2);
+};
+
 interface SaturnRingsProps {
   resources: NormalizedResource[];
   clusters: CategoryCluster[];
@@ -54,6 +63,7 @@ interface SaturnRingsProps {
   filteredResourceIds?: number[] | null;
   hoveredIndex?: number | null;
   clickedIndex?: number | null;
+  entranceProgress?: number;  // 0-1 progress from parent timeline
 }
 
 /**
@@ -61,6 +71,7 @@ interface SaturnRingsProps {
  *
  * Renders Saturn-like rings around high-score resources (9.5+).
  * Syncs with ResourceNodes for position, opacity, and hover animations.
+ * Uses entranceProgress prop for synchronized entrance with other layers.
  */
 export function SaturnRings({
   resources,
@@ -71,6 +82,7 @@ export function SaturnRings({
   filteredResourceIds,
   hoveredIndex,
   clickedIndex,
+  entranceProgress = 0,
 }: SaturnRingsProps) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const groupRef = useRef<THREE.Group>(null);
@@ -81,7 +93,6 @@ export function SaturnRings({
   const targetOpacitiesRef = useRef<Float32Array | null>(null);
   const currentHoverScalesRef = useRef<Float32Array | null>(null);
   const entranceProgressRef = useRef<Float32Array | null>(null);
-  const entranceStartTimeRef = useRef<number | null>(null);
 
   // Filter to only high-score resources
   const ringResources = useMemo(() => {
@@ -169,7 +180,6 @@ export function SaturnRings({
       targetOpacitiesRef.current = new Float32Array(ringCount).fill(ANIMATION.VISIBLE_OPACITY);
       currentHoverScalesRef.current = new Float32Array(ringCount).fill(ANIMATION.NORMAL_SCALE);
       entranceProgressRef.current = new Float32Array(ringCount).fill(0);
-      entranceStartTimeRef.current = Date.now();
       setIsInitialized(false);
     }
   }, [ringCount]);
@@ -306,39 +316,28 @@ export function SaturnRings({
     if (!currentOpacitiesRef.current || !targetOpacitiesRef.current || !currentHoverScalesRef.current) return;
     if (!entranceProgressRef.current) return;
 
-    const now = Date.now();
-    const entranceStart = entranceStartTimeRef.current || now;
-    const timeSinceStart = now - entranceStart;
-
     const dummy = new THREE.Object3D();
     let hasChanges = false;
-    let allEntranceComplete = true;
+    let allComplete = true;
 
     for (let i = 0; i < ringCount; i++) {
       // Get original resource index for hover/click matching
       const originalIndex = ringToResourceIndex.get(i) ?? -1;
 
-      // Entrance animation with stagger (slightly delayed from planets)
-      const nodeEntranceDelay = ANIMATION.ENTRANCE_DELAY + 100 + (i * ANIMATION.STAGGER_DELAY);
-      const timeSinceNodeStart = timeSinceStart - nodeEntranceDelay;
+      // Calculate per-ring entrance progress based on global progress and stagger
+      const staggerOffset = (i * ANIMATION.STAGGER_DELAY) / 1000;
+      const ringProgress = Math.max(0, (entranceProgress - staggerOffset * 0.5) / (1 - staggerOffset * 0.5));
 
       let entranceScale = entranceProgressRef.current[i];
       if (!isInitialized) {
-        if (timeSinceNodeStart <= 0) {
-          entranceScale = 0;
-          allEntranceComplete = false;
-        } else if (timeSinceNodeStart < ANIMATION.ENTRANCE_DURATION) {
-          const progress = timeSinceNodeStart / ANIMATION.ENTRANCE_DURATION;
-          entranceScale = progress < 0.5
-            ? 2 * progress * progress
-            : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-          allEntranceComplete = false;
-        } else {
-          entranceScale = 1.0;
-        }
-        if (Math.abs(entranceScale - entranceProgressRef.current[i]) > 0.001) {
-          entranceProgressRef.current[i] = entranceScale;
+        const newEntranceScale = easeOutBack(ringProgress);
+        if (Math.abs(newEntranceScale - entranceScale) > 0.001) {
+          entranceProgressRef.current[i] = newEntranceScale;
+          entranceScale = newEntranceScale;
           hasChanges = true;
+        }
+        if (ringProgress < 1) {
+          allComplete = false;
         }
       } else {
         entranceScale = 1.0;
@@ -413,7 +412,7 @@ export function SaturnRings({
     }
 
     // Check if entrance animation is complete
-    if (!isInitialized && allEntranceComplete && timeSinceStart > ANIMATION.ENTRANCE_DELAY + ringCount * ANIMATION.STAGGER_DELAY + ANIMATION.ENTRANCE_DURATION + 100) {
+    if (!isInitialized && allComplete && entranceProgress >= 1) {
       setIsInitialized(true);
     }
   });

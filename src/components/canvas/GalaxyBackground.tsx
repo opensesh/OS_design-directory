@@ -1,8 +1,23 @@
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useFrame, useLoader } from '@react-three/fiber';
 import * as THREE from 'three';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 import { generateStarfieldLayout } from '../../utils/particle-layouts';
+
+/**
+ * Layer timing configuration (must match InspoCanvas)
+ */
+const LAYER_TIMING = {
+  skybox: {
+    startDelay: 0,
+    duration: 1000,
+  },
+} as const;
+
+/**
+ * Easing function for smooth deceleration
+ */
+const easeOutCubic = (t: number): number => 1 - Math.pow(1 - Math.min(1, Math.max(0, t)), 3);
 
 /**
  * GalaxyBackground Component
@@ -15,13 +30,14 @@ import { generateStarfieldLayout } from '../../utils/particle-layouts';
 interface StarfieldProps {
   count?: number;
   radius?: number;
+  opacity?: number;
 }
 
 /**
  * Starfield - 3D particle stars for depth
  * Creates parallax effect on camera movement
  */
-function Starfield({ count = 4000, radius = 200 }: StarfieldProps) {
+function Starfield({ count = 4000, radius = 200, opacity = 1 }: StarfieldProps) {
   const pointsRef = useRef<THREE.Points>(null);
 
   // Generate star positions using existing starfield layout
@@ -57,6 +73,7 @@ function Starfield({ count = 4000, radius = 200 }: StarfieldProps) {
     return new THREE.ShaderMaterial({
       uniforms: {
         color: { value: new THREE.Color('#ffffff') },
+        globalOpacity: { value: opacity },
       },
       vertexShader: `
         attribute float size;
@@ -72,6 +89,7 @@ function Starfield({ count = 4000, radius = 200 }: StarfieldProps) {
       `,
       fragmentShader: `
         uniform vec3 color;
+        uniform float globalOpacity;
         varying float vOpacity;
 
         void main() {
@@ -80,7 +98,7 @@ function Starfield({ count = 4000, radius = 200 }: StarfieldProps) {
           if (r > 0.5) discard;
 
           // Soft glow falloff
-          float alpha = vOpacity * (1.0 - smoothstep(0.0, 0.5, r));
+          float alpha = vOpacity * globalOpacity * (1.0 - smoothstep(0.0, 0.5, r));
           gl_FragColor = vec4(color, alpha);
         }
       `,
@@ -88,7 +106,14 @@ function Starfield({ count = 4000, radius = 200 }: StarfieldProps) {
       depthWrite: false,
       blending: THREE.AdditiveBlending,
     });
-  }, []);
+  }, [opacity]);
+
+  // Update global opacity uniform
+  useFrame(() => {
+    if (shaderMaterial.uniforms.globalOpacity) {
+      shaderMaterial.uniforms.globalOpacity.value = opacity;
+    }
+  });
 
   return (
     <points ref={pointsRef} material={shaderMaterial}>
@@ -118,13 +143,14 @@ function Starfield({ count = 4000, radius = 200 }: StarfieldProps) {
 
 interface SkyboxProps {
   texturePath?: string;
+  opacity?: number;
 }
 
 /**
  * Skybox - Equirectangular HDR texture mapped to inside of sphere
  * Uses RGBELoader for proper HDR tone mapping
  */
-function Skybox({ texturePath = '/textures/galaxy/skybox.hdr' }: SkyboxProps) {
+function Skybox({ texturePath = '/textures/galaxy/skybox.hdr', opacity = 1 }: SkyboxProps) {
   const texture = useLoader(RGBELoader, texturePath);
 
   // Configure texture for equirectangular mapping
@@ -140,7 +166,7 @@ function Skybox({ texturePath = '/textures/galaxy/skybox.hdr' }: SkyboxProps) {
         side={THREE.BackSide}
         depthWrite={false}
         transparent={true}
-        opacity={1}
+        opacity={opacity}
         toneMapped={false}
       />
     </mesh>
@@ -152,6 +178,7 @@ interface GalaxyBackgroundProps {
   starRadius?: number;
   showSkybox?: boolean;
   showStarfield?: boolean;
+  masterStartTime: number;
 }
 
 /**
@@ -160,21 +187,37 @@ interface GalaxyBackgroundProps {
  * Combines skybox and starfield for immersive space environment.
  * The skybox provides the distant galaxy/nebula backdrop,
  * while the starfield adds depth with parallax on camera movement.
+ * 
+ * Uses master timeline for synchronized fade-in with other layers.
  */
 export default function GalaxyBackground({
   starCount = 4000,
   starRadius = 200,
   showSkybox = true,
   showStarfield = true,
+  masterStartTime,
 }: GalaxyBackgroundProps) {
+  const [skyboxOpacity, setSkyboxOpacity] = useState(0);
+
+  // Calculate opacity based on master timeline
+  useFrame(() => {
+    const elapsed = Date.now() - masterStartTime;
+    const progress = Math.max(0, elapsed - LAYER_TIMING.skybox.startDelay) / LAYER_TIMING.skybox.duration;
+    const eased = easeOutCubic(progress);
+    
+    if (Math.abs(eased - skyboxOpacity) > 0.01) {
+      setSkyboxOpacity(eased);
+    }
+  });
+
   return (
     <group>
-      {/* Galaxy/nebula skybox */}
-      {showSkybox && <Skybox />}
+      {/* Galaxy/nebula skybox - fades in on load */}
+      {showSkybox && <Skybox opacity={skyboxOpacity} />}
 
-      {/* 3D starfield for depth */}
+      {/* 3D starfield for depth - also fades in with skybox */}
       {showStarfield && (
-        <Starfield count={starCount} radius={starRadius} />
+        <Starfield count={starCount} radius={starRadius} opacity={skyboxOpacity} />
       )}
     </group>
   );

@@ -49,6 +49,7 @@ interface NebulaCloudProps {
   isActive: boolean;
   isMatched: boolean;
   hasAnyFilter: boolean;
+  globalOpacity: number;
 }
 
 /**
@@ -57,7 +58,14 @@ interface NebulaCloudProps {
  * Uses sprites that always face the camera, positioned at different depths
  * within the cluster to create true 3D parallax when orbiting.
  */
-function NebulaCloud({ cluster, texture, isActive, isMatched, hasAnyFilter }: NebulaCloudProps) {
+function NebulaCloud({ 
+  cluster, 
+  texture, 
+  isActive, 
+  isMatched, 
+  hasAnyFilter,
+  globalOpacity,
+}: NebulaCloudProps) {
   const groupRef = useRef<THREE.Group>(null);
   const materialsRef = useRef<THREE.SpriteMaterial[]>([]);
   const currentOpacityRef = useRef(CLOUD_CONFIG.BASE_OPACITY);
@@ -145,10 +153,11 @@ function NebulaCloud({ cluster, texture, isActive, isMatched, hasAnyFilter }: Ne
     const currentOpacity = currentOpacityRef.current;
     const newOpacity = currentOpacity + (targetOpacity - currentOpacity) * CLOUD_CONFIG.OPACITY_LERP_SPEED;
 
-    if (Math.abs(newOpacity - currentOpacity) > 0.001) {
+    if (Math.abs(newOpacity - currentOpacity) > 0.001 || globalOpacity < 1) {
       currentOpacityRef.current = newOpacity;
+      // Apply both filter opacity AND global fade-in opacity
       materialsRef.current.forEach((mat, i) => {
-        mat.opacity = newOpacity * sprites[i].opacityFactor;
+        mat.opacity = newOpacity * sprites[i].opacityFactor * globalOpacity;
       });
     }
   });
@@ -174,6 +183,7 @@ interface NebulaPlanesProps {
   clusters: CategoryCluster[];
   activeCategory?: string | null;
   matchedCategories?: string[];
+  globalOpacity?: number;
 }
 
 /**
@@ -188,18 +198,22 @@ interface NebulaPlanesProps {
  * - Parallax motion when orbiting the galaxy
  * - Additive blending for ethereal glow
  * - Smooth opacity transitions on filter
+ * 
+ * Uses globalOpacity prop for synchronized fade-in with other layers.
  */
 export default function NebulaPlanes({
   clusters,
   activeCategory,
   matchedCategories,
+  globalOpacity = 1,
 }: NebulaPlanesProps) {
   // Load smoke texture
   const texture = useTexture('/textures/clouds/smoke.png');
 
   const hasAnyFilter = activeCategory !== null || (matchedCategories !== undefined && matchedCategories.length > 0);
 
-  if (clusters.length === 0) return null;
+  // Don't render if not visible yet
+  if (globalOpacity <= 0 || clusters.length === 0) return null;
 
   return (
     <group>
@@ -215,6 +229,7 @@ export default function NebulaPlanes({
             isActive={isActive}
             isMatched={isMatched}
             hasAnyFilter={hasAnyFilter}
+            globalOpacity={globalOpacity}
           />
         );
       })}
