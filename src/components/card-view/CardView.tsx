@@ -14,8 +14,8 @@ export function CardView({ resources }: CardViewProps) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Read state from URL
-  const activeCategory = searchParams.get('cat');
-  const activeSubcategory = searchParams.get('sub');
+  const activeCategory = searchParams.get('category');
+  const activeSubcategory = searchParams.get('subCategory');
 
   // Determine current level
   const level = activeSubcategory ? 3 : activeCategory ? 2 : 1;
@@ -42,7 +42,7 @@ export function CardView({ resources }: CardViewProps) {
 
   const navigateToCategory = useCallback(() => {
     if (activeCategory) {
-      setSearchParams({ display: 'card', cat: activeCategory });
+      setSearchParams({ display: 'card', category: activeCategory });
     }
   }, [activeCategory, setSearchParams]);
 
@@ -52,7 +52,7 @@ export function CardView({ resources }: CardViewProps) {
       setSearchParams({ display: 'card' });
     } else {
       // Expand new category
-      setSearchParams({ display: 'card', cat: category });
+      setSearchParams({ display: 'card', category: category });
     }
   }, [activeCategory, setSearchParams]);
 
@@ -60,8 +60,8 @@ export function CardView({ resources }: CardViewProps) {
     if (activeCategory) {
       setSearchParams({
         display: 'card',
-        cat: activeCategory,
-        sub: subcategory
+        category: activeCategory,
+        subCategory: subcategory
       });
     }
   }, [activeCategory, setSearchParams]);
