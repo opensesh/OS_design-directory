@@ -490,7 +490,7 @@ export default function Home() {
         role="region"
         aria-label="Current view"
       >
-        <div className={`max-w-7xl mx-auto px-6 ${displayMode === '3d' ? 'py-4' : 'py-3'} md:py-4`}>
+        <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             {/* Left: Label + View Name + Description */}
             <div className="flex flex-col gap-0.5">
