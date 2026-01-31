@@ -1,6 +1,6 @@
 # Design Directory
 
-An interactive 3D design resource repository created by [Open Session](https://opensession.co) to help enable and inspire designers worldwide.
+An interactive 3D design resource repository created by [Open Session](https://opensession.co) to help enable and inspire designers and builders worldwide. You can use this codebase with any dataset. It's simply a template for navigating data in three different directory views, including 3D, cards, and table views. There is built-in automation and security to easily adapt, play, and learn. 
 
 ## Purpose
 
