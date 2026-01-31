@@ -22,6 +22,7 @@ function getFaviconUrl(url: string | null): string | null {
 }
 
 interface InspoResourceTooltipProps {
+  onClick?: (resource: NormalizedResource) => void;
   resource: NormalizedResource | null;
   mousePosition: { x: number; y: number };
 }
@@ -33,6 +34,7 @@ interface InspoResourceTooltipProps {
  * Includes favicon, category badge, and description.
  */
 export default function InspoResourceTooltip({
+  onClick,
   resource,
   mousePosition,
 }: InspoResourceTooltipProps) {
@@ -102,7 +104,8 @@ export default function InspoResourceTooltip({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 5 }}
           transition={{ duration: 0.15, ease: 'easeOut' }}
-          className="fixed z-[100] pointer-events-none"
+          className="fixed z-[100] pointer-events-auto cursor-pointer"
+          onClick={() => resource && onClick?.(resource)}
           style={{
             left: adjustedPosition.x,
             top: adjustedPosition.y,
