@@ -46,13 +46,15 @@ const displayValue = isListening && transcript
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 300)}px`;
     }
-  }, [input]);
+  }, [displayValue]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || isLoading) return;
-    onSubmit(input.trim());
+    const submitValue = displayValue;
+    if (!submitValue.trim() || isLoading) return;
+    onSubmit(submitValue.trim());
     setInput('');
+    baseTextRef.current = '';
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -143,9 +145,9 @@ const handleMicClick = () => {
           {/* Send Button */}
           <button
             type="submit"
-            disabled={!input.trim() || isLoading}
+            disabled={!displayValue.trim() || isLoading}
             className={`p-2 rounded-lg transition-all ${
-              input.trim() && !isLoading
+              displayValue.trim() && !isLoading
                 ? 'bg-brand-aperol text-white hover:bg-brand-aperol/90'
                 : 'text-os-text-secondary-dark/50 cursor-not-allowed'
             }`}
