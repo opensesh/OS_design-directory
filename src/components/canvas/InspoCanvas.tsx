@@ -280,11 +280,48 @@ function InteractionController({
       }
     };
 
+    // Handle touch tap for mobile/tablet devices
+    const handleTouchEnd = (event: TouchEvent) => {
+      if (!resourceNodesRef.current) return;
+      
+      const mesh = resourceNodesRef.current.getMesh();
+      if (!mesh) return;
+
+      // Use the last touch point
+      const touch = event.changedTouches[0];
+      if (!touch) return;
+
+      const rect = canvas.getBoundingClientRect();
+      mouse.current.x = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.current.y = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
+
+      raycaster.setFromCamera(mouse.current, camera);
+      const intersects = raycaster.intersectObject(mesh);
+
+      if (intersects.length > 0 && intersects[0].instanceId !== undefined) {
+        const index = intersects[0].instanceId;
+        const opacity = resourceNodesRef.current.getOpacityAtIndex(index);
+
+        // Only trigger tap if node is fully visible (not filtered/dimmed)
+        if (opacity >= 0.5) {
+          // Trigger click animation first
+          if (onClickAnimation) {
+            onClickAnimation(index);
+          }
+          // Then trigger actual click handler with delay for animation
+          setTimeout(() => {
+            onClick(index);
+          }, 150);
+        }
+      }
+    };
+
     canvas.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('mouseenter', handleMouseEnter);
     canvas.addEventListener('click', handleClick);
     canvas.addEventListener('mouseleave', handleMouseLeave);
     canvas.addEventListener('touchcancel', handleTouchCancel);
+    canvas.addEventListener('touchend', handleTouchEnd);
 
     return () => {
       canvas.removeEventListener('mousemove', handleMouseMove);
@@ -292,6 +329,7 @@ function InteractionController({
       canvas.removeEventListener('click', handleClick);
       canvas.removeEventListener('mouseleave', handleMouseLeave);
       canvas.removeEventListener('touchcancel', handleTouchCancel);
+      canvas.removeEventListener('touchend', handleTouchEnd);
     };
   }, [camera, gl, raycaster, resourceNodesRef, onHover, onClick, onClickAnimation]);
 
