@@ -542,7 +542,11 @@ export default function Home() {
       </section>
 
       {/* Content Area - FLEX-1 fills remaining space */}
-      <div className={`flex-1 relative min-h-0 overflow-hidden ${displayMode === '3d' ? '' : 'pointer-events-auto'}`}>
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className={`flex-1 relative min-h-0 overflow-hidden outline-none ${displayMode === '3d' ? '' : 'pointer-events-auto'}`}
+      >
         {/* Card View or Table View (3D mode uses empty spacer since canvas is fixed) */}
         <AnimatePresence mode="wait">
           {displayMode === '3d' && (
@@ -592,7 +596,7 @@ export default function Home() {
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </main>
 
       {/* Bottom Controls - Only show in 3D mode */}
       <AnimatePresence>
