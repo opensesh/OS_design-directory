@@ -13,7 +13,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 
 export const config = {
-  runtime: 'edge',
+  runtime: 'nodejs',
 };
 
 /**
