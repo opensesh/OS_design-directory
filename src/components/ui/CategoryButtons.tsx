@@ -73,10 +73,7 @@ export function CategoryButtons({
         <div className="flex items-center justify-center gap-2 min-w-max px-4">
           {/* All button - resets filter */}
           <motion.button
-            onClick={() => {
-              onCategoryChange(null);
-              onSubCategoryChange(null);
-            }}
+            onClick={() => onCategoryChange(null)}
             className={`
               px-4 py-2 rounded-full text-sm font-medium
               transition-all duration-200 whitespace-nowrap
@@ -100,10 +97,7 @@ export function CategoryButtons({
             return (
               <motion.button
                 key={category}
-                onClick={() => {
-                  onCategoryChange(category);
-                  onSubCategoryChange(null); // Reset subcategory when changing category
-                }}
+                onClick={() => onCategoryChange(category)}
                 onMouseEnter={() => setHoveredCategory(category)}
                 onMouseLeave={() => setHoveredCategory(null)}
                 className={`
