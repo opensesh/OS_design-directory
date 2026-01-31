@@ -75,7 +75,7 @@ export default function Home() {
 
   // Mobile sort state - default to rating descending
   type MobileSortOption = 'rating' | 'free-first' | 'paid-first';
-  const [mobileSortOption, setMobileSortOption] = useState<MobileSortOption>('rating');
+  const [mobileSortOption, _setMobileSortOption] = useState<MobileSortOption>('rating');
 
   // Keyboard shortcuts
   useKeyboardShortcuts({
