@@ -9,13 +9,26 @@ interface UniverseLegendProps {
   onClose: () => void;
 }
 
+type OpenSection = 'keyboard' | 'touch' | 'appearance' | 'categories';
+
 export const UniverseLegend: React.FC<UniverseLegendProps> = ({ isOpen, onClose }) => {
-  const [keyboardOpen, setKeyboardOpen] = useState(true);
-  const [touchOpen, setTouchOpen] = useState(true);
-  const [appearanceOpen, setAppearanceOpen] = useState(false);
-  const [categoryOpen, setCategoryOpen] = useState(false);
+  // Accordion state - multiple sections can be open independently
+  const [openSections, setOpenSections] = useState<Set<OpenSection>>(new Set(['keyboard']));
   
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Toggle function for independent accordion behavior
+  const toggleSection = (section: OpenSection) => {
+    setOpenSections(prev => {
+      const next = new Set(prev);
+      if (next.has(section)) {
+        next.delete(section);
+      } else {
+        next.add(section);
+      }
+      return next;
+    });
+  };
 
   // Click outside to close
   useEffect(() => {
@@ -66,11 +79,11 @@ export const UniverseLegend: React.FC<UniverseLegendProps> = ({ isOpen, onClose 
             opacity: { duration: 0.2 }
           }}
           role="region"
-          className="absolute top-full right-0 mt-2 w-80 max-w-[calc(100vw-2rem)] bg-os-surface-dark/95 backdrop-blur-xl rounded-lg border border-os-border-dark shadow-xl overflow-hidden max-h-[calc(100vh-200px)] overflow-y-auto z-50"
+          className="w-80 max-w-[calc(100vw-2rem)] bg-os-surface-dark/95 backdrop-blur-xl rounded-lg border border-os-border-dark shadow-xl overflow-hidden max-h-[calc(100vh-200px)] overflow-y-auto"
         >
           {/* Title Header */}
           <div className="px-4 py-3 border-b border-os-border-dark">
-            <h3 className="text-sm font-semibold text-os-text-primary-dark uppercase tracking-wide">
+            <h3 className="text-h5 font-accent font-bold text-brand-aperol">
               Legend
             </h3>
           </div>
@@ -86,11 +99,11 @@ export const UniverseLegend: React.FC<UniverseLegendProps> = ({ isOpen, onClose 
               ease: [0.4, 0, 0.2, 1]
             }}
           >
-            <Collapsible open={keyboardOpen} onOpenChange={setKeyboardOpen}>
+            <Collapsible open={openSections.has('keyboard')} onOpenChange={() => toggleSection('keyboard')}>
               <CollapsibleTrigger className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-os-text-primary-dark hover:bg-os-surface-dark/60 transition-colors border-b border-os-border-dark">
                 <span>Keyboard Controls</span>
                 <motion.div
-                  animate={{ rotate: keyboardOpen ? 180 : 0 }}
+                  animate={{ rotate: openSections.has('keyboard') ? 180 : 0 }}
                   transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                 >
                   <ChevronDown className="w-4 h-4" />
@@ -149,11 +162,11 @@ export const UniverseLegend: React.FC<UniverseLegendProps> = ({ isOpen, onClose 
               ease: [0.4, 0, 0.2, 1]
             }}
           >
-            <Collapsible open={touchOpen} onOpenChange={setTouchOpen}>
+            <Collapsible open={openSections.has('touch')} onOpenChange={() => toggleSection('touch')}>
               <CollapsibleTrigger className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-os-text-primary-dark hover:bg-os-surface-dark/60 transition-colors border-b border-os-border-dark">
                 <span>Touch Controls</span>
                 <motion.div
-                  animate={{ rotate: touchOpen ? 180 : 0 }}
+                  animate={{ rotate: openSections.has('touch') ? 180 : 0 }}
                   transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                 >
                   <ChevronDown className="w-4 h-4" />
@@ -195,11 +208,11 @@ export const UniverseLegend: React.FC<UniverseLegendProps> = ({ isOpen, onClose 
               ease: [0.4, 0, 0.2, 1]
             }}
           >
-            <Collapsible open={appearanceOpen} onOpenChange={setAppearanceOpen}>
+            <Collapsible open={openSections.has('appearance')} onOpenChange={() => toggleSection('appearance')}>
               <CollapsibleTrigger className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-os-text-primary-dark hover:bg-os-surface-dark/60 transition-colors border-b border-os-border-dark">
                 <span>Appearance</span>
                 <motion.div
-                  animate={{ rotate: appearanceOpen ? 180 : 0 }}
+                  animate={{ rotate: openSections.has('appearance') ? 180 : 0 }}
                   transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                 >
                   <ChevronDown className="w-4 h-4" />
@@ -241,11 +254,11 @@ export const UniverseLegend: React.FC<UniverseLegendProps> = ({ isOpen, onClose 
               ease: [0.4, 0, 0.2, 1]
             }}
           >
-            <Collapsible open={categoryOpen} onOpenChange={setCategoryOpen}>
+            <Collapsible open={openSections.has('categories')} onOpenChange={() => toggleSection('categories')}>
               <CollapsibleTrigger className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-os-text-primary-dark hover:bg-os-surface-dark/60 transition-colors">
                 <span>Categories</span>
                 <motion.div
-                  animate={{ rotate: categoryOpen ? 180 : 0 }}
+                  animate={{ rotate: openSections.has('categories') ? 180 : 0 }}
                   transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                 >
                   <ChevronDown className="w-4 h-4" />
