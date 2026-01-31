@@ -106,6 +106,43 @@
   animation: fade-up-no-translate 0.6s ease-out forwards;
 }
 
+/* AI Loader Animations - Aperol branded */
+@keyframes loader-rotate {
+  0% {
+    transform: rotate(90deg);
+    box-shadow: 0 10px 20px 0 #fff inset,
+      0 20px 30px 0 #FE7A42 inset,
+      0 60px 60px 0 #FE5102 inset;
+  }
+  50% {
+    transform: rotate(270deg);
+    box-shadow: 0 10px 20px 0 #fff inset,
+      0 20px 10px 0 #FF6A2A inset,
+      0 40px 60px 0 #C94000 inset;
+  }
+  100% {
+    transform: rotate(450deg);
+    box-shadow: 0 10px 20px 0 #fff inset,
+      0 20px 30px 0 #FE7A42 inset,
+      0 60px 60px 0 #FE5102 inset;
+  }
+}
+
+@keyframes loader-letter-anim {
+  0%, 100% {
+    opacity: 0.4;
+    transform: translateY(0);
+  }
+  20% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  40% {
+    opacity: 0.7;
+    transform: translateY(0);
+  }
+}
+
 /* Neuromorphic styling for pre-prompt containers */
 .neuromorphic-prompt {
   background: linear-gradient(145deg, #2a2a2a, #252525);
@@ -263,10 +300,4 @@
     /* Subtle stroke for definition */
     -webkit-text-stroke: 0.5px rgba(255, 250, 238, 0.15);
   }
-}
-
-/* DotLoader active state */
-.active {
-  opacity: 1 !important;
-  transition: opacity 60ms ease-in-out;
 }
