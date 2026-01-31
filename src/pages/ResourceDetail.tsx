@@ -1,6 +1,7 @@
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useEffect, useMemo, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { DURATION, EASING } from '../lib/motion-tokens';
 import {
   ArrowLeft,
   ExternalLink,
@@ -165,6 +166,11 @@ export default function ResourceDetail() {
       setImageDimensions(null);
     }
   }, [resource?.screenshot]);
+
+  // Scroll to top when resource changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [id]);
 
   // Calculate aspect ratio dynamically based on image dimensions
   const aspectRatio = imageDimensions
@@ -340,11 +346,14 @@ export default function ResourceDetail() {
 
       {/* Content */}
       <main className="max-w-5xl mx-auto px-6 py-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-        >
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: DURATION.slow, ease: EASING.smooth }}
+          >
           {/* Screenshot Container with Actions */}
           {hasScreenshot && (
             <motion.div
@@ -727,6 +736,7 @@ export default function ResourceDetail() {
             </motion.div>
           )}
         </motion.div>
+        </AnimatePresence>
       </main>
 
       {/* Search Modal */}
