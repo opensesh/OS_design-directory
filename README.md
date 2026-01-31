@@ -404,3 +404,32 @@ MIT License - feel free to fork and customize for your own use.
 ---
 
 **Built with care by [Open Session](https://opensession.co)**
+
+---
+
+## Security
+
+### Rate Limiting
+
+The LLM-powered search endpoint (`/api/search/parse-query`) is rate-limited:
+- **10 requests per minute** per IP
+- **100 requests per day** per IP
+
+Exceeding these limits returns a `429 Too Many Requests` response.
+
+### Security Headers
+
+The following security headers are configured via `vercel.json`:
+- `X-Content-Type-Options: nosniff` - Prevents MIME-type sniffing
+- `X-Frame-Options: DENY` - Prevents clickjacking
+- `Referrer-Policy: strict-origin-when-cross-origin` - Controls referrer information
+
+### Input Validation
+
+- Search queries are limited to 1,000 characters
+- All LLM responses are sanitized with whitelist validation
+- No user data is stored or persisted
+
+### Reporting Vulnerabilities
+
+If you discover a security vulnerability, please email security@opensession.co rather than opening a public issue. We'll respond within 48 hours.
