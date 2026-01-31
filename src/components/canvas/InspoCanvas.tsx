@@ -802,14 +802,6 @@ export default function InspoCanvas({
     return calculateCategoryClusters(resources, CATEGORY_ORDER, CATEGORY_COLORS);
   }, [resources]);
 
-  // Clear hover state when resources or filters change to prevent stuck tooltips
-  useEffect(() => {
-    setHoveredIndex(null);
-    if (onResourceHover) {
-      onResourceHover(null, mousePosRef.current);
-    }
-  }, [resources.length, activeCategory, filteredResourceIds, onResourceHover]);
-
   // Track mouse position for tooltip
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
