@@ -26,7 +26,7 @@ export const DotLoader = ({
     const gridRef = useRef<HTMLDivElement>(null);
     const currentIndex = useRef(0);
     const repeats = useRef(0);
-    const interval = useRef<NodeJS.Timeout>(null);
+    const interval = useRef<NodeJS.Timeout | null>(null);
 
     const applyFrameToDots = useCallback(
         (dots: HTMLDivElement[], frameIndex: number) => {
