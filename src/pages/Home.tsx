@@ -627,7 +627,7 @@ export default function Home() {
             className="flex-shrink-0 relative z-20"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
+            exit={{ opacity: 0, transition: { duration: 0 } }}
             transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
           >
             {/* Solid background - instant exit to prevent rectangle artifact */}
