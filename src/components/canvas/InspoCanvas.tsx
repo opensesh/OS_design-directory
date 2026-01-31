@@ -545,6 +545,59 @@ function CameraController({
 }
 
 /**
+ * ResponsiveCamera
+ *
+ * Adjusts camera distance based on viewport aspect ratio.
+ * On ultra-wide displays, moves camera closer to fill the viewport.
+ * On narrow/portrait displays, moves camera further back.
+ */
+interface ResponsiveCameraProps {
+  isCameraAnimatingRef: React.MutableRefObject<boolean>;
+}
+
+function ResponsiveCamera({ isCameraAnimatingRef }: ResponsiveCameraProps) {
+  const { camera, size } = useThree();
+  const targetZRef = useRef(CAMERA_ANIMATION.DEFAULT_POSITION.z);
+
+  // Calculate target Z based on aspect ratio
+  useEffect(() => {
+    const aspectRatio = size.width / size.height;
+    const baseZ = CAMERA_ANIMATION.DEFAULT_POSITION.z; // 125
+
+    // Target aspect ratio (16:9 = 1.78)
+    const targetAspect = 1.78;
+
+    let newZ = baseZ;
+
+    if (aspectRatio > targetAspect) {
+      // Ultra-wide: move closer (min 80)
+      const widthFactor = aspectRatio / targetAspect;
+      newZ = Math.max(80, baseZ / Math.sqrt(widthFactor));
+    } else if (aspectRatio < targetAspect) {
+      // Narrow/portrait: move further back (max 180)
+      const heightFactor = targetAspect / aspectRatio;
+      newZ = Math.min(180, baseZ * Math.sqrt(heightFactor));
+    }
+
+    targetZRef.current = newZ;
+  }, [size.width, size.height]);
+
+  // Smoothly interpolate camera Z when not animating for filters
+  useFrame(() => {
+    if (isCameraAnimatingRef.current) return;
+
+    const currentZ = camera.position.z;
+    const targetZ = targetZRef.current;
+
+    if (Math.abs(currentZ - targetZ) > 0.1) {
+      camera.position.z += (targetZ - currentZ) * 0.05;
+    }
+  });
+
+  return null;
+}
+
+/**
  * Galaxy system - clusters and nodes
  */
 interface GalaxySystemProps {
@@ -821,6 +874,9 @@ export default function InspoCanvas({
         matchedCategories={matchedCategories}
         resources={resources}
       />
+
+      {/* Responsive camera for ultra-wide viewports */}
+      <ResponsiveCamera isCameraAnimatingRef={isCameraAnimatingRef} />
 
       {/* Galaxy system - clusters and nodes */}
       <Suspense fallback={null}>
