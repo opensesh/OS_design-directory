@@ -87,25 +87,6 @@ export default function Home() {
   const [hoveredResource, setHoveredResource] = useState<NormalizedResource | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-  // Dismiss tooltip on any click outside the canvas (safety net)
-  useEffect(() => {
-    if (!hoveredResource) return;
-
-    const handleGlobalClick = () => {
-      setHoveredResource(null);
-    };
-
-    // Short delay to avoid dismissing immediately on the hover interaction
-    const timeoutId = setTimeout(() => {
-      window.addEventListener('click', handleGlobalClick, { once: true });
-    }, 100);
-
-    return () => {
-      clearTimeout(timeoutId);
-      window.removeEventListener('click', handleGlobalClick);
-    };
-  }, [hoveredResource]);
-
   // Search modal state
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
