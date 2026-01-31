@@ -397,34 +397,6 @@ export default function Home() {
               />
             </Suspense>
           </motion.div>
-          
-          {/* Legend Button - Aligned with content container */}
-          <div className="absolute top-10 inset-x-0 z-[260] pointer-events-none">
-            <div className="max-w-7xl mx-auto px-6">
-              <div className="flex justify-end pointer-events-auto">
-                <div className="relative">
-                  <motion.button
-                    ref={legendButtonRef}
-                    onClick={() => {
-                      if (legendButtonRef.current) {
-                        setLegendButtonRect(legendButtonRef.current.getBoundingClientRect());
-                      }
-                      setLegendOpen(!legendOpen);
-                    }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-                    aria-label={legendOpen ? "Close legend" : "Open legend"}
-                    className="p-2.5 bg-os-surface-dark/80 backdrop-blur-xl rounded-lg border border-os-border-dark hover:border-os-border-dark/60 text-os-text-secondary-dark hover:text-brand-aperol transition-all shadow-lg"
-                  >
-                    {legendOpen ? <X className="w-5 h-5" /> : <Info className="w-5 h-5" />}
-                  </motion.button>
-                  
-
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       )}
 
@@ -745,6 +717,30 @@ export default function Home() {
           navigate(`/resource/${resource.id}`);
         }}
       />
+
+      {/* Legend Button - Fixed position outside canvas for proper z-index */}
+      {displayMode === '3d' && (
+        <div className="fixed top-[164px] right-6 z-[260] md:right-[calc((100vw-80rem)/2+1.5rem)]">
+          <div className="max-w-7xl">
+            <motion.button
+              ref={legendButtonRef}
+              onClick={() => {
+                if (legendButtonRef.current) {
+                  setLegendButtonRect(legendButtonRef.current.getBoundingClientRect());
+                }
+                setLegendOpen(!legendOpen);
+              }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+              aria-label={legendOpen ? "Close legend" : "Open legend"}
+              className="p-2.5 bg-os-surface-dark/80 backdrop-blur-xl rounded-lg border border-os-border-dark hover:border-os-border-dark/60 text-os-text-secondary-dark hover:text-brand-aperol transition-all shadow-lg"
+            >
+              {legendOpen ? <X className="w-5 h-5" /> : <Info className="w-5 h-5" />}
+            </motion.button>
+          </div>
+        </div>
+      )}
 
       {/* Legend Backdrop + Dropdown - needs to be outside overlay for proper z-index */}
       <AnimatePresence>
