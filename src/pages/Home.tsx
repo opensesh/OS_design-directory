@@ -371,41 +371,6 @@ export default function Home() {
             </Suspense>
           </motion.div>
           
-          {/* Legend Button - Aligned with content container */}
-          <div className="absolute top-10 inset-x-0 z-20 pointer-events-none">
-            <div className="max-w-7xl mx-auto px-6">
-              <div className="flex justify-end pointer-events-auto">
-                <div className="relative">
-                  <motion.button
-                    onClick={() => setLegendOpen(!legendOpen)}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-                    aria-label={legendOpen ? "Close legend" : "Open legend"}
-                    className="p-2.5 bg-os-surface-dark/80 backdrop-blur-xl rounded-lg border border-os-border-dark hover:border-os-border-dark/60 text-os-text-secondary-dark hover:text-brand-aperol transition-all shadow-lg"
-                  >
-                    {legendOpen ? <X className="w-5 h-5" /> : <Info className="w-5 h-5" />}
-                  </motion.button>
-                  
-                  {/* Legend Dropdown - positioned absolutely below button */}
-                  <AnimatePresence>
-                    {legendOpen && (
-                      <motion.div
-                        key="legend-dropdown"
-                        className="absolute top-full right-0 mt-2 z-[100]"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.15 }}
-                      >
-                        <UniverseLegend isOpen={legendOpen} onClose={() => setLegendOpen(false)} />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       )}
 
@@ -702,7 +667,45 @@ export default function Home() {
         mousePosition={mousePosition}
       />
 
-      {/* Search Modal - needs to be outside overlay for proper z-index */}
+      {/* Legend - Fixed position at root level for proper z-index */}
+      {displayMode === '3d' && (
+        <div className="fixed top-[134px] inset-x-0 z-[60] pointer-events-none">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="flex justify-end pointer-events-auto">
+              <div className="relative">
+                <motion.button
+                  onClick={() => setLegendOpen(!legendOpen)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                  aria-label={legendOpen ? "Close legend" : "Open legend"}
+                  className="p-2.5 bg-os-surface-dark/80 backdrop-blur-xl rounded-lg border border-os-border-dark hover:border-os-border-dark/60 text-os-text-secondary-dark hover:text-brand-aperol transition-all shadow-lg"
+                >
+                  {legendOpen ? <X className="w-5 h-5" /> : <Info className="w-5 h-5" />}
+                </motion.button>
+                
+                {/* Legend Dropdown */}
+                <AnimatePresence>
+                  {legendOpen && (
+                    <motion.div
+                      key="legend-dropdown"
+                      className="absolute top-full right-0 mt-2"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.15 }}
+                    >
+                      <UniverseLegend isOpen={legendOpen} onClose={() => setLegendOpen(false)} />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+            {/* Search Modal - needs to be outside overlay for proper z-index */}
       <SearchModal
         isOpen={isSearchModalOpen}
         onClose={() => setIsSearchModalOpen(false)}
