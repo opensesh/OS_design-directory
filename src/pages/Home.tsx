@@ -1,6 +1,6 @@
 import { useState, useMemo, lazy, Suspense, useCallback, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Box, Table2, Search, LayoutGrid, Info } from 'lucide-react';
+import { Box, Table2, Search, LayoutGrid, Info, X } from 'lucide-react';
 import { SearchModal } from '../components/search/SearchModal';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -18,8 +18,6 @@ import {
   generateCategoryResponse,
 } from '../lib/search';
 import { performLLMSearch } from '../hooks/useLLMSearch';
-import { DotLoader } from '../components/ui/dot-loader';
-import { animationPresets } from '../lib/animation-frames';
 
 // Lazy load the 3D canvas for better initial load
 const InspoCanvas = lazy(() => import('../components/canvas/InspoCanvas'));
@@ -290,15 +288,7 @@ export default function Home() {
           <Suspense
             fallback={
               <div className="w-full h-full flex items-center justify-center bg-os-bg-dark">
-                <div className="flex flex-col items-center gap-4">
-                  <DotLoader
-                    frames={animationPresets[0].frames}
-                    duration={animationPresets[0].duration}
-                    repeatCount={animationPresets[0].repeatCount}
-                    dotClassName="bg-brand-aperol/20 [&.active]:bg-brand-aperol"
-                  />
-                  <span className="text-os-text-secondary-dark text-sm">Loading universe...</span>
-                </div>
+                <span className="text-os-text-secondary-dark text-sm">Loading universe...</span>
               </div>
             }
           >
@@ -312,6 +302,33 @@ export default function Home() {
               onResourceHover={handleResourceHover}
             />
           </Suspense>
+          
+          {/* Legend Button - Aligned with content container */}
+          <div className="absolute top-4 inset-x-0 z-20 pointer-events-none">
+            <div className="max-w-5xl mx-auto px-6">
+              <div className="flex justify-end pointer-events-auto">
+                <div className="relative">
+                  <motion.button
+                    onClick={() => setLegendOpen(!legendOpen)}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                    aria-label={legendOpen ? "Close legend" : "Open legend"}
+                    className="p-2.5 bg-os-surface-dark/80 backdrop-blur-xl rounded-lg border border-os-border-dark hover:border-os-border-dark/60 text-os-text-secondary-dark hover:text-brand-aperol transition-all shadow-lg"
+                  >
+                    {legendOpen ? <X className="w-5 h-5" /> : <Info className="w-5 h-5" />}
+                  </motion.button>
+                  
+                  {/* Legend Dropdown - positioned absolutely below button */}
+                  {legendOpen && (
+                    <div className="absolute top-full right-0 mt-2">
+                      <UniverseLegend isOpen={legendOpen} onClose={() => setLegendOpen(false)} />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
@@ -465,25 +482,7 @@ export default function Home() {
                 <Table2 className="w-4 h-4" />
               </button>
             </div>
-            
-            {/* Legend Button - Only in 3D View */}
-            {displayMode === '3d' && (
-              <div className="relative ml-3">
-                <motion.button
-                  onClick={() => setLegendOpen(!legendOpen)}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-                  aria-label="Open legend"
-                  className="p-2.5 bg-os-surface-dark/80 backdrop-blur-xl rounded-lg border border-os-border-dark hover:border-os-border-dark/60 text-os-text-secondary-dark hover:text-brand-aperol transition-all"
-                >
-                  <Info className="w-5 h-5" />
-                </motion.button>
-                
-                {/* Legend Dropdown */}
-                <UniverseLegend isOpen={legendOpen} onClose={() => setLegendOpen(false)} />
-              </div>
-            )}
+
           </div>
         </div>
       </section>
