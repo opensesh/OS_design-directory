@@ -399,7 +399,7 @@ export default function Home() {
           </motion.div>
           
           {/* Legend Button - Aligned with content container */}
-          <div className="absolute top-10 inset-x-0 z-20 pointer-events-none">
+          <div className="absolute top-10 inset-x-0 z-[260] pointer-events-none">
             <div className="max-w-7xl mx-auto px-6">
               <div className="flex justify-end pointer-events-auto">
                 <div className="relative">
