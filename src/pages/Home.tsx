@@ -624,12 +624,20 @@ export default function Home() {
       <AnimatePresence>
         {displayMode === '3d' && (
           <motion.div
-            className="flex-shrink-0 relative z-20 bg-os-bg-dark"
+            className="flex-shrink-0 relative z-20"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
           >
+            {/* Solid background - fades faster to prevent rectangle glitch */}
+            <motion.div
+              className="absolute inset-0 bg-os-bg-dark pointer-events-none"
+              initial={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15, ease: 'easeOut' }}
+            />
+            
             {/* Bottom gradient - matches top gradient for seamless blend */}
             <motion.div
               className="absolute -top-32 left-0 right-0 h-32 pointer-events-none z-10"
