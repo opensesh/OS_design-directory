@@ -20,8 +20,8 @@ This project serves as a living, interactive catalog of design resources curated
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/design-directory.git
-cd design-directory
+git clone https://github.com/opensesh/OS_design-directory.git
+cd OS_design-directory
 
 # Install dependencies
 bun install
@@ -224,6 +224,14 @@ node scripts/validate.cjs
 - Average description length
 - Missing screenshots list
 
+### 7. Migrate Screenshots (`migrate-screenshots.ts`)
+
+Migrate screenshot files to a new naming convention or location.
+
+```bash
+npx tsx scripts/migrate-screenshots.ts
+```
+
 ---
 
 ## Complete Workflow: Adding New Resources
@@ -270,6 +278,9 @@ design-directory/
 │   │   │   ├── CategoryGrid.tsx
 │   │   │   └── ResourceCard.tsx
 │   │   └── ui/                  # General UI components
+│   │       ├── AILoader.tsx     # AI typing indicator
+│   │       ├── dot-loader.tsx   # Animated dot loader
+│   │       └── ...
 │   ├── data/
 │   │   ├── index.ts             # Data export
 │   │   └── resources.json       # ← YOUR RESOURCE DATA
@@ -292,6 +303,7 @@ design-directory/
 │   ├── add-resources.ts
 │   ├── capture-screenshots.ts
 │   ├── fix-screenshots.ts
+│   ├── migrate-screenshots.ts
 │   ├── update-descriptions.cjs
 │   ├── transform-taxonomy.cjs
 │   └── validate.cjs
@@ -309,7 +321,7 @@ design-directory/
 | **Framework** | React 18 + TypeScript |
 | **3D Rendering** | Three.js + React Three Fiber |
 | **State** | Zustand |
-| **Styling** | Tailwind CSS v4 |
+| **Styling** | Tailwind CSS |
 | **Routing** | React Router v7 |
 
 ---
