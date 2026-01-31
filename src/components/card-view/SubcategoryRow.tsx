@@ -48,14 +48,15 @@ export const SubcategoryRow = forwardRef<HTMLDivElement, SubcategoryRowProps>(
       <AnimatePresence>
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          exit={{ opacity: 0, height: 0 }}
+          initial={{ opacity: 0, scaleY: 0 }}
+          animate={{ opacity: 1, scaleY: 1 }}
+          exit={{ opacity: 0, scaleY: 0 }}
           transition={{
             duration: 0.35,
             ease: [0.4, 0, 0.2, 1],
             opacity: { duration: 0.25 }
           }}
+          style={{ transformOrigin: 'top', overflow: 'hidden' }}
           className="overflow-hidden"
         >
           {/* Use matching grid structure to align with cards - 1 col mobile, 2 tablet, 3 desktop */}

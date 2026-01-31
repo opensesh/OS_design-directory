@@ -137,14 +137,15 @@ export function CategoryButtons({
       <AnimatePresence>
         {activeCategory && subCategories.length > 0 && (
           <motion.div
-            initial={{ opacity: 0, height: 0, y: -10 }}
-            animate={{ opacity: 1, height: 'auto', y: 0 }}
-            exit={{ opacity: 0, height: 0, y: -10 }}
+            initial={{ opacity: 0, scaleY: 0 }}
+            animate={{ opacity: 1, scaleY: 1 }}
+            exit={{ opacity: 0, scaleY: 0 }}
             transition={{
               duration: 0.3,
               ease: [0.4, 0, 0.2, 1],
               opacity: { duration: 0.2 }
             }}
+            style={{ transformOrigin: 'top', overflow: 'hidden' }}
             className="overflow-hidden"
           >
             <div className="overflow-x-auto scrollbar-hide py-1">
