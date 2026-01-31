@@ -625,7 +625,7 @@ export default function Home() {
         {displayMode === '3d' && (
           <motion.div
             className="flex-shrink-0 relative z-20"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 1, y: 0 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, transition: { duration: 0 } }}
             transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
