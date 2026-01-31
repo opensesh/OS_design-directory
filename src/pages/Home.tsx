@@ -630,12 +630,12 @@ export default function Home() {
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
           >
-            {/* Solid background - synced with parent exit animation */}
+            {/* Solid background - instant exit to prevent rectangle artifact */}
             <motion.div
               className="absolute inset-0 bg-os-bg-dark pointer-events-none"
               initial={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+              transition={{ duration: 0 }}
             />
             
             {/* Bottom gradient - matches top gradient for seamless blend */}
@@ -643,7 +643,7 @@ export default function Home() {
               className="absolute -top-32 left-0 right-0 h-32 pointer-events-none z-10"
               initial={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+              transition={{ duration: 0 }}
               style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(20,20,20,0.8) 60%, rgba(20,20,20,1) 100%)' }}
             />
 
