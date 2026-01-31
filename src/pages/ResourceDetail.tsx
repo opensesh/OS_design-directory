@@ -436,21 +436,42 @@ export default function ResourceDetail() {
               {/* Title + Domain + Buttons */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-3">
-                  {/* Clickable Title + Domain */}
-                  <a
-                    href={resource.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group block min-w-0 flex-1"
-                  >
-                    <h1 className="text-2xl md:text-3xl font-bold tracking-tight group-hover:text-[#FE5102] transition-colors">
-                      {resource.name}
-                    </h1>
-                    <div className="flex items-center gap-1.5 text-zinc-400 group-hover:text-[#FE5102] transition-colors mt-1">
+                  {/* Title + Domain - Independent hover states */}
+                  <div className="min-w-0 flex-1">
+                    {/* Title link */}
+                    <a
+                      href={resource.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group inline-flex items-center gap-2"
+                    >
+                      <h1 className="text-2xl md:text-3xl font-bold tracking-tight group-hover:text-[#FE5102] transition-colors">
+                        {resource.name}
+                      </h1>
+                      <motion.span
+                        className="text-zinc-500 group-hover:text-[#FE5102] transition-colors"
+                        whileHover={{ x: 2, y: -2 }}
+                      >
+                        <ArrowUpRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </motion.span>
+                    </a>
+                    
+                    {/* Domain link - independent hover */}
+                    <a
+                      href={resource.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group inline-flex items-center gap-1.5 text-zinc-400 hover:text-[#FE5102] transition-colors mt-1"
+                    >
                       <Globe className="w-3.5 h-3.5" />
                       <span className="text-sm truncate">{domain}</span>
-                    </div>
-                  </a>
+                      <motion.span
+                        whileHover={{ x: 2, y: -2 }}
+                      >
+                        <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </motion.span>
+                    </a>
+                  </div>
 
 
                   {/* Action buttons - responsive */}
