@@ -304,8 +304,8 @@ export default function Home() {
           </Suspense>
           
           {/* Legend Button - Aligned with content container */}
-          <div className="absolute top-6 inset-x-0 z-20 pointer-events-none">
-            <div className="max-w-5xl mx-auto px-6">
+          <div className="absolute top-16 inset-x-0 z-20 pointer-events-none">
+            <div className="max-w-7xl mx-auto px-6">
               <div className="flex justify-end pointer-events-auto">
                 <div className="relative">
                   <motion.button
@@ -336,7 +336,7 @@ export default function Home() {
       <div className={`relative z-10 h-full flex flex-col overflow-hidden ${displayMode === '3d' ? 'pointer-events-none' : ''}`}>
         {/* Header - Semi-transparent with backdrop blur */}
         <header className={`pointer-events-auto flex-shrink-0 sticky top-0 z-30 backdrop-blur-xl border-b border-os-border-dark/50 h-16 ${displayMode === '3d' ? 'bg-os-bg-dark/60' : 'bg-os-bg-dark/80'}`}>
-        <div className="max-w-5xl mx-auto px-6 h-full">
+        <div className="max-w-7xl mx-auto px-6 h-full">
           <div className="flex items-center justify-between h-full">
           <div className="flex items-center gap-3 min-w-0">
             {/* Open Session Brand Mark - resets filters */}
@@ -422,7 +422,7 @@ export default function Home() {
         role="region"
         aria-label="Current view"
       >
-        <div className={`max-w-5xl mx-auto px-6 ${displayMode === '3d' ? 'py-4' : 'py-3'} md:py-4`}>
+        <div className={`max-w-7xl mx-auto px-6 ${displayMode === '3d' ? 'py-4' : 'py-3'} md:py-4`}>
           <div className="flex items-center justify-between">
             {/* Left: Label + View Name + Description */}
             <div className="flex flex-col gap-0.5">
@@ -456,6 +456,7 @@ export default function Home() {
                     : 'text-os-text-secondary-dark hover:text-brand-vanilla'
                 }`}
                 aria-label="3D View"
+                aria-current={displayMode === '3d' ? 'page' : undefined}
               >
                 <Box className="w-4 h-4" />
               </button>
@@ -523,7 +524,7 @@ export default function Home() {
               }}
               className="w-full h-full overflow-auto"
             >
-              <div className="max-w-5xl mx-auto">
+              <div className="max-w-7xl mx-auto">
                 <InspoTable
                   resources={resources}
                   initialCategory={categoryParam || undefined}
@@ -556,7 +557,7 @@ export default function Home() {
               style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(20,20,20,0.8) 60%, rgba(20,20,20,1) 100%)' }}
             />
 
-            <div className="relative z-20 w-full max-w-5xl mx-auto px-6 pt-2 pb-6 space-y-3 pointer-events-auto">
+            <div className="relative z-20 w-full max-w-7xl mx-auto px-6 pt-2 pb-6 space-y-3 pointer-events-auto">
               {/* AI Response - absolutely positioned to overlay without pushing layout */}
               <div className="relative">
                 <AnimatePresence>
