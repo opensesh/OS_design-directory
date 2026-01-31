@@ -1,4 +1,4 @@
-import { useState, useMemo, lazy, Suspense, useCallback, useRef } from 'react';
+import { useState, useMemo, lazy, Suspense, useCallback, useRef, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Box, Table2, Search, LayoutGrid, Info, X } from 'lucide-react';
 import { SearchModal } from '../components/search/SearchModal';
@@ -60,6 +60,16 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredResourceIds, setFilteredResourceIds] = useState<number[] | null>(null);
   const [matchedCategories, setMatchedCategories] = useState<string[]>([]);
+
+  // Sync URL params to filter state on mount/change
+  useEffect(() => {
+    if (categoryParam !== activeCategory) {
+      setActiveCategory(categoryParam);
+    }
+    if (subCategoryParam !== activeSubCategory) {
+      setActiveSubCategory(subCategoryParam);
+    }
+  }, [categoryParam, subCategoryParam]);
 
   // AI response state
   const messageIdRef = useRef(0);
@@ -304,7 +314,7 @@ export default function Home() {
           </Suspense>
           
           {/* Legend Button - Aligned with content container */}
-          <div className="absolute top-20 md:top-10 lg:top-12 inset-x-0 z-20 pointer-events-none">
+          <div className="absolute top-10 inset-x-0 z-20 pointer-events-none">
             <div className="max-w-7xl mx-auto px-6">
               <div className="flex justify-end pointer-events-auto">
                 <div className="relative">
