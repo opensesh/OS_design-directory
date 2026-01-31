@@ -1,5 +1,0 @@
-{
-  "runtime": "edge",
-  "deploymentTarget": "v8-worker",
-  "entrypoint": "api/search/parse-query.js"
-}
