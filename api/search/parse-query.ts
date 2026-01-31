@@ -142,7 +142,8 @@ export default async function handler(req: Request): Promise<Response> {
   }
 
   // Get client IP for rate limiting
-  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+  const ip = req.headers.get('x-vercel-ip') ||
+             req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
              req.headers.get('x-real-ip') ||
              'unknown';
 
@@ -176,6 +177,14 @@ export default async function handler(req: Request): Promise<Response> {
 
     if (!query || typeof query !== 'string') {
       return new Response(JSON.stringify({ error: 'Invalid query parameter' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Validate query length to prevent abuse
+    if (query.length > 1000) {
+      return new Response(JSON.stringify({ error: 'Query too long (max 1000 characters)' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
