@@ -1,5 +1,22 @@
+/**
+ * Animation Frames for DotLoader
+ * 
+ * Each frame is an array of dot indices (0-48) that should be "active"
+ * The 7x7 grid is indexed left-to-right, top-to-bottom:
+ * 
+ *  0  1  2  3  4  5  6
+ *  7  8  9 10 11 12 13
+ * 14 15 16 17 18 19 20
+ * 21 22 23 24 25 26 27
+ * 28 29 30 31 32 33 34
+ * 35 36 37 38 39 40 41
+ * 42 43 44 45 46 47 48
+ * 
+ * Center dot is 24
+ */
+
 // Thinking/processing animation - ripple from center
-const thinking = [
+export const thinkingFrames = [
   [24],
   [17, 23, 25, 31],
   [10, 16, 18, 24, 30, 32, 38],
@@ -15,13 +32,32 @@ const thinking = [
   [24],
 ];
 
-// Export type and presets
-export type AnimationPreset = {
-  frames: number[][];
-  duration: number;
-  repeatCount: number;
-};
+// Wave animation - sweeps left to right and back
+export const waveFrames = [
+  [0, 7, 14, 21, 28, 35, 42],
+  [1, 8, 15, 22, 29, 36, 43],
+  [2, 9, 16, 23, 30, 37, 44],
+  [3, 10, 17, 24, 31, 38, 45],
+  [4, 11, 18, 25, 32, 39, 46],
+  [5, 12, 19, 26, 33, 40, 47],
+  [6, 13, 20, 27, 34, 41, 48],
+  [5, 12, 19, 26, 33, 40, 47],
+  [4, 11, 18, 25, 32, 39, 46],
+  [3, 10, 17, 24, 31, 38, 45],
+  [2, 9, 16, 23, 30, 37, 44],
+  [1, 8, 15, 22, 29, 36, 43],
+  [0, 7, 14, 21, 28, 35, 42],
+];
 
-export const animationPresets: AnimationPreset[] = [
-  { frames: thinking, duration: 120, repeatCount: -1 }, // Loop infinitely
+// Pulse/breathe animation - grows and shrinks from center
+export const pulseFrames = [
+  [],
+  [24],
+  [17, 23, 25, 31, 24],
+  [10, 16, 18, 24, 30, 32, 17, 23, 25, 31],
+  [3, 9, 11, 17, 23, 25, 31, 37, 39, 10, 16, 18, 24, 30, 32],
+  [10, 16, 18, 24, 30, 32, 17, 23, 25, 31],
+  [17, 23, 25, 31, 24],
+  [24],
+  [],
 ];
