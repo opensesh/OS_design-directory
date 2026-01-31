@@ -1,6 +1,7 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { getCategoryColor } from '../../types/resource';
+import { useState, useRef, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
+import { getCategoryColor } from "../../types/resource";
+import { useTouchDevice } from "../../hooks/useTouchDevice";
 
 interface CategoryCardProps {
   category: string;
@@ -11,17 +12,26 @@ interface CategoryCardProps {
 }
 
 const CATEGORY_VIDEOS: Record<string, string> = {
-  'Community': '/videos/categories/community.mp4',
-  'Inspiration': '/videos/categories/inspiration.mp4',
-  'Learning': '/videos/categories/learning.mp4',
-  'Templates': '/videos/categories/templates.mp4',
-  'Tools': '/videos/categories/tools.mp4',
-  'AI': '/videos/categories/ai.mp4',
+  "Community": "/videos/categories/community.mp4",
+  "Inspiration": "/videos/categories/inspiration.mp4",
+  "Learning": "/videos/categories/learning.mp4",
+  "Templates": "/videos/categories/templates.mp4",
+  "Tools": "/videos/categories/tools.mp4",
+  "AI": "/videos/categories/ai.mp4",
+};
+
+const CATEGORY_POSTERS: Record<string, string> = {
+  "Community": "/images/posters/community.jpg",
+  "Inspiration": "/images/posters/inspiration.jpg",
+  "Learning": "/images/posters/learning.jpg",
+  "Templates": "/images/posters/templates.jpg",
+  "Tools": "/images/posters/tools.jpg",
+  "AI": "/images/posters/ai.jpg",
 };
 
 const CATEGORY_VIDEO_POSITIONS: Record<string, string> = {
-  'AI': 'center 30%',
-  'Inspiration': 'center 30%',
+  "AI": "center 30%",
+  "Inspiration": "center 30%",
 };
 
 export function CategoryCard({
@@ -37,6 +47,10 @@ export function CategoryCard({
   const isReversingRef = useRef(false);
   const animationFrameRef = useRef<number | null>(null);
   const lastTimeRef = useRef<number>(0);
+  const isTouch = useTouchDevice();
+
+  // On touch devices, play video when expanded; on desktop, play on hover
+  const shouldPlayVideo = isTouch ? isExpanded : isHovered;
 
   // Reverse playback using requestAnimationFrame
   const reversePlayback = useCallback((timestamp: number) => {
@@ -69,12 +83,12 @@ export function CategoryCard({
     animationFrameRef.current = requestAnimationFrame(reversePlayback);
   }, [reversePlayback]);
 
-  // Control video playback on hover with ping-pong effect
+  // Control video playback with ping-pong effect
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    if (isHovered) {
+    if (shouldPlayVideo) {
       isReversingRef.current = false;
       video.play().catch(() => {
         // Silently handle autoplay restrictions
@@ -88,9 +102,10 @@ export function CategoryCard({
       video.pause();
       video.currentTime = 0;
     }
-  }, [isHovered]);
+  }, [shouldPlayVideo]);
 
   const videoSrc = CATEGORY_VIDEOS[category];
+  const posterSrc = CATEGORY_POSTERS[category];
 
   return (
     <motion.button
@@ -105,7 +120,7 @@ export function CategoryCard({
         focus:ring-offset-2 focus:ring-offset-os-bg-dark
         aspect-[4/3] sm:aspect-square
         transform-gpu
-        ${isExpanded ? 'ring-2' : ''}
+        ${isExpanded ? "ring-2" : ""}
       `}
       style={{
         borderColor: isExpanded ? categoryColor : undefined,
@@ -132,9 +147,10 @@ export function CategoryCard({
               className="absolute inset-0 w-full h-full object-cover"
               style={{ objectPosition: CATEGORY_VIDEO_POSITIONS[category] }}
               src={videoSrc}
+              poster={posterSrc}
               muted
               playsInline
-              preload="metadata"
+              preload={isTouch ? "none" : "metadata"}
               onEnded={handleVideoEnded}
             />
           )}
@@ -144,7 +160,7 @@ export function CategoryCard({
         <div
           className="absolute inset-0 pointer-events-none rounded-lg"
           style={{
-            boxShadow: 'inset 0 0 25px 15px rgba(28, 28, 28, 1)',
+            boxShadow: "inset 0 0 25px 15px rgba(28, 28, 28, 1)",
             background: `
               linear-gradient(to right, rgba(28, 28, 28, 1) 0%, transparent 25%),
               linear-gradient(to left, rgba(28, 28, 28, 1) 0%, transparent 25%),
@@ -194,7 +210,7 @@ export function CategoryCard({
           >
             {count}
           </span>
-          {' '}Resource{count !== 1 ? 's' : ''}
+          {" "}Resource{count !== 1 ? "s" : ""}
         </p>
       </div>
     </motion.button>
