@@ -624,7 +624,7 @@ export default function Home() {
       <AnimatePresence>
         {displayMode === '3d' && (
           <motion.div
-            className="flex-shrink-0 relative z-20 bg-os-bg-dark"
+            className="flex-shrink-0 relative z-20"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
