@@ -748,6 +748,19 @@ export default function Home() {
 
       {/* Legend Backdrop + Dropdown - needs to be outside overlay for proper z-index */}
       <AnimatePresence>
+        {legendOpen && (
+          <motion.div
+            key="legend-backdrop"
+            className="fixed inset-x-0 bottom-0 z-[250] bg-os-bg-dark/60 backdrop-blur-md"
+            style={{ top: 124 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            onClick={() => setLegendOpen(false)}
+            aria-hidden="true"
+          />
+        )}
         {legendOpen && legendButtonRect && (
           <motion.div
             key="legend-dropdown"
