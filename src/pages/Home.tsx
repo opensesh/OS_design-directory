@@ -100,7 +100,7 @@ export default function Home() {
     'cmd+k': useCallback(() => setIsSearchModalOpen(true), []),
   });
 
-  // Auto-dismiss tooltip after 2 seconds on mobile/tablet
+  // Auto-dismiss tooltip after 5 seconds (extended for touch device interaction)
   useEffect(() => {
     // Clear any existing timeout
     if (hoverTimeoutRef.current) {
@@ -112,7 +112,7 @@ export default function Home() {
     if (hoveredResource) {
       hoverTimeoutRef.current = setTimeout(() => {
         setHoveredResource(null);
-      }, 2000); // 2 seconds
+      }, 5000); // 5 seconds - extended for touch device interaction
     }
 
     return () => {
