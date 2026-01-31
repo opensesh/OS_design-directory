@@ -162,7 +162,7 @@ export function RatingScale({
           {/* Indicator dot */}
           {animateOnMount ? (
             <motion.div
-              className="absolute w-3 h-3 rounded-full -top-[3px] border-2 border-[#141414]"
+              className="absolute w-3 h-3 rounded-full -top-[3px] border-2 border-[var(--border-secondary)]"
               initial={{ left: '-6px', scale: 0 }}
               animate={{ left: `calc(${percentage}% - 6px)`, scale: 1 }}
               transition={{ delay: 0.25, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -170,7 +170,7 @@ export function RatingScale({
             />
           ) : (
             <div
-              className="absolute w-3 h-3 rounded-full -top-[3px] border-2 border-[#141414] transition-all duration-300"
+              className="absolute w-3 h-3 rounded-full -top-[3px] border-2 border-[var(--border-secondary)] transition-all duration-300"
               style={{
                 left: `calc(${percentage}% - 6px)`,
                 backgroundColor: tierColor,

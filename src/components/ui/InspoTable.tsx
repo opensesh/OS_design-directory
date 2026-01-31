@@ -258,7 +258,7 @@ export function InspoTable({
     <div className="w-full">
       {/* Filter Active Banner - shows when navigating from ResourceDetail */}
       {showFilterBanner && (
-        <div className="flex items-center justify-between px-4 py-2 bg-[#FE5102]/10 border-b border-[#FE5102]/20">
+        <div className="flex items-center justify-between px-4 py-2 bg-[#FE5102]/10 border-b border-[var(--border-secondary)]">
           <span className="text-sm text-[#FE5102] font-medium">
             Showing results for: {activeFilterLabel}
           </span>

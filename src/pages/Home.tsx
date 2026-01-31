@@ -468,6 +468,7 @@ export default function Home() {
                     : 'text-os-text-secondary-dark hover:text-brand-vanilla'
                 }`}
                 aria-label="Card View"
+                aria-current={displayMode === 'card' ? 'page' : undefined}
               >
                 <LayoutGrid className="w-4 h-4" />
               </button>
@@ -479,6 +480,7 @@ export default function Home() {
                     : 'text-os-text-secondary-dark hover:text-brand-vanilla'
                 }`}
                 aria-label="Table View"
+                aria-current={displayMode === 'table' ? 'page' : undefined}
               >
                 <Table2 className="w-4 h-4" />
               </button>

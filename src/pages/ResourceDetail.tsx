@@ -601,7 +601,7 @@ export default function ResourceDetail() {
                     {resource.category && (
                       <Link
                         to={`/?display=table&category=${encodeURIComponent(resource.category)}`}
-                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#FE5102]/10 text-[#FE5102] text-xs border border-[#FE5102]/20 hover:bg-[#FE5102]/20 transition-colors"
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#FE5102]/10 text-[#FE5102] text-xs border border-[var(--border-secondary)] hover:bg-[#FE5102]/20 transition-colors"
                       >
                         <Folder className="w-2.5 h-2.5" />
                         {resource.category}
@@ -687,7 +687,7 @@ export default function ResourceDetail() {
                     <Link
                       key={related.id}
                       to={`/resource/${related.id}`}
-                      className="group flex items-center gap-3 p-3 rounded-lg bg-zinc-800/40 border border-zinc-700/30 hover:border-[#FE5102]/30 hover:bg-zinc-800/60 transition-all"
+                      className="group flex items-center gap-3 p-3 rounded-lg bg-zinc-800/40 border border-zinc-700/30 hover:border-[var(--border-primary)] hover:bg-zinc-800/60 transition-all"
                     >
                       {/* Mini thumbnail with favicon fallback */}
                       <div className="w-10 h-10 rounded-md overflow-hidden bg-zinc-800 border border-zinc-700 flex-shrink-0 flex items-center justify-center">
