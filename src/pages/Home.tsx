@@ -86,6 +86,7 @@ export default function Home() {
   // Tooltip state
   const [hoveredResource, setHoveredResource] = useState<NormalizedResource | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Search modal state
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
@@ -98,6 +99,28 @@ export default function Home() {
   useKeyboardShortcuts({
     'cmd+k': useCallback(() => setIsSearchModalOpen(true), []),
   });
+
+  // Auto-dismiss tooltip after 2 seconds on mobile/tablet
+  useEffect(() => {
+    // Clear any existing timeout
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
+    }
+
+    // If there is a hovered resource, set auto-dismiss timeout
+    if (hoveredResource) {
+      hoverTimeoutRef.current = setTimeout(() => {
+        setHoveredResource(null);
+      }, 2000); // 2 seconds
+    }
+
+    return () => {
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
+    };
+  }, [hoveredResource]);
 
   // Filter resources based on category, subcategory, and semantic search
   const filteredResources = useMemo(() => {
@@ -707,6 +730,10 @@ export default function Home() {
       <InspoResourceTooltip
         resource={hoveredResource}
         mousePosition={mousePosition}
+        onClick={(resource) => {
+          setHoveredResource(null);
+          navigate(`/resource/${resource.id}`);
+        }}
       />
 
       {/* Search Modal - needs to be outside overlay for proper z-index */}
