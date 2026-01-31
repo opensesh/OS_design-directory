@@ -270,16 +270,28 @@ function InteractionController({
       }
     };
 
+    const handleTouchCancel = () => {
+      isMouseInCanvasRef.current = false;
+      mouse.current.set(-999, -999);
+      if (lastHoveredRef.current !== null) {
+        lastHoveredRef.current = null;
+        onHover(null);
+        canvas.style.cursor = 'default';
+      }
+    };
+
     canvas.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('mouseenter', handleMouseEnter);
     canvas.addEventListener('click', handleClick);
     canvas.addEventListener('mouseleave', handleMouseLeave);
+    canvas.addEventListener('touchcancel', handleTouchCancel);
 
     return () => {
       canvas.removeEventListener('mousemove', handleMouseMove);
       canvas.removeEventListener('mouseenter', handleMouseEnter);
       canvas.removeEventListener('click', handleClick);
       canvas.removeEventListener('mouseleave', handleMouseLeave);
+      canvas.removeEventListener('touchcancel', handleTouchCancel);
     };
   }, [camera, gl, raycaster, resourceNodesRef, onHover, onClick, onClickAnimation]);
 
