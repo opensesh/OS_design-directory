@@ -18,27 +18,27 @@ export function InspoChat({
   const [isFocused, setIsFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const {
-    isListening,
-    transcript,
-    error: voiceError,
-    startListening,
-    stopListening,
-    resetTranscript,
-  } = useVoiceRecognition((finalTranscript) => {
-    setInput((prev) => prev + (prev ? ' ' : '') + finalTranscript);
-    resetTranscript();
-  });
+// Base text ref to store input before voice starts (prevents word repetition)
+  const baseTextRef = useRef('');
 
-  // Append transcript while listening
-  useEffect(() => {
-    if (transcript && isListening) {
-      setInput((prev) => {
-        const base = prev.replace(transcript, '').trim();
-        return base + (base ? ' ' : '') + transcript;
-      });
-    }
-  }, [transcript, isListening]);
+const {
+  isListening,
+  transcript,
+  error: voiceError,
+  startListening,
+  stopListening,
+  resetTranscript,
+} = useVoiceRecognition((finalTranscript) => {
+  const newInput = baseTextRef.current + (baseTextRef.current ? ' ' : '') + finalTranscript;
+  setInput(newInput);
+  baseTextRef.current = newInput;
+  resetTranscript();
+});
+
+// Compute display value: show interim transcript during listening
+const displayValue = isListening && transcript
+  ? baseTextRef.current + (baseTextRef.current ? ' ' : '') + transcript
+  : input;
 
   // Auto-resize textarea
   useEffect(() => {
@@ -62,13 +62,14 @@ export function InspoChat({
     }
   };
 
-  const handleMicClick = () => {
-    if (isListening) {
-      stopListening();
-    } else {
-      startListening();
-    }
-  };
+const handleMicClick = () => {
+  if (isListening) {
+    stopListening();
+  } else {
+    baseTextRef.current = input; // Save current input
+    startListening();
+  }
+};
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-3xl mx-auto">
@@ -85,7 +86,7 @@ export function InspoChat({
         <div className="relative">
           <textarea
             ref={textareaRef}
-            value={input}
+            value={displayValue}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             onFocus={() => setIsFocused(true)}
