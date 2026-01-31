@@ -18,3 +18,28 @@
   --category-tools: #EC4899;
   --category-ai: #06B6D4;
 }
+
+/* Spacing Scale */
+:root {
+  --space-xs: 4px;   /* gap-1, p-1 */
+  --space-sm: 8px;   /* gap-2, p-2 */
+  --space-md: 12px;  /* gap-3, p-3 */
+  --space-lg: 16px;  /* gap-4, p-4 */
+  --space-xl: 20px;  /* gap-5, p-5 */
+  --space-2xl: 24px; /* gap-6, p-6 */
+  --space-3xl: 32px; /* gap-8, p-8 */
+  --space-4xl: 48px; /* gap-12, p-12 */
+
+  /* Component-specific spacing patterns */
+  --padding-button-sm: var(--space-xs) var(--space-md);  /* py-1 px-3 */
+  --padding-button: var(--space-sm) var(--space-lg);     /* py-2 px-4 */
+  --padding-button-lg: var(--space-md) var(--space-xl);  /* py-3 px-5 */
+  
+  --padding-card: var(--space-lg);                       /* p-4 */
+  --padding-container: var(--space-2xl);                 /* px-6 */
+  
+  --gap-tight: var(--space-xs);    /* 4px - very compact */
+  --gap-default: var(--space-sm);  /* 8px - standard */
+  --gap-loose: var(--space-md);    /* 12px - comfortable */
+  --gap-spacious: var(--space-lg); /* 16px - roomy */
+}
