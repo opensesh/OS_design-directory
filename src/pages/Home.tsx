@@ -37,6 +37,8 @@ export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [legendOpen, setLegendOpen] = useState(false);
+  const [legendButtonRect, setLegendButtonRect] = useState<DOMRect | null>(null);
+  const legendButtonRef = useRef<HTMLButtonElement>(null);
   
   // Universe loading state - only for initial 3D load
   const [universeReady, setUniverseReady] = useState(false);
@@ -629,14 +631,17 @@ export default function Home() {
         {displayMode === '3d' && (
           <motion.div
             className="flex-shrink-0 relative z-20 bg-os-bg-dark"
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 30 }}
-            transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
           >
             {/* Bottom gradient - matches top gradient for seamless blend */}
-            <div
+            <motion.div
               className="absolute -top-32 left-0 right-0 h-32 pointer-events-none z-10"
+              initial={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15, ease: 'easeOut' }}
               style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(20,20,20,0.8) 60%, rgba(20,20,20,1) 100%)' }}
             />
 
