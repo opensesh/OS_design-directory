@@ -160,12 +160,12 @@ export function CategoryCard({
         <div
           className="absolute inset-0 pointer-events-none rounded-lg"
           style={{
-            boxShadow: "inset 0 0 25px 15px rgba(28, 28, 28, 1)",
+            boxShadow: "inset 0 0 25px 15px rgba(var(--card-vignette), 1)",
             background: `
-              linear-gradient(to right, rgba(28, 28, 28, 1) 0%, transparent 25%),
-              linear-gradient(to left, rgba(28, 28, 28, 1) 0%, transparent 25%),
-              linear-gradient(to bottom, rgba(28, 28, 28, 1) 0%, transparent 30%),
-              linear-gradient(to top, rgba(28, 28, 28, 1) 0%, transparent 35%)
+              linear-gradient(to right, rgba(var(--card-vignette), 1) 0%, transparent 25%),
+              linear-gradient(to left, rgba(var(--card-vignette), 1) 0%, transparent 25%),
+              linear-gradient(to bottom, rgba(var(--card-vignette), 1) 0%, transparent 30%),
+              linear-gradient(to top, rgba(var(--card-vignette), 1) 0%, transparent 35%)
             `
           }}
         />
@@ -175,7 +175,7 @@ export function CategoryCard({
       <div className="absolute bottom-0 left-0 right-0 px-4 pb-4 pt-2">
         {/* Header row with title and chevron */}
         <div className="flex items-center justify-between mb-0.5">
-          <h3 className="text-lg font-display font-semibold text-brand-vanilla">
+          <h3 className="text-lg font-display font-semibold text-[var(--fg-primary)]">
             {category}
           </h3>
           
