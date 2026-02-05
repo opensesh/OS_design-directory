@@ -45,7 +45,7 @@ export function SubcategoryCard({
         />
 
         <div>
-          <p className="text-sm font-medium text-brand-vanilla whitespace-nowrap">
+          <p className="text-sm font-medium text-[var(--fg-primary)] whitespace-nowrap">
             {subcategory}
           </p>
           <p className="text-xs text-os-text-secondary-dark">
