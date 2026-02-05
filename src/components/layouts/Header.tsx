@@ -26,7 +26,7 @@ export default function Header() {
   }, [menuOpen])
 
   return (
-    <header className="sticky top-0 z-50 bg-brand-charcoal border-b border-[#595959]">
+    <header className="sticky top-0 z-50 bg-brand-charcoal border-b border-[var(--border-secondary)]">
       <div className="w-full max-w-[1184px] mx-auto px-6 py-3 flex items-center justify-between">
         {/* Brand Logo - Small Icon */}
         <div className="flex items-center">

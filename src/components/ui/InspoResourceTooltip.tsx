@@ -112,7 +112,7 @@ export default function InspoResourceTooltip({
           }}
         >
           {/* Card Container */}
-          <div className="bg-zinc-900/95 backdrop-blur-sm border border-zinc-800 rounded-lg p-4 shadow-xl max-w-xs">
+          <div className="bg-[var(--bg-primary)]/95 backdrop-blur-sm border border-[var(--border-secondary)] rounded-lg p-4 shadow-xl max-w-xs">
             {/* Header with Favicon and Title */}
             <div className="flex items-start gap-3 mb-3">
               {/* Favicon */}
@@ -179,7 +179,7 @@ export default function InspoResourceTooltip({
             )}
 
             {/* Click hint */}
-            <p className="text-zinc-500 text-xs mt-3 pt-2 border-t border-zinc-800">
+            <p className="text-[var(--fg-tertiary)] text-xs mt-3 pt-2 border-t border-[var(--border-secondary)]">
               Click to view details →
             </p>
           </div>

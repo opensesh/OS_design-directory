@@ -91,7 +91,7 @@ function TooltipContent({
         </p>
       )}
 
-      <div className="pt-2 border-t border-zinc-700">
+      <div className="pt-2 border-t border-[var(--border-secondary)]">
         <p className="text-xs text-zinc-400 leading-relaxed">
           Resources are rated based on their overall value to the design community.
         </p>
@@ -216,12 +216,12 @@ export function RatingScale({
               className="absolute z-50 bottom-full right-0 mb-2"
               role="tooltip"
             >
-              <div className="bg-zinc-900 border border-zinc-700 rounded-xl shadow-xl">
+              <div className="bg-[var(--bg-primary)] border border-[var(--border-secondary)] rounded-xl shadow-xl">
                 <TooltipContent score={score} tier={tier} rationale={rationale} />
               </div>
               {/* Arrow */}
               <div className="absolute top-full right-4 -mt-px">
-                <div className="w-3 h-3 bg-zinc-900 border-r border-b border-zinc-700 rotate-45 transform -translate-y-1.5" />
+                <div className="w-3 h-3 bg-[var(--bg-primary)] border-r border-b border-[var(--border-secondary)] rotate-45 transform -translate-y-1.5" />
               </div>
             </motion.div>
           )}

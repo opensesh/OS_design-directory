@@ -90,13 +90,13 @@ function splitDescription(description: string): [string, string] {
  * Pricing badge styles based on pricing type
  */
 function getPricingStyle(pricing: string | null) {
-  if (!pricing) return { bg: 'bg-zinc-800', text: 'text-zinc-400', border: 'border-zinc-700' };
+  if (!pricing) return { bg: 'bg-[var(--bg-secondary)]', text: 'text-[var(--fg-secondary)]', border: 'border-[var(--border-secondary)]' };
 
   const lower = pricing.toLowerCase();
   if (lower === 'free') return { bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/30' };
   if (lower === 'freemium') return { bg: 'bg-amber-500/10', text: 'text-amber-400', border: 'border-amber-500/30' };
   if (lower === 'paid' || lower === 'pay per use') return { bg: 'bg-rose-500/10', text: 'text-rose-400', border: 'border-rose-500/30' };
-  return { bg: 'bg-zinc-800', text: 'text-zinc-400', border: 'border-zinc-700' };
+  return { bg: 'bg-[var(--bg-secondary)]', text: 'text-[var(--fg-secondary)]', border: 'border-[var(--border-secondary)]' };
 }
 
 /**
@@ -201,10 +201,10 @@ export default function ResourceDetail() {
   // Handle resource not found
   if (!resource) {
     return (
-      <div className="min-h-screen bg-[#141414] text-[#FFFAEE] flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--fg-primary)] flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-semibold mb-4">Resource Not Found</h1>
-          <p className="text-zinc-500 mb-6">The resource you're looking for doesn't exist.</p>
+          <p className="text-[var(--fg-tertiary)] mb-6">The resource you're looking for doesn't exist.</p>
           <Link
             to="/"
             className="inline-flex items-center gap-2 px-4 py-2 bg-[#FE5102] text-white rounded-lg hover:bg-[#FE5102]/90 transition-colors"
@@ -224,7 +224,7 @@ export default function ResourceDetail() {
   const hasScreenshot = resource.screenshot && !screenshotError;
 
   return (
-    <div className="min-h-screen bg-[#141414] text-[#FFFAEE]">
+    <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--fg-primary)]">
       {/* Header - Consistent with Home */}
       <header className="sticky top-0 z-10 bg-os-bg-dark/80 backdrop-blur-xl border-b border-os-border-dark/50">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -299,14 +299,14 @@ export default function ResourceDetail() {
             <nav className="flex items-center gap-1.5 text-sm min-w-0">
               <button
                 onClick={() => navigate(-1)}
-                className="text-zinc-400 hover:text-brand-vanilla transition-colors flex-shrink-0"
+                className="text-[var(--fg-secondary)] hover:text-brand-vanilla transition-colors flex-shrink-0"
                 aria-label="Go back"
               >
                 <ArrowLeft className="w-4 h-4" />
               </button>
               <Link
                 to={`/?display=table&category=${encodeURIComponent(resource.category || '')}`}
-                className="text-zinc-400 hover:text-brand-vanilla truncate transition-colors"
+                className="text-[var(--fg-secondary)] hover:text-brand-vanilla truncate transition-colors"
               >
                 {resource.category || 'Resource'}
               </Link>
@@ -364,9 +364,9 @@ export default function ResourceDetail() {
             >
               <div className="relative bg-[#191919] rounded-xl p-6 flex items-center justify-center">
                 {/* Browser Mockup - centered with adaptive aspect ratio */}
-                <div className="rounded-lg overflow-hidden border border-zinc-800/50 max-w-2xl w-full shadow-2xl max-h-[70vh]">
+                <div className="rounded-lg overflow-hidden border border-[var(--border-secondary)]/50 max-w-2xl w-full shadow-2xl max-h-[70vh]">
                   {/* Browser chrome with traffic lights */}
-                  <div className="flex items-center gap-2 px-3 py-2 bg-zinc-900 border-b border-zinc-800/50">
+                  <div className="flex items-center gap-2 px-3 py-2 bg-[var(--bg-primary)] border-b border-[var(--border-secondary)]/50">
                     {/* Traffic lights */}
                     <div className="flex gap-1">
                       <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
@@ -375,9 +375,9 @@ export default function ResourceDetail() {
                     </div>
                     {/* URL bar */}
                     <div className="flex-1 flex items-center justify-center">
-                      <div className="flex items-center gap-1.5 px-3 py-1 bg-zinc-800 rounded-md max-w-xs w-full">
-                        <Globe className="w-3 h-3 text-zinc-500 flex-shrink-0" />
-                        <span className="text-[11px] text-zinc-500 truncate">{domain}</span>
+                      <div className="flex items-center gap-1.5 px-3 py-1 bg-[var(--bg-secondary)] rounded-md max-w-xs w-full">
+                        <Globe className="w-3 h-3 text-[var(--fg-tertiary)] flex-shrink-0" />
+                        <span className="text-[11px] text-[var(--fg-tertiary)] truncate">{domain}</span>
                       </div>
                     </div>
                     {/* Spacer for symmetry */}
@@ -416,7 +416,7 @@ export default function ResourceDetail() {
             {/* Icon + Title + Buttons Row */}
             <div className="flex items-start gap-4">
               {/* Thumbnail/Favicon */}
-              <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-zinc-800 border border-zinc-700 shadow-lg flex-shrink-0">
+              <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-secondary)] shadow-lg flex-shrink-0">
                 {hasThumbnail ? (
                   <img
                     src={resource.thumbnail!}
@@ -425,7 +425,7 @@ export default function ResourceDetail() {
                     onError={() => setImgError(true)}
                   />
                 ) : faviconUrl && !faviconError ? (
-                  <div className="w-full h-full flex items-center justify-center bg-zinc-800">
+                  <div className="w-full h-full flex items-center justify-center bg-[var(--bg-secondary)]">
                     <img
                       src={faviconUrl}
                       alt={resource.name}
@@ -434,8 +434,8 @@ export default function ResourceDetail() {
                     />
                   </div>
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-zinc-800">
-                    <span className="text-xl font-bold text-zinc-400">
+                  <div className="w-full h-full flex items-center justify-center bg-[var(--bg-secondary)]">
+                    <span className="text-xl font-bold text-[var(--fg-secondary)]">
                       {resource.name.charAt(0).toUpperCase()}
                     </span>
                   </div>
@@ -458,7 +458,7 @@ export default function ResourceDetail() {
                         {resource.name}
                       </h1>
                       <motion.span
-                        className="text-zinc-500 group-hover:text-[#FE5102] transition-colors"
+                        className="text-[var(--fg-tertiary)] group-hover:text-[#FE5102] transition-colors"
                         whileHover={{ x: 2, y: -2 }}
                       >
                         <ArrowUpRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -470,7 +470,7 @@ export default function ResourceDetail() {
                       href={resource.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group flex items-center gap-1.5 text-zinc-400 hover:text-[#FE5102] transition-colors mt-1"
+                      className="group flex items-center gap-1.5 text-[var(--fg-secondary)] hover:text-[#FE5102] transition-colors mt-1"
                     >
                       <Globe className="w-3.5 h-3.5" />
                       <span className="text-sm truncate">{domain}</span>
@@ -535,7 +535,7 @@ export default function ResourceDetail() {
                   {resource.tags.map((tag, idx) => (
                     <span
                       key={idx}
-                      className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded bg-zinc-700/40 text-zinc-400"
+                      className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded bg-[var(--bg-tertiary)]/40 text-[var(--fg-secondary)]"
                     >
                       <Tag className="w-2.5 h-2.5" />
                       {tag}
@@ -558,7 +558,7 @@ export default function ResourceDetail() {
               <div className="md:col-span-2 order-2 md:order-1">
                 {resource.description && (
                   <div>
-                    <h2 className="text-xs font-semibold text-[#FFFAEE] mb-3 uppercase tracking-wide flex items-center gap-2">
+                    <h2 className="text-xs font-semibold text-[var(--fg-primary)] mb-3 uppercase tracking-wide flex items-center gap-2">
                       <span className="w-6 h-px bg-[#FE5102]" />
                       About
                     </h2>
@@ -582,11 +582,11 @@ export default function ResourceDetail() {
               </div>
 
               {/* Right Column: Rating + Details (1/3 width on desktop) */}
-              <div className="md:col-span-1 order-1 md:order-2 bg-zinc-800/20 rounded-lg p-4 space-y-8">
+              <div className="md:col-span-1 order-1 md:order-2 bg-[var(--bg-secondary)]/20 rounded-lg p-4 space-y-8">
                 {/* Rating Section */}
                 {resource.gravityScore && (
                   <div>
-                    <h2 className="text-xs font-semibold text-[#FFFAEE] mb-3 uppercase tracking-wide flex items-center gap-2">
+                    <h2 className="text-xs font-semibold text-[var(--fg-primary)] mb-3 uppercase tracking-wide flex items-center gap-2">
                       <span className="w-6 h-px bg-[#FE5102]" />
                       Rating
                     </h2>
@@ -601,7 +601,7 @@ export default function ResourceDetail() {
 
                 {/* Details Section */}
                 <div>
-                  <h2 className="text-xs font-semibold text-[#FFFAEE] mb-3 uppercase tracking-wide flex items-center gap-2">
+                  <h2 className="text-xs font-semibold text-[var(--fg-primary)] mb-3 uppercase tracking-wide flex items-center gap-2">
                     <span className="w-6 h-px bg-[#FE5102]" />
                     Details
                   </h2>
@@ -621,7 +621,7 @@ export default function ResourceDetail() {
                     {resource.subCategory && (
                       <Link
                         to={`/?display=table&subCategory=${encodeURIComponent(resource.subCategory)}`}
-                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-800/60 text-zinc-400 text-xs border border-zinc-700/50 hover:bg-zinc-700 hover:text-[#FFFAEE] transition-colors"
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[var(--bg-secondary)]/60 text-[var(--fg-secondary)] text-xs border border-[var(--border-secondary)]/50 hover:bg-[var(--bg-tertiary)] hover:text-[var(--fg-primary)] transition-colors"
                       >
                         <Layers className="w-2.5 h-2.5" />
                         {resource.subCategory}
@@ -643,7 +643,7 @@ export default function ResourceDetail() {
                     {resource.tier && (
                       <Link
                         to={`/?display=table&tier=${resource.tier}`}
-                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-zinc-800/60 text-zinc-400 text-xs border border-zinc-700/50 hover:bg-zinc-700 hover:text-[#FFFAEE] transition-colors"
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[var(--bg-secondary)]/60 text-[var(--fg-secondary)] text-xs border border-[var(--border-secondary)]/50 hover:bg-[var(--bg-tertiary)] hover:text-[var(--fg-primary)] transition-colors"
                       >
                         <Layers className="w-2.5 h-2.5" />
                         Tier {resource.tier}
@@ -683,9 +683,9 @@ export default function ResourceDetail() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="mb-8 pt-6 border-t border-zinc-800/30"
+              className="mb-8 pt-6 border-t border-[var(--border-secondary)]/30"
             >
-              <h2 className="text-xs font-semibold text-[#FFFAEE] mb-3 uppercase tracking-wide flex items-center gap-2">
+              <h2 className="text-xs font-semibold text-[var(--fg-primary)] mb-3 uppercase tracking-wide flex items-center gap-2">
                 <span className="w-6 h-px bg-[#FE5102]" />
                 Related Resources
               </h2>
@@ -696,10 +696,10 @@ export default function ResourceDetail() {
                     <Link
                       key={related.id}
                       to={`/resource/${related.id}`}
-                      className="group flex items-center gap-3 p-3 rounded-lg bg-zinc-800/40 border border-zinc-700/30 hover:border-[var(--border-primary)] hover:bg-zinc-800/60 transition-all"
+                      className="group flex items-center gap-3 p-3 rounded-lg bg-[var(--bg-secondary)]/40 border border-[var(--border-secondary)]/30 hover:border-[var(--border-primary)] hover:bg-[var(--bg-secondary)]/60 transition-all"
                     >
                       {/* Mini thumbnail with favicon fallback */}
-                      <div className="w-10 h-10 rounded-md overflow-hidden bg-zinc-800 border border-zinc-700 flex-shrink-0 flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-md overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-secondary)] flex-shrink-0 flex items-center justify-center">
                         {related.thumbnail ? (
                           <img
                             src={related.thumbnail}
@@ -713,22 +713,22 @@ export default function ResourceDetail() {
                             className="w-6 h-6 object-contain"
                           />
                         ) : (
-                          <span className="text-xs font-medium text-zinc-400">
+                          <span className="text-xs font-medium text-[var(--fg-secondary)]">
                             {related.name.charAt(0)}
                           </span>
                         )}
                       </div>
 
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-sm font-medium text-[#FFFAEE] group-hover:text-[#FE5102] transition-colors truncate">
+                        <h3 className="text-sm font-medium text-[var(--fg-primary)] group-hover:text-[#FE5102] transition-colors truncate">
                           {related.name}
                         </h3>
-                        <p className="text-xs text-zinc-500 truncate">
+                        <p className="text-xs text-[var(--fg-tertiary)] truncate">
                           {related.subCategory || related.category || 'Resource'}
                         </p>
                       </div>
 
-                      <ExternalLink className="w-3.5 h-3.5 text-zinc-500 group-hover:text-[#FE5102] transition-colors flex-shrink-0" />
+                      <ExternalLink className="w-3.5 h-3.5 text-[var(--fg-tertiary)] group-hover:text-[#FE5102] transition-colors flex-shrink-0" />
                     </Link>
                   );
                 })}
