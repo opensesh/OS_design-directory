@@ -15,6 +15,9 @@
   --bg-tertiary: #f5f3f0;
   --bg-quaternary: #ebe8e4;
 
+  /* Card vignette - for video overlay gradients */
+  --card-vignette: 255, 255, 255;
+
   /* Foregrounds - Charcoal-based */
   --fg-primary: #191919;
   --fg-secondary: #5c574f;
@@ -69,6 +72,9 @@
   --bg-secondary_hover: #252525;
   --bg-tertiary: #252525;
   --bg-quaternary: #2e2e2e;
+
+  /* Card vignette - for video overlay gradients */
+  --card-vignette: 28, 28, 28;
 
   /* Foregrounds - Light neutrals */
   --fg-primary: #E8E8E8;
