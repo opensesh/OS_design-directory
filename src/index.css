@@ -1,16 +1,9 @@
+/* Import theme tokens first */
+@import './styles/theme.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-:root {
-  --background: #FFFAEE;
-  --foreground: #191919;
-}
-
-.dark {
-  --background: #141414;
-  --foreground: #E8E8E8;
-}
 
 /* Font Declarations - Neue Haas Grotesk Display Pro */
 @font-face {
@@ -54,42 +47,7 @@
   font-display: swap;
 }
 
-/* BOS-2.0 Design System Tokens - Hex colors matching original */
-:root {
-  /* Backgrounds - match BOS-2.0 os.* palette */
-  --bg-primary: #141414;
-  --bg-primary_alt: #141414;
-  --bg-secondary: #1C1C1C;
-  --bg-secondary_hover: #252525;
-  --bg-tertiary: #252525;
-
-  /* Foregrounds - match BOS-2.0 */
-  --fg-primary: #E8E8E8;
-  --fg-secondary: #9CA3AF;
-  --fg-tertiary: #6B7280;
-  --fg-quaternary: #4B5563;
-  --fg-placeholder: #6B7280;
-
-  /* Borders */
-  --border-primary: #2C2C2C;
-  --border-secondary: #2C2C2C;
-  --border-tertiary: #1F1F1F;
-
-  /* Brand - Core Palette */
-  --brand-charcoal: #191919;
-  --brand-vanilla: #FFFAEE;
-  --brand-aperol: #FE5102;
-
-  /* Brand - Functional */
-  --bg-brand-solid: #FE5102;
-  --bg-brand-solid_hover: #ff7a38;
-  --fg-brand-primary: #ff7a38;
-  --fg-brand-secondary: #FE5102;
-
-  /* Focus */
-  --focus-ring: #FE5102;
-}
-
+/* Base Reset */
 * {
   margin: 0;
   padding: 0;
@@ -113,7 +71,8 @@ body {
   height: 100vh;      /* Fallback for older browsers */
   height: 100dvh;     /* Modern browsers use this - fixes mobile toolbar issues */
 }
-/* Custom scrollbar for webkit browsers */
+
+/* Custom scrollbar for webkit browsers - uses CSS variables for theme responsiveness */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -124,23 +83,18 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #404040;
+  background: var(--scrollbar-thumb);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #505050;
+  background: var(--scrollbar-thumb-hover);
 }
 
 /* Focus visible styles */
 *:focus-visible {
-  outline: 2px solid #FE5102;
+  outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
-}
-
-/* Smooth transitions */
-* {
-  @apply transition-colors duration-200;
 }
 
 /* Prevent text selection on UI elements */
