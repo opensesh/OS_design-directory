@@ -12,20 +12,21 @@ export default {
         'xs': '400px',  // Custom breakpoint for very small devices
       },
       colors: {
-        // BRAND-OS Color System
+        // BRAND-OS Color System (static values for specific use cases)
         brand: {
           charcoal: '#191919',
           vanilla: '#FFFAEE',
           aperol: '#FE5102',
         },
-        // OS dark theme palette
+        // OS palette - now maps to CSS variables for theme responsiveness
+        // Class names retain '-dark' suffix for backwards compatibility
         os: {
-          'bg-darker': '#0C0C0C',
-          'bg-dark': '#141414',
-          'surface-dark': '#1C1C1C',
-          'border-dark': '#2C2C2C',
-          'text-primary-dark': '#E8E8E8',
-          'text-secondary-dark': '#9CA3AF',
+          'bg-darker': 'var(--bg-primary)',
+          'bg-dark': 'var(--bg-primary)',
+          'surface-dark': 'var(--bg-secondary)',
+          'border-dark': 'var(--border-secondary)',
+          'text-primary-dark': 'var(--fg-primary)',
+          'text-secondary-dark': 'var(--fg-secondary)',
         },
       },
       fontFamily: {
