@@ -1,0 +1,110 @@
+/* ============================================
+   BOS Design System - Theme Tokens
+   Following BOS-3.0 architecture pattern
+   ============================================ */
+
+/* ============================================
+   LIGHT MODE (DEFAULT)
+   ============================================ */
+:root {
+  /* Backgrounds - Warm neutrals */
+  --bg-primary: #faf8f5;
+  --bg-primary_alt: #fdfcfb;
+  --bg-secondary: #ffffff;
+  --bg-secondary_hover: #f5f3f0;
+  --bg-tertiary: #f5f3f0;
+  --bg-quaternary: #ebe8e4;
+
+  /* Foregrounds - Charcoal-based */
+  --fg-primary: #191919;
+  --fg-secondary: #5c574f;
+  --fg-tertiary: #78726a;
+  --fg-quaternary: #a8a29b;
+  --fg-placeholder: #78726a;
+
+  /* Borders - Warm grays */
+  --border-primary: #e5e2de;
+  --border-secondary: #d5d1cb;
+  --border-tertiary: #f5f3f0;
+
+  /* Brand - Core Palette (consistent across themes) */
+  --brand-charcoal: #191919;
+  --brand-vanilla: #FFFAEE;
+  --brand-aperol: #FE5102;
+
+  /* Brand - Functional */
+  --bg-brand-solid: #FE5102;
+  --bg-brand-solid_hover: #e64400;
+  --fg-brand-primary: #fe5102;
+  --fg-brand-secondary: #cc4100;
+
+  /* Focus */
+  --focus-ring: #FE5102;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+  /* Scrollbar */
+  --scrollbar-thumb: #d5d1cb;
+  --scrollbar-thumb-hover: #a8a29b;
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+.dark {
+  /* Backgrounds - Charcoal-based */
+  --bg-primary: #141414;
+  --bg-primary_alt: #141414;
+  --bg-secondary: #1C1C1C;
+  --bg-secondary_hover: #252525;
+  --bg-tertiary: #252525;
+  --bg-quaternary: #2e2e2e;
+
+  /* Foregrounds - Light neutrals */
+  --fg-primary: #E8E8E8;
+  --fg-secondary: #9CA3AF;
+  --fg-tertiary: #6B7280;
+  --fg-quaternary: #4B5563;
+  --fg-placeholder: #6B7280;
+
+  /* Borders */
+  --border-primary: #2C2C2C;
+  --border-secondary: #2C2C2C;
+  --border-tertiary: #1F1F1F;
+
+  /* Brand - Functional (brighter for dark backgrounds) */
+  --bg-brand-solid_hover: #ff7a38;
+  --fg-brand-primary: #ff7a38;
+  --fg-brand-secondary: #FE5102;
+
+  /* Shadows (darker for dark mode) */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+
+  /* Scrollbar */
+  --scrollbar-thumb: #404040;
+  --scrollbar-thumb-hover: #505050;
+}
+
+/* ============================================
+   THEME TRANSITIONS
+   ============================================ */
+html:not(.no-transitions),
+html:not(.no-transitions) *,
+html:not(.no-transitions) *::before,
+html:not(.no-transitions) *::after {
+  transition: background-color 0.3s ease,
+              border-color 0.3s ease,
+              color 0.3s ease,
+              fill 0.3s ease,
+              stroke 0.3s ease !important;
+}
+
+/* Exclude layout properties to prevent Framer Motion conflicts */
+html:not(.no-transitions) * {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow !important;
+}
