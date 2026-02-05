@@ -49,6 +49,13 @@
   /* Scrollbar */
   --scrollbar-thumb: #d5d1cb;
   --scrollbar-thumb-hover: #a8a29b;
+
+  /* Logo/Branding - switches based on theme */
+  --logo-fill: #191919;  /* Charcoal on light backgrounds */
+
+  /* Canvas gradients - for seamless universe canvas transitions */
+  --canvas-gradient-top: linear-gradient(to bottom, #faf8f5 0%, rgba(250,248,245,0.8) 40%, transparent 100%);
+  --canvas-gradient-bottom: linear-gradient(to bottom, transparent 0%, rgba(250,248,245,0.8) 60%, #faf8f5 100%);
 }
 
 /* ============================================
@@ -88,6 +95,13 @@
   /* Scrollbar */
   --scrollbar-thumb: #404040;
   --scrollbar-thumb-hover: #505050;
+
+  /* Logo/Branding */
+  --logo-fill: #FFFAEE;  /* Vanilla on dark backgrounds */
+
+  /* Canvas gradients */
+  --canvas-gradient-top: linear-gradient(to bottom, #141414 0%, rgba(20,20,20,0.8) 40%, transparent 100%);
+  --canvas-gradient-bottom: linear-gradient(to bottom, transparent 0%, rgba(20,20,20,0.8) 60%, #141414 100%);
 }
 
 /* ============================================
