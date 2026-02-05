@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en" class="no-transitions">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -8,8 +8,24 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OS Design Directory</title>
+    <!-- Early theme detection to prevent flash of wrong theme -->
+    <script>
+      (function() {
+        var STORAGE_KEY = 'os-design-directory-theme';
+        var stored = localStorage.getItem(STORAGE_KEY);
+        var theme = stored || 'system';
+        
+        // Resolve system preference
+        if (theme === 'system') {
+          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        
+        // Apply theme class immediately
+        document.documentElement.classList.add(theme);
+      })();
+    </script>
   </head>
-  <body class="dark">
+  <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
