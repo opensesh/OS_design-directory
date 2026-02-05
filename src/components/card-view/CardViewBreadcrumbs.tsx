@@ -34,7 +34,7 @@ export function CardViewBreadcrumbs({
             flex items-center gap-1.5 px-2 py-1 rounded-md
             transition-colors duration-200
             ${!category
-              ? 'text-brand-vanilla bg-os-surface-dark/60'
+              ? 'text-[var(--fg-primary)] bg-os-surface-dark/60'
               : 'text-os-text-secondary-dark hover:text-brand-vanilla hover:bg-os-surface-dark/40'
             }
           `}
@@ -52,7 +52,7 @@ export function CardViewBreadcrumbs({
               className={`
                 px-2 py-1 rounded-md transition-colors duration-200
                 ${!subcategory
-                  ? 'text-brand-vanilla bg-os-surface-dark/60'
+                  ? 'text-[var(--fg-primary)] bg-os-surface-dark/60'
                   : 'text-os-text-secondary-dark hover:text-brand-vanilla hover:bg-os-surface-dark/40'
                 }
               `}
