@@ -100,7 +100,7 @@ export function ResourceCard({ resource, index }: ResourceCardProps) {
       </div>
 
       {/* Resource name */}
-      <p className="text-xs font-medium text-brand-vanilla line-clamp-2 leading-tight">
+      <p className="text-xs font-medium text-[var(--fg-primary)] line-clamp-2 leading-tight">
         {resource.name}
       </p>
 
