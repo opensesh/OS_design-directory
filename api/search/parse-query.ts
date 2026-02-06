@@ -6,11 +6,12 @@
  *
  * Features:
  * - Claude Sonnet for high-quality query understanding
- * - Per-IP rate limiting (10 req/min, 100 req/day)
+ * - Per-IP rate limiting via Vercel KV (10 req/min, 100 req/day)
  * - Graceful fallback on errors
  */
 
 import Anthropic from '@anthropic-ai/sdk';
+import { kv } from '@vercel/kv';
 
 export const config = {
   runtime: 'nodejs',
@@ -25,61 +26,93 @@ const RATE_LIMITS = {
 };
 
 /**
- * In-memory rate limit tracking
- *
- * LIMITATION: Rate limits reset on serverless cold starts since this
- * uses in-memory storage. For production at scale, migrate to:
- * - Vercel KV (recommended): https://vercel.com/docs/storage/vercel-kv
- * - Redis via Upstash: https://upstash.com/
- *
- * Current behavior: Limits are per-IP but may reset unexpectedly when
- * the serverless function cold starts (typically after ~5-15min of inactivity).
+ * Rate limit record structure stored in Vercel KV
  */
-const rateLimitStore = new Map<string, {
+interface RateLimitRecord {
   minuteCount: number;
   minuteResetTime: number;
   dayCount: number;
   dayResetTime: number;
-}>();
+}
 
 /**
- * Check and update rate limits for an IP
+ * Check and update rate limits for an IP using Vercel KV
+ *
+ * Uses persistent storage to maintain rate limits across serverless cold starts.
+ * Falls back to allowing the request if KV is unavailable (fail-open).
  */
-function checkRateLimit(ip: string): { allowed: boolean; reason?: string } {
+async function checkRateLimit(ip: string): Promise<{
+  allowed: boolean;
+  reason?: string;
+  remaining?: number;
+  resetTime?: number;
+}> {
   const now = Date.now();
-  const record = rateLimitStore.get(ip) || {
-    minuteCount: 0,
-    minuteResetTime: now + 60000,      // 1 minute
-    dayCount: 0,
-    dayResetTime: now + 86400000,      // 24 hours
-  };
+  const key = `ratelimit:${ip}`;
 
-  // Reset minute counter if window expired
-  if (now > record.minuteResetTime) {
-    record.minuteCount = 0;
-    record.minuteResetTime = now + 60000;
+  try {
+    // Get existing record from KV
+    let record = await kv.hgetall<RateLimitRecord>(key);
+
+    if (!record) {
+      record = {
+        minuteCount: 0,
+        minuteResetTime: now + 60000,      // 1 minute
+        dayCount: 0,
+        dayResetTime: now + 86400000,      // 24 hours
+      };
+    }
+
+    // Reset minute counter if window expired
+    if (now > record.minuteResetTime) {
+      record.minuteCount = 0;
+      record.minuteResetTime = now + 60000;
+    }
+
+    // Reset day counter if window expired
+    if (now > record.dayResetTime) {
+      record.dayCount = 0;
+      record.dayResetTime = now + 86400000;
+    }
+
+    // Check limits
+    if (record.minuteCount >= RATE_LIMITS.REQUESTS_PER_MINUTE) {
+      return {
+        allowed: false,
+        reason: 'Rate limit exceeded: too many requests per minute',
+        remaining: 0,
+        resetTime: record.minuteResetTime,
+      };
+    }
+    if (record.dayCount >= RATE_LIMITS.REQUESTS_PER_DAY) {
+      return {
+        allowed: false,
+        reason: 'Rate limit exceeded: daily limit reached',
+        remaining: 0,
+        resetTime: record.dayResetTime,
+      };
+    }
+
+    // Increment counters
+    record.minuteCount++;
+    record.dayCount++;
+
+    // Store updated record with 24-hour expiry
+    await kv.hset(key, record);
+    await kv.expire(key, 86400); // Expire after 24 hours
+
+    return {
+      allowed: true,
+      remaining: RATE_LIMITS.REQUESTS_PER_MINUTE - record.minuteCount,
+      resetTime: record.minuteResetTime,
+    };
+  } catch (error) {
+    // If KV fails, log warning and allow request (fail-open)
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('Rate limit KV error, allowing request:', error);
+    }
+    return { allowed: true };
   }
-
-  // Reset day counter if window expired
-  if (now > record.dayResetTime) {
-    record.dayCount = 0;
-    record.dayResetTime = now + 86400000;
-  }
-
-  // Check limits
-  if (record.minuteCount >= RATE_LIMITS.REQUESTS_PER_MINUTE) {
-    return { allowed: false, reason: 'Rate limit exceeded: too many requests per minute' };
-  }
-  if (record.dayCount >= RATE_LIMITS.REQUESTS_PER_DAY) {
-    return { allowed: false, reason: 'Rate limit exceeded: daily limit reached' };
-  }
-
-  // Increment counters
-  record.minuteCount++;
-  record.dayCount++;
-  rateLimitStore.set(ip, record);
-
-  return { allowed: true };
 }
 
 /**
@@ -155,10 +188,14 @@ export default async function handler(req: Request): Promise<Response> {
              'unknown';
 
   // Check rate limit
-  const rateLimitResult = checkRateLimit(ip);
+  const rateLimitResult = await checkRateLimit(ip);
   if (!rateLimitResult.allowed) {
+    const retryAfter = rateLimitResult.resetTime
+      ? Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000)
+      : 60;
+
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         error: rateLimitResult.reason,
         intent: 'find',
         filters: {},
@@ -168,12 +205,23 @@ export default async function handler(req: Request): Promise<Response> {
       }),
       {
         status: 429,
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
-          'Retry-After': '60',
+          'Retry-After': String(retryAfter),
+          'X-RateLimit-Limit': String(RATE_LIMITS.REQUESTS_PER_MINUTE),
+          'X-RateLimit-Remaining': '0',
+          'X-RateLimit-Reset': String(rateLimitResult.resetTime || Date.now() + 60000),
         },
       }
     );
+  }
+
+  // Build rate limit headers for successful responses
+  const rateLimitHeaders: Record<string, string> = {};
+  if (rateLimitResult.remaining !== undefined) {
+    rateLimitHeaders['X-RateLimit-Limit'] = String(RATE_LIMITS.REQUESTS_PER_MINUTE);
+    rateLimitHeaders['X-RateLimit-Remaining'] = String(rateLimitResult.remaining);
+    rateLimitHeaders['X-RateLimit-Reset'] = String(rateLimitResult.resetTime || Date.now() + 60000);
   }
 
   // Parse request body
@@ -277,6 +325,7 @@ export default async function handler(req: Request): Promise<Response> {
       headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'public, s-maxage=3600', // Cache for 1 hour
+        ...rateLimitHeaders,
       },
     });
   } catch (error) {

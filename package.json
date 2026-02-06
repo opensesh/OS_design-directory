@@ -17,11 +17,12 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",
-    "@tanstack/react-virtual": "^3.13.2",
     "@radix-ui/react-collapsible": "^1.1.12",
     "@react-three/drei": "^9.122.0",
     "@react-three/fiber": "^8.18.0",
+    "@tanstack/react-virtual": "^3.13.2",
     "@types/papaparse": "^5.3.16",
+    "@vercel/kv": "^3.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dotenv": "^17.2.3",
