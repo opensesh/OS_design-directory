@@ -398,11 +398,92 @@ SERPAPI_API_KEY=...
 
 ---
 
+## Theming & Color System
+
+This project features a complete **light and dark mode** theming system using CSS custom properties. All colors are defined in `src/styles/theme.css` and automatically adapt based on user preference.
+
+### Brand Colors
+
+| Token | Hex | Usage |
+|-------|-----|-------|
+| **Charcoal** | `#191919` | Brand identity, dark backgrounds |
+| **Vanilla** | `#FFFAEE` | Warm neutrals, light accents |
+| **Aperol** | `#FE5102` | Primary accent (CTAs, links, badges) |
+
+### Theme Tokens
+
+All UI colors use semantic CSS variables that switch between light and dark values:
+
+```css
+/* Backgrounds */
+--bg-primary       /* Main canvas/page background */
+--bg-secondary     /* Elevated surfaces (cards, modals) */
+--bg-tertiary      /* Hover states, subtle fills */
+
+/* Foregrounds */
+--fg-primary       /* Primary text */
+--fg-secondary     /* Secondary text */
+--fg-tertiary      /* Muted/disabled text */
+
+/* Borders */
+--border-primary   /* Default borders */
+--border-secondary /* Subtle borders */
+
+/* Brand */
+--bg-brand-solid   /* Brand-colored buttons */
+--fg-brand-primary /* Brand-colored text/icons */
+```
+
+### Light Mode Palette
+
+| Token | Hex | Description |
+|-------|-----|-------------|
+| `--bg-primary` | `#faf8f5` | Warm off-white background |
+| `--bg-secondary` | `#ffffff` | Pure white for elevated surfaces |
+| `--bg-tertiary` | `#f5f3f0` | Subtle hover states |
+| `--fg-primary` | `#191919` | Charcoal text |
+| `--fg-secondary` | `#5c574f` | Secondary text |
+| `--border-secondary` | `#d5d1cb` | Warm gray borders |
+
+### Dark Mode Palette
+
+| Token | Hex | Description |
+|-------|-----|-------------|
+| `--bg-primary` | `#141414` | Deep charcoal background |
+| `--bg-secondary` | `#1C1C1C` | Slightly elevated surfaces |
+| `--bg-tertiary` | `#252525` | Hover states |
+| `--fg-primary` | `#E8E8E8` | Light gray text |
+| `--fg-secondary` | `#9CA3AF` | Muted text |
+| `--border-secondary` | `#2C2C2C` | Subtle dark borders |
+
+### Theme Toggle
+
+Users can switch between light and dark mode using the theme toggle button in the header. The system also respects the user's OS preference by default.
+
+### Customizing the Theme
+
+To customize colors for your own brand:
+
+1. **Edit `src/styles/theme.css`** - Modify the `:root` (light) and `.dark` selectors
+2. **Update brand tokens** - Change `--brand-charcoal`, `--brand-vanilla`, and `--brand-aperol`
+3. **Adjust canvas gradients** - The `--canvas-gradient-top` and `--canvas-gradient-bottom` variables control the 3D canvas edge blending
+
+### Theme Transitions
+
+Smooth 300ms transitions are applied globally when switching themes, covering:
+- Background colors
+- Border colors
+- Text colors
+- SVG fills and strokes
+
+---
+
 ## Design Philosophy
 
 Every aspect of this project reflects Open Session's commitment to craft:
 
-- **Brand-First Design** - Custom Aperol orange (#FE5102) and charcoal backgrounds
+- **Brand-First Design** - Custom Aperol orange (#FE5102) with warm charcoal and vanilla neutrals
+- **Light & Dark Modes** - Full theming support with smooth transitions
 - **Smooth Interactions** - Carefully tuned easing curves and transitions
 - **Performance Matters** - Optimized rendering for fluid 60fps experience
 - **Accessibility** - Keyboard navigation and screen reader support
