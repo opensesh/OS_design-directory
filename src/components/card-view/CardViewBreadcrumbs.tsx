@@ -34,8 +34,8 @@ export function CardViewBreadcrumbs({
             flex items-center gap-1.5 px-2 py-1 rounded-md
             transition-colors duration-200
             ${!category
-              ? 'text-[var(--fg-primary)] bg-os-surface-dark/60'
-              : 'text-os-text-secondary-dark hover:text-brand-vanilla hover:bg-os-surface-dark/40'
+              ? 'text-[var(--fg-primary)] bg-[var(--bg-secondary)]/40'
+              : 'text-[var(--fg-secondary)] hover:text-[var(--fg-primary)] hover:bg-[var(--bg-secondary)]/30'
             }
           `}
         >
@@ -46,14 +46,14 @@ export function CardViewBreadcrumbs({
         {/* Category breadcrumb */}
         {category && (
           <>
-            <ChevronRight className="w-3.5 h-3.5 text-os-text-secondary-dark" />
+            <ChevronRight className="w-3.5 h-3.5 text-[var(--fg-secondary)]" />
             <button
               onClick={onNavigateCategory}
               className={`
                 px-2 py-1 rounded-md transition-colors duration-200
                 ${!subcategory
-                  ? 'text-[var(--fg-primary)] bg-os-surface-dark/60'
-                  : 'text-os-text-secondary-dark hover:text-brand-vanilla hover:bg-os-surface-dark/40'
+                  ? 'text-[var(--fg-primary)] bg-[var(--bg-secondary)]/40'
+                  : 'text-[var(--fg-secondary)] hover:text-[var(--fg-primary)] hover:bg-[var(--bg-secondary)]/30'
                 }
               `}
               style={{
@@ -68,9 +68,9 @@ export function CardViewBreadcrumbs({
         {/* Subcategory breadcrumb */}
         {subcategory && (
           <>
-            <ChevronRight className="w-3.5 h-3.5 text-os-text-secondary-dark" />
+            <ChevronRight className="w-3.5 h-3.5 text-[var(--fg-secondary)]" />
             <span
-              className="px-2 py-1 rounded-md bg-os-surface-dark/60"
+              className="px-2 py-1 rounded-md bg-[var(--bg-secondary)]/40"
               style={{ color: categoryColor || undefined }}
             >
               {subcategory}
@@ -80,7 +80,7 @@ export function CardViewBreadcrumbs({
       </div>
 
       {/* Resource count */}
-      <p className="text-sm text-os-text-secondary-dark">
+      <p className="text-sm text-[var(--fg-secondary)]">
         <span className="font-semibold text-brand-aperol">{resourceCount}</span>
         {' '}resource{resourceCount !== 1 ? 's' : ''}
       </p>
