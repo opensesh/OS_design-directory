@@ -114,7 +114,7 @@ export default function SideNav() {
         zIndex: 100,
         width: isOpen ? '260px' : '64px',
         backgroundColor: '#FFFAEE',
-        borderRight: '1px solid #E2E8F0',
+        borderRight: '1px solid var(--border-secondary)',
         borderRadius: '4px',
         padding: isOpen ? '16px' : '8px',
         transition: 'width 200ms ease-out, padding 200ms ease-out',

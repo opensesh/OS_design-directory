@@ -43,7 +43,7 @@ export default function Tooltip({ children, label, show }: TooltipProps) {
             fontSize: '16px',
             fontWeight: 500,
             lineHeight: 1.25,
-            border: '1px solid #E2E8F0',
+            border: '1px solid var(--border-secondary)',
             borderRadius: '4px',
             boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)',
             whiteSpace: 'nowrap',
