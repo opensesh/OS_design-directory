@@ -25,8 +25,15 @@ const RATE_LIMITS = {
 };
 
 /**
- * In-memory rate limit tracking (resets on cold start)
- * For production, consider using Vercel KV or Redis
+ * In-memory rate limit tracking
+ *
+ * LIMITATION: Rate limits reset on serverless cold starts since this
+ * uses in-memory storage. For production at scale, migrate to:
+ * - Vercel KV (recommended): https://vercel.com/docs/storage/vercel-kv
+ * - Redis via Upstash: https://upstash.com/
+ *
+ * Current behavior: Limits are per-IP but may reset unexpectedly when
+ * the serverless function cold starts (typically after ~5-15min of inactivity).
  */
 const rateLimitStore = new Map<string, {
   minuteCount: number;

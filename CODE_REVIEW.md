@@ -155,20 +155,20 @@ Add environment-based filtering.
 
 ### Must Fix (Blocking)
 - [ ] Rotate exposed API keys
-- [ ] Add ErrorBoundary for canvas
-- [ ] Add minimum test coverage (5-10 tests)
+- [x] Add ErrorBoundary for canvas
+- [x] Add minimum test coverage (5-10 tests) - 41 tests added
 
 ### Should Fix (High Value)
-- [ ] Add `loading="lazy"` to images
-- [ ] Standardize border token usage
+- [x] Add `loading="lazy"` to images
+- [x] Standardize border token usage
 - [ ] Update Vite to fix esbuild vulnerability
-- [ ] Document rate limiting limitation
+- [x] Document rate limiting limitation
 
 ### Nice to Have (Polish)
-- [ ] Add useCallback to navigation handlers
+- [x] Add useCallback to navigation handlers (already done)
 - [ ] Implement virtual scrolling for scale
 - [ ] Add cost tracking for AI calls
-- [ ] Remove console logs in production
+- [x] Remove console logs in production (environment-based filtering)
 
 ---
 
