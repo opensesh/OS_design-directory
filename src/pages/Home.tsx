@@ -417,7 +417,7 @@ export default function Home() {
       {/* UI Overlay Container */}
       <div className={`relative z-[255] h-full flex flex-col overflow-hidden ${displayMode === '3d' ? 'pointer-events-none' : ''}`}>
         {/* Header - Semi-transparent with backdrop blur */}
-        <header className={`pointer-events-auto flex-shrink-0 sticky top-0 z-30 backdrop-blur-xl border-b border-[var(--border-secondary)] h-16 ${displayMode === '3d' ? 'bg-os-bg-dark/60' : 'bg-os-bg-dark/80'}`}>
+        <header className={`pointer-events-auto flex-shrink-0 sticky top-0 z-[258] backdrop-blur-xl border-b border-[var(--border-secondary)] h-16 ${displayMode === '3d' ? 'bg-os-bg-dark/60' : 'bg-os-bg-dark/80'}`}>
         <div className="max-w-7xl mx-auto px-6 h-full">
           <div className="flex items-center justify-between h-full">
           <div className="flex items-center gap-3 min-w-0">
@@ -503,7 +503,7 @@ export default function Home() {
 
       {/* Subheader - View Mode Indicator */}
       <section
-        className={`pointer-events-auto flex-shrink-0 border-b border-[var(--border-secondary)] ${displayMode === '3d' ? 'bg-os-bg-dark/60 backdrop-blur-xl' : 'bg-os-bg-dark'}`}
+        className={`pointer-events-auto flex-shrink-0 z-[258] border-b border-[var(--border-secondary)] ${displayMode === '3d' ? 'bg-os-bg-dark/60 backdrop-blur-xl' : 'bg-os-bg-dark'}`}
         role="region"
         aria-label="Current view"
       >
