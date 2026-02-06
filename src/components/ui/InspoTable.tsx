@@ -1,9 +1,27 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { ChevronUp, ChevronDown, ChevronsUpDown, ExternalLink, Search, X } from 'lucide-react';
 import type { NormalizedResource } from '../../types/resource';
 import { MobileResourceCard } from './MobileResourceCard';
 import { GravityScoreBadge } from './GravityScoreBadge';
+
+// Animation variants for staggered row entrance
+const rowVariants = {
+  hidden: { opacity: 0, y: 8 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.02,
+      duration: 0.3,
+      ease: [0.4, 0, 0.2, 1]
+    }
+  })
+};
+
+// Shared easing for consistent feel
+const smoothEase = [0.4, 0, 0.2, 1];
 
 // Rating range filter options
 const RATING_RANGES = [
@@ -38,8 +56,8 @@ function ResourceThumbnail({ resource }: { resource: NormalizedResource }) {
   if (!hasThumbnail && !hasFavicon) {
     const initial = resource.name.charAt(0).toUpperCase();
     return (
-      <div className="w-10 h-10 rounded-lg bg-os-surface-dark border border-os-border-dark flex items-center justify-center flex-shrink-0">
-        <span className="text-sm font-medium text-os-text-secondary-dark">{initial}</span>
+      <div className="w-10 h-10 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-secondary)] flex items-center justify-center flex-shrink-0">
+        <span className="text-sm font-medium text-[var(--fg-secondary)]">{initial}</span>
       </div>
     );
   }
@@ -47,7 +65,7 @@ function ResourceThumbnail({ resource }: { resource: NormalizedResource }) {
   // Show thumbnail if available
   if (hasThumbnail) {
     return (
-      <div className="w-10 h-10 rounded-lg overflow-hidden bg-os-surface-dark border border-os-border-dark flex-shrink-0 relative">
+      <div className="w-10 h-10 rounded-lg overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-secondary)] flex-shrink-0 relative">
         <img
           src={resource.thumbnail!}
           alt={resource.name}
@@ -60,7 +78,7 @@ function ResourceThumbnail({ resource }: { resource: NormalizedResource }) {
 
   // Fallback to favicon
   return (
-    <div className="w-10 h-10 rounded-lg overflow-hidden bg-os-surface-dark border border-os-border-dark flex items-center justify-center flex-shrink-0">
+    <div className="w-10 h-10 rounded-lg overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-secondary)] flex items-center justify-center flex-shrink-0">
       <img
         src={faviconUrl}
         alt={resource.name}
@@ -255,47 +273,62 @@ export function InspoTable({
   };
 
   return (
-    <div className="w-full">
+    <motion.div
+      className="w-full"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3, ease: smoothEase }}
+    >
       {/* Filter Active Banner - shows when navigating from ResourceDetail */}
       {showFilterBanner && (
-        <div className="flex items-center justify-between px-4 py-2 bg-[#FE5102]/10 border-b border-[var(--border-secondary)]">
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, ease: smoothEase }}
+          className="flex items-center justify-between px-4 py-2 bg-[#FE5102]/10 border-b border-[var(--border-secondary)]"
+        >
           <span className="text-sm text-[#FE5102] font-medium">
             Showing results for: {activeFilterLabel}
           </span>
           <button
             onClick={clearFilters}
-            className="text-xs text-zinc-400 hover:text-[#FFFAEE] transition-colors"
+            className="text-xs text-[var(--fg-tertiary)] hover:text-[var(--fg-primary)] transition-colors"
           >
             Clear filter
           </button>
-        </div>
+        </motion.div>
       )}
 
       {/* Filters */}
-      <div className="bg-os-bg-dark border-b border-os-border-dark">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3, delay: 0.05, ease: smoothEase }}
+        className="bg-[var(--bg-primary)] border-b border-[var(--border-secondary)]"
+      >
         <div className="p-4 md:p-6 space-y-4">
           {/* Desktop: Flex row with filters right-aligned */}
           {/* Mobile: Stack vertically with labels visible */}
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             {/* Search Filter */}
             <div className="w-full md:w-auto">
-              <label htmlFor="search-filter" className="block text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark mb-2">
+              <label htmlFor="search-filter" className="block text-xs font-accent uppercase tracking-wider text-[var(--fg-secondary)] mb-2">
                 Search
               </label>
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-os-text-secondary-dark" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--fg-secondary)]" />
                 <input
                   id="search-filter"
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Filter resources..."
-                  className="w-full md:w-48 pl-9 pr-8 py-2 bg-os-surface-dark border border-os-border-dark rounded-lg text-xs sm:text-sm text-os-text-primary-dark placeholder:text-os-text-secondary-dark focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors"
+                  className="w-full md:w-48 pl-9 pr-8 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-xs sm:text-sm text-[var(--fg-primary)] placeholder:text-[var(--fg-secondary)] focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors"
                 />
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-os-text-secondary-dark hover:text-os-text-primary-dark"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-[var(--fg-secondary)] hover:text-[var(--fg-primary)]"
                   >
                     <X className="w-3 h-3" />
                   </button>
@@ -307,14 +340,14 @@ export function InspoTable({
             <div className="grid grid-cols-4 md:flex gap-3 md:gap-4">
               {/* Category Filter */}
               <div className="flex flex-col">
-                <label htmlFor="category-filter" className="block text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark mb-2">
+                <label htmlFor="category-filter" className="block text-xs font-accent uppercase tracking-wider text-[var(--fg-secondary)] mb-2">
                   Category
                 </label>
                 <select
                   id="category-filter"
                   value={categoryFilter}
                   onChange={(e) => handleCategoryChange(e.target.value)}
-                  className="px-2 sm:px-3 py-2 bg-os-surface-dark border border-os-border-dark rounded-lg text-xs sm:text-sm text-os-text-primary-dark focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30 truncate"
+                  className="px-2 sm:px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-xs sm:text-sm text-[var(--fg-primary)] focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30 truncate"
                 >
                   <option value="all">All</option>
                   {filterOptions.categories.map((category) => (
@@ -327,14 +360,14 @@ export function InspoTable({
 
               {/* Sub-category Filter */}
               <div className="flex flex-col">
-                <label htmlFor="subcategory-filter" className="block text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark mb-2">
+                <label htmlFor="subcategory-filter" className="block text-xs font-accent uppercase tracking-wider text-[var(--fg-secondary)] mb-2">
                   Sub-cat
                 </label>
                 <select
                   id="subcategory-filter"
                   value={subCategoryFilter}
                   onChange={(e) => handleSubCategoryChange(e.target.value)}
-                  className="px-2 sm:px-3 py-2 bg-os-surface-dark border border-os-border-dark rounded-lg text-xs sm:text-sm text-os-text-primary-dark focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30 truncate"
+                  className="px-2 sm:px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-xs sm:text-sm text-[var(--fg-primary)] focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30 truncate"
                 >
                   <option value="all">All</option>
                   {filterOptions.subCategories.map((subCategory) => (
@@ -347,14 +380,14 @@ export function InspoTable({
 
               {/* Pricing Filter */}
               <div className="flex flex-col">
-                <label htmlFor="pricing-filter" className="block text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark mb-2">
+                <label htmlFor="pricing-filter" className="block text-xs font-accent uppercase tracking-wider text-[var(--fg-secondary)] mb-2">
                   Pricing
                 </label>
                 <select
                   id="pricing-filter"
                   value={pricingFilter}
                   onChange={(e) => handlePricingChange(e.target.value)}
-                  className="px-2 sm:px-3 py-2 bg-os-surface-dark border border-os-border-dark rounded-lg text-xs sm:text-sm text-os-text-primary-dark focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30 truncate"
+                  className="px-2 sm:px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-xs sm:text-sm text-[var(--fg-primary)] focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30 truncate"
                 >
                   <option value="all">All</option>
                   {filterOptions.pricings.map((pricing) => (
@@ -367,14 +400,14 @@ export function InspoTable({
 
               {/* Rating Filter */}
               <div className="flex flex-col">
-                <label htmlFor="rating-filter" className="block text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark mb-2">
+                <label htmlFor="rating-filter" className="block text-xs font-accent uppercase tracking-wider text-[var(--fg-secondary)] mb-2">
                   Rating
                 </label>
                 <select
                   id="rating-filter"
                   value={ratingFilter}
                   onChange={(e) => handleRatingChange(e.target.value)}
-                  className="px-2 sm:px-3 py-2 bg-os-surface-dark border border-os-border-dark rounded-lg text-xs sm:text-sm text-os-text-primary-dark focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30 truncate"
+                  className="px-2 sm:px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-xs sm:text-sm text-[var(--fg-primary)] focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30 truncate"
                 >
                   {RATING_RANGES.map((range) => (
                     <option key={range.value} value={range.value}>
@@ -387,28 +420,40 @@ export function InspoTable({
           </div>
 
           {/* Results Count - with breathing room */}
-          <div className="text-sm text-os-text-secondary-dark pt-2">
+          <div className="text-sm text-[var(--fg-secondary)] pt-2">
             <span className="font-accent text-brand-aperol">{filteredAndSortedResources.length}</span>
             {' '}of{' '}
             <span className="font-medium">{resources.length}</span>
             {' '}resources
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Mobile Card View */}
       <div className="sm:hidden">
         {filteredAndSortedResources.length === 0 ? (
-          <div className="p-8 text-center text-os-text-secondary-dark text-sm">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3, ease: smoothEase }}
+            className="p-8 text-center text-[var(--fg-secondary)] text-sm"
+          >
             No resources match the selected filters.
-          </div>
+          </motion.div>
         ) : (
-          filteredAndSortedResources.map((resource) => (
-            <MobileResourceCard
+          filteredAndSortedResources.map((resource, index) => (
+            <motion.div
               key={resource.id}
-              resource={resource}
-              onClick={() => navigate(`/resource/${resource.id}`)}
-            />
+              custom={index}
+              initial="hidden"
+              animate="visible"
+              variants={rowVariants}
+            >
+              <MobileResourceCard
+                resource={resource}
+                onClick={() => navigate(`/resource/${resource.id}`)}
+              />
+            </motion.div>
           ))
         )}
       </div>
@@ -416,18 +461,23 @@ export function InspoTable({
       {/* Desktop Table View */}
       <div className="hidden sm:block overflow-x-auto">
         <table className="w-full border-collapse">
-          <thead className="sticky top-0 z-10 bg-os-bg-dark shadow-[0_1px_0_0_rgba(255,255,255,0.1)]">
-            <tr className="border-b border-os-border-dark">
+          <motion.thead
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3, delay: 0.1, ease: smoothEase }}
+            className="sticky top-0 z-10 bg-[var(--bg-primary)] shadow-[0_1px_0_0_var(--border-secondary)]"
+          >
+            <tr className="border-b border-[var(--border-secondary)]">
               {/* Thumbnail Header */}
-              <th className="w-16 p-4 bg-os-bg-dark">
+              <th className="w-16 p-4 bg-[var(--bg-primary)]">
                 <span className="sr-only">Thumbnail</span>
               </th>
 
               {/* Name Header */}
-              <th className="text-left p-4 bg-os-bg-dark">
+              <th className="text-left p-4 bg-[var(--bg-primary)]">
                 <button
                   onClick={() => handleSort('name')}
-                  className="flex items-center gap-2 text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark hover:text-brand-aperol transition-colors group"
+                  className="flex items-center gap-2 text-xs font-accent uppercase tracking-wider text-[var(--fg-secondary)] hover:text-brand-aperol transition-colors group"
                 >
                   Name
                   {getSortIcon('name')}
@@ -435,10 +485,10 @@ export function InspoTable({
               </th>
 
               {/* Category Header */}
-              <th className="text-left p-4 bg-os-bg-dark">
+              <th className="text-left p-4 bg-[var(--bg-primary)]">
                 <button
                   onClick={() => handleSort('category')}
-                  className="flex items-center gap-2 text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark hover:text-brand-aperol transition-colors group"
+                  className="flex items-center gap-2 text-xs font-accent uppercase tracking-wider text-[var(--fg-secondary)] hover:text-brand-aperol transition-colors group"
                 >
                   Category
                   {getSortIcon('category')}
@@ -446,10 +496,10 @@ export function InspoTable({
               </th>
 
               {/* Sub-category Header */}
-              <th className="text-left p-4 bg-os-bg-dark hidden lg:table-cell">
+              <th className="text-left p-4 bg-[var(--bg-primary)] hidden lg:table-cell">
                 <button
                   onClick={() => handleSort('subCategory')}
-                  className="flex items-center gap-2 text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark hover:text-brand-aperol transition-colors group"
+                  className="flex items-center gap-2 text-xs font-accent uppercase tracking-wider text-[var(--fg-secondary)] hover:text-brand-aperol transition-colors group"
                 >
                   Sub-category
                   {getSortIcon('subCategory')}
@@ -457,10 +507,10 @@ export function InspoTable({
               </th>
 
               {/* Pricing Header */}
-              <th className="text-left p-4 bg-os-bg-dark">
+              <th className="text-left p-4 bg-[var(--bg-primary)]">
                 <button
                   onClick={() => handleSort('pricing')}
-                  className="flex items-center gap-2 text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark hover:text-brand-aperol transition-colors group"
+                  className="flex items-center gap-2 text-xs font-accent uppercase tracking-wider text-[var(--fg-secondary)] hover:text-brand-aperol transition-colors group"
                 >
                   Pricing
                   {getSortIcon('pricing')}
@@ -468,10 +518,10 @@ export function InspoTable({
               </th>
 
               {/* Rating Header */}
-              <th className="text-left p-4 bg-os-bg-dark">
+              <th className="text-left p-4 bg-[var(--bg-primary)]">
                 <button
                   onClick={() => handleSort('gravityScore')}
-                  className="flex items-center gap-2 text-xs font-accent uppercase tracking-wider text-os-text-secondary-dark hover:text-brand-aperol transition-colors group"
+                  className="flex items-center gap-2 text-xs font-accent uppercase tracking-wider text-[var(--fg-secondary)] hover:text-brand-aperol transition-colors group"
                 >
                   Rating
                   {getSortIcon('gravityScore')}
@@ -479,24 +529,28 @@ export function InspoTable({
               </th>
 
               {/* Actions Header */}
-              <th className="w-20 p-4 bg-os-bg-dark">
+              <th className="w-20 p-4 bg-[var(--bg-primary)]">
                 <span className="sr-only">Actions</span>
               </th>
             </tr>
-          </thead>
+          </motion.thead>
           <tbody>
             {filteredAndSortedResources.length === 0 ? (
               <tr>
-                <td colSpan={7} className="p-12 text-center text-os-text-secondary-dark">
+                <td colSpan={7} className="p-12 text-center text-[var(--fg-secondary)]">
                   No resources match the selected filters.
                 </td>
               </tr>
             ) : (
-              filteredAndSortedResources.map((resource) => (
-                <tr
+              filteredAndSortedResources.map((resource, index) => (
+                <motion.tr
                   key={resource.id}
+                  custom={index}
+                  initial="hidden"
+                  animate="visible"
+                  variants={rowVariants}
                   onClick={() => navigate(`/resource/${resource.id}`)}
-                  className="border-b border-os-border-dark/50 hover:bg-os-surface-dark/30 transition-colors group cursor-pointer"
+                  className="border-b border-[var(--border-secondary)]/50 hover:bg-[var(--bg-secondary)]/30 transition-colors group cursor-pointer"
                 >
                   {/* Thumbnail Column */}
                   <td className="p-4">
@@ -505,29 +559,29 @@ export function InspoTable({
 
                   {/* Name Column - Links to detail page */}
                   <td className="p-4">
-                    <span className="font-medium text-os-text-primary-dark group-hover:text-brand-aperol transition-colors">
+                    <span className="font-medium text-[var(--fg-primary)] group-hover:text-brand-aperol transition-colors">
                       {resource.name}
                     </span>
                   </td>
 
                   {/* Category Column */}
-                  <td className="p-4 text-os-text-secondary-dark">
+                  <td className="p-4 text-[var(--fg-secondary)]">
                     {resource.category || '-'}
                   </td>
 
                   {/* Sub-category Column */}
-                  <td className="p-4 text-os-text-secondary-dark hidden lg:table-cell">
+                  <td className="p-4 text-[var(--fg-secondary)] hidden lg:table-cell">
                     {resource.subCategory || '-'}
                   </td>
 
                   {/* Pricing Column */}
                   <td className="p-4">
                     {resource.pricing ? (
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-os-surface-dark text-xs font-accent font-bold uppercase text-os-text-primary-dark border border-os-border-dark">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-[var(--bg-secondary)] text-xs font-accent font-bold uppercase text-[var(--fg-primary)] border border-[var(--border-secondary)]">
                         {resource.pricing}
                       </span>
                     ) : (
-                      <span className="text-os-text-secondary-dark">-</span>
+                      <span className="text-[var(--fg-secondary)]">-</span>
                     )}
                   </td>
 
@@ -540,7 +594,7 @@ export function InspoTable({
                         showTooltip={false}
                       />
                     ) : (
-                      <span className="text-os-text-secondary-dark">-</span>
+                      <span className="text-[var(--fg-secondary)]">-</span>
                     )}
                   </td>
 
@@ -551,18 +605,18 @@ export function InspoTable({
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-os-surface-dark border border-os-border-dark text-os-text-secondary-dark hover:text-brand-aperol hover:border-brand-aperol/30 transition-all"
+                      className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-secondary)] text-[var(--fg-secondary)] hover:text-brand-aperol hover:border-brand-aperol/30 transition-all"
                       title={`Visit ${resource.name}`}
                     >
                       <ExternalLink className="w-4 h-4" />
                     </a>
                   </td>
-                </tr>
+                </motion.tr>
               ))
             )}
           </tbody>
         </table>
       </div>
-    </div>
+    </motion.div>
   );
 }
