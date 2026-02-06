@@ -737,7 +737,7 @@ export default function Home() {
 
       {/* Legend Button - Fixed position outside canvas for proper z-index */}
       {displayMode === '3d' && (
-        <div className="fixed top-[164px] inset-x-0 z-[260] pointer-events-none">
+        <div className="fixed top-[132px] inset-x-0 z-[260] pointer-events-none">
           <div className="max-w-7xl mx-auto px-6">
             <div className="flex justify-end pointer-events-auto">
               <motion.button
@@ -752,7 +752,7 @@ export default function Home() {
                 whileTap={{ scale: 0.95 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 17 }}
                 aria-label={legendOpen ? "Close legend" : "Open legend"}
-                className="p-2.5 bg-os-bg-dark/60 backdrop-blur-xl rounded-lg border border-[var(--border-secondary)] text-os-text-secondary-dark hover:text-brand-aperol hover:border-brand-aperol/30 transition-all shadow-lg"
+                className="p-2.5 bg-os-bg-dark backdrop-blur-xl rounded-lg border border-[var(--border-secondary)] text-os-text-secondary-dark hover:text-brand-aperol hover:border-brand-aperol/30 transition-all shadow-lg"
               >
                 {legendOpen ? <X className="w-5 h-5" /> : <Info className="w-5 h-5" />}
               </motion.button>
@@ -767,7 +767,7 @@ export default function Home() {
           <motion.div
             key="legend-backdrop"
             className="fixed inset-x-0 bottom-0 z-[250] bg-os-bg-dark/60 backdrop-blur-md"
-            style={{ top: 164 }}
+            style={{ top: 132 }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
