@@ -74,6 +74,10 @@ export function ResourceCard({ resource, index }: ResourceCardProps) {
           <img
             src={resource.thumbnail}
             alt={resource.name}
+            width={48}
+            height={48}
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover"
             onError={(e) => {
               // Fallback to favicon on error
@@ -87,6 +91,10 @@ export function ResourceCard({ resource, index }: ResourceCardProps) {
           <img
             src={faviconUrl}
             alt={resource.name}
+            width={32}
+            height={32}
+            loading="lazy"
+            decoding="async"
             className="w-8 h-8"
             onError={(e) => {
               // Hide on error
