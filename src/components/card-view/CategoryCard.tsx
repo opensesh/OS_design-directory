@@ -106,6 +106,7 @@ export function CategoryCard({
 
   const videoSrc = CATEGORY_VIDEOS[category];
   const posterSrc = CATEGORY_POSTERS[category];
+  const objectPosition = CATEGORY_VIDEO_POSITIONS[category];
 
   return (
     <motion.button
@@ -141,13 +142,26 @@ export function CategoryCard({
       <div className="absolute top-3 left-3 right-3 bottom-[4.5rem] sm:bottom-auto sm:h-[68%] rounded-lg">
         {/* Inner clipping container - 2px smaller on all sides */}
         <div className="absolute inset-[2px] rounded-md overflow-hidden">
+          {/* Poster image - separate element with matching objectPosition */}
+          {posterSrc && (
+            <img
+              src={posterSrc}
+              alt=""
+              className={`
+                absolute inset-0 w-full h-full object-cover
+                transition-opacity duration-300
+                ${shouldPlayVideo ? "opacity-0" : "opacity-100"}
+              `}
+              style={{ objectPosition }}
+            />
+          )}
+          {/* Video element - no poster attribute */}
           {videoSrc && (
             <video
               ref={videoRef}
               className="absolute inset-0 w-full h-full object-cover"
-              style={{ objectPosition: CATEGORY_VIDEO_POSITIONS[category] }}
+              style={{ objectPosition }}
               src={videoSrc}
-              poster={posterSrc}
               muted
               playsInline
               preload={isTouch ? "none" : "metadata"}
