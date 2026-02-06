@@ -162,7 +162,7 @@ export function RatingScale({
           {/* Indicator dot */}
           {animateOnMount ? (
             <motion.div
-              className="absolute w-3 h-3 rounded-full -top-[3px] border-2 border-[var(--border-secondary)]"
+              className="absolute w-3 h-3 rounded-full -top-[3px] border border-[var(--border-secondary)]"
               initial={{ left: '-6px', scale: 0 }}
               animate={{ left: `calc(${percentage}% - 6px)`, scale: 1 }}
               transition={{ delay: 0.25, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -170,7 +170,7 @@ export function RatingScale({
             />
           ) : (
             <div
-              className="absolute w-3 h-3 rounded-full -top-[3px] border-2 border-[var(--border-secondary)] transition-all duration-300"
+              className="absolute w-3 h-3 rounded-full -top-[3px] border border-[var(--border-secondary)] transition-all duration-300"
               style={{
                 left: `calc(${percentage}% - 6px)`,
                 backgroundColor: tierColor,
@@ -193,7 +193,7 @@ export function RatingScale({
         {showTooltip && (
           <button
             type="button"
-            className="text-[var(--fg-tertiary)] hover:text-[var(--fg-secondary)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FE5102]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-primary)] rounded"
+            className="text-[var(--fg-tertiary)] hover:text-[var(--fg-secondary)] transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[var(--border-primary)]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-primary)] rounded"
             onMouseEnter={() => setIsTooltipOpen(true)}
             onMouseLeave={() => setIsTooltipOpen(false)}
             onClick={() => setIsTooltipOpen(!isTooltipOpen)}
