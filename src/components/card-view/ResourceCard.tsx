@@ -45,7 +45,7 @@ export function ResourceCard({ resource, index }: ResourceCardProps) {
         bg-os-surface-dark/40 border border-os-border-dark
         flex flex-col items-center justify-center p-3
         text-center transition-colors duration-200
-        focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:ring-offset-2 focus:ring-offset-os-bg-dark
+        focus:outline-none focus:ring-1 focus:ring-[var(--border-primary)]/60 focus:ring-offset-2 focus:ring-offset-[var(--bg-primary)]
         group
       `}
       variants={{

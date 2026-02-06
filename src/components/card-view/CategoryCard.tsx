@@ -117,7 +117,7 @@ export function CategoryCard({
         relative w-full rounded-xl text-left overflow-hidden
         bg-os-surface-dark border border-os-border-dark
         transition-colors duration-200
-        focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 
+        focus:outline-none focus:ring-1 focus:ring-[var(--border-primary)]/60 
         focus:ring-offset-2 focus:ring-offset-os-bg-dark
         aspect-[4/3] sm:aspect-square
         transform-gpu
