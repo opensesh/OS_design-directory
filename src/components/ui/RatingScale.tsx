@@ -81,18 +81,18 @@ function TooltipContent({
         </span>
       </div>
 
-      <div className="text-xs text-zinc-400">
+      <div className="text-xs text-[var(--fg-tertiary)]">
         {TIER_LABELS[tier]}
       </div>
 
       {rationale && (
-        <p className="text-xs text-zinc-400 leading-relaxed">
+        <p className="text-xs text-[var(--fg-tertiary)] leading-relaxed">
           {rationale}
         </p>
       )}
 
       <div className="pt-2 border-t border-[var(--border-secondary)]">
-        <p className="text-xs text-zinc-400 leading-relaxed">
+        <p className="text-xs text-[var(--fg-tertiary)] leading-relaxed">
           Resources are rated based on their overall value to the design community.
         </p>
       </div>
@@ -126,14 +126,14 @@ export function RatingScale({
       {/* Scale track */}
       <div className="flex-1 relative">
         {/* Number labels */}
-        <div className="flex justify-between text-xs text-zinc-400 mb-1.5">
+        <div className="flex justify-between text-xs text-[var(--fg-tertiary)] mb-1.5">
           <span>0</span>
           <span>10</span>
         </div>
 
         {/* Track container */}
         <div
-          className="h-1.5 bg-zinc-800 rounded-full relative"
+          className="h-1.5 bg-[var(--bg-tertiary)] rounded-full relative"
           role="progressbar"
           aria-valuenow={score}
           aria-valuemin={0}
@@ -182,7 +182,7 @@ export function RatingScale({
 
       {/* Score + Info */}
       <div className="flex items-center gap-2 relative">
-        <span className="text-lg font-bold text-[#FFFAEE] tabular-nums">
+        <span className="text-lg font-bold text-[var(--fg-primary)] tabular-nums">
           {animateOnMount ? (
             <AnimatedScore value={score} delay={0.2} animate={true} />
           ) : (
@@ -193,7 +193,7 @@ export function RatingScale({
         {showTooltip && (
           <button
             type="button"
-            className="text-zinc-400 hover:text-zinc-300 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FE5102]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#141414] rounded"
+            className="text-[var(--fg-tertiary)] hover:text-[var(--fg-secondary)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FE5102]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-primary)] rounded"
             onMouseEnter={() => setIsTooltipOpen(true)}
             onMouseLeave={() => setIsTooltipOpen(false)}
             onClick={() => setIsTooltipOpen(!isTooltipOpen)}
