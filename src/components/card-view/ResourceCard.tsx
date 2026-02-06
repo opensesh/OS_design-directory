@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Globe } from 'lucide-react';
 import type { NormalizedResource } from '../../types/resource';
 import { getCategoryColor } from '../../types/resource';
+import { SPRING, STAGGER } from '@/lib/motion-tokens';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 interface ResourceCardProps {
   resource: NormalizedResource;
@@ -12,6 +14,7 @@ interface ResourceCardProps {
 export function ResourceCard({ resource, index }: ResourceCardProps) {
   const navigate = useNavigate();
   const categoryColor = getCategoryColor(resource.category);
+  const prefersReducedMotion = useReducedMotion();
 
   // Extract domain for favicon
   const getFaviconUrl = (url: string) => {
@@ -48,25 +51,27 @@ export function ResourceCard({ resource, index }: ResourceCardProps) {
         focus:outline-none focus:ring-1 focus:ring-[var(--border-primary)]/60 focus:ring-offset-2 focus:ring-offset-[var(--bg-primary)]
         group
       `}
-      variants={{
+      variants={prefersReducedMotion ? {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1 }
+      } : {
         hidden: { opacity: 0, scale: 0.8 },
         visible: {
           opacity: 1,
           scale: 1,
           transition: {
             type: 'spring',
-            stiffness: 300,
-            damping: 24,
-            delay: index * 0.03
+            ...SPRING.normal,
+            delay: index * STAGGER.fast
           }
         }
       }}
-      whileHover={{
-        scale: 1.05,
+      whileHover={prefersReducedMotion ? {} : {
+        scale: 1.02,
         boxShadow: `0 8px 30px ${categoryColor}15`,
         borderColor: categoryColor,
       }}
-      whileTap={{ scale: 0.98 }}
+      whileTap={prefersReducedMotion ? {} : { scale: 0.98 }}
     >
       {/* Thumbnail or Favicon */}
       <div className="w-12 h-12 rounded-lg overflow-hidden mb-2 bg-os-bg-dark/50 flex items-center justify-center">
