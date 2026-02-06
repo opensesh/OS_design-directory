@@ -739,7 +739,7 @@ export default function Home() {
                 whileTap={{ scale: 0.95 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 17 }}
                 aria-label={legendOpen ? "Close legend" : "Open legend"}
-                className="p-2.5 bg-os-surface-dark/50 backdrop-blur-xl rounded-lg border border-os-border-dark text-os-text-secondary-dark hover:text-brand-aperol hover:border-brand-aperol/30 transition-all shadow-lg"
+                className="p-2.5 bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-secondary)] text-os-text-secondary-dark hover:text-brand-aperol hover:border-brand-aperol/30 transition-all shadow-lg"
               >
                 {legendOpen ? <X className="w-5 h-5" /> : <Info className="w-5 h-5" />}
               </motion.button>
