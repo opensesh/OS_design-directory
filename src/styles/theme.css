@@ -57,8 +57,8 @@
   --logo-fill: #191919;  /* Charcoal on light backgrounds */
 
   /* Canvas gradients - for seamless universe canvas transitions */
-  --canvas-gradient-top: linear-gradient(to bottom, #faf8f5 0%, rgba(250,248,245,0.8) 40%, transparent 100%);
-  --canvas-gradient-bottom: linear-gradient(to bottom, transparent 0%, rgba(250,248,245,0.8) 60%, #faf8f5 100%);
+  --canvas-gradient-top: linear-gradient(to bottom, #faf8f5 0%, rgba(250,248,245,0.9) 15%, rgba(250,248,245,0.6) 35%, rgba(250,248,245,0.3) 55%, transparent 100%);
+  --canvas-gradient-bottom: linear-gradient(to bottom, transparent 0%, rgba(250,248,245,0.3) 45%, rgba(250,248,245,0.6) 65%, rgba(250,248,245,0.9) 85%, #faf8f5 100%);
 }
 
 /* ============================================
