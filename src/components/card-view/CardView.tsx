@@ -5,6 +5,8 @@ import { CardViewBreadcrumbs } from './CardViewBreadcrumbs';
 import { CategoryGrid } from './CategoryGrid';
 import { ResourceMosaic } from './ResourceMosaic';
 import type { NormalizedResource } from '../../types/resource';
+import { PAGE_TRANSITION } from '@/lib/motion-tokens';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 interface CardViewProps {
   resources: NormalizedResource[];
@@ -12,6 +14,10 @@ interface CardViewProps {
 
 export function CardView({ resources }: CardViewProps) {
   const [searchParams, setSearchParams] = useSearchParams();
+  const prefersReducedMotion = useReducedMotion();
+
+  // Get transition based on motion preference
+  const transition = prefersReducedMotion ? PAGE_TRANSITION.reduced : PAGE_TRANSITION.viewSwitch;
 
   // Read state from URL
   const activeCategory = searchParams.get('category');
@@ -83,10 +89,10 @@ export function CardView({ resources }: CardViewProps) {
           {level <= 2 ? (
             <motion.div
               key="category-grid"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+              initial={transition.initial}
+              animate={transition.animate}
+              exit={transition.exit}
+              transition={transition.transition}
             >
               <CategoryGrid
                 resources={resources}
@@ -99,10 +105,10 @@ export function CardView({ resources }: CardViewProps) {
           ) : (
             <motion.div
               key="resource-mosaic"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+              initial={transition.initial}
+              animate={transition.animate}
+              exit={transition.exit}
+              transition={transition.transition}
             >
               <ResourceMosaic
                 resources={resources}
