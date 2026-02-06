@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion';
 import { getCategoryColor } from '../../types/resource';
+import { TRANSITION } from '@/lib/motion-tokens';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 interface SubcategoryCardProps {
   subcategory: string;
@@ -17,6 +19,7 @@ export function SubcategoryCard({
   onClick
 }: SubcategoryCardProps) {
   const categoryColor = getCategoryColor(category);
+  const prefersReducedMotion = useReducedMotion();
 
   return (
     <motion.button
@@ -31,11 +34,12 @@ export function SubcategoryCard({
         borderColor: isActive ? categoryColor : undefined,
         backgroundColor: isActive ? `${categoryColor}15` : undefined,
       }}
-      whileHover={{
+      whileHover={prefersReducedMotion ? {} : {
         scale: 1.02,
         backgroundColor: `${categoryColor}10`,
       }}
-      whileTap={{ scale: 0.98 }}
+      whileTap={prefersReducedMotion ? {} : { scale: 0.98 }}
+      transition={TRANSITION.fast}
     >
       <div className="flex items-center gap-3">
         {/* Color indicator dot */}
