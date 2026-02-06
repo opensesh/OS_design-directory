@@ -77,7 +77,7 @@ export function CategoryButtons({
             className={`
               px-4 py-2 rounded-full text-sm font-medium
               transition-all duration-200 whitespace-nowrap
-              focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:ring-offset-2 focus:ring-offset-os-bg-dark
+              focus:outline-none focus:ring-1 focus:ring-[var(--border-primary)]/60 focus:ring-offset-2 focus:ring-offset-[var(--bg-primary)]
               ${activeCategory === null
                 ? 'bg-brand-aperol text-white'
                 : 'bg-os-surface-dark/60 text-os-text-secondary-dark hover:text-brand-vanilla border border-[var(--border-secondary)]'
@@ -103,7 +103,7 @@ export function CategoryButtons({
                 className={`
                   px-4 py-2 rounded-full text-sm font-medium
                   transition-all duration-200 whitespace-nowrap
-                  focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:ring-offset-2 focus:ring-offset-os-bg-dark
+                  focus:outline-none focus:ring-1 focus:ring-[var(--border-primary)]/60 focus:ring-offset-2 focus:ring-offset-[var(--bg-primary)]
                   ${isActive
                     ? 'text-white'
                     : 'bg-os-surface-dark/60 text-os-text-secondary-dark hover:text-brand-vanilla border border-[var(--border-secondary)]'
@@ -158,7 +158,7 @@ export function CategoryButtons({
                   className={`
                     px-3 py-1.5 rounded-full text-xs font-medium
                     transition-all duration-200 whitespace-nowrap
-                    focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:ring-offset-2 focus:ring-offset-os-bg-dark
+                    focus:outline-none focus:ring-1 focus:ring-[var(--border-primary)]/60 focus:ring-offset-2 focus:ring-offset-[var(--bg-primary)]
                     ${activeSubCategory === null
                       ? 'text-white'
                       : 'bg-os-surface-dark/40 text-os-text-secondary-dark border border-[var(--border-secondary)]'
@@ -189,7 +189,7 @@ export function CategoryButtons({
                       className={`
                         px-3 py-1.5 rounded-full text-xs font-medium
                         transition-all duration-200 whitespace-nowrap
-                        focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:ring-offset-2 focus:ring-offset-os-bg-dark
+                        focus:outline-none focus:ring-1 focus:ring-[var(--border-primary)]/60 focus:ring-offset-2 focus:ring-offset-[var(--bg-primary)]
                         ${isActive
                           ? 'text-white'
                           : 'bg-os-surface-dark/40 text-os-text-secondary-dark border border-[var(--border-secondary)]'
