@@ -4,6 +4,8 @@ import { Box, Table2, Search, LayoutGrid, Info, X } from 'lucide-react';
 import { SearchModal } from '../components/search/SearchModal';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 import { motion, AnimatePresence } from 'framer-motion';
+import { PAGE_TRANSITION, DURATION, EASING, TRANSITION } from '@/lib/motion-tokens';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { resources } from '../data';
 import type { NormalizedResource } from '../types/resource';
 import { InspoChat } from '../components/ui/InspoChat';
@@ -41,7 +43,8 @@ export default function Home() {
   const [legendOpen, setLegendOpen] = useState(false);
   const [legendButtonRect, setLegendButtonRect] = useState<DOMRect | null>(null);
   const legendButtonRef = useRef<HTMLButtonElement>(null);
-  
+  const prefersReducedMotion = useReducedMotion();
+
   // Universe loading state - only for initial 3D load
   const [universeReady, setUniverseReady] = useState(false);
   const [showLoader, setShowLoader] = useState(true);
@@ -368,7 +371,7 @@ export default function Home() {
                 key="loader"
                 initial={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+                transition={{ duration: DURATION.slower, ease: EASING.smooth }}
                 className="absolute inset-0 z-50 bg-os-bg-dark"
               >
                 <AILoader />
@@ -381,7 +384,7 @@ export default function Home() {
             className="w-full h-full"
             initial={{ opacity: 0 }}
             animate={{ opacity: universeReady ? 1 : 0 }}
-            transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ duration: DURATION.cinematic, ease: EASING.smooth }}
           >
             <CanvasErrorBoundary
               onError={() => {
@@ -517,10 +520,10 @@ export default function Home() {
               <AnimatePresence mode="wait">
                 <motion.h2
                   key={displayMode}
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+                  initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 4 }}
+                  animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+                  exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -4 }}
+                  transition={{ duration: DURATION.normal, ease: EASING.smooth }}
                   className="text-h3 md:text-h3-tablet font-accent font-bold text-brand-aperol"
                   aria-live="polite"
                 >
@@ -590,13 +593,10 @@ export default function Home() {
           {displayMode === 'card' && (
             <motion.div
               key="card"
-              initial={{ opacity: 0, y: 20, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -10, scale: 0.98 }}
-              transition={{
-                duration: 0.4,
-                ease: [0.4, 0, 0.2, 1]
-              }}
+              initial={prefersReducedMotion ? PAGE_TRANSITION.reduced.initial : PAGE_TRANSITION.viewSwitch.initial}
+              animate={prefersReducedMotion ? PAGE_TRANSITION.reduced.animate : PAGE_TRANSITION.viewSwitch.animate}
+              exit={prefersReducedMotion ? PAGE_TRANSITION.reduced.exit : PAGE_TRANSITION.viewSwitch.exit}
+              transition={prefersReducedMotion ? PAGE_TRANSITION.reduced.transition : PAGE_TRANSITION.viewSwitch.transition}
               className="w-full h-full"
             >
               <CardView resources={resources} />
@@ -606,13 +606,10 @@ export default function Home() {
           {displayMode === 'table' && (
             <motion.div
               key="table"
-              initial={{ opacity: 0, y: 20, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -10, scale: 0.98 }}
-              transition={{
-                duration: 0.4,
-                ease: [0.4, 0, 0.2, 1]
-              }}
+              initial={prefersReducedMotion ? PAGE_TRANSITION.reduced.initial : PAGE_TRANSITION.viewSwitch.initial}
+              animate={prefersReducedMotion ? PAGE_TRANSITION.reduced.animate : PAGE_TRANSITION.viewSwitch.animate}
+              exit={prefersReducedMotion ? PAGE_TRANSITION.reduced.exit : PAGE_TRANSITION.viewSwitch.exit}
+              transition={prefersReducedMotion ? PAGE_TRANSITION.reduced.transition : PAGE_TRANSITION.viewSwitch.transition}
               className="w-full h-full overflow-auto"
             >
               <div className="max-w-7xl mx-auto">
@@ -640,7 +637,7 @@ export default function Home() {
             initial={{ opacity: 1, y: 0 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, transition: { duration: 0 } }}
-            transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ duration: DURATION.slow, ease: EASING.smooth }}
           >
             {/* Solid background - instant exit to prevent rectangle artifact */}
             <motion.div
@@ -665,10 +662,10 @@ export default function Home() {
                 <AnimatePresence>
                   {aiMessage && (
                     <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+                      initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 10 }}
+                      animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+                      exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
+                      transition={TRANSITION.normal}
                       className="absolute bottom-full left-0 right-0 mb-3 pointer-events-auto"
                     >
                       <AIFilterResponse
@@ -748,9 +745,9 @@ export default function Home() {
                   }
                   setLegendOpen(!legendOpen);
                 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                whileHover={prefersReducedMotion ? {} : { scale: 1.05 }}
+                whileTap={prefersReducedMotion ? {} : { scale: 0.95 }}
+                transition={TRANSITION.springSnappy}
                 aria-label={legendOpen ? "Close legend" : "Open legend"}
                 className="p-2.5 bg-os-bg-dark backdrop-blur-xl rounded-lg border border-[var(--border-secondary)] text-os-text-secondary-dark hover:text-brand-aperol hover:border-brand-aperol/30 transition-all shadow-lg"
               >
@@ -768,10 +765,10 @@ export default function Home() {
             key="legend-backdrop"
             className="fixed inset-x-0 bottom-0 z-[259] bg-os-bg-dark/60 backdrop-blur-md"
             style={{ top: 137 }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
+            initial={PAGE_TRANSITION.backdrop.initial}
+            animate={PAGE_TRANSITION.backdrop.animate}
+            exit={PAGE_TRANSITION.backdrop.exit}
+            transition={PAGE_TRANSITION.backdrop.transition}
             onClick={() => setLegendOpen(false)}
             aria-hidden="true"
           />
@@ -784,10 +781,10 @@ export default function Home() {
               top: legendButtonRect.bottom + 8,
               right: window.innerWidth - legendButtonRect.right,
             }}
-            initial={{ opacity: 0, y: -10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.95 }}
-            transition={{ duration: 0.15 }}
+            initial={prefersReducedMotion ? PAGE_TRANSITION.reduced.initial : PAGE_TRANSITION.modal.initial}
+            animate={prefersReducedMotion ? PAGE_TRANSITION.reduced.animate : PAGE_TRANSITION.modal.animate}
+            exit={prefersReducedMotion ? PAGE_TRANSITION.reduced.exit : PAGE_TRANSITION.modal.exit}
+            transition={prefersReducedMotion ? PAGE_TRANSITION.reduced.transition : PAGE_TRANSITION.modal.transition}
           >
             <UniverseLegend isOpen={legendOpen} onClose={() => setLegendOpen(false)} />
           </motion.div>
