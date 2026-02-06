@@ -56,11 +56,11 @@ export const SubcategoryRow = forwardRef<HTMLDivElement, SubcategoryRowProps>(
             ease: [0.4, 0, 0.2, 1],
             opacity: { duration: 0.25 }
           }}
-          style={{ transformOrigin: 'top', overflow: 'hidden' }}
-          className="overflow-hidden"
+          style={{ transformOrigin: 'top' }}
         >
           {/* Use matching grid structure to align with cards - 1 col mobile, 2 tablet, 3 desktop */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 py-4">
+          {/* Added padding to accommodate hover scale effect on subcategory cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 py-4 px-1 -mx-1">
             <div 
               style={{ 
                 gridColumn: gridColumnStart + ' / -1'
@@ -69,7 +69,7 @@ export const SubcategoryRow = forwardRef<HTMLDivElement, SubcategoryRowProps>(
               <p className="text-xs text-os-text-secondary-dark mb-3 uppercase tracking-wider">
                 Subcategories
               </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 py-1 -my-1">
                 {subcategories.map((sub, index) => (
                   <motion.div
                     key={sub.name}
