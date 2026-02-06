@@ -21,6 +21,7 @@ import { performLLMSearch } from '../hooks/useLLMSearch';
 
 // Lazy load the 3D canvas for better initial load
 const InspoCanvas = lazy(() => import('../components/canvas/InspoCanvas'));
+import { CanvasErrorBoundary } from '../components/canvas/CanvasErrorBoundary';
 import { AILoader } from '../components/ui/AILoader';
 import { UniverseLegend } from '../components/canvas/UniverseLegend';
 import { ThemeToggle } from '../components/ui/ThemeToggle';
@@ -382,21 +383,33 @@ export default function Home() {
             animate={{ opacity: universeReady ? 1 : 0 }}
             transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
           >
-            <Suspense fallback={null}>
-              <InspoCanvas
-                resources={resources}
-                activeCategory={activeCategory}
-                activeSubFilter={activeSubCategory}
-                filteredResourceIds={filteredResourceIds}
-                matchedCategories={matchedCategories}
-                onResourceClick={handleResourceClick}
-                onResourceHover={handleResourceHover}
-                onReady={() => {
-                  setUniverseReady(true);
-                  setTimeout(() => setShowLoader(false), 300);
-                }}
-              />
-            </Suspense>
+            <CanvasErrorBoundary
+              onError={() => {
+                // Switch to card view on canvas error
+                setSearchParams((prev) => {
+                  const next = new URLSearchParams(prev);
+                  next.set('display', 'card');
+                  return next;
+                });
+                setShowLoader(false);
+              }}
+            >
+              <Suspense fallback={null}>
+                <InspoCanvas
+                  resources={resources}
+                  activeCategory={activeCategory}
+                  activeSubFilter={activeSubCategory}
+                  filteredResourceIds={filteredResourceIds}
+                  matchedCategories={matchedCategories}
+                  onResourceClick={handleResourceClick}
+                  onResourceHover={handleResourceHover}
+                  onReady={() => {
+                    setUniverseReady(true);
+                    setTimeout(() => setShowLoader(false), 300);
+                  }}
+                />
+              </Suspense>
+            </CanvasErrorBoundary>
           </motion.div>
         </div>
       )}
