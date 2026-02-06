@@ -766,7 +766,7 @@ export default function Home() {
         {legendOpen && (
           <motion.div
             key="legend-backdrop"
-            className="fixed inset-x-0 bottom-0 z-[257] bg-os-bg-dark/60 backdrop-blur-md"
+            className="fixed inset-x-0 bottom-0 z-[259] bg-os-bg-dark/60 backdrop-blur-md"
             style={{ top: 137 }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

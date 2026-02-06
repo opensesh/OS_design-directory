@@ -104,7 +104,7 @@ export default function InspoResourceTooltip({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 5 }}
           transition={{ duration: 0.15, ease: 'easeOut' }}
-          className="fixed z-[256] pointer-events-auto cursor-pointer"
+          className="fixed z-[261] pointer-events-auto cursor-pointer"
           onClick={() => resource && onClick?.(resource)}
           style={{
             left: adjustedPosition.x,
