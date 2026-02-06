@@ -415,7 +415,7 @@ export default function Home() {
       )}
 
       {/* UI Overlay Container */}
-      <div className={`relative z-10 h-full flex flex-col overflow-hidden ${displayMode === '3d' ? 'pointer-events-none' : ''}`}>
+      <div className={`relative z-[255] h-full flex flex-col overflow-hidden ${displayMode === '3d' ? 'pointer-events-none' : ''}`}>
         {/* Header - Semi-transparent with backdrop blur */}
         <header className={`pointer-events-auto flex-shrink-0 sticky top-0 z-30 backdrop-blur-xl border-b border-[var(--border-secondary)] h-16 ${displayMode === '3d' ? 'bg-os-bg-dark/60' : 'bg-os-bg-dark/80'}`}>
         <div className="max-w-7xl mx-auto px-6 h-full">
