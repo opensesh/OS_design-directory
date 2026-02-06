@@ -754,7 +754,7 @@ export default function Home() {
           <motion.div
             key="legend-backdrop"
             className="fixed inset-x-0 bottom-0 z-[250] bg-os-bg-dark/60 backdrop-blur-md"
-            style={{ top: 124 }}
+            style={{ top: 164 }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

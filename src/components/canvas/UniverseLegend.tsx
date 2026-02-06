@@ -126,7 +126,7 @@ export const UniverseLegend: React.FC<UniverseLegendProps> = ({ isOpen, onClose 
             opacity: { duration: 0.2 }
           }}
           role="region"
-          className="w-80 max-w-[calc(100vw-2rem)] bg-os-surface-dark/95 backdrop-blur-xl rounded-lg border border-os-border-dark shadow-xl overflow-hidden max-h-[calc(100vh-200px)] overflow-y-auto"
+          className="w-80 max-w-[calc(100vw-2rem)] bg-[var(--bg-primary)] rounded-lg border border-os-border-dark shadow-xl overflow-hidden max-h-[calc(100vh-200px)] overflow-y-auto"
         >
           {/* Title Header */}
           <div className="px-4 py-3 border-b border-os-border-dark">
