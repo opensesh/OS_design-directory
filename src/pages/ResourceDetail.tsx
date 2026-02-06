@@ -486,6 +486,21 @@ export default function ResourceDetail() {
                         <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
                       </motion.span>
                     </a>
+
+                    {/* Tags - Desktop/Tablet: inside left column, tight to URL */}
+                    {resource.tags && resource.tags.length > 0 && (
+                      <div className="hidden md:flex flex-wrap gap-1.5 mt-2">
+                        {resource.tags.map((tag, idx) => (
+                          <span
+                            key={idx}
+                            className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded bg-[var(--bg-tertiary)]/40 text-[var(--fg-secondary)]"
+                          >
+                            <Tag className="w-2.5 h-2.5" />
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
 
@@ -534,9 +549,9 @@ export default function ResourceDetail() {
               </div>
             )}
 
-            {/* Tags - Outside flex, aligned with icon's left edge */}
+            {/* Tags - Mobile only: outside flex, aligned with icon's left edge */}
             {resource.tags && resource.tags.length > 0 && (
-              <div className="mt-2">
+              <div className="mt-2 md:hidden">
                 <div className="flex flex-wrap gap-1.5">
                   {resource.tags.map((tag, idx) => (
                     <span
