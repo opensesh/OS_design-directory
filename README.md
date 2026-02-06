@@ -384,17 +384,89 @@ bun run build
 
 ---
 
-## Environment Variables
+## Deployment Options
 
-Create a `.env` file for automation scripts:
+This project is designed to work at three levels—from zero-config static hosting to full production with AI-powered search.
 
-```env
-# Required for fix-screenshots.ts
-ANTHROPIC_API_KEY=sk-ant-...
-SERPAPI_API_KEY=...
+### Tier 1: Static Site (Zero Dependencies)
+
+Fork it, build it, deploy it. No API keys, no backend, no external services required.
+
+```bash
+bun run build
+# Upload dist/ to any static host (GitHub Pages, Netlify, Cloudflare, etc.)
 ```
 
-**Note:** These are only needed for automation scripts, not for running the app.
+**What works:**
+- Full 3D visualization, card view, and list view
+- Category filtering and tag search
+- Local keyword-based search
+- All animations and interactions
+
+### Tier 2: AI-Powered Search (Optional)
+
+Add your own Anthropic API key to enable intelligent natural language search.
+
+```env
+ANTHROPIC_API_KEY=sk-ant-...
+```
+
+**What you get:**
+- Natural language queries ("show me free prototyping tools")
+- Semantic understanding of search intent
+- Multi-filter extraction from conversational queries
+
+**Fallback behavior:** If the API is unavailable or times out (5s), search automatically falls back to local keyword matching. The app never breaks.
+
+### Tier 3: Production (Our Hosted Version)
+
+We use [Vercel KV](https://vercel.com/docs/storage/vercel-kv) for persistent rate limiting across serverless cold starts.
+
+**What it adds:**
+- Rate limiting that persists across deployments (10 req/min, 100 req/day per IP)
+- No configuration needed—Vercel auto-provisions KV credentials
+
+**For self-hosters:** Rate limiting is skipped if KV is unavailable (fail-open). Your app still works; you just won't have persistent rate limits. If you need rate limiting, you can:
+- Deploy to Vercel (KV auto-configured)
+- Use Upstash Redis directly (requires code modification)
+- Implement your own rate limiting middleware
+
+---
+
+## Environment Variables
+
+### For the App (Optional)
+
+These enable enhanced features but are **not required** to run the application:
+
+| Variable | Required | Purpose |
+|----------|----------|---------|
+| `ANTHROPIC_API_KEY` | No | Enables AI-powered natural language search |
+
+### For Automation Scripts (Optional)
+
+These are only needed if you use the screenshot automation:
+
+| Variable | Required | Purpose |
+|----------|----------|---------|
+| `ANTHROPIC_API_KEY` | For `fix-screenshots.ts` | Claude Vision for detecting bad screenshots |
+| `SERPAPI_API_KEY` | For `fix-screenshots.ts` | Google Images API for finding replacements |
+
+### For Production (Vercel Only)
+
+| Variable | Required | Purpose |
+|----------|----------|---------|
+| `KV_REST_API_*` | Auto-provisioned | Vercel KV for rate limiting (no manual setup needed) |
+
+Create a `.env` file for local development:
+
+```env
+# Optional - enables AI search
+ANTHROPIC_API_KEY=sk-ant-...
+
+# Optional - only for screenshot automation
+SERPAPI_API_KEY=...
+```
 
 ---
 
@@ -509,6 +581,8 @@ The LLM-powered search endpoint (`/api/search/parse-query`) is rate-limited:
 - **100 requests per day** per IP
 
 Exceeding these limits returns a `429 Too Many Requests` response.
+
+**Note for self-hosters:** Rate limiting requires Vercel KV. If you deploy elsewhere, the rate limiter gracefully skips (fail-open behavior)—your app works, but without persistent rate limits.
 
 ### Security Headers
 
