@@ -175,10 +175,10 @@ export function CategoryCard({
           className="absolute inset-0 pointer-events-none rounded-lg"
           style={{
             boxShadow: `
-              inset 40px 0 40px -35px rgba(var(--card-vignette), 1),
-              inset -40px 0 40px -35px rgba(var(--card-vignette), 1),
-              inset 0 40px 40px -35px rgba(var(--card-vignette), 1),
-              inset 0 -40px 40px -35px rgba(var(--card-vignette), 1)
+              inset 40px 0 40px -8px rgba(var(--card-vignette), 1),
+              inset -40px 0 40px -8px rgba(var(--card-vignette), 1),
+              inset 0 40px 40px -8px rgba(var(--card-vignette), 1),
+              inset 0 -40px 40px -8px rgba(var(--card-vignette), 1)
             `
           }}
         />
