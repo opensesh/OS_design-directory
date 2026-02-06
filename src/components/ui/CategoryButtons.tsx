@@ -80,7 +80,7 @@ export function CategoryButtons({
               focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:ring-offset-2 focus:ring-offset-os-bg-dark
               ${activeCategory === null
                 ? 'bg-brand-aperol text-white'
-                : 'bg-os-surface-dark/60 text-os-text-secondary-dark hover:text-brand-vanilla border border-os-border-dark/40'
+                : 'bg-os-surface-dark/60 text-os-text-secondary-dark hover:text-brand-vanilla border border-[var(--border-secondary)]'
               }
             `}
             whileTap={{ scale: 0.95 }}
@@ -106,7 +106,7 @@ export function CategoryButtons({
                   focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:ring-offset-2 focus:ring-offset-os-bg-dark
                   ${isActive
                     ? 'text-white'
-                    : 'bg-os-surface-dark/60 text-os-text-secondary-dark hover:text-brand-vanilla border border-os-border-dark/40'
+                    : 'bg-os-surface-dark/60 text-os-text-secondary-dark hover:text-brand-vanilla border border-[var(--border-secondary)]'
                   }
                 `}
                 style={{
@@ -161,7 +161,7 @@ export function CategoryButtons({
                     focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:ring-offset-2 focus:ring-offset-os-bg-dark
                     ${activeSubCategory === null
                       ? 'text-white'
-                      : 'bg-os-surface-dark/40 text-os-text-secondary-dark border border-os-border-dark/30'
+                      : 'bg-os-surface-dark/40 text-os-text-secondary-dark border border-[var(--border-secondary)]'
                     }
                   `}
                   style={{
@@ -192,7 +192,7 @@ export function CategoryButtons({
                         focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:ring-offset-2 focus:ring-offset-os-bg-dark
                         ${isActive
                           ? 'text-white'
-                          : 'bg-os-surface-dark/40 text-os-text-secondary-dark border border-os-border-dark/30'
+                          : 'bg-os-surface-dark/40 text-os-text-secondary-dark border border-[var(--border-secondary)]'
                         }
                       `}
                       style={{
