@@ -178,8 +178,8 @@ export function CategoryCard({
           className="absolute inset-0 pointer-events-none rounded-lg"
           style={{
             boxShadow: `
-              inset 40px 0 48px -8px rgba(var(--card-vignette), 1),
-              inset -50px 0 48px -8px rgba(var(--card-vignette), 1),
+              inset 60px 0 48px -8px rgba(var(--card-vignette), 1),
+              inset -60px 0 48px -8px rgba(var(--card-vignette), 1),
               inset 0 70px 56px -8px rgba(var(--card-vignette), 1),
               inset 0 -70px 56px -8px rgba(var(--card-vignette), 1)
             `
