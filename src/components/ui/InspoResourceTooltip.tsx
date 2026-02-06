@@ -112,12 +112,12 @@ export default function InspoResourceTooltip({
           }}
         >
           {/* Card Container */}
-          <div className="bg-[var(--bg-primary)]/95 backdrop-blur-sm border border-[var(--border-secondary)] rounded-lg p-4 shadow-xl max-w-xs">
+          <div className="bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg p-4 shadow-xl max-w-xs">
             {/* Header with Favicon and Title */}
             <div className="flex items-start gap-3 mb-3">
               {/* Favicon */}
               <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 overflow-hidden bg-zinc-800"
+                className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 overflow-hidden bg-[var(--bg-tertiary)]"
                 style={{
                   borderColor: categoryColor,
                   borderWidth: '2px',
@@ -144,7 +144,7 @@ export default function InspoResourceTooltip({
 
               <div className="flex-1 min-w-0">
                 {/* Title */}
-                <h3 className="text-white font-semibold text-base leading-tight">
+                <h3 className="text-[var(--fg-primary)] font-semibold text-base leading-tight">
                   {resource.name}
                 </h3>
 
@@ -173,7 +173,7 @@ export default function InspoResourceTooltip({
 
             {/* Description */}
             {truncatedDescription && (
-              <p className="text-zinc-400 text-sm leading-relaxed">
+              <p className="text-[var(--fg-secondary)] text-sm leading-relaxed">
                 {truncatedDescription}
               </p>
             )}
