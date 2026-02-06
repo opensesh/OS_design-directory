@@ -227,7 +227,7 @@ export default function ResourceDetail() {
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--fg-primary)]">
       {/* Header - Consistent with Home */}
-      <header className="sticky top-0 z-10 bg-os-bg-dark/80 backdrop-blur-xl border-b border-os-border-dark/50">
+      <header className="sticky top-0 z-10 bg-[var(--bg-primary)] border-b border-[var(--border-secondary)]">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           {/* Left: Logo + Wordmark */}
           <Link
@@ -272,11 +272,13 @@ export default function ResourceDetail() {
             {/* Search Button - hidden on mobile, visible on desktop */}
             <button
               onClick={() => setIsSearchModalOpen(true)}
-              className="hidden md:flex items-center justify-center gap-2 h-10 px-3 bg-os-surface-dark/50 border border-os-border-dark rounded-lg text-os-text-secondary-dark hover:text-os-text-primary-dark hover:border-brand-aperol/30 transition-all"
+              className="hidden md:flex items-center justify-between h-10 min-w-[200px] lg:min-w-[240px] px-3 bg-os-surface-dark/50 border border-os-border-dark rounded-lg text-os-text-secondary-dark hover:text-os-text-primary-dark hover:border-brand-aperol/30 transition-all"
               title="Search resources (⌘K)"
             >
-              <Search className="w-4 h-4" />
-              <span className="text-sm">Search...</span>
+              <div className="flex items-center gap-2">
+                <Search className="w-4 h-4" />
+                <span className="text-sm">Search...</span>
+              </div>
               <kbd className="hidden lg:inline text-[10px] px-1.5 py-0.5 bg-os-bg-dark rounded border border-os-border-dark">⌘K</kbd>
             </button>
 
@@ -570,11 +572,11 @@ export default function ResourceDetail() {
                       const [first, second] = splitDescription(resource.description);
                       return (
                         <div className="space-y-3">
-                          <p className="text-sm leading-relaxed text-zinc-300">
+                          <p className="text-sm leading-relaxed text-[var(--fg-secondary)]">
                             {first}
                           </p>
                           {second && (
-                            <p className="text-sm leading-relaxed text-zinc-300">
+                            <p className="text-sm leading-relaxed text-[var(--fg-secondary)]">
                               {second}
                             </p>
                           )}
