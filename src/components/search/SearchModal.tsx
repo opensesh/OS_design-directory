@@ -2,9 +2,21 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, ArrowRight, Command } from 'lucide-react';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { useResourceSearch, type SearchResult } from '../../hooks/useResourceSearch';
 import type { NormalizedResource } from '../../types/resource';
 import { getCategoryColor } from '../../types/resource';
+
+// Virtual list item types
+type VirtualItem =
+  | { type: 'header'; category: string; count: number }
+  | { type: 'popular-label' }
+  | { type: 'result'; result: SearchResult; globalIndex: number };
+
+// Item heights for virtualization
+const HEADER_HEIGHT = 32;
+const RESULT_HEIGHT = 56;
+const POPULAR_LABEL_HEIGHT = 28;
 
 // Get favicon URL from domain using Google's service
 function getFaviconUrl(url: string): string {
@@ -64,6 +76,38 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
     }
     return flat;
   }, [displayGroupedResults, orderedCategories]);
+
+  // Create flattened virtual items list (headers + results)
+  const virtualItems = useMemo(() => {
+    const items: VirtualItem[] = [];
+
+    // Add "Popular Resources" label when not searching
+    if (!query.trim() && flatResults.length > 0) {
+      items.push({ type: 'popular-label' });
+    }
+
+    let globalIndex = 0;
+    for (const category of orderedCategories) {
+      const categoryResults = displayGroupedResults[category];
+      items.push({ type: 'header', category, count: categoryResults.length });
+      for (const result of categoryResults) {
+        items.push({ type: 'result', result, globalIndex });
+        globalIndex++;
+      }
+    }
+    return items;
+  }, [query, orderedCategories, displayGroupedResults, flatResults.length]);
+
+  // Map from result globalIndex to virtualItems index for scrolling
+  const resultIndexToVirtualIndex = useMemo(() => {
+    const map = new Map<number, number>();
+    virtualItems.forEach((item, virtualIndex) => {
+      if (item.type === 'result') {
+        map.set(item.globalIndex, virtualIndex);
+      }
+    });
+    return map;
+  }, [virtualItems]);
 
   // Handle mounting for portal
   useEffect(() => {

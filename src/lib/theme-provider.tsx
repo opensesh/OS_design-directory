@@ -14,11 +14,28 @@ const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 const STORAGE_KEY = 'os-design-directory-theme';
 
 /**
+ * Detect if the user is on a mobile device
+ */
+function isMobileDevice(): boolean {
+  if (typeof window === 'undefined') return false;
+  return window.matchMedia('(max-width: 768px)').matches ||
+         /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+}
+
+/**
  * Resolves the actual theme based on system preference
  */
 function getSystemTheme(): ResolvedTheme {
   if (typeof window === 'undefined') return 'dark';
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+/**
+ * Get the default theme - dark for mobile, system for desktop
+ */
+function getDefaultTheme(): Theme {
+  if (typeof window === 'undefined') return 'dark';
+  return isMobileDevice() ? 'dark' : 'system';
 }
 
 /**
@@ -59,10 +76,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   /**
    * Initialize theme from localStorage on mount
+   * Mobile devices default to dark mode for better experience
    */
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
-    const initial = stored || 'system';
+    const initial = stored || getDefaultTheme();
     setThemeState(initial);
     const r = resolve(initial);
     setResolvedTheme(r);
