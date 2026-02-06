@@ -80,8 +80,8 @@ export function InspoChat({
           relative bg-os-surface-dark/80 backdrop-blur-xl rounded-xl
           border transition-all duration-200
           ${isFocused
-            ? 'border-brand-aperol shadow-lg shadow-brand-aperol/20'
-            : 'border-os-border-dark hover:border-os-border-dark/60'
+            ? 'border-[var(--border-primary)] shadow-lg shadow-black/10'
+            : 'border-[var(--border-secondary)] hover:border-[var(--fg-tertiary)]'
           }
         `}
       >
