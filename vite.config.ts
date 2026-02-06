@@ -5,6 +5,17 @@ import path from 'path'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  build: {
+    chunkSizeWarningLimit: 1200,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-three': ['three', '@react-three/fiber', '@react-three/drei'],
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+        },
+      },
+    },
+  },
   server: {
     port: 3001,
     // Proxy API requests to Vercel dev server when running standalone Vite
