@@ -298,7 +298,7 @@ export default function ResourceDetail() {
       </header>
 
       {/* Subheader - Visible on all viewports */}
-      <section className="border-b border-[var(--border-secondary)]/50 bg-[var(--bg-primary)]">
+      <section className="border-b border-[var(--border-secondary)] bg-[var(--bg-primary)]">
         <div className="max-w-7xl mx-auto px-6 py-3 md:py-4">
           <div className="flex items-center justify-between">
             {/* Left: Breadcrumbs */}
@@ -372,7 +372,7 @@ export default function ResourceDetail() {
                 {/* Browser Mockup - centered with adaptive aspect ratio */}
                 <div className="rounded-lg overflow-hidden border border-[var(--border-secondary)]/50 max-w-2xl w-full shadow-2xl max-h-[70vh]">
                   {/* Browser chrome with traffic lights */}
-                  <div className="flex items-center gap-2 px-3 py-2 bg-[var(--bg-primary)] border-b border-[var(--border-secondary)]/50">
+                  <div className="flex items-center gap-2 px-3 py-2 bg-[var(--bg-primary)] border-b border-[var(--border-secondary)]">
                     {/* Traffic lights */}
                     <div className="flex gap-1">
                       <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
@@ -689,7 +689,7 @@ export default function ResourceDetail() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="mb-8 pt-6 border-t border-[var(--border-secondary)]/30"
+              className="mb-8 pt-6 border-t border-[var(--border-secondary)]"
             >
               <h2 className="text-xs font-semibold text-[var(--fg-primary)] mb-3 uppercase tracking-wide flex items-center gap-2">
                 <span className="w-6 h-px bg-[#FE5102]" />
@@ -702,7 +702,7 @@ export default function ResourceDetail() {
                     <Link
                       key={related.id}
                       to={`/resource/${related.id}`}
-                      className="group flex items-center gap-3 p-3 rounded-lg bg-[var(--bg-secondary)]/40 border border-[var(--border-secondary)]/30 hover:border-[var(--border-primary)] hover:bg-[var(--bg-secondary)]/60 transition-all"
+                      className="group flex items-center gap-3 p-3 rounded-lg bg-[var(--bg-secondary)]/40 border border-[var(--border-secondary)]/30 hover:border-[var(--fg-tertiary)] hover:bg-[var(--bg-secondary)]/60 transition-all"
                     >
                       {/* Mini thumbnail with favicon fallback */}
                       <div className="w-10 h-10 rounded-md overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-secondary)] flex-shrink-0 flex items-center justify-center">

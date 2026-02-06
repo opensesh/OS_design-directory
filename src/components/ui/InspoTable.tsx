@@ -550,7 +550,7 @@ export function InspoTable({
                   animate="visible"
                   variants={rowVariants}
                   onClick={() => navigate(`/resource/${resource.id}`)}
-                  className="border-b border-[var(--border-secondary)]/50 hover:bg-[var(--bg-secondary)]/30 transition-colors group cursor-pointer"
+                  className="border-b border-[var(--border-secondary)] hover:bg-[var(--bg-secondary)]/30 transition-colors group cursor-pointer"
                 >
                   {/* Thumbnail Column */}
                   <td className="p-4">
