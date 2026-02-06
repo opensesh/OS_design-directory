@@ -737,7 +737,7 @@ export default function Home() {
 
       {/* Legend Button - Fixed position outside canvas for proper z-index */}
       {displayMode === '3d' && (
-        <div className="fixed top-[132px] inset-x-0 z-[260] pointer-events-none">
+        <div className="fixed top-[164px] inset-x-0 z-[260] pointer-events-none">
           <div className="max-w-7xl mx-auto px-6">
             <div className="flex justify-end pointer-events-auto">
               <motion.button
