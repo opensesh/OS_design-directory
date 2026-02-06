@@ -45,9 +45,9 @@ export default function Home() {
   const legendButtonRef = useRef<HTMLButtonElement>(null);
   const prefersReducedMotion = useReducedMotion();
 
-  // Universe loading state - only for initial 3D load
-  const [universeReady, setUniverseReady] = useState(false);
-  const [showLoader, setShowLoader] = useState(true);
+  // Universe loading state - phased loading for smooth transitions
+  type LoadingPhase = 'loading' | 'transitioning' | 'ready';
+  const [loadingPhase, setLoadingPhase] = useState<LoadingPhase>('loading');
 
   // Display mode from URL params
   type DisplayMode = '3d' | 'table' | 'card';
@@ -365,13 +365,13 @@ export default function Home() {
             style={{ background: 'var(--canvas-gradient-top)' }}
           />
           {/* Loader overlay */}
-          <AnimatePresence>
-            {showLoader && (
+          <AnimatePresence onExitComplete={() => setLoadingPhase('ready')}>
+            {loadingPhase === 'loading' && (
               <motion.div
                 key="loader"
                 initial={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: DURATION.slower, ease: EASING.smooth }}
+                transition={{ duration: DURATION.slow, ease: EASING.smooth }}
                 className="absolute inset-0 z-50 bg-os-bg-dark"
               >
                 <AILoader />
@@ -383,7 +383,7 @@ export default function Home() {
           <motion.div
             className="w-full h-full"
             initial={{ opacity: 0 }}
-            animate={{ opacity: universeReady ? 1 : 0 }}
+            animate={{ opacity: loadingPhase === 'ready' ? 1 : 0 }}
             transition={{ duration: DURATION.cinematic, ease: EASING.smooth }}
           >
             <CanvasErrorBoundary
@@ -394,7 +394,7 @@ export default function Home() {
                   next.set('display', 'card');
                   return next;
                 });
-                setShowLoader(false);
+                setLoadingPhase('ready');
               }}
             >
               <Suspense fallback={null}>
@@ -407,8 +407,7 @@ export default function Home() {
                   onResourceClick={handleResourceClick}
                   onResourceHover={handleResourceHover}
                   onReady={() => {
-                    setUniverseReady(true);
-                    setTimeout(() => setShowLoader(false), 300);
+                    setLoadingPhase('transitioning');
                   }}
                 />
               </Suspense>
