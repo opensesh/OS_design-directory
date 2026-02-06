@@ -627,7 +627,7 @@ export default function ResourceDetail() {
                     {resource.subCategory && (
                       <Link
                         to={`/?display=table&subCategory=${encodeURIComponent(resource.subCategory)}`}
-                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[var(--bg-secondary)]/60 text-[var(--fg-secondary)] text-xs border border-[var(--border-secondary)]/50 hover:bg-[var(--bg-tertiary)] hover:text-[var(--fg-primary)] transition-colors"
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[var(--bg-secondary)]/60 text-[var(--fg-secondary)] text-xs border border-[var(--border-secondary)] hover:bg-[var(--bg-tertiary)] hover:text-[var(--fg-primary)] transition-colors"
                       >
                         <Layers className="w-2.5 h-2.5" />
                         {resource.subCategory}
@@ -649,7 +649,7 @@ export default function ResourceDetail() {
                     {resource.tier && (
                       <Link
                         to={`/?display=table&tier=${resource.tier}`}
-                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[var(--bg-secondary)]/60 text-[var(--fg-secondary)] text-xs border border-[var(--border-secondary)]/50 hover:bg-[var(--bg-tertiary)] hover:text-[var(--fg-primary)] transition-colors"
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[var(--bg-secondary)]/60 text-[var(--fg-secondary)] text-xs border border-[var(--border-secondary)] hover:bg-[var(--bg-tertiary)] hover:text-[var(--fg-primary)] transition-colors"
                       >
                         <Layers className="w-2.5 h-2.5" />
                         Tier {resource.tier}
@@ -702,7 +702,7 @@ export default function ResourceDetail() {
                     <Link
                       key={related.id}
                       to={`/resource/${related.id}`}
-                      className="group flex items-center gap-3 p-3 rounded-lg bg-[var(--bg-secondary)]/40 border border-[var(--border-secondary)]/30 hover:border-[var(--fg-tertiary)] hover:bg-[var(--bg-secondary)]/60 transition-all"
+                      className="group flex items-center gap-3 p-3 rounded-lg bg-[var(--bg-secondary)]/40 border border-[var(--border-secondary)] hover:border-[var(--fg-tertiary)] hover:bg-[var(--bg-secondary)]/60 transition-all"
                     >
                       {/* Mini thumbnail with favicon fallback */}
                       <div className="w-10 h-10 rounded-md overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-secondary)] flex-shrink-0 flex items-center justify-center">
