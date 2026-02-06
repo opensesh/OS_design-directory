@@ -102,7 +102,7 @@ export function InspoChat({
         </div>
 
         {/* Toolbar */}
-        <div className="flex items-center justify-end px-4 py-3 border-t border-os-border-dark gap-2 sm:gap-4">
+        <div className="flex items-center justify-end px-4 py-3 border-t border-[var(--border-secondary)] gap-2 sm:gap-4">
           {/* Voice Input */}
           <div className="relative">
             {isListening && (

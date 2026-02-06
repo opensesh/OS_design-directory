@@ -432,7 +432,7 @@ export default function Home() {
                 setFilteredResourceIds(null);
                 setMatchedCategories([]);
               }}
-              className="flex items-center justify-center w-10 h-[39px] bg-os-surface-dark/50 rounded-md border border-os-border-dark hover:opacity-80 transition-opacity"
+              className="flex items-center justify-center w-10 h-[39px] bg-os-surface-dark/50 rounded-md border border-[var(--border-secondary)] hover:opacity-80 transition-opacity"
             >
               <svg
                 width="24"
@@ -475,14 +475,14 @@ export default function Home() {
             {/* Search Button - hidden on mobile, visible on desktop */}
             <button
               onClick={() => setIsSearchModalOpen(true)}
-              className="hidden md:flex items-center justify-between h-10 min-w-[200px] lg:min-w-[240px] px-3 bg-os-surface-dark/50 border border-os-border-dark rounded-lg text-os-text-secondary-dark hover:text-os-text-primary-dark hover:border-brand-aperol/30 transition-all"
+              className="hidden md:flex items-center justify-between h-10 min-w-[200px] lg:min-w-[240px] px-3 bg-os-surface-dark/50 border border-[var(--border-secondary)] rounded-lg text-os-text-secondary-dark hover:text-os-text-primary-dark hover:border-brand-aperol/30 transition-all"
               title="Search resources (⌘K)"
             >
               <div className="flex items-center gap-2">
                 <Search className="w-4 h-4" />
                 <span className="text-sm">Search...</span>
               </div>
-              <kbd className="hidden lg:inline text-[10px] px-1.5 py-0.5 bg-os-bg-dark rounded border border-os-border-dark">⌘K</kbd>
+              <kbd className="hidden lg:inline text-[10px] px-1.5 py-0.5 bg-os-bg-dark rounded border border-[var(--border-secondary)]">⌘K</kbd>
             </button>
 
           {/* Theme Toggle - desktop/tablet only */}
@@ -491,7 +491,7 @@ export default function Home() {
           {/* Search button - visible on mobile only */}
           <button
             onClick={() => setIsSearchModalOpen(true)}
-            className="flex md:hidden items-center justify-center w-10 h-10 bg-os-surface-dark/50 border border-os-border-dark rounded-lg text-os-text-secondary-dark hover:text-os-text-primary-dark hover:border-brand-aperol/30 transition-all"
+            className="flex md:hidden items-center justify-center w-10 h-10 bg-os-surface-dark/50 border border-[var(--border-secondary)] rounded-lg text-os-text-secondary-dark hover:text-os-text-primary-dark hover:border-brand-aperol/30 transition-all"
             aria-label="Search resources"
           >
             <Search className="w-5 h-5" />
@@ -532,7 +532,7 @@ export default function Home() {
             </div>
 
             {/* Right: View toggle (all screen sizes) */}
-            <div className="flex items-center bg-os-surface-dark/50 rounded-lg p-1 border border-os-border-dark">
+            <div className="flex items-center bg-os-surface-dark/50 rounded-lg p-1 border border-[var(--border-secondary)]">
               <button
                 onClick={() => setSearchParams({})}
                 className={`p-2 rounded-md transition-all ${

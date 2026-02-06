@@ -23,7 +23,7 @@ export function SubcategoryCard({
       onClick={onClick}
       className={`
         flex-shrink-0 px-4 py-3 rounded-lg text-left
-        bg-os-surface-dark/60 border border-os-border-dark
+        bg-os-surface-dark/60 border border-[var(--border-secondary)]
         transition-colors duration-200
         focus:outline-none focus:ring-1 focus:ring-[var(--border-primary)]/60 focus:ring-offset-2 focus:ring-offset-[var(--bg-primary)]
       `}

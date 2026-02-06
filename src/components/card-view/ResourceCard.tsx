@@ -42,7 +42,7 @@ export function ResourceCard({ resource, index }: ResourceCardProps) {
       onClick={() => navigate(`/resource/${resource.id}`)}
       className={`
         relative w-full aspect-square rounded-lg overflow-hidden
-        bg-os-surface-dark/40 border border-os-border-dark
+        bg-os-surface-dark/40 border border-[var(--border-secondary)]
         flex flex-col items-center justify-center p-3
         text-center transition-colors duration-200
         focus:outline-none focus:ring-1 focus:ring-[var(--border-primary)]/60 focus:ring-offset-2 focus:ring-offset-[var(--bg-primary)]

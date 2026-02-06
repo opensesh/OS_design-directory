@@ -25,7 +25,7 @@ function MobileThumbnail({ resource }: { resource: NormalizedResource }) {
   if (!hasThumbnail && !hasFavicon) {
     const initial = resource.name.charAt(0).toUpperCase();
     return (
-      <div className="w-10 h-10 rounded-lg bg-os-surface-dark border border-os-border-dark flex items-center justify-center flex-shrink-0">
+      <div className="w-10 h-10 rounded-lg bg-os-surface-dark border border-[var(--border-secondary)] flex items-center justify-center flex-shrink-0">
         <span className="text-sm font-medium text-os-text-secondary-dark">{initial}</span>
       </div>
     );
@@ -34,7 +34,7 @@ function MobileThumbnail({ resource }: { resource: NormalizedResource }) {
   // Show thumbnail if available
   if (hasThumbnail) {
     return (
-      <div className="w-10 h-10 rounded-lg overflow-hidden bg-os-surface-dark border border-os-border-dark flex-shrink-0">
+      <div className="w-10 h-10 rounded-lg overflow-hidden bg-os-surface-dark border border-[var(--border-secondary)] flex-shrink-0">
         <img
           src={resource.thumbnail!}
           alt={resource.name}
@@ -47,7 +47,7 @@ function MobileThumbnail({ resource }: { resource: NormalizedResource }) {
 
   // Fallback to favicon
   return (
-    <div className="w-10 h-10 rounded-lg overflow-hidden bg-os-surface-dark border border-os-border-dark flex items-center justify-center flex-shrink-0">
+    <div className="w-10 h-10 rounded-lg overflow-hidden bg-os-surface-dark border border-[var(--border-secondary)] flex items-center justify-center flex-shrink-0">
       <img
         src={faviconUrl}
         alt={resource.name}
@@ -67,7 +67,7 @@ export function MobileResourceCard({ resource, onClick }: MobileResourceCardProp
   return (
     <div
       onClick={onClick}
-      className="flex items-center gap-3 p-3 bg-os-bg-dark border-b border-os-border-dark/50 active:bg-os-surface-dark/30 transition-colors cursor-pointer"
+      className="flex items-center gap-3 p-3 bg-os-bg-dark border-b border-[var(--border-secondary)]/50 active:bg-os-surface-dark/30 transition-colors cursor-pointer"
     >
       {/* Column 1: Thumbnail (fixed width) */}
       <MobileThumbnail resource={resource} />
@@ -91,7 +91,7 @@ export function MobileResourceCard({ resource, onClick }: MobileResourceCardProp
       {/* Column 3: Pricing chip (fixed width, right-aligned) */}
       <div className="shrink-0 w-20 flex justify-end">
         {resource.pricing && (
-          <span className="inline-flex items-center px-2 py-0.5 rounded bg-os-surface-dark text-[10px] font-accent font-bold uppercase text-os-text-primary-dark border border-os-border-dark">
+          <span className="inline-flex items-center px-2 py-0.5 rounded bg-os-surface-dark text-[10px] font-accent font-bold uppercase text-os-text-primary-dark border border-[var(--border-secondary)]">
             {resource.pricing}
           </span>
         )}

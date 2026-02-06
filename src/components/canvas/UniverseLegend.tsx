@@ -126,10 +126,10 @@ export const UniverseLegend: React.FC<UniverseLegendProps> = ({ isOpen, onClose 
             opacity: { duration: 0.2 }
           }}
           role="region"
-          className="w-80 max-w-[calc(100vw-2rem)] bg-[var(--bg-primary)] rounded-lg border border-os-border-dark shadow-xl overflow-hidden max-h-[calc(100vh-200px)] overflow-y-auto"
+          className="w-80 max-w-[calc(100vw-2rem)] bg-[var(--bg-primary)] rounded-lg border border-[var(--border-secondary)] shadow-xl overflow-hidden max-h-[calc(100vh-200px)] overflow-y-auto"
         >
           {/* Title Header */}
-          <div className="px-4 py-3 border-b border-os-border-dark">
+          <div className="px-4 py-3 border-b border-[var(--border-secondary)]">
             <h3 className="text-h5 font-accent font-bold text-brand-aperol">
               Legend
             </h3>
@@ -147,7 +147,7 @@ export const UniverseLegend: React.FC<UniverseLegendProps> = ({ isOpen, onClose 
             }}
           >
             <Collapsible open={openSection === 'keyboard'} onOpenChange={() => toggleSection('keyboard')}>
-              <CollapsibleTrigger className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-os-text-primary-dark hover:bg-os-surface-dark/60 transition-colors border-b border-os-border-dark">
+              <CollapsibleTrigger className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-os-text-primary-dark hover:bg-os-surface-dark/60 transition-colors border-b border-[var(--border-secondary)]">
                 <span>Keyboard Controls</span>
                 <motion.div
                   animate={{ rotate: openSection === 'keyboard' ? 180 : 0 }}
@@ -156,7 +156,7 @@ export const UniverseLegend: React.FC<UniverseLegendProps> = ({ isOpen, onClose 
                   <ChevronDown className="w-4 h-4" />
                 </motion.div>
               </CollapsibleTrigger>
-              <CollapsibleContent className="px-4 py-3 border-b border-os-border-dark overflow-hidden">
+              <CollapsibleContent className="px-4 py-3 border-b border-[var(--border-secondary)] overflow-hidden">
                 <AnimatePresence>
                   {openSection === 'keyboard' && (
                     <motion.div
@@ -180,7 +180,7 @@ export const UniverseLegend: React.FC<UniverseLegendProps> = ({ isOpen, onClose 
                               animate="visible"
                               className="flex items-start gap-2"
                             >
-                              <kbd className="px-1.5 py-0.5 bg-os-bg-dark rounded text-xs font-mono border border-os-border-dark">
+                              <kbd className="px-1.5 py-0.5 bg-os-bg-dark rounded text-xs font-mono border border-[var(--border-secondary)]">
                                 {item.key}
                               </kbd>
                               <span className="leading-relaxed">{item.desc}</span>
@@ -225,7 +225,7 @@ export const UniverseLegend: React.FC<UniverseLegendProps> = ({ isOpen, onClose 
             }}
           >
             <Collapsible open={openSection === 'touch'} onOpenChange={() => toggleSection('touch')}>
-              <CollapsibleTrigger className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-os-text-primary-dark hover:bg-os-surface-dark/60 transition-colors border-b border-os-border-dark">
+              <CollapsibleTrigger className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-os-text-primary-dark hover:bg-os-surface-dark/60 transition-colors border-b border-[var(--border-secondary)]">
                 <span>Touch Controls</span>
                 <motion.div
                   animate={{ rotate: openSection === 'touch' ? 180 : 0 }}
@@ -234,7 +234,7 @@ export const UniverseLegend: React.FC<UniverseLegendProps> = ({ isOpen, onClose 
                   <ChevronDown className="w-4 h-4" />
                 </motion.div>
               </CollapsibleTrigger>
-              <CollapsibleContent className="px-4 py-3 border-b border-os-border-dark overflow-hidden">
+              <CollapsibleContent className="px-4 py-3 border-b border-[var(--border-secondary)] overflow-hidden">
                 <AnimatePresence>
                   {openSection === 'touch' && (
                     <motion.div
@@ -298,7 +298,7 @@ export const UniverseLegend: React.FC<UniverseLegendProps> = ({ isOpen, onClose 
             }}
           >
             <Collapsible open={openSection === 'appearance'} onOpenChange={() => toggleSection('appearance')}>
-              <CollapsibleTrigger className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-os-text-primary-dark hover:bg-os-surface-dark/60 transition-colors border-b border-os-border-dark">
+              <CollapsibleTrigger className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-os-text-primary-dark hover:bg-os-surface-dark/60 transition-colors border-b border-[var(--border-secondary)]">
                 <span>Appearance</span>
                 <motion.div
                   animate={{ rotate: openSection === 'appearance' ? 180 : 0 }}
@@ -307,7 +307,7 @@ export const UniverseLegend: React.FC<UniverseLegendProps> = ({ isOpen, onClose 
                   <ChevronDown className="w-4 h-4" />
                 </motion.div>
               </CollapsibleTrigger>
-              <CollapsibleContent className="px-4 py-3 border-b border-os-border-dark overflow-hidden">
+              <CollapsibleContent className="px-4 py-3 border-b border-[var(--border-secondary)] overflow-hidden">
                 <AnimatePresence>
                   {openSection === 'appearance' && (
                     <motion.div

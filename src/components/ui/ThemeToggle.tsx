@@ -36,7 +36,7 @@ export function ThemeToggle() {
     return (
       <div 
         className="hidden md:flex items-center justify-center w-10 h-10 
-          bg-os-surface-dark/50 border border-os-border-dark rounded-lg"
+          bg-os-surface-dark/50 border border-[var(--border-secondary)] rounded-lg"
         aria-hidden="true"
       >
         <div className="w-5 h-5 animate-pulse bg-[var(--bg-tertiary)] rounded" />
@@ -50,7 +50,7 @@ export function ThemeToggle() {
     <button
       onClick={() => setTheme(next)}
       className="hidden md:flex items-center justify-center w-10 h-10
-        bg-os-surface-dark/50 border border-os-border-dark rounded-lg
+        bg-os-surface-dark/50 border border-[var(--border-secondary)] rounded-lg
         text-os-text-secondary-dark hover:text-os-text-primary-dark
         hover:border-brand-aperol/30 transition-all duration-200"
       aria-label={`Theme: ${label}. Click to switch to ${themeConfig[next].label} mode`}

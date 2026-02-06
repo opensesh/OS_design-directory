@@ -182,7 +182,7 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
       >
         {/* Favicon or fallback initial */}
         <div
-          className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 bg-os-surface-dark border border-os-border-dark overflow-hidden"
+          className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 bg-os-surface-dark border border-[var(--border-secondary)] overflow-hidden"
         >
           {showFavicon ? (
             <img
@@ -259,7 +259,7 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
                 w-full max-w-2xl
                 bg-os-bg-dark
                 rounded-xl
-                border border-os-border-dark
+                border border-[var(--border-secondary)]
                 shadow-2xl
                 overflow-hidden
               "
@@ -267,7 +267,7 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
             >
               {/* Search Input */}
               <h2 id="search-modal-title" className="sr-only">Search resources</h2>
-              <div className="flex items-center gap-3 px-5 py-4 border-b border-os-border-dark">
+              <div className="flex items-center gap-3 px-5 py-4 border-b border-[var(--border-secondary)]">
                 <Search className="w-5 h-5 text-os-text-secondary-dark flex-shrink-0" />
                 <input
                   ref={inputRef}
@@ -285,7 +285,7 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
                   "
                 />
                 <div className="flex items-center gap-1">
-                  <kbd className="hidden sm:flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] text-os-text-secondary-dark bg-os-surface-dark rounded border border-os-border-dark">
+                  <kbd className="hidden sm:flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] text-os-text-secondary-dark bg-os-surface-dark rounded border border-[var(--border-secondary)]">
                     <Command className="w-2.5 h-2.5" />K
                   </kbd>
                   <button
@@ -351,23 +351,23 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
               </div>
 
               {/* Footer */}
-              <div className="flex items-center justify-between px-5 py-3 border-t border-os-border-dark text-[10px] text-os-text-secondary-dark">
+              <div className="flex items-center justify-between px-5 py-3 border-t border-[var(--border-secondary)] text-[10px] text-os-text-secondary-dark">
                 <div className="flex items-center gap-3">
                   <span className="flex items-center gap-1">
-                    <kbd className="px-1 py-0.5 bg-os-surface-dark rounded border border-os-border-dark">
+                    <kbd className="px-1 py-0.5 bg-os-surface-dark rounded border border-[var(--border-secondary)]">
                       Enter
                     </kbd>
                     to select
                   </span>
                   <span className="flex items-center gap-1">
-                    <kbd className="px-1 py-0.5 bg-os-surface-dark rounded border border-os-border-dark">
+                    <kbd className="px-1 py-0.5 bg-os-surface-dark rounded border border-[var(--border-secondary)]">
                       ↑↓
                     </kbd>
                     to navigate
                   </span>
                 </div>
                 <span className="flex items-center gap-1">
-                  <kbd className="px-1 py-0.5 bg-os-surface-dark rounded border border-os-border-dark">
+                  <kbd className="px-1 py-0.5 bg-os-surface-dark rounded border border-[var(--border-secondary)]">
                     Esc
                   </kbd>
                   to close
