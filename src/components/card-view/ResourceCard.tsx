@@ -25,14 +25,14 @@ export function ResourceCard({ resource, index }: ResourceCardProps) {
 
   const faviconUrl = getFaviconUrl(resource.url);
 
-  // Pricing badge color
+  // Pricing badge color - uses semantic tokens from theme.css
   const getPricingColor = (pricing: string | null) => {
     if (!pricing) return null;
     const p = pricing.toLowerCase();
-    if (p.includes('free')) return '#10B981'; // Green
-    if (p.includes('freemium')) return '#F59E0B'; // Amber
-    if (p.includes('paid')) return '#EC4899'; // Pink
-    return '#9CA3AF'; // Gray
+    if (p.includes('free')) return 'var(--color-pricing-free)';
+    if (p.includes('freemium')) return 'var(--color-pricing-freemium)';
+    if (p.includes('paid')) return 'var(--color-pricing-paid)';
+    return 'var(--color-pricing-default)';
   };
 
   const pricingColor = getPricingColor(resource.pricing);

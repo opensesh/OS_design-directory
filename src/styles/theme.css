@@ -44,6 +44,12 @@
   /* Focus */
   --focus-ring: #FE5102;
 
+  /* Status/Pricing Colors */
+  --color-pricing-free: #10B981;
+  --color-pricing-freemium: #F59E0B;
+  --color-pricing-paid: #EC4899;
+  --color-pricing-default: #9CA3AF;
+
   /* Shadows */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
@@ -92,6 +98,12 @@
   --bg-brand-solid_hover: #ff7a38;
   --fg-brand-primary: #ff7a38;
   --fg-brand-secondary: #FE5102;
+
+  /* Status/Pricing Colors - slightly brighter for dark mode */
+  --color-pricing-free: #34D399;
+  --color-pricing-freemium: #FBBF24;
+  --color-pricing-paid: #F472B6;
+  --color-pricing-default: #9CA3AF;
 
   /* Shadows (darker for dark mode) */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
