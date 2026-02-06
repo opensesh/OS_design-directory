@@ -6,6 +6,9 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 import { useResourceSearch, type SearchResult } from '../../hooks/useResourceSearch';
 import type { NormalizedResource } from '../../types/resource';
 import { getCategoryColor } from '../../types/resource';
+import { PAGE_TRANSITION } from '@/lib/motion-tokens';
+import { SearchResultSkeleton } from '@/components/ui/Skeleton';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 // Virtual list item types
 type VirtualItem =
@@ -41,6 +44,7 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const prefersReducedMotion = useReducedMotion();
 
   const { query, setQuery, groupedResults, defaultResults, isSearching, clearSearch } = useResourceSearch({
     debounceMs: 100,
@@ -288,10 +292,10 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
         <>
           {/* Backdrop */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
+            initial={PAGE_TRANSITION.backdrop.initial}
+            animate={PAGE_TRANSITION.backdrop.animate}
+            exit={PAGE_TRANSITION.backdrop.exit}
+            transition={PAGE_TRANSITION.backdrop.transition}
             className="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm"
             onClick={onClose}
           />
@@ -305,10 +309,10 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
             onClick={onClose}
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: -20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: -20 }}
-              transition={{ duration: 0.15 }}
+              initial={prefersReducedMotion ? PAGE_TRANSITION.reduced.initial : PAGE_TRANSITION.modal.initial}
+              animate={prefersReducedMotion ? PAGE_TRANSITION.reduced.animate : PAGE_TRANSITION.modal.animate}
+              exit={prefersReducedMotion ? PAGE_TRANSITION.reduced.exit : PAGE_TRANSITION.modal.exit}
+              transition={prefersReducedMotion ? PAGE_TRANSITION.reduced.transition : PAGE_TRANSITION.modal.transition}
               className="
                 w-full max-w-2xl
                 bg-os-bg-dark
@@ -364,18 +368,7 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
                 className="max-h-[60vh] min-h-[400px] overflow-y-auto"
               >
                 {isSearching ? (
-                  // Loading skeleton
-                  <div className="py-2">
-                    {[1, 2, 3, 4].map((i) => (
-                      <div key={i} className="flex items-center gap-3 px-5 py-3">
-                        <div className="w-9 h-9 rounded-lg bg-os-surface-dark animate-pulse" />
-                        <div className="flex-1 space-y-2">
-                          <div className="h-4 bg-os-surface-dark rounded w-3/4 animate-pulse" />
-                          <div className="h-3 bg-os-surface-dark rounded w-1/2 animate-pulse" />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  <SearchResultSkeleton count={4} />
                 ) : flatResults.length > 0 ? (
                   <div
                     style={{
