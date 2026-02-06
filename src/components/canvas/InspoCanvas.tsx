@@ -13,7 +13,6 @@ import ClusterLabels from './ClusterLabels';
 import type { NormalizedResource } from '../../types/resource';
 import { CATEGORY_ORDER, CATEGORY_COLORS } from '../../types/resource';
 import { useTheme } from '../../lib/theme-provider';
-import { EffectComposer, BrightnessContrast, HueSaturation } from '@react-three/postprocessing';
 
 /**
  * Camera animation configuration
@@ -1043,20 +1042,6 @@ export default function InspoCanvas({
         enablePan={true}
         panSpeed={0.8}
       />
-
-      {/* Post-processing effects - light mode only */}
-      {resolvedTheme === 'light' && (
-        <EffectComposer>
-          <BrightnessContrast
-            brightness={0}
-            contrast={0.15}
-          />
-          <HueSaturation
-            hue={0}
-            saturation={0.2}
-          />
-        </EffectComposer>
-      )}
     </Canvas>
   );
 }
