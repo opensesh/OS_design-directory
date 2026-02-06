@@ -114,18 +114,18 @@ export function AIFilterResponse({
           transition={{ duration: 0.25, ease: 'easeOut' }}
           className="w-full max-w-3xl mx-auto"
         >
-          <div className="bg-os-surface-dark/80 backdrop-blur-sm rounded-lg border border-os-border-dark p-3 relative">
+          <div className="bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-secondary)] p-3 relative">
             {/* Dismiss button */}
             <button
               onClick={onDismiss}
-              className="absolute top-2 right-2 p-1 rounded-full text-os-text-secondary-dark hover:text-os-text-primary-dark hover:bg-os-surface-dark/50 transition-colors"
+              className="absolute top-2 right-2 p-1 rounded-full text-[var(--fg-secondary)] hover:text-[var(--fg-primary)] hover:bg-[var(--bg-tertiary)] transition-colors"
               aria-label="Dismiss"
             >
               <X className="w-3.5 h-3.5" />
             </button>
 
             {/* Typing text */}
-            <p className="text-sm text-os-text-primary-dark leading-relaxed pr-6">
+            <p className="text-sm text-[var(--fg-primary)] leading-relaxed pr-6">
               {displayedText}
               {/* Blinking cursor while typing */}
               {!isComplete && (
@@ -146,7 +146,7 @@ export function AIFilterResponse({
                   transition={{ delay: 0.2 }}
                   className="mt-2"
                 >
-                  <span className="inline-flex items-center gap-1.5 px-2 py-1 bg-os-surface-dark/60 rounded-full text-xs text-os-text-secondary-dark">
+                  <span className="inline-flex items-center gap-1.5 px-2 py-1 bg-[var(--bg-tertiary)] rounded-full text-xs text-[var(--fg-secondary)]">
                     <span className="w-1.5 h-1.5 rounded-full bg-brand-aperol animate-pulse" />
                     {matchCount} resource{matchCount !== 1 ? 's' : ''} found
                   </span>
