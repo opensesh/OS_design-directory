@@ -66,7 +66,7 @@ No `Access-Control-*` headers. Works via same-origin requests, but breaks if API
 
 | Package | Current | Issue |
 |---------|---------|-------|
-| esbuild (via Vite) | 5.0.8 | CORS bypass in dev server (GHSA-67mh-4wv8-2f99) |
+| ~~esbuild (via Vite)~~ | ~~5.0.8~~ | ~~CORS bypass in dev server (GHSA-67mh-4wv8-2f99)~~ ✅ Fixed: Vite 6.4.1 |
 | @typescript-eslint/* | 6.21.0 | Missing security patches |
 | react | 18.3.1 | 2 major versions behind |
 
@@ -161,13 +161,13 @@ Add environment-based filtering.
 ### Should Fix (High Value)
 - [x] Add `loading="lazy"` to images
 - [x] Standardize border token usage
-- [ ] Update Vite to fix esbuild vulnerability
+- [x] Update Vite to fix esbuild vulnerability (upgraded to 6.4.1)
 - [x] Document rate limiting limitation
 
 ### Nice to Have (Polish)
 - [x] Add useCallback to navigation handlers (already done)
-- [ ] Implement virtual scrolling for scale
-- [ ] Add cost tracking for AI calls
+- [x] Implement virtual scrolling for scale (@tanstack/react-virtual)
+- [x] Add cost tracking for AI calls
 - [x] Remove console logs in production (environment-based filtering)
 
 ---
