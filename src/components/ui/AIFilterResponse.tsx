@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
+import { DURATION, EASING } from '@/lib/motion-tokens';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 interface AIFilterResponseProps {
   messageId?: number;
@@ -31,6 +33,7 @@ export function AIFilterResponse({
   const charIndexRef = useRef(0);
   const autoFadeTimerRef = useRef<NodeJS.Timeout | null>(null);
   const currentMessageIdRef = useRef<number | undefined>(undefined);
+  const prefersReducedMotion = useReducedMotion();
 
   // Typewriter effect
   useEffect(() => {
@@ -108,10 +111,10 @@ export function AIFilterResponse({
     <AnimatePresence>
       {message && (
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.25, ease: 'easeOut' }}
+          initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 10 }}
+          animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+          exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
+          transition={{ duration: DURATION.normal, ease: EASING.smooth }}
           className="w-full max-w-3xl mx-auto"
         >
           <div className="bg-[var(--bg-secondary)] rounded-lg border border-[var(--border-secondary)] p-3 relative">
@@ -141,9 +144,9 @@ export function AIFilterResponse({
             <AnimatePresence>
               {isComplete && matchCount !== undefined && (
                 <motion.div
-                  initial={{ opacity: 0, y: 5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
+                  initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 5 }}
+                  animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+                  transition={{ delay: DURATION.normal, duration: DURATION.fast, ease: EASING.smooth }}
                   className="mt-2"
                 >
                   <span className="inline-flex items-center gap-1.5 px-2 py-1 bg-[var(--bg-tertiary)] rounded-full text-xs text-[var(--fg-secondary)]">
