@@ -14,15 +14,6 @@ const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 const STORAGE_KEY = 'os-design-directory-theme';
 
 /**
- * Detect if the user is on a mobile device
- */
-function isMobileDevice(): boolean {
-  if (typeof window === 'undefined') return false;
-  return window.matchMedia('(max-width: 768px)').matches ||
-         /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-}
-
-/**
  * Resolves the actual theme based on system preference
  */
 function getSystemTheme(): ResolvedTheme {
@@ -31,19 +22,11 @@ function getSystemTheme(): ResolvedTheme {
 }
 
 /**
- * Get the default theme - dark for mobile, system for desktop
- */
-function getDefaultTheme(): Theme {
-  if (typeof window === 'undefined') return 'dark';
-  return isMobileDevice() ? 'dark' : 'system';
-}
-
-/**
  * Theme provider component - equivalent to next-themes for Vite/React
  * Manages theme state, localStorage persistence, and system preference detection
  */
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('system');
+  const [theme, setThemeState] = useState<Theme>('dark');
   const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>('dark');
   const [mounted, setMounted] = useState(false);
 
@@ -76,11 +59,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   /**
    * Initialize theme from localStorage on mount
-   * Mobile devices default to dark mode for better experience
+   * Default to dark mode for all users
    */
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
-    const initial = stored || getDefaultTheme();
+    const initial = stored || 'dark';
     setThemeState(initial);
     const r = resolve(initial);
     setResolvedTheme(r);
