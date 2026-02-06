@@ -404,7 +404,7 @@ export default function Home() {
       {/* UI Overlay Container */}
       <div className={`relative z-10 h-full flex flex-col overflow-hidden ${displayMode === '3d' ? 'pointer-events-none' : ''}`}>
         {/* Header - Semi-transparent with backdrop blur */}
-        <header className={`pointer-events-auto flex-shrink-0 sticky top-0 z-30 backdrop-blur-xl border-b border-os-border-dark/50 h-16 ${displayMode === '3d' ? 'bg-os-bg-dark/60' : 'bg-os-bg-dark/80'}`}>
+        <header className={`pointer-events-auto flex-shrink-0 sticky top-0 z-30 backdrop-blur-xl border-b border-[var(--border-secondary)] h-16 ${displayMode === '3d' ? 'bg-os-bg-dark/60' : 'bg-os-bg-dark/80'}`}>
         <div className="max-w-7xl mx-auto px-6 h-full">
           <div className="flex items-center justify-between h-full">
           <div className="flex items-center gap-3 min-w-0">
@@ -490,7 +490,7 @@ export default function Home() {
 
       {/* Subheader - View Mode Indicator */}
       <section
-        className={`pointer-events-auto flex-shrink-0 border-b border-os-border-dark/50 ${displayMode === '3d' ? 'bg-os-bg-dark/60 backdrop-blur-xl' : 'bg-os-bg-dark'}`}
+        className={`pointer-events-auto flex-shrink-0 border-b border-[var(--border-secondary)] ${displayMode === '3d' ? 'bg-os-bg-dark/60 backdrop-blur-xl' : 'bg-os-bg-dark'}`}
         role="region"
         aria-label="Current view"
       >
@@ -739,7 +739,7 @@ export default function Home() {
                 whileTap={{ scale: 0.95 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 17 }}
                 aria-label={legendOpen ? "Close legend" : "Open legend"}
-                className="p-2.5 bg-os-surface-dark/80 backdrop-blur-xl rounded-lg border border-os-border-dark hover:border-os-border-dark/60 text-os-text-secondary-dark hover:text-brand-aperol transition-all shadow-lg"
+                className="p-2.5 bg-os-surface-dark/80 backdrop-blur-xl rounded-lg border border-[var(--border-secondary)] hover:border-[var(--fg-tertiary)] text-[var(--fg-primary)] hover:text-brand-aperol transition-all shadow-lg"
               >
                 {legendOpen ? <X className="w-5 h-5" /> : <Info className="w-5 h-5" />}
               </motion.button>
