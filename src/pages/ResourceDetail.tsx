@@ -235,7 +235,7 @@ export default function ResourceDetail() {
             className="flex items-center gap-3 min-w-0 hover:opacity-80 transition-opacity"
           >
             {/* Open Session Brand Mark in styled container */}
-            <div className="flex items-center justify-center w-10 h-[39px] bg-os-surface-dark/50 rounded-md border border-os-border-dark">
+            <div className="flex items-center justify-center w-10 h-[39px] bg-[var(--bg-secondary)]/30 rounded-md border border-[var(--border-secondary)]">
               <svg
                 width="24"
                 height="24"
@@ -272,14 +272,14 @@ export default function ResourceDetail() {
             {/* Search Button - hidden on mobile, visible on desktop */}
             <button
               onClick={() => setIsSearchModalOpen(true)}
-              className="hidden md:flex items-center justify-between h-10 min-w-[200px] lg:min-w-[240px] px-3 bg-os-surface-dark/50 border border-os-border-dark rounded-lg text-os-text-secondary-dark hover:text-os-text-primary-dark hover:border-brand-aperol/30 transition-all"
+              className="hidden md:flex items-center justify-between h-10 min-w-[200px] lg:min-w-[240px] px-3 bg-[var(--bg-secondary)]/30 border border-[var(--border-secondary)] rounded-lg text-[var(--fg-secondary)] hover:text-os-text-primary-dark hover:border-brand-aperol/30 transition-all"
               title="Search resources (⌘K)"
             >
               <div className="flex items-center gap-2">
                 <Search className="w-4 h-4" />
                 <span className="text-sm">Search...</span>
               </div>
-              <kbd className="hidden lg:inline text-[10px] px-1.5 py-0.5 bg-os-bg-dark rounded border border-os-border-dark">⌘K</kbd>
+              <kbd className="hidden lg:inline text-[10px] px-1.5 py-0.5 bg-[var(--bg-primary)] rounded border border-[var(--border-secondary)]">⌘K</kbd>
             </button>
 
             {/* Theme Toggle - desktop/tablet only */}
@@ -288,7 +288,7 @@ export default function ResourceDetail() {
             {/* Search button - visible on mobile only */}
             <button
               onClick={() => setIsSearchModalOpen(true)}
-              className="flex md:hidden items-center justify-center w-10 h-10 bg-os-surface-dark/50 border border-os-border-dark rounded-lg text-os-text-secondary-dark hover:text-os-text-primary-dark hover:border-brand-aperol/30 transition-all"
+              className="flex md:hidden items-center justify-center w-10 h-10 bg-[var(--bg-secondary)]/30 border border-[var(--border-secondary)] rounded-lg text-[var(--fg-secondary)] hover:text-os-text-primary-dark hover:border-brand-aperol/30 transition-all"
               aria-label="Search resources"
             >
               <Search className="w-5 h-5" />
@@ -298,42 +298,42 @@ export default function ResourceDetail() {
       </header>
 
       {/* Subheader - Visible on all viewports */}
-      <section className="border-b border-os-border-dark/50 bg-os-bg-dark">
+      <section className="border-b border-[var(--border-secondary)]/50 bg-[var(--bg-primary)]">
         <div className="max-w-7xl mx-auto px-6 py-3 md:py-4">
           <div className="flex items-center justify-between">
             {/* Left: Breadcrumbs */}
             <nav className="flex items-center gap-1.5 text-sm min-w-0">
               <button
                 onClick={() => navigate(-1)}
-                className="text-[var(--fg-secondary)] hover:text-brand-vanilla transition-colors flex-shrink-0"
+                className="text-[var(--fg-secondary)] hover:text-[var(--fg-primary)] transition-colors flex-shrink-0"
                 aria-label="Go back"
               >
                 <ArrowLeft className="w-4 h-4" />
               </button>
               <Link
                 to={`/?display=table&category=${encodeURIComponent(resource.category || '')}`}
-                className="text-[var(--fg-secondary)] hover:text-brand-vanilla truncate transition-colors"
+                className="text-[var(--fg-secondary)] hover:text-[var(--fg-primary)] truncate transition-colors"
               >
                 {resource.category || 'Resource'}
               </Link>
-              <ChevronRight className="w-3 h-3 shrink-0 text-zinc-600" />
-              <span className="text-brand-vanilla truncate">
+              <ChevronRight className="w-3 h-3 shrink-0 text-[var(--fg-tertiary)]" />
+              <span className="text-[var(--fg-primary)] truncate">
                 {resource.subCategory || resource.name}
               </span>
             </nav>
 
             {/* Right: View toggle */}
-            <div className="flex items-center bg-os-surface-dark/50 rounded-lg p-1 border border-os-border-dark flex-shrink-0">
+            <div className="flex items-center bg-[var(--bg-secondary)]/30 rounded-lg p-1 border border-[var(--border-secondary)] flex-shrink-0">
               <Link
                 to="/"
-                className="p-2 rounded-md transition-all text-os-text-secondary-dark hover:text-brand-vanilla"
+                className="p-2 rounded-md transition-all text-[var(--fg-secondary)] hover:text-[var(--fg-primary)]"
                 aria-label="3D View"
               >
                 <Box className="w-4 h-4" />
               </Link>
               <Link
                 to="/?display=card"
-                className="p-2 rounded-md transition-all text-os-text-secondary-dark hover:text-brand-vanilla"
+                className="p-2 rounded-md transition-all text-[var(--fg-secondary)] hover:text-[var(--fg-primary)]"
                 aria-label="Card View"
               >
                 <LayoutGrid className="w-4 h-4" />
