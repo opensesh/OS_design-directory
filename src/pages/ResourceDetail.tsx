@@ -226,6 +226,14 @@ export default function ResourceDetail() {
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--fg-primary)]">
+      {/* Skip to main content - accessibility */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[999] focus:px-4 focus:py-2 focus:bg-brand-aperol focus:text-white focus:rounded-md focus:outline-none"
+      >
+        Skip to main content
+      </a>
+
       {/* Header - Consistent with Home */}
       <header className="sticky top-0 z-10 bg-[var(--bg-primary)] border-b border-[var(--border-secondary)]">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -351,7 +359,7 @@ export default function ResourceDetail() {
       </section>
 
       {/* Content */}
-      <main className="max-w-5xl mx-auto px-6 py-8">
+      <main id="main-content" tabIndex={-1} className="max-w-5xl mx-auto px-6 py-8 outline-none">
         <AnimatePresence mode="wait">
           <motion.div
             key={id}
