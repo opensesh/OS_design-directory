@@ -496,7 +496,20 @@ function CameraController({
     else if (activeCategory) {
       const activeCluster = clusters.find(c => c.category === activeCategory);
       if (activeCluster) {
+        // Include boundary points to represent the cluster's actual extent
+        // This ensures the camera zooms out enough to showcase the full nebula
+        const clusterRadius = activeCluster.radius;
         visiblePositions.push(activeCluster.center);
+        visiblePositions.push({
+          x: activeCluster.center.x + clusterRadius,
+          y: activeCluster.center.y,
+          z: activeCluster.center.z,
+        });
+        visiblePositions.push({
+          x: activeCluster.center.x - clusterRadius,
+          y: activeCluster.center.y,
+          z: activeCluster.center.z,
+        });
       }
     }
     // If matched categories from search, show those clusters
