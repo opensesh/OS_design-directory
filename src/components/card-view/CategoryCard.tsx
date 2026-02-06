@@ -2,6 +2,8 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { getCategoryColor } from "../../types/resource";
 import { useTouchDevice } from "../../hooks/useTouchDevice";
+import { DURATION, EASING } from "@/lib/motion-tokens";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface CategoryCardProps {
   category: string;
@@ -48,6 +50,7 @@ export function CategoryCard({
   const animationFrameRef = useRef<number | null>(null);
   const lastTimeRef = useRef<number>(0);
   const isTouch = useTouchDevice();
+  const prefersReducedMotion = useReducedMotion();
 
   // On touch devices, play video when expanded; on desktop, play on hover
   const shouldPlayVideo = isTouch ? isExpanded : isHovered;
@@ -129,14 +132,14 @@ export function CategoryCard({
       }}
       animate={{
         opacity: isOtherExpanded && !isExpanded ? 0.5 : 1,
-        scale: isExpanded ? 1.02 : 1,
+        scale: prefersReducedMotion ? 1 : (isExpanded ? 1.02 : 1),
       }}
-      whileHover={{
+      whileHover={prefersReducedMotion ? {} : {
         scale: isOtherExpanded ? 1 : 1.02,
         boxShadow: `0 8px 30px ${categoryColor}15`,
       }}
-      whileTap={{ scale: 0.98 }}
-      transition={{ duration: 0.2 }}
+      whileTap={prefersReducedMotion ? {} : { scale: 0.98 }}
+      transition={{ duration: DURATION.normal, ease: EASING.smooth }}
     >
       {/* Outer container - positioning and visual frame */}
       <div className="absolute top-3 left-3 right-3 bottom-[4.5rem] sm:bottom-auto sm:h-[68%] rounded-lg">
@@ -194,8 +197,8 @@ export function CategoryCard({
           
           {/* Expand indicator */}
           <motion.div
-            animate={{ rotate: isExpanded ? 180 : 0 }}
-            transition={{ duration: 0.2 }}
+            animate={{ rotate: prefersReducedMotion ? 0 : (isExpanded ? 180 : 0) }}
+            transition={{ duration: DURATION.normal, ease: EASING.smooth }}
           >
             <svg
               width="18"
