@@ -384,7 +384,7 @@ export default function Home() {
             className="w-full h-full"
             initial={{ opacity: 0 }}
             animate={{ opacity: loadingPhase === 'ready' ? 1 : 0 }}
-            transition={{ duration: DURATION.cinematic, ease: EASING.smooth }}
+            transition={{ duration: DURATION.slower, ease: EASING.smooth }}
           >
             <CanvasErrorBoundary
               onError={() => {
