@@ -1,5 +1,6 @@
 import { useMemo, useRef, useState } from 'react';
 import { useFrame, useLoader } from '@react-three/fiber';
+import { useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 import { generateStarfieldLayout } from '../../utils/particle-layouts';
@@ -148,7 +149,7 @@ interface SkyboxProps {
 
 /**
  * Skybox - Equirectangular HDR texture mapped to inside of sphere
- * Uses RGBELoader for proper HDR tone mapping
+ * Uses RGBELoader for proper HDR tone mapping (dark mode)
  */
 function Skybox({ texturePath = '/textures/galaxy/skybox.hdr', opacity = 1 }: SkyboxProps) {
   const texture = useLoader(RGBELoader, texturePath);
@@ -173,12 +174,45 @@ function Skybox({ texturePath = '/textures/galaxy/skybox.hdr', opacity = 1 }: Sk
   );
 }
 
+interface LightSkyboxProps {
+  texturePath?: string;
+  opacity?: number;
+}
+
+/**
+ * LightSkybox - Standard texture mapped to inside of sphere for light mode
+ * Uses useTexture (drei) for JPEG/PNG loading
+ */
+function LightSkybox({ texturePath = '/textures/galaxy/skybox-light.jpg', opacity = 1 }: LightSkyboxProps) {
+  const texture = useTexture(texturePath);
+
+  // Configure texture for equirectangular mapping
+  useMemo(() => {
+    texture.mapping = THREE.EquirectangularReflectionMapping;
+    texture.colorSpace = THREE.SRGBColorSpace;
+  }, [texture]);
+
+  return (
+    <mesh scale={[-500, 500, 500]}>
+      <sphereGeometry args={[1, 128, 64]} />
+      <meshBasicMaterial
+        map={texture}
+        side={THREE.BackSide}
+        depthWrite={false}
+        transparent={true}
+        opacity={opacity}
+      />
+    </mesh>
+  );
+}
+
 interface GalaxyBackgroundProps {
   starCount?: number;
   starRadius?: number;
   showSkybox?: boolean;
   showStarfield?: boolean;
   masterStartTime: number;
+  resolvedTheme?: 'light' | 'dark';
 }
 
 /**
@@ -187,8 +221,9 @@ interface GalaxyBackgroundProps {
  * Combines skybox and starfield for immersive space environment.
  * The skybox provides the distant galaxy/nebula backdrop,
  * while the starfield adds depth with parallax on camera movement.
- * 
+ *
  * Uses master timeline for synchronized fade-in with other layers.
+ * Supports theme-aware crossfading between dark and light skybox textures.
  */
 export default function GalaxyBackground({
   starCount = 4000,
@@ -196,28 +231,55 @@ export default function GalaxyBackground({
   showSkybox = true,
   showStarfield = true,
   masterStartTime,
+  resolvedTheme = 'dark',
 }: GalaxyBackgroundProps) {
-  const [skyboxOpacity, setSkyboxOpacity] = useState(0.15);
+  // Entrance animation opacity (shared)
+  const [entranceOpacity, setEntranceOpacity] = useState(0);
 
-  // Calculate opacity based on master timeline
+  // Theme crossfade (0 = dark, 1 = light)
+  const [themeFade, setThemeFade] = useState(resolvedTheme === 'light' ? 1 : 0);
+
+  const isLightMode = resolvedTheme === 'light';
+
+  // Calculate opacity based on master timeline and theme crossfade
   useFrame(() => {
+    // 1. Entrance animation (initial load)
     const elapsed = Date.now() - masterStartTime;
     const progress = Math.max(0, elapsed - LAYER_TIMING.skybox.startDelay) / LAYER_TIMING.skybox.duration;
-    const eased = easeOutCubic(progress);
-    
-    if (Math.abs(eased - skyboxOpacity) > 0.01) {
-      setSkyboxOpacity(eased);
+    const targetEntrance = easeOutCubic(progress);
+
+    if (Math.abs(targetEntrance - entranceOpacity) > 0.01) {
+      setEntranceOpacity(prev => prev + (targetEntrance - prev) * 0.1);
+    }
+
+    // 2. Theme crossfade (smooth lerp ~300ms)
+    const targetThemeFade = isLightMode ? 1 : 0;
+    const lerpSpeed = 0.08; // Smooth interpolation
+
+    if (Math.abs(targetThemeFade - themeFade) > 0.005) {
+      setThemeFade(prev => prev + (targetThemeFade - prev) * lerpSpeed);
     }
   });
 
+  // Calculate crossfaded opacities
+  const darkOpacity = entranceOpacity * (1 - themeFade);
+  const lightOpacity = entranceOpacity * themeFade;
+
   return (
     <group>
-      {/* Galaxy/nebula skybox - fades in on load */}
-      {showSkybox && <Skybox opacity={skyboxOpacity} />}
+      {/* Dark mode HDR skybox - fades out in light mode */}
+      {showSkybox && darkOpacity > 0.01 && (
+        <Skybox opacity={darkOpacity} />
+      )}
 
-      {/* 3D starfield for depth - also fades in with skybox */}
-      {showStarfield && (
-        <Starfield count={starCount} radius={starRadius} opacity={skyboxOpacity} />
+      {/* Light mode JPEG skybox - fades in for light mode */}
+      {showSkybox && lightOpacity > 0.01 && (
+        <LightSkybox opacity={lightOpacity} />
+      )}
+
+      {/* 3D starfield - uses dark opacity (hidden in light mode) */}
+      {showStarfield && darkOpacity > 0.01 && (
+        <Starfield count={starCount} radius={starRadius} opacity={darkOpacity} />
       )}
     </group>
   );

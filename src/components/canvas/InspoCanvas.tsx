@@ -12,6 +12,7 @@ import NebulaPlanes from './NebulaPlanes';
 import ClusterLabels from './ClusterLabels';
 import type { NormalizedResource } from '../../types/resource';
 import { CATEGORY_ORDER, CATEGORY_COLORS } from '../../types/resource';
+import { useTheme } from '../../lib/theme-provider';
 
 /**
  * Camera animation configuration
@@ -886,7 +887,7 @@ export default function InspoCanvas({
   onResourceClick,
   onReady,
 }: InspoCanvasProps) {
-  
+  const { resolvedTheme } = useTheme();
   const masterStartTimeRef = useRef<number>(Date.now());
   const resourceNodesRef = useRef<ResourceNodesHandle>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -962,7 +963,10 @@ export default function InspoCanvas({
     >
       {/* Immersive galaxy background */}
       <Suspense fallback={null}>
-        <GalaxyBackground masterStartTime={masterStartTimeRef.current} />
+        <GalaxyBackground
+          masterStartTime={masterStartTimeRef.current}
+          resolvedTheme={resolvedTheme}
+        />
       </Suspense>
 
       {/* Lighting setup for physical materials */}
