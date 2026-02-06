@@ -1,6 +1,8 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import Home from './pages/Home';
 import ResourceDetail from './pages/ResourceDetail';
+import { PageTransition } from './components/layout/PageTransition';
 
 /**
  * App
@@ -10,13 +12,34 @@ import ResourceDetail from './pages/ResourceDetail';
  * - / : Home page with 3D universe or table view
  * - /?display=table : Table view
  * - /resource/:id : Individual resource detail page
+ *
+ * Uses AnimatePresence for smooth page transitions
+ * with fade + slide animations between routes.
  */
 function App() {
+  const location = useLocation();
+
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/resource/:id" element={<ResourceDetail />} />
-    </Routes>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route
+          path="/"
+          element={
+            <PageTransition>
+              <Home />
+            </PageTransition>
+          }
+        />
+        <Route
+          path="/resource/:id"
+          element={
+            <PageTransition>
+              <ResourceDetail />
+            </PageTransition>
+          }
+        />
+      </Routes>
+    </AnimatePresence>
   );
 }
 
