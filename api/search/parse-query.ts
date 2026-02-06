@@ -234,6 +234,21 @@ export default async function handler(req: Request): Promise<Response> {
       ],
     });
 
+    // Cost tracking - extract usage data from response
+    // Claude Sonnet 4 pricing: $3/1M input tokens, $15/1M output tokens
+    const { input_tokens, output_tokens } = response.usage;
+    const estimatedCostUsd = (input_tokens * 0.000003) + (output_tokens * 0.000015);
+
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[AI Cost]', {
+        model: 'claude-sonnet-4-20250514',
+        input_tokens,
+        output_tokens,
+        estimated_cost_usd: estimatedCostUsd.toFixed(6),
+        query_preview: query.substring(0, 50) + (query.length > 50 ? '...' : ''),
+      });
+    }
+
     // Extract text content
     const textContent = response.content.find(c => c.type === 'text');
     if (!textContent || textContent.type !== 'text') {
