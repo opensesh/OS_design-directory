@@ -170,11 +170,16 @@ export function CategoryCard({
           )}
         </div>
         
-        {/* Vignette overlay - radial gradient for smooth edge fade */}
+        {/* Vignette overlay - seamless rectangular fade using directional box-shadows */}
         <div
           className="absolute inset-0 pointer-events-none rounded-lg"
           style={{
-            background: `radial-gradient(ellipse 80% 70% at center, transparent 0%, rgba(var(--card-vignette), 0.4) 70%, rgba(var(--card-vignette), 0.95) 100%)`
+            boxShadow: `
+              inset 40px 0 30px -20px rgba(var(--card-vignette), 1),
+              inset -40px 0 30px -20px rgba(var(--card-vignette), 1),
+              inset 0 40px 30px -20px rgba(var(--card-vignette), 1),
+              inset 0 -50px 35px -20px rgba(var(--card-vignette), 1)
+            `
           }}
         />
       </div>
