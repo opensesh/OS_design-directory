@@ -243,7 +243,9 @@ export default async function handler(req: Request): Promise<Response> {
       }
       parsed = JSON.parse(jsonText);
     } catch (parseError) {
-      console.error('Failed to parse Claude response:', textContent.text);
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('Failed to parse Claude response:', textContent.text);
+      }
       throw new Error('Invalid JSON from Claude');
     }
 
@@ -256,7 +258,9 @@ export default async function handler(req: Request): Promise<Response> {
       },
     });
   } catch (error) {
-    console.error('Claude API error:', error);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('Claude API error:', error);
+    }
 
     // Return a fallback response that the client can use
     return new Response(

@@ -166,7 +166,9 @@ export function useLLMSearch(options: UseLLMSearchOptions = {}): UseLLMSearchRet
             }
           } catch (llmError) {
             // LLM failed - use fallback parsing
-            console.warn('LLM search failed, using local fallback:', llmError);
+            if (import.meta.env.DEV) {
+              console.warn('LLM search failed, using local fallback:', llmError);
+            }
             parsedQuery = createFallbackParse(normalizedQuery);
             
             // Still apply any filters we could extract locally
@@ -203,7 +205,9 @@ export function useLLMSearch(options: UseLLMSearchOptions = {}): UseLLMSearchRet
         return searchResult;
       } catch (err) {
         // Handle unexpected errors with graceful fallback
-        console.error('Search error:', err);
+        if (import.meta.env.DEV) {
+          console.error('Search error:', err);
+        }
         setError('Search encountered an error. Showing basic results.');
 
         // Fallback to basic local search

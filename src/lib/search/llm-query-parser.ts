@@ -119,7 +119,9 @@ export async function parseQueryWithLLM(query: string): Promise<ParsedQuery> {
     // Validate and sanitize the response
     return sanitizeParsedQuery(parsed);
   } catch (error) {
-    console.warn('LLM query parsing failed, using fallback:', error);
+    if (import.meta.env.DEV) {
+      console.warn('LLM query parsing failed, using fallback:', error);
+    }
     return createFallbackParse(query);
   }
 }
