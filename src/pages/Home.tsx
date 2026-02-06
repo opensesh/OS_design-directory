@@ -358,7 +358,7 @@ export default function Home() {
           {/* Top gradient - aggressive fade from dark for seamless blend */}
           <div
             className="absolute top-0 inset-x-0 h-32 pointer-events-none z-10"
-            style={{ background: 'linear-gradient(to bottom, rgba(20,20,20,1) 0%, rgba(20,20,20,0.8) 40%, transparent 100%)' }}
+            style={{ background: 'var(--canvas-gradient-top)' }}
           />
           {/* Loader overlay */}
           <AnimatePresence>
@@ -643,7 +643,7 @@ export default function Home() {
               initial={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0 }}
-              style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(20,20,20,0.8) 60%, rgba(20,20,20,1) 100%)' }}
+              style={{ background: 'var(--canvas-gradient-bottom)' }}
             />
 
             <div className="relative z-20 w-full max-w-7xl mx-auto px-6 pt-2 pb-6 space-y-3 pointer-events-auto">
