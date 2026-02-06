@@ -958,7 +958,7 @@ export default function InspoCanvas({
         fov: CAMERA_ANIMATION.FOV
       }}
       gl={{ alpha: false }}
-      style={{ background: '#141414' }}
+      style={{ background: 'var(--bg-primary)' }}
     >
       {/* Immersive galaxy background */}
       <Suspense fallback={null}>
