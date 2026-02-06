@@ -525,7 +525,7 @@ export default function Home() {
                 className={`p-2 rounded-md transition-all ${
                   displayMode === '3d'
                     ? 'bg-brand-aperol text-white'
-                    : 'text-os-text-secondary-dark hover:text-brand-vanilla'
+                    : 'text-os-text-secondary-dark hover:text-os-text-primary-dark hover:bg-[var(--bg-tertiary)]'
                 }`}
                 aria-label="3D View"
                 aria-current={displayMode === '3d' ? 'page' : undefined}
@@ -537,7 +537,7 @@ export default function Home() {
                 className={`p-2 rounded-md transition-all ${
                   displayMode === 'card'
                     ? 'bg-brand-aperol text-white'
-                    : 'text-os-text-secondary-dark hover:text-brand-vanilla'
+                    : 'text-os-text-secondary-dark hover:text-os-text-primary-dark hover:bg-[var(--bg-tertiary)]'
                 }`}
                 aria-label="Card View"
                 aria-current={displayMode === 'card' ? 'page' : undefined}
@@ -549,7 +549,7 @@ export default function Home() {
                 className={`p-2 rounded-md transition-all ${
                   displayMode === 'table'
                     ? 'bg-brand-aperol text-white'
-                    : 'text-os-text-secondary-dark hover:text-brand-vanilla'
+                    : 'text-os-text-secondary-dark hover:text-os-text-primary-dark hover:bg-[var(--bg-tertiary)]'
                 }`}
                 aria-label="Table View"
                 aria-current={displayMode === 'table' ? 'page' : undefined}
@@ -739,7 +739,7 @@ export default function Home() {
                 whileTap={{ scale: 0.95 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 17 }}
                 aria-label={legendOpen ? "Close legend" : "Open legend"}
-                className="p-2.5 bg-os-surface-dark/80 backdrop-blur-xl rounded-lg border border-[var(--border-secondary)] hover:border-[var(--fg-tertiary)] text-brand-vanilla hover:text-brand-aperol transition-all shadow-lg"
+                className="p-2.5 bg-os-surface-dark/50 backdrop-blur-xl rounded-lg border border-os-border-dark text-os-text-secondary-dark hover:text-brand-aperol hover:border-brand-aperol/30 transition-all shadow-lg"
               >
                 {legendOpen ? <X className="w-5 h-5" /> : <Info className="w-5 h-5" />}
               </motion.button>
