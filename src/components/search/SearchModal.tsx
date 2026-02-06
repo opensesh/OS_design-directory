@@ -38,7 +38,7 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const resultsRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
@@ -109,6 +109,19 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
     return map;
   }, [virtualItems]);
 
+  // Set up virtualizer
+  const virtualizer = useVirtualizer({
+    count: virtualItems.length,
+    getScrollElement: () => scrollContainerRef.current,
+    estimateSize: (index) => {
+      const item = virtualItems[index];
+      if (item.type === 'header') return HEADER_HEIGHT;
+      if (item.type === 'popular-label') return POPULAR_LABEL_HEIGHT;
+      return RESULT_HEIGHT;
+    },
+    overscan: 5,
+  });
+
   // Handle mounting for portal
   useEffect(() => {
     setMounted(true);
@@ -138,13 +151,15 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
     setSelectedIndex(0);
   }, [query]);
 
-  // Scroll selected item into view
+  // Scroll selected item into view using virtualizer
   useEffect(() => {
-    if (resultsRef.current && selectedIndex >= 0) {
-      const selectedElement = resultsRef.current.querySelector(`[data-index="${selectedIndex}"]`);
-      selectedElement?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    if (selectedIndex >= 0) {
+      const virtualIndex = resultIndexToVirtualIndex.get(selectedIndex);
+      if (virtualIndex !== undefined) {
+        virtualizer.scrollToIndex(virtualIndex, { align: 'auto', behavior: 'smooth' });
+      }
     }
-  }, [selectedIndex]);
+  }, [selectedIndex, resultIndexToVirtualIndex, virtualizer]);
 
   // Handle selection
   const handleSelect = useCallback((result: SearchResult) => {
@@ -188,11 +203,6 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose, flatResults, selectedIndex, handleSelect]);
-
-  // Get global index for a result
-  const getGlobalIndex = useCallback((result: SearchResult): number => {
-    return flatResults.findIndex(r => r.resource.id === result.resource.id);
-  }, [flatResults]);
 
   // Track favicon errors for fallback to letter initial
   const [faviconErrors, setFaviconErrors] = useState<Set<string>>(new Set());
@@ -348,8 +358,11 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
                 </div>
               </div>
 
-              {/* Results List */}
-              <div ref={resultsRef} className="max-h-[60vh] min-h-[400px] overflow-y-auto">
+              {/* Results List - Virtualized */}
+              <div
+                ref={scrollContainerRef}
+                className="max-h-[60vh] min-h-[400px] overflow-y-auto"
+              >
                 {isSearching ? (
                   // Loading skeleton
                   <div className="py-2">
@@ -364,25 +377,72 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
                     ))}
                   </div>
                 ) : flatResults.length > 0 ? (
-                  <div className="py-2">
-                    {/* Show section label based on whether user is searching or viewing defaults */}
-                    {!query.trim() && (
-                      <div className="px-5 pt-2 pb-1">
-                        <span className="text-xs text-os-text-secondary-dark">Popular Resources</span>
-                      </div>
-                    )}
-                    {orderedCategories.map((category) => (
-                      <div key={category} className="mt-2 first:mt-0">
-                        <SectionHeader
-                          title={category}
-                          count={displayGroupedResults[category].length}
-                        />
-                        {displayGroupedResults[category].map((result) => {
-                          const globalIndex = getGlobalIndex(result);
-                          return renderResultItem(result, selectedIndex === globalIndex, globalIndex);
-                        })}
-                      </div>
-                    ))}
+                  <div
+                    style={{
+                      height: `${virtualizer.getTotalSize()}px`,
+                      width: '100%',
+                      position: 'relative',
+                    }}
+                  >
+                    {virtualizer.getVirtualItems().map((virtualRow) => {
+                      const item = virtualItems[virtualRow.index];
+
+                      if (item.type === 'popular-label') {
+                        return (
+                          <div
+                            key="popular-label"
+                            style={{
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              width: '100%',
+                              height: `${virtualRow.size}px`,
+                              transform: `translateY(${virtualRow.start}px)`,
+                            }}
+                          >
+                            <div className="px-5 pt-2 pb-1">
+                              <span className="text-xs text-os-text-secondary-dark">Popular Resources</span>
+                            </div>
+                          </div>
+                        );
+                      }
+
+                      if (item.type === 'header') {
+                        return (
+                          <div
+                            key={`header-${item.category}`}
+                            style={{
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              width: '100%',
+                              height: `${virtualRow.size}px`,
+                              transform: `translateY(${virtualRow.start}px)`,
+                            }}
+                          >
+                            <SectionHeader title={item.category} count={item.count} />
+                          </div>
+                        );
+                      }
+
+                      // Result item
+                      const { result, globalIndex } = item;
+                      return (
+                        <div
+                          key={result.resource.id}
+                          style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: `${virtualRow.size}px`,
+                            transform: `translateY(${virtualRow.start}px)`,
+                          }}
+                        >
+                          {renderResultItem(result, selectedIndex === globalIndex, globalIndex)}
+                        </div>
+                      );
+                    })}
                   </div>
                 ) : query.trim() ? (
                   // No results
