@@ -536,7 +536,7 @@ export default function ResourceDetail() {
 
             {/* Tags - Outside flex, aligned with icon's left edge */}
             {resource.tags && resource.tags.length > 0 && (
-              <div className="mt-4">
+              <div className="mt-2">
                 <div className="flex flex-wrap gap-1.5">
                   {resource.tags.map((tag, idx) => (
                     <span
