@@ -144,10 +144,29 @@ export const conceptMappings: Record<string, {
     description: 'Icon libraries and icon sets for design and development',
   },
   'component library': {
-    keywords: ['component library', 'ui library', 'ui kit', 'design system', 'react components', 'ui components'],
+    keywords: ['component library', 'ui library', 'ui kit', 'react components', 'ui components'],
     resourceNames: ['shadcn/ui', 'Radix', 'Chakra UI', 'MUI', 'Ant Design', 'Tailwind UI'],
     categories: ['Tools', 'Templates'],
-    description: 'UI component libraries and design systems',
+    description: 'UI component libraries for React and other frameworks',
+  },
+  'design system': {
+    keywords: [
+      'design system', 'design systems', 'design tokens', 'style guide',
+      'component documentation', 'ui documentation', 'design ops', 'designops',
+    ],
+    resourceNames: [
+      'Supernova',           // gravityScore: 9.0 - THE design system platform
+      'Storybook',           // gravityScore: 8.8 - UI documentation standard
+      'Design Systems Repo', // gravityScore: 7.5 - Curated collection
+      'shadcn/ui',           // Popular component system
+      'Radix UI',            // Accessible primitives
+      'Untitled UI',         // Figma design system
+      'Blank',               // Minimal design system
+      'Lumos',               // Comprehensive Figma system
+      'Figma',               // Design tool with variables/tokens
+    ],
+    categories: ['Tools', 'Templates', 'Learning'],
+    description: 'Design system platforms, documentation tools, and component libraries',
   },
   'motion design': {
     keywords: ['motion design', 'motion graphics', 'animation', 'animate', 'after effects', 'lottie'],
