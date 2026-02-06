@@ -323,7 +323,7 @@ export function InspoTable({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Filter resources..."
-                  className="w-full md:w-48 pl-9 pr-8 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-xs sm:text-sm text-[var(--fg-primary)] placeholder:text-[var(--fg-secondary)] focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors"
+                  className="w-full md:w-48 pl-9 pr-8 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-xs sm:text-sm text-[var(--fg-primary)] placeholder:text-[var(--fg-secondary)] focus:outline-none focus:ring-1 focus:ring-[var(--border-primary)]/60 focus:border-[var(--border-primary)] transition-colors"
                 />
                 {searchQuery && (
                   <button
@@ -347,7 +347,7 @@ export function InspoTable({
                   id="category-filter"
                   value={categoryFilter}
                   onChange={(e) => handleCategoryChange(e.target.value)}
-                  className="px-2 sm:px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-xs sm:text-sm text-[var(--fg-primary)] focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30 truncate"
+                  className="px-2 sm:px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-xs sm:text-sm text-[var(--fg-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--border-primary)]/60 focus:border-[var(--border-primary)] transition-colors cursor-pointer hover:border-[var(--fg-tertiary)] truncate"
                 >
                   <option value="all">All</option>
                   {filterOptions.categories.map((category) => (
@@ -367,7 +367,7 @@ export function InspoTable({
                   id="subcategory-filter"
                   value={subCategoryFilter}
                   onChange={(e) => handleSubCategoryChange(e.target.value)}
-                  className="px-2 sm:px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-xs sm:text-sm text-[var(--fg-primary)] focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30 truncate"
+                  className="px-2 sm:px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-xs sm:text-sm text-[var(--fg-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--border-primary)]/60 focus:border-[var(--border-primary)] transition-colors cursor-pointer hover:border-[var(--fg-tertiary)] truncate"
                 >
                   <option value="all">All</option>
                   {filterOptions.subCategories.map((subCategory) => (
@@ -387,7 +387,7 @@ export function InspoTable({
                   id="pricing-filter"
                   value={pricingFilter}
                   onChange={(e) => handlePricingChange(e.target.value)}
-                  className="px-2 sm:px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-xs sm:text-sm text-[var(--fg-primary)] focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30 truncate"
+                  className="px-2 sm:px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-xs sm:text-sm text-[var(--fg-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--border-primary)]/60 focus:border-[var(--border-primary)] transition-colors cursor-pointer hover:border-[var(--fg-tertiary)] truncate"
                 >
                   <option value="all">All</option>
                   {filterOptions.pricings.map((pricing) => (
@@ -407,7 +407,7 @@ export function InspoTable({
                   id="rating-filter"
                   value={ratingFilter}
                   onChange={(e) => handleRatingChange(e.target.value)}
-                  className="px-2 sm:px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-xs sm:text-sm text-[var(--fg-primary)] focus:outline-none focus:ring-2 focus:ring-brand-aperol/50 focus:border-brand-aperol transition-colors cursor-pointer hover:border-brand-aperol/30 truncate"
+                  className="px-2 sm:px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-xs sm:text-sm text-[var(--fg-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--border-primary)]/60 focus:border-[var(--border-primary)] transition-colors cursor-pointer hover:border-[var(--fg-tertiary)] truncate"
                 >
                   {RATING_RANGES.map((range) => (
                     <option key={range.value} value={range.value}>
@@ -605,7 +605,7 @@ export function InspoTable({
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-secondary)] text-[var(--fg-secondary)] hover:text-brand-aperol hover:border-brand-aperol/30 transition-all"
+                      className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-secondary)] text-[var(--fg-secondary)] hover:text-brand-aperol hover:border-[var(--fg-tertiary)] transition-all"
                       title={`Visit ${resource.name}`}
                     >
                       <ExternalLink className="w-4 h-4" />
