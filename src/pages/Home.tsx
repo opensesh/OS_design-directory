@@ -45,9 +45,10 @@ export default function Home() {
   const legendButtonRef = useRef<HTMLButtonElement>(null);
   const prefersReducedMotion = useReducedMotion();
 
-  // Universe loading state - phased loading for smooth transitions
-  type LoadingPhase = 'loading' | 'transitioning' | 'ready';
+  // Universe loading state
+  type LoadingPhase = 'loading' | 'ready';
   const [loadingPhase, setLoadingPhase] = useState<LoadingPhase>('loading');
+  const loadStartTime = useRef(Date.now());
 
   // Display mode from URL params
   type DisplayMode = '3d' | 'table' | 'card';
@@ -365,13 +366,13 @@ export default function Home() {
             style={{ background: 'var(--canvas-gradient-top)' }}
           />
           {/* Loader overlay */}
-          <AnimatePresence onExitComplete={() => setLoadingPhase('ready')}>
+          <AnimatePresence>
             {loadingPhase === 'loading' && (
               <motion.div
                 key="loader"
                 initial={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: DURATION.slow, ease: EASING.smooth }}
+                transition={{ duration: DURATION.normal, ease: EASING.smooth }}
                 className="absolute inset-0 z-50 bg-os-bg-dark"
               >
                 <AILoader />
@@ -379,13 +380,8 @@ export default function Home() {
             )}
           </AnimatePresence>
 
-          {/* Universe with fade-in */}
-          <motion.div
-            className="w-full h-full"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: loadingPhase === 'ready' ? 1 : 0 }}
-            transition={{ duration: DURATION.slower, ease: EASING.smooth }}
-          >
+          {/* Universe - renders behind loader overlay at full opacity */}
+          <div className="w-full h-full">
             <CanvasErrorBoundary
               onError={() => {
                 // Switch to card view on canvas error
@@ -407,12 +403,19 @@ export default function Home() {
                   onResourceClick={handleResourceClick}
                   onResourceHover={handleResourceHover}
                   onReady={() => {
-                    setLoadingPhase('transitioning');
+                    const elapsed = Date.now() - loadStartTime.current;
+                    const minDisplayTime = 3000; // Ensure at least 2 full ripple cycles
+                    const remaining = Math.max(0, minDisplayTime - elapsed);
+                    if (remaining > 0) {
+                      setTimeout(() => setLoadingPhase('ready'), remaining);
+                    } else {
+                      setLoadingPhase('ready');
+                    }
                   }}
                 />
               </Suspense>
             </CanvasErrorBoundary>
-          </motion.div>
+          </div>
         </div>
       )}
 
