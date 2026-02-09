@@ -296,7 +296,7 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
             animate={PAGE_TRANSITION.backdrop.animate}
             exit={PAGE_TRANSITION.backdrop.exit}
             transition={PAGE_TRANSITION.backdrop.transition}
-            className="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-[9998] bg-black/60 backdrop-blur-sm"
             onClick={onClose}
           />
 
@@ -305,7 +305,7 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
             role="dialog"
             aria-modal="true"
             aria-labelledby="search-modal-title"
-            className="fixed inset-0 z-[201] flex items-start justify-center pt-[12vh] px-4"
+            className="fixed inset-0 z-[9999] flex items-start justify-center pt-[12vh] px-4"
             onClick={onClose}
           >
             <motion.div
