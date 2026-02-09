@@ -75,6 +75,7 @@ function CursorLight() {
   const { camera, gl } = useThree();
   const mouse = useRef(new THREE.Vector2());
   const worldPos = useRef(new THREE.Vector3());
+  const tempPos = useRef(new THREE.Vector3());
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -90,11 +91,11 @@ function CursorLight() {
     if (!lightRef.current) return;
 
     // Project mouse to world space at a fixed depth in front of the nodes
-    const tempPos = new THREE.Vector3(mouse.current.x, mouse.current.y, 0.5);
-    tempPos.unproject(camera);
+    tempPos.current.set(mouse.current.x, mouse.current.y, 0.5);
+    tempPos.current.unproject(camera);
 
     // Calculate direction from camera and scale to desired depth
-    const dir = tempPos.sub(camera.position).normalize();
+    const dir = tempPos.current.sub(camera.position).normalize();
     worldPos.current.copy(camera.position).add(dir.multiplyScalar(30));
 
     lightRef.current.position.copy(worldPos.current);
@@ -120,6 +121,9 @@ function CursorLight() {
 function KeyboardController() {
   const { camera, gl } = useThree();
   const keysPressed = useRef<Set<string>>(new Set());
+  const rightVec = useRef(new THREE.Vector3());
+  const upVec = useRef(new THREE.Vector3());
+  const forwardVec = useRef(new THREE.Vector3());
 
   useEffect(() => {
     const canvas = gl.domElement;
@@ -154,36 +158,34 @@ function KeyboardController() {
     if (keys.size === 0) return;
 
     // Get camera right and up vectors for movement
-    const right = new THREE.Vector3();
-    const up = new THREE.Vector3(0, 1, 0);
-    camera.getWorldDirection(right);
-    right.cross(up).normalize();
+    upVec.current.set(0, 1, 0);
+    camera.getWorldDirection(rightVec.current);
+    rightVec.current.cross(upVec.current).normalize();
 
-    const forward = new THREE.Vector3();
-    camera.getWorldDirection(forward);
+    camera.getWorldDirection(forwardVec.current);
 
     // Horizontal movement (Arrow Left/Right or A/D)
     if (keys.has('arrowleft') || keys.has('a')) {
-      camera.position.add(right.clone().multiplyScalar(-KEYBOARD_NAV.MOVE_SPEED));
+      camera.position.addScaledVector(rightVec.current, -KEYBOARD_NAV.MOVE_SPEED);
     }
     if (keys.has('arrowright') || keys.has('d')) {
-      camera.position.add(right.clone().multiplyScalar(KEYBOARD_NAV.MOVE_SPEED));
+      camera.position.addScaledVector(rightVec.current, KEYBOARD_NAV.MOVE_SPEED);
     }
 
     // Vertical movement (Arrow Up/Down or W/S)
     if (keys.has('arrowup') || keys.has('w')) {
-      camera.position.add(up.clone().multiplyScalar(KEYBOARD_NAV.MOVE_SPEED));
+      camera.position.addScaledVector(upVec.current, KEYBOARD_NAV.MOVE_SPEED);
     }
     if (keys.has('arrowdown') || keys.has('s')) {
-      camera.position.add(up.clone().multiplyScalar(-KEYBOARD_NAV.MOVE_SPEED));
+      camera.position.addScaledVector(upVec.current, -KEYBOARD_NAV.MOVE_SPEED);
     }
 
     // Zoom (Q/E or +/-)
     if (keys.has('q') || keys.has('=') || keys.has('+')) {
-      camera.position.add(forward.clone().multiplyScalar(KEYBOARD_NAV.MOVE_SPEED * 2));
+      camera.position.addScaledVector(forwardVec.current, KEYBOARD_NAV.MOVE_SPEED * 2);
     }
     if (keys.has('e') || keys.has('-') || keys.has('_')) {
-      camera.position.add(forward.clone().multiplyScalar(-KEYBOARD_NAV.MOVE_SPEED * 2));
+      camera.position.addScaledVector(forwardVec.current, -KEYBOARD_NAV.MOVE_SPEED * 2);
     }
   });
 
@@ -214,6 +216,10 @@ function InteractionController({
   const mouse = useRef(new THREE.Vector2(-999, -999)); // Start off-screen
   const lastHoveredRef = useRef<number | null>(null);
   const isMouseInCanvasRef = useRef(false);
+  // Reusable objects for proximity check loop (avoids per-frame allocations)
+  const tempMatrix = useRef(new THREE.Matrix4());
+  const tempPosition = useRef(new THREE.Vector3());
+  const rotationMatrix = useRef(new THREE.Matrix4());
 
   useEffect(() => {
     const canvas = gl.domElement;
@@ -378,32 +384,30 @@ function InteractionController({
 
       // Get instance count from mesh
       const instanceCount = mesh.count;
-      const tempMatrix = new THREE.Matrix4();
-      const tempPosition = new THREE.Vector3();
 
       for (let i = 0; i < instanceCount; i++) {
         const opacity = resourceNodesRef.current.getOpacityAtIndex(i) ?? 0;
         if (opacity < MIN_HOVER_OPACITY) continue; // Skip filtered/dimmed nodes
 
         // Get world position from instance matrix
-        mesh.getMatrixAt(i, tempMatrix);
-        tempPosition.setFromMatrixPosition(tempMatrix);
+        mesh.getMatrixAt(i, tempMatrix.current);
+        tempPosition.current.setFromMatrixPosition(tempMatrix.current);
 
         // Apply parent group rotation to get actual world position
         const groupRotation = resourceNodesRef.current.getGroupRotation();
         if (groupRotation) {
           // Create rotation matrix from euler
-          const rotationMatrix = new THREE.Matrix4().makeRotationFromEuler(groupRotation);
-          tempPosition.applyMatrix4(rotationMatrix);
+          rotationMatrix.current.makeRotationFromEuler(groupRotation);
+          tempPosition.current.applyMatrix4(rotationMatrix.current);
         }
 
         // Project to screen space
-        tempPosition.project(camera);
-        const screenX = (tempPosition.x * 0.5 + 0.5) * canvasRect.width;
-        const screenY = (-tempPosition.y * 0.5 + 0.5) * canvasRect.height;
+        tempPosition.current.project(camera);
+        const screenX = (tempPosition.current.x * 0.5 + 0.5) * canvasRect.width;
+        const screenY = (-tempPosition.current.y * 0.5 + 0.5) * canvasRect.height;
 
         // Skip if behind camera
-        if (tempPosition.z > 1) continue;
+        if (tempPosition.current.z > 1) continue;
 
         const dx = mousePixelX - screenX;
         const dy = mousePixelY - screenY;
@@ -465,6 +469,7 @@ function CameraController({
   const animationProgressRef = useRef(0);
   const startPositionRef = useRef(new THREE.Vector3());
   const startLookAtRef = useRef(new THREE.Vector3());
+  const currentLookAtRef = useRef(new THREE.Vector3());
 
   // Calculate target camera position and trigger animation when filters change
   useEffect(() => {
@@ -592,16 +597,16 @@ function CameraController({
     camera.position.lerpVectors(startPositionRef.current, targetPositionRef.current, eased);
 
     // Interpolate lookAt
-    const currentLookAt = new THREE.Vector3().lerpVectors(
+    currentLookAtRef.current.lerpVectors(
       startLookAtRef.current,
       targetLookAtRef.current,
       eased
     );
-    camera.lookAt(currentLookAt);
-    
+    camera.lookAt(currentLookAtRef.current);
+
     // Sync OrbitControls target to prevent "pull back" effect
     if (controlsRef.current) {
-      controlsRef.current.target.copy(currentLookAt);
+      controlsRef.current.target.copy(currentLookAtRef.current);
     }
   });
 
