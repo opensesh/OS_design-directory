@@ -120,7 +120,7 @@ export default function InspoResourceTooltip({
                 className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 overflow-hidden bg-[var(--bg-tertiary)]"
                 style={{
                   borderColor: categoryColor,
-                  borderWidth: '2px',
+                  borderWidth: '1px',
                   borderStyle: 'solid'
                 }}
               >
