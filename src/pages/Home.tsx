@@ -274,12 +274,12 @@ export default function Home() {
   };
 
   // Dismiss AI response
-  const dismissAiResponse = () => {
+  const dismissAiResponse = useCallback(() => {
     setAiMessage(null);
     setSearchQuery('');
     setFilteredResourceIds(null);
     setMatchedCategories([]);
-  };
+  }, []);
 
   // Handle category change with AI response
   const handleCategoryChange = (category: string | null) => {
@@ -508,7 +508,7 @@ export default function Home() {
 
       {/* Subheader - View Mode Indicator */}
       <section
-        className={`pointer-events-auto flex-shrink-0 z-[258] border-b border-[var(--border-secondary)] ${displayMode === '3d' ? 'bg-os-bg-dark/60 backdrop-blur-xl' : 'bg-os-bg-dark'}`}
+        className={`pointer-events-auto flex-shrink-0 relative z-[258] border-b border-[var(--border-secondary)] ${displayMode === '3d' ? 'bg-os-bg-dark/60 backdrop-blur-xl' : 'bg-os-bg-dark'}`}
         role="region"
         aria-label="Current view"
       >
@@ -781,6 +781,8 @@ export default function Home() {
             className="fixed z-[300]"
             style={{
               top: legendButtonRect.bottom + 8,
+              // TODO: Position is calculated once when dropdown opens; does not update on window resize.
+              // Acceptable for launch since legend closes on backdrop click.
               right: window.innerWidth - legendButtonRect.right,
             }}
             initial={prefersReducedMotion ? PAGE_TRANSITION.reduced.initial : PAGE_TRANSITION.modal.initial}
