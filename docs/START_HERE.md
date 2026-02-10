@@ -23,9 +23,9 @@ Building a 3D particle-based design resource directory with morphing transitions
 
 ---
 
-## ⚡ CURSOR STARTER PROMPT
+## ⚡ AI Code Editor Starter Prompt
 
-**Copy this into Cursor/Claude Code Extension to begin:**
+**Copy this into your AI code editor (Claude Code, Cursor, etc.) to begin:**
 
 ```
 I want to build a 3D Design Directory with particle visualizations that morph between sphere, galaxy, and grid layouts.
@@ -47,31 +47,35 @@ Please:
 
 src/
 ├── components/
-│   ├── 3d/
-│   │   ├── ParticleSphere.jsx
-│   │   ├── ParticleGalaxy.jsx
-│   │   └── ResourceNode.jsx
+│   ├── canvas/
+│   │   ├── InspoCanvas.tsx
+│   │   ├── ResourceNodes.tsx
+│   │   └── GalaxyBackground.tsx
 │   ├── ui/
-│   │   ├── CategoryFilters.jsx
-│   │   ├── ViewToggle.jsx
-│   │   └── ResourceCard.jsx
-│   └── layouts/
-│       ├── HomePage.jsx
-│       ├── ExploreView.jsx
-│       ├── ListView.jsx
-│       └── ResourcePage.jsx
+│   │   ├── CategoryButtons.tsx
+│   │   ├── ThemeToggle.tsx
+│   │   └── InspoTable.tsx
+│   ├── card-view/
+│   │   ├── CardView.tsx
+│   │   ├── CategoryGrid.tsx
+│   │   └── ResourceCard.tsx
+│   └── search/
+│       └── SearchModal.tsx
+├── pages/
+│   ├── Home.tsx
+│   └── ResourceDetail.tsx
 ├── hooks/
-│   ├── useParticleTransition.js
-│   └── useResourceFilter.js
+│   ├── useParticleTransition.ts
+│   └── useKeyboardShortcuts.ts
 ├── store/
-│   └── useAppStore.js
+│   └── useAppStore.ts
 ├── utils/
-│   ├── particleLayouts.js
-│   └── sphericalCoordinates.js
+│   ├── particleLayouts.ts
+│   └── orbital-layout.ts
 └── data/
     └── resources.json
 
-5. Create basic Three.js scene in App.jsx with:
+5. Create basic Three.js scene in App.tsx with:
    - Canvas from R3F
    - OrbitControls from drei
    - Ambient light
@@ -91,7 +95,7 @@ After this, I'll implement the Fibonacci sphere particle distribution.
 - ✅ Basic Three.js scene
 - ✅ Fibonacci sphere distribution (1000 particles)
 - ✅ InstancedMesh optimization
-- ✅ Category color coding (UX/Brand/Art/Code)
+- ✅ Category color coding (Tools/Inspiration/AI/Learning/Templates/Community)
 - ✅ Auto-rotation
 
 ### Day 2: Morph System Architecture
@@ -234,13 +238,16 @@ function useParticleInteraction(particlesRef) {
 
 ### Colors (Category-coded)
 ```css
-UX:    #00D9FF (Cyan)
-Brand: #FF6B6B (Coral)
-Art:   #A78BFA (Purple)
-Code:  #34D399 (Green)
+Tools:       #EC4899 (Pink)
+Inspiration: #FF5102 (Orange)
+AI:          #06B6D4 (Cyan)
+Learning:    #10B981 (Green)
+Templates:   #F59E0B (Amber)
+Community:   #3B82F6 (Blue)
 
-Background: #0A0E27 (Dark navy)
-Accents:    #1E293B (Slate)
+Background (dark):  #141414
+Background (light): #faf8f5
+Brand accent:       #FE5102 (Aperol)
 ```
 
 ### Particle Specs
@@ -254,24 +261,33 @@ Accents:    #1E293B (Slate)
 ## 📂 Resource Data Schema
 
 ```json
-{
-  "resources": [
-    {
-      "id": "ux-001",
-      "name": "Nielsen Norman Group",
-      "category": "UX",
-      "description": "Evidence-based UX research and training",
-      "url": "https://www.nngroup.com",
-      "tags": ["research", "usability", "training"],
-      "featured": true,
-      "position": {
-        "phi": 0.52,
-        "theta": 1.24
-      }
-    }
-  ]
-}
+[
+  {
+    "id": 1,
+    "name": "Figma",
+    "url": "https://figma.com",
+    "description": "Cloud-based collaborative interface design platform...",
+    "category": "Tools",
+    "subCategory": "Design",
+    "pricing": "Freemium",
+    "featured": true,
+    "opensource": false,
+    "tags": ["design", "prototyping", "collaboration", "ui/ux"],
+    "count": null,
+    "tier": 1,
+    "thumbnail": null,
+    "screenshot": "/assets/screenshots/1-figma.jpg",
+    "gravityScore": 9.8,
+    "gravityRationale": "Industry standard for collaborative UI design"
+  }
+]
 ```
+
+**Key fields:**
+- `gravityScore` (1.0-10.0): Controls position in 3D view — higher scores appear closer to center
+- `screenshot`: Path relative to `public/`, captured via automation scripts
+- `category`: Must be one of: `Tools`, `Inspiration`, `AI`, `Learning`, `Templates`, `Community`
+- `pricing`: `Free`, `Freemium`, or `Paid`
 
 ---
 
@@ -283,19 +299,19 @@ Accents:    #1E293B (Slate)
 - **> 90** Lighthouse Performance score
 
 ### Optimization Checklist
-- [ ] Use InstancedMesh (critical!)
-- [ ] Reduce particles on mobile
-- [ ] BufferGeometry for all shapes
-- [ ] Proper Three.js disposal
-- [ ] Lazy load heavy components
-- [ ] Code splitting
+- [x] Use InstancedMesh (critical!)
+- [x] Reduce particles on mobile
+- [x] BufferGeometry for all shapes
+- [x] Proper Three.js disposal
+- [x] Lazy load heavy components
+- [x] Code splitting
 
 ---
 
-## 💡 Working with Claude Code Extension
+## 💡 Working with AI Code Editors
 
 ### Good Prompts
-✅ "Implement Fibonacci sphere in ParticleSphere.jsx using phi = acos(-1 + 2i/n)"
+✅ "Implement Fibonacci sphere in InspoCanvas.tsx using phi = acos(-1 + 2i/n)"
 ✅ "Add raycasting with threshold=5 for particle clicks"
 ✅ "Optimize with InstancedMesh, verify 60fps"
 
@@ -397,14 +413,14 @@ By end of Day 1, you should have:
 Great! The sphere is working. Now let's design the morph system.
 
 Please create:
-1. src/utils/particleLayouts.js with three functions:
+1. src/utils/particleLayouts.ts with three functions:
    - generateSphereLayout(count, radius)
    - generateGalaxyLayout(count, maxRadius)
    - generateGridLayout(count, columns)
 
-2. src/store/useAppStore.js with Zustand:
-   - viewMode: 'sphere' | 'galaxy' | 'list'
-   - activeCategory: null | 'UX' | 'Brand' | 'Art' | 'Code'
+2. src/store/useAppStore.ts with Zustand:
+   - viewMode: '3d' | 'card' | 'table'
+   - activeCategory: null | 'Tools' | 'Inspiration' | 'AI' | 'Learning' | 'Templates' | 'Community'
    - setViewMode, setCategory actions
 
 3. Plan the transition algorithm that will lerp between layouts.
@@ -416,13 +432,13 @@ Let me know when complete and I'll review the architecture!
 
 ## 🚀 Ready to Build!
 
-Open Cursor and paste the **CURSOR STARTER PROMPT** above to begin.
+Open your AI code editor and paste the **AI Code Editor Starter Prompt** above to begin.
 
 The full conversation context is preserved here - reference this document anytime you need to remember the plan or find key code snippets.
 
-**You got this!** 🎨✨
+**You got this!**
 
 ---
 
-*Last updated: October 26, 2025*
-*Build time estimate: 30-40 hours over 5 days*
+*Last updated: February 2026*
+*Original build time: ~30-40 hours over 5 days*
