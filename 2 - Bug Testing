@@ -1,0 +1,137 @@
+Part 2: Testing Plan for Contributors
+1. Unit Tests — Search Library
+The search library already has two test files. Expand coverage:
+
+Existing tests:
+
+src/lib/search/__tests__/fuzzy-match.test.ts
+src/lib/search/__tests__/query-classifier.test.ts
+New tests to add:
+
+src/lib/search/__tests__/semantic-search.test.ts — test semanticSearch() with category filtering, pricing filters, min/max results, empty queries, synonym expansion
+src/lib/search/__tests__/semantic-mappings.test.ts — test expandSynonyms(), detectConcepts(), resolveCategory(), resolvePricing()
+2. Component Tests — Critical User Flows
+Create src/components/__tests__/ directory:
+
+SearchModal.test.tsx
+
+Opens on Cmd+K
+Closes on Escape
+Keyboard navigation (arrow up/down cycles through results)
+Enter selects the highlighted result
+Search input filters results
+Focus trap between input and close button
+Empty state displays correctly
+Portal renders at document.body level
+AIFilterResponse.test.tsx
+
+Typewriter effect completes full message
+Auto-dismiss fires after configured delay
+Dismiss button clears message
+New message resets typewriter
+Timer cleanup on unmount (no act() warnings)
+CategoryGrid.test.tsx
+
+Renders all categories
+Expanding a category shows subcategory row
+Column count updates on resize
+Subcategory row appears below correct grid row
+3. Visual Regression Checklist
+Manual checklist for PR review (document in a TESTING.md at project root):
+
+Theme consistency (test BOTH light and dark mode):
+
+ SearchModal renders correctly in light mode
+ SearchModal renders correctly in dark mode
+ SideNav tooltip is readable in both themes
+ AIFilterResponse is readable in both themes
+ Category buttons contrast is sufficient
+ Resource cards have proper borders
+ Table view header is properly styled
+Responsive breakpoints (test at each):
+
+ Mobile (375px) — single column cards, mobile search button visible
+ Tablet (768px) — two column grid, search bar visible
+ Desktop (1024px) — three column grid, full header
+ Ultra-wide (2560px) — 3D canvas frames content properly
+3D Canvas states:
+
+ Initial load shows loader, then reveals universe
+ Category filter zooms camera to cluster
+ Search filter highlights matching nodes
+ Hover shows tooltip following cursor
+ Click navigates to resource detail
+ Touch tap works on mobile devices
+ Legend opens/closes properly
+4. Performance Benchmarks
+Bundle size targets (check with bun run build):
+
+vendor-three chunk: monitor, currently largest chunk
+vendor-react chunk: should be under 200KB gzipped
+Total JS: log baseline in README for contributors to compare against
+3D Canvas performance:
+
+Open Chrome DevTools Performance tab
+Record 5 seconds of normal interaction
+Verify: no frame drops below 30fps on mid-range hardware
+After Bug 2-5 fixes: confirm no garbage collection spikes from object allocation
+5. Accessibility Checklist
+Keyboard navigation:
+
+ Tab through all interactive elements in header
+ Cmd+K opens search, Escape closes it
+ Arrow keys navigate search results
+ Enter selects a result
+ Skip to main content link works on focus
+ View mode buttons are keyboard accessible
+ Legend button opens/closes with Enter/Space
+Screen reader:
+
+ Search modal has proper role="dialog" and aria-modal="true"
+ aria-labelledby connects to visible heading
+ View toggle buttons have aria-label and aria-current
+ Skip link is available
+ Resource count is announced (aria-live)
+ Category buttons announce selected state
+6. Cross-Browser Verification
+Must test on:
+
+Chrome (latest) — primary target
+Firefox (latest) — CSS variable support, WebGL
+Safari (latest) — backdrop-filter, WebGL quirks
+Mobile Safari (iOS) — touch events, dvh units, viewport behavior
+Chrome Android — touch events
+Known risk areas:
+
+backdrop-blur-sm / backdrop-blur-xl — Safari needs -webkit-backdrop-filter
+h-dvh — dynamic viewport height, needs fallback for older browsers
+WebGL/Three.js — shader compilation differences across GPU drivers
+Web Speech API — only Chrome has full support (used in InspoChat voice recognition)
+7. Critical User Flow Tests
+Manual smoke tests before any release:
+
+First visit flow: Load app → see loader → universe reveals → hover nodes → click resource → view detail → back to home
+Search flow: Cmd+K → type query → arrow down → Enter → navigate to resource
+Category filter flow: Click category button → universe zooms → AI response appears → auto-dismisses → click "All" to reset
+View switching: 3D → Card → Table → 3D (verify no stale state)
+Theme toggle: Switch dark → light → dark (verify all components theme correctly)
+URL deep link: Navigate to /?display=table&category=Tools → verify table loads with Tools filter
+Execution Order
+Phase	Bugs	Est. Scope	Why This Order
+1	2, 3, 4, 5	InspoCanvas.tsx only	Biggest perf impact, all same pattern
+2	1, 12	SearchModal.tsx only	Most visible component, affects both themes
+3	6, 9	Home.tsx only	Layout + callback fixes
+4	7, 11	Tooltip + ResourceTooltip	Quick targeted fixes
+5	8, 10	AIFilterResponse + CategoryGrid	Timer/resize cleanup
+6	13	Home.tsx	Add TODO comment only
+7	—	New test files + TESTING.md	Testing infrastructure for contributors
+Verification
+After all fixes, run these checks end-to-end:
+
+bun run build — no TypeScript errors, build succeeds
+bun test — all existing + new tests pass
+bun dev — manual smoke test of all 6 critical user flows above
+Open DevTools Performance → record 5s in 3D view → no GC spikes, steady 60fps
+Toggle light/dark mode → every component themes correctly (SearchModal especially)
+Resize browser narrow → wide → verify responsive behavior
+Keyboard-only navigation → all interactive elements reachable

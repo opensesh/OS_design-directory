@@ -1,0 +1,81 @@
+Pre-Launch Bug Audit & Testing Plan
+Context
+The OS Design Directory is about to be open-sourced. This audit identifies every confirmed bug and establishes a testing foundation for contributors. The goal: ship clean, then give contributors the tools to keep it clean.
+
+Part 1: Bug Fix Sprint
+Group A: 3D Canvas Performance (InspoCanvas.tsx) — HIGH PRIORITY
+All four fixes are in the same file and follow the same pattern: hoist new THREE.*() allocations out of useFrame callbacks into refs.
+
+Bug 2 — InteractionController hot-loop allocations
+
+InspoCanvas.tsx:381-397
+new THREE.Matrix4(), new THREE.Vector3(), and new THREE.Matrix4().makeRotationFromEuler() allocated every frame inside a loop over ALL instances
+Fix: Create tempMatrix, tempPosition, and rotationMatrix as useRef values outside useFrame
+Bug 3 — CursorLight per-frame allocation
+
+InspoCanvas.tsx:93
+new THREE.Vector3(...) created every frame
+Fix: Hoist to a ref, reuse with .set()
+Bug 4 — KeyboardController per-frame allocation
+
+InspoCanvas.tsx:157-163
+right, up, forward vectors allocated every frame
+Fix: Hoist to refs, reuse with .set() and .copy()
+Bug 5 — CameraController per-frame allocation
+
+InspoCanvas.tsx:595
+new THREE.Vector3().lerpVectors(...) allocated every frame during animation
+Fix: Hoist to ref
+Group B: SearchModal (SearchModal.tsx) — HIGH PRIORITY
+Bug 1 — Keyboard event listener churn
+
+SearchModal.tsx:174-209
+selectedIndex in the dependency array causes the keydown listener to be torn down and re-added on every arrow key press
+Fix: Store selectedIndex and flatResults in refs, read from refs inside the handler. Remove them from the dependency array. Keep isOpen and onClose as deps.
+Bug 12 — Hardcoded dark-mode-only class names
+
+Throughout SearchModal.tsx
+Classes like bg-os-bg-dark, text-os-text-primary-dark, bg-os-surface-dark won't theme in light mode
+Fix: Replace with semantic tokens:
+bg-os-bg-dark → bg-[var(--bg-primary)]
+text-os-text-primary-dark → text-[var(--fg-primary)]
+text-os-text-secondary-dark → text-[var(--fg-secondary)]
+bg-os-surface-dark → bg-[var(--bg-secondary)]
+Group C: Home.tsx — MEDIUM PRIORITY
+Bug 6 — Subheader z-index without position
+
+Home.tsx:511
+z-[258] has no effect without a CSS position property
+Fix: Add relative to the section's className
+Bug 9 — Unmemoized dismissAiResponse callback
+
+Home.tsx:277-282
+Inline function passed to AIFilterResponse causes its auto-fade useEffect to re-run on every Home render
+Fix: Wrap in useCallback with empty dependency array (it only calls state setters which are stable)
+Bug 13 — Legend dropdown position doesn't update on resize
+
+Home.tsx:784
+window.innerWidth is read once when dropdown opens
+Fix: Acceptable for launch (legend closes on any backdrop click). Add a TODO comment noting the limitation.
+Group D: Component-Level Fixes — MEDIUM PRIORITY
+Bug 7 — SideNav Tooltip hardcoded white background
+
+Tooltip.tsx:40
+backgroundColor: '#FFFFFF' and color: '#020617' are hardcoded
+Fix: Use var(--bg-secondary) and var(--fg-primary) CSS variables
+Bug 11 — InspoResourceTooltip 2px border violation
+
+InspoResourceTooltip.tsx:123
+borderWidth: '2px' violates design system rules (no border-2)
+Fix: Change to borderWidth: '1px'
+Group E: Timer & Resize Cleanup — LOW PRIORITY
+Bug 8 — AIFilterResponse typewriter timer leak
+
+AIFilterResponse.tsx:52-73
+Chained setTimeout calls continue after unmount; only the initial timeout is cleaned up
+Fix: Track the active timeout ID in a ref, clear it in the cleanup function
+Bug 10 — CategoryGrid resize listener without debounce
+
+CategoryGrid.tsx:30-43
+Fires state update on every pixel of resize
+Fix: Wrap in requestAnimationFrame or a simple 150ms debounce
