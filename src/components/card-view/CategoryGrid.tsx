@@ -26,8 +26,10 @@ export function CategoryGrid({
   // Mobile (<640px): 1 column, Tablet (640-1024px): 2 columns, Desktop (1024px+): 3 columns
   const [columnCount, setColumnCount] = useState(3);
 
-  // Update column count on resize
+  // Update column count on resize (throttled with requestAnimationFrame)
   useEffect(() => {
+    let rafId: number | null = null;
+
     const updateColumns = () => {
       if (window.innerWidth < 640) {
         setColumnCount(1);
@@ -37,9 +39,23 @@ export function CategoryGrid({
         setColumnCount(3);
       }
     };
+
+    const handleResize = () => {
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(() => {
+        updateColumns();
+        rafId = null;
+      });
+    };
+
     updateColumns();
-    window.addEventListener('resize', updateColumns);
-    return () => window.removeEventListener('resize', updateColumns);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+    };
   }, []);
 
   // Scroll to subcategory row when category expands to ensure subcategories are visible

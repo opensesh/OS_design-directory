@@ -31,6 +31,7 @@ export function AIFilterResponse({
   const [displayedText, setDisplayedText] = useState('');
   const [isComplete, setIsComplete] = useState(false);
   const charIndexRef = useRef(0);
+  const typewriterTimerRef = useRef<NodeJS.Timeout | null>(null);
   const autoFadeTimerRef = useRef<NodeJS.Timeout | null>(null);
   const currentMessageIdRef = useRef<number | undefined>(undefined);
   const prefersReducedMotion = useReducedMotion();
@@ -66,16 +67,21 @@ export function AIFilterResponse({
           delay = 15; // Quick for spaces
         }
 
-        setTimeout(typeNextChar, delay);
+        typewriterTimerRef.current = setTimeout(typeNextChar, delay);
       } else {
         setIsComplete(true);
       }
     };
 
     // Start typing after a brief delay
-    const startTimeout = setTimeout(typeNextChar, 300);
+    typewriterTimerRef.current = setTimeout(typeNextChar, 300);
 
-    return () => clearTimeout(startTimeout);
+    return () => {
+      if (typewriterTimerRef.current) {
+        clearTimeout(typewriterTimerRef.current);
+        typewriterTimerRef.current = null;
+      }
+    };
   }, [message, messageId]);
 
   // Auto-fade timer - dismiss message after delay when typing completes
