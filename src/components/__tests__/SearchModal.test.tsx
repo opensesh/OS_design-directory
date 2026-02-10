@@ -255,23 +255,23 @@ describe('SearchModal', () => {
       <SearchModal isOpen={true} onClose={onClose} onSelectResource={onSelectResource} />,
     );
 
-    // All three results should be present (Figma, Framer, Frontend Masters)
+    // All three results: sorted by category (Learning first, then Tools)
+    // Index 0: Frontend Masters (Learning)
+    // Index 1: Figma (Tools)
+    // Index 2: Framer (Tools)
     expect(screen.getByText('Figma')).toBeInTheDocument();
     expect(screen.getByText('Framer')).toBeInTheDocument();
     expect(screen.getByText('Frontend Masters')).toBeInTheDocument();
 
-    // Arrow down from index 0 -> 1
+    // Arrow down from index 0 -> 1 -> 2 -> wraps to 0
     fireEvent.keyDown(document, { key: 'ArrowDown' });
-    // Arrow down from index 1 -> 2
     fireEvent.keyDown(document, { key: 'ArrowDown' });
-    // Arrow down from index 2 -> 0 (wraps)
     fireEvent.keyDown(document, { key: 'ArrowDown' });
 
-    // No errors, navigation cycles. The selection state is internal,
-    // but we confirm Enter selects the correct item after cycling
+    // After wrapping back to 0, Enter selects Frontend Masters
     fireEvent.keyDown(document, { key: 'Enter' });
     expect(onSelectResource).toHaveBeenCalledWith(
-      expect.objectContaining({ name: 'Figma' }),
+      expect.objectContaining({ name: 'Frontend Masters' }),
     );
   });
 
@@ -285,11 +285,11 @@ describe('SearchModal', () => {
       <SearchModal isOpen={true} onClose={onClose} onSelectResource={onSelectResource} />,
     );
 
-    // Arrow up from index 0 wraps to last (index 2)
+    // Arrow up from index 0 wraps to last (index 2 = Framer)
     fireEvent.keyDown(document, { key: 'ArrowUp' });
     fireEvent.keyDown(document, { key: 'Enter' });
     expect(onSelectResource).toHaveBeenCalledWith(
-      expect.objectContaining({ name: 'Frontend Masters' }),
+      expect.objectContaining({ name: 'Framer' }),
     );
   });
 
