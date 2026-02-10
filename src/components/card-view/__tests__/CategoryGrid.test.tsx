@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { CategoryGrid } from '../CategoryGrid';
 import { CATEGORY_COLORS } from '../../../types/resource';
@@ -187,16 +187,16 @@ describe('CategoryGrid', () => {
   });
 
   describe('category expansion', () => {
-    it('calls onCategoryClick when a category card is clicked', async () => {
+    it('calls onCategoryClick when a category card is clicked', () => {
       const onCategoryClick = vi.fn();
-      const user = userEvent.setup();
 
       render(
         <CategoryGrid {...defaultProps} onCategoryClick={onCategoryClick} />
       );
 
+      // Use fireEvent to avoid hover/mouseEnter side effects on the video-heavy CategoryCard
       const toolsButton = screen.getByText('Tools').closest('button')!;
-      await user.click(toolsButton);
+      fireEvent.click(toolsButton);
       expect(onCategoryClick).toHaveBeenCalledWith('Tools');
     });
 
@@ -269,7 +269,9 @@ describe('CategoryGrid', () => {
 
       // Simulate resize to tablet width
       innerWidthSpy.mockReturnValue(800);
-      window.dispatchEvent(new Event('resize'));
+      await act(async () => {
+        window.dispatchEvent(new Event('resize'));
+      });
 
       // Re-render to reflect state changes
       rerender(<CategoryGrid {...defaultProps} />);
