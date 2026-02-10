@@ -129,11 +129,6 @@ const learningResults: SearchResult[] = [
   makeSearchResult({ id: 3, name: 'Frontend Masters', category: 'Learning' }),
 ];
 
-const defaultGrouped: GroupedSearchResults = {
-  Tools: toolResults,
-  Learning: learningResults,
-};
-
 const allDefaults: SearchResult[] = [...toolResults, ...learningResults];
 
 // ── Tests ────────────────────────────────────────────────────────────────

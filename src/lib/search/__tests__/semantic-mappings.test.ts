@@ -325,7 +325,7 @@ describe('data integrity', () => {
   });
 
   it('every conceptMapping has at least one keyword and one resource name', () => {
-    for (const [name, concept] of Object.entries(conceptMappings)) {
+    for (const [_name, concept] of Object.entries(conceptMappings)) {
       expect(concept.keywords.length).toBeGreaterThan(0);
       expect(concept.resourceNames.length).toBeGreaterThan(0);
       expect(concept.description).toBeTruthy();
