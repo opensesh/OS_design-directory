@@ -46,6 +46,10 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const prefersReducedMotion = useReducedMotion();
 
+  // Refs for keyboard handler to avoid listener churn (Bug 1 fix)
+  const selectedIndexRef = useRef(selectedIndex);
+  const flatResultsRef = useRef<SearchResult[]>([]);
+
   const { query, setQuery, groupedResults, defaultResults, isSearching, clearSearch } = useResourceSearch({
     debounceMs: 100,
     maxResults: 30,
@@ -155,6 +159,15 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
     setSelectedIndex(0);
   }, [query]);
 
+  // Keep refs in sync for keyboard handler (Bug 1 fix)
+  useEffect(() => {
+    selectedIndexRef.current = selectedIndex;
+  }, [selectedIndex]);
+
+  useEffect(() => {
+    flatResultsRef.current = flatResults;
+  }, [flatResults]);
+
   // Scroll selected item into view using virtualizer
   useEffect(() => {
     if (selectedIndex >= 0) {
@@ -170,11 +183,14 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
     onSelectResource(result.resource);
   }, [onSelectResource]);
 
-  // Handle keyboard navigation
+  // Handle keyboard navigation (Bug 1 fix: read from refs to avoid listener churn)
   useEffect(() => {
     if (!isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      const currentResults = flatResultsRef.current;
+      const currentIndex = selectedIndexRef.current;
+
       if (e.key === 'Escape') {
         onClose();
       } else if (e.key === 'Tab') {
@@ -188,25 +204,25 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
         }
       } else if (e.key === 'ArrowDown') {
         e.preventDefault();
-        setSelectedIndex(prev =>
-          prev < flatResults.length - 1 ? prev + 1 : 0
+        setSelectedIndex(
+          currentIndex < currentResults.length - 1 ? currentIndex + 1 : 0
         );
       } else if (e.key === 'ArrowUp') {
         e.preventDefault();
-        setSelectedIndex(prev =>
-          prev > 0 ? prev - 1 : flatResults.length - 1
+        setSelectedIndex(
+          currentIndex > 0 ? currentIndex - 1 : currentResults.length - 1
         );
       } else if (e.key === 'Enter') {
         e.preventDefault();
-        if (flatResults[selectedIndex]) {
-          handleSelect(flatResults[selectedIndex]);
+        if (currentResults[currentIndex]) {
+          handleSelect(currentResults[currentIndex]);
         }
       }
     };
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose, flatResults, selectedIndex, handleSelect]);
+  }, [isOpen, onClose, handleSelect]);
 
   // Track favicon errors for fallback to letter initial
   const [faviconErrors, setFaviconErrors] = useState<Set<string>>(new Set());
@@ -234,13 +250,13 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
           text-left
           transition-colors
           border-l-4
-          ${isSelected ? 'bg-os-surface-dark' : 'hover:bg-os-surface-dark/50'}
+          ${isSelected ? 'bg-[var(--bg-secondary)]' : 'hover:bg-[var(--bg-secondary)]/50'}
         `}
         style={{ borderLeftColor: categoryColor }}
       >
         {/* Favicon or fallback initial */}
         <div
-          className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 bg-os-surface-dark border border-[var(--border-secondary)] overflow-hidden"
+          className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] overflow-hidden"
         >
           {showFavicon ? (
             <img
@@ -250,23 +266,23 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
               onError={() => handleFaviconError(String(result.resource.id))}
             />
           ) : (
-            <span className="text-sm font-medium text-os-text-secondary-dark">
+            <span className="text-sm font-medium text-[var(--fg-secondary)]">
               {result.resource.name.charAt(0).toUpperCase()}
             </span>
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-sm font-medium text-os-text-primary-dark truncate">
+          <div className="text-sm font-medium text-[var(--fg-primary)] truncate">
             {result.resource.name}
           </div>
           {result.resource.description && (
-            <div className="text-xs text-os-text-secondary-dark truncate">
+            <div className="text-xs text-[var(--fg-secondary)] truncate">
               {result.resource.description}
             </div>
           )}
         </div>
         {isSelected && (
-          <ArrowRight className="w-4 h-4 text-os-text-secondary-dark flex-shrink-0" />
+          <ArrowRight className="w-4 h-4 text-[var(--fg-secondary)] flex-shrink-0" />
         )}
       </button>
     );
@@ -275,11 +291,11 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
   // Section header component
   const SectionHeader = ({ title, count }: { title: string; count?: number }) => (
     <div className="px-5 py-2 flex items-center justify-between">
-      <span className="text-xs font-accent uppercase tracking-wider text-os-text-primary-dark">
+      <span className="text-xs font-accent uppercase tracking-wider text-[var(--fg-primary)]">
         {title}
       </span>
       {count !== undefined && count > 0 && (
-        <span className="text-xs text-os-text-secondary-dark">
+        <span className="text-xs text-[var(--fg-secondary)]">
           {count}
         </span>
       )}
@@ -315,7 +331,7 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
               transition={prefersReducedMotion ? PAGE_TRANSITION.reduced.transition : PAGE_TRANSITION.modal.transition}
               className="
                 w-full max-w-2xl
-                bg-os-bg-dark
+                bg-[var(--bg-primary)]
                 rounded-xl
                 border border-[var(--border-secondary)]
                 shadow-2xl
@@ -326,7 +342,7 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
               {/* Search Input */}
               <h2 id="search-modal-title" className="sr-only">Search resources</h2>
               <div className="flex items-center gap-3 px-5 py-4 border-b border-[var(--border-secondary)]">
-                <Search className="w-5 h-5 text-os-text-secondary-dark flex-shrink-0" />
+                <Search className="w-5 h-5 text-[var(--fg-secondary)] flex-shrink-0" />
                 <input
                   ref={inputRef}
                   type="text"
@@ -336,14 +352,14 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
                   className="
                     flex-1
                     bg-transparent
-                    text-os-text-primary-dark
-                    placeholder:text-os-text-secondary-dark
+                    text-[var(--fg-primary)]
+                    placeholder:text-[var(--fg-secondary)]
                     focus:outline-none
                     text-base
                   "
                 />
                 <div className="flex items-center gap-1">
-                  <kbd className="hidden sm:flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] text-os-text-secondary-dark bg-os-surface-dark rounded border border-[var(--border-secondary)]">
+                  <kbd className="hidden sm:flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] text-[var(--fg-secondary)] bg-[var(--bg-secondary)] rounded border border-[var(--border-secondary)]">
                     <Command className="w-2.5 h-2.5" />K
                   </kbd>
                   <button
@@ -352,8 +368,8 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
                     aria-label="Close search"
                     className="
                       p-1 rounded-md
-                      text-os-text-secondary-dark hover:text-os-text-primary-dark
-                      hover:bg-os-surface-dark
+                      text-[var(--fg-secondary)] hover:text-[var(--fg-primary)]
+                      hover:bg-[var(--bg-secondary)]
                       transition-colors
                     "
                   >
@@ -394,7 +410,7 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
                             }}
                           >
                             <div className="px-5 pt-2 pb-1">
-                              <span className="text-xs text-os-text-secondary-dark">Popular Resources</span>
+                              <span className="text-xs text-[var(--fg-secondary)]">Popular Resources</span>
                             </div>
                           </div>
                         );
@@ -440,31 +456,31 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
                 ) : query.trim() ? (
                   // No results
                   <div className="py-12 text-center">
-                    <Search className="w-8 h-8 text-os-text-secondary-dark mx-auto mb-3" />
-                    <p className="text-sm text-os-text-secondary-dark">No results found</p>
-                    <p className="text-xs text-os-text-secondary-dark/70 mt-1">Try a different search term</p>
+                    <Search className="w-8 h-8 text-[var(--fg-secondary)] mx-auto mb-3" />
+                    <p className="text-sm text-[var(--fg-secondary)]">No results found</p>
+                    <p className="text-xs text-[var(--fg-secondary)]/70 mt-1">Try a different search term</p>
                   </div>
                 ) : null}
               </div>
 
               {/* Footer */}
-              <div className="flex items-center justify-between px-5 py-3 border-t border-[var(--border-secondary)] text-[10px] text-os-text-secondary-dark">
+              <div className="flex items-center justify-between px-5 py-3 border-t border-[var(--border-secondary)] text-[10px] text-[var(--fg-secondary)]">
                 <div className="flex items-center gap-3">
                   <span className="flex items-center gap-1">
-                    <kbd className="px-1 py-0.5 bg-os-surface-dark rounded border border-[var(--border-secondary)]">
+                    <kbd className="px-1 py-0.5 bg-[var(--bg-secondary)] rounded border border-[var(--border-secondary)]">
                       Enter
                     </kbd>
                     to select
                   </span>
                   <span className="flex items-center gap-1">
-                    <kbd className="px-1 py-0.5 bg-os-surface-dark rounded border border-[var(--border-secondary)]">
+                    <kbd className="px-1 py-0.5 bg-[var(--bg-secondary)] rounded border border-[var(--border-secondary)]">
                       ↑↓
                     </kbd>
                     to navigate
                   </span>
                 </div>
                 <span className="flex items-center gap-1">
-                  <kbd className="px-1 py-0.5 bg-os-surface-dark rounded border border-[var(--border-secondary)]">
+                  <kbd className="px-1 py-0.5 bg-[var(--bg-secondary)] rounded border border-[var(--border-secondary)]">
                     Esc
                   </kbd>
                   to close
