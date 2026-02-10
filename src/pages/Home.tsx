@@ -779,6 +779,10 @@ export default function Home() {
           <motion.div
             key="legend-dropdown"
             className="fixed z-[300]"
+            // TODO: legendButtonRect and window.innerWidth are captured once on open,
+            // so the dropdown position won't update on window resize. Acceptable for
+            // launch since the legend closes on any backdrop click. To fix, add a
+            // resize listener that recalculates position while the dropdown is open.
             style={{
               top: legendButtonRect.bottom + 8,
               // TODO: Position is calculated once when dropdown opens; does not update on window resize.
