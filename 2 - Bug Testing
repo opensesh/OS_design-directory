@@ -63,18 +63,70 @@ Responsive breakpoints (test at each):
  Click navigates to resource detail
  Touch tap works on mobile devices
  Legend opens/closes properly
-4. Performance Benchmarks
-Bundle size targets (check with bun run build):
+4. Performance Benchmarks — RESULTS (2026-02-09)
 
-vendor-three chunk: monitor, currently largest chunk
-vendor-react chunk: should be under 200KB gzipped
-Total JS: log baseline in README for contributors to compare against
-3D Canvas performance:
+4a. Bundle Size Baseline (bun run build)
 
-Open Chrome DevTools Performance tab
-Record 5 seconds of normal interaction
-Verify: no frame drops below 30fps on mid-range hardware
-After Bug 2-5 fixes: confirm no garbage collection spikes from object allocation
+Build: vite v6.4.1 — ✓ 2708 modules transformed, built in 3.29s
+
+| Chunk                | Raw         | Gzipped     | Status                          |
+|----------------------|-------------|-------------|---------------------------------|
+| vendor-three         | 1,198.73 KB | 348.35 KB   | Largest chunk (expected — Three.js) |
+| index (app bundle)   | 485.12 KB   | 133.11 KB   | Main application code           |
+| InspoCanvas          | 38.85 KB    | 12.38 KB    | 3D canvas component             |
+| vendor-react         | 36.06 KB    | 13.14 KB    | ✅ Well under 200KB gzipped target |
+| CSS                  | 51.94 KB    | 8.32 KB     | Single stylesheet               |
+| **Total JS**         | **1,758.76 KB** | **506.98 KB** | **Baseline for contributors** |
+
+Notes:
+- vendor-three (348 KB gz) dominates the bundle. Tree-shaking THREE imports or switching to selective imports (e.g., three/examples/jsm) would be the biggest win for future optimization.
+- vendor-react (13 KB gz) is minimal — React 19 is lean.
+- No TypeScript errors during build.
+
+4b. 3D Canvas Performance — Bug 2-5 Per-Frame Allocation Audit
+
+⚠️ BLOCKER: Bug 2-5 fixes have NOT been merged to main.
+
+The fixes exist on branch `opensesh/fix-group-a-bugs` (commit 8f3e2c1 "perf(canvas): hoist THREE.js allocations out of useFrame loops") but were never merged. All four per-frame allocation bugs are still present in InspoCanvas.tsx on main:
+
+Bug 2 — InteractionController hot-loop allocations (STILL PRESENT)
+  - Line 381: `new THREE.Matrix4()` allocated every frame
+  - Line 382: `new THREE.Vector3()` allocated every frame
+  - Line 396: `new THREE.Matrix4().makeRotationFromEuler(groupRotation)` allocated every frame inside instance loop
+  - Impact: O(n) allocations per frame where n = visible resource count
+
+Bug 3 — CursorLight per-frame allocation (STILL PRESENT)
+  - Line 93: `new THREE.Vector3(mouse.current.x, mouse.current.y, 0.5)` allocated every frame
+  - Impact: 1 Vector3 per frame (~60/sec)
+
+Bug 4 — KeyboardController per-frame allocation (STILL PRESENT)
+  - Line 157: `new THREE.Vector3()` (right) allocated every frame
+  - Line 158: `new THREE.Vector3(0, 1, 0)` (up) allocated every frame
+  - Line 162: `new THREE.Vector3()` (forward) allocated every frame
+  - Impact: 3 Vector3s per frame (~180/sec) plus .clone() calls at lines 167, 170, 175, 178, 183, 186
+
+Bug 5 — CameraController per-frame allocation (STILL PRESENT)
+  - Line 595: `new THREE.Vector3().lerpVectors(...)` allocated every frame during camera animation
+  - Impact: 1 Vector3 per frame during animation sequences
+
+Result: GC spikes from object allocation CANNOT be confirmed as resolved until opensesh/fix-group-a-bugs is merged. DevTools Performance profiling should be re-run after merge.
+
+Action required: Merge branch `opensesh/fix-group-a-bugs` to main, then re-run this benchmark.
+
+4c. Additional Bug Fix Status (discovered during audit)
+
+Verified on main:
+  ✅ Bug 1  — SearchModal keyboard listener (fixed)
+  ✅ Bug 6  — Subheader z-index + relative position (fixed)
+  ✅ Bug 8  — AIFilterResponse timer leak (fixed, ref-tracked cleanup)
+  ✅ Bug 12 — SearchModal semantic tokens (fixed)
+  ✅ Bug 13 — Legend dropdown TODO comment (documented)
+
+Still open on main:
+  ❌ Bug 7  — Tooltip.tsx line 40: still uses hardcoded `backgroundColor: '#FFFFFF'`
+  ❌ Bug 9  — Home.tsx: dismissAiResponse not wrapped in useCallback
+  ❌ Bug 11 — InspoResourceTooltip.tsx: still uses `borderWidth: '2px'`
+  ❌ Bugs 2-5 — InspoCanvas.tsx: per-frame allocations (fix on unmerged branch)
 5. Accessibility Checklist
 Keyboard navigation:
 
