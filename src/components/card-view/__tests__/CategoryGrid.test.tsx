@@ -77,10 +77,38 @@ vi.mock('framer-motion', () => {
   };
 });
 
-// Mock motion tokens
+// Mock motion tokens — include all exports used by child components
 vi.mock('@/lib/motion-tokens', () => ({
-  DURATION: { fast: 0.15, normal: 0.2, slow: 0.3 },
-  EASING: { smooth: [0.4, 0, 0.2, 1] },
+  DURATION: { fast: 0.15, normal: 0.2, slow: 0.3, slower: 0.5, cinematic: 0.8 },
+  EASING: { smooth: [0.4, 0, 0.2, 1], spring: [0.16, 1, 0.3, 1], linear: [0, 0, 1, 1] },
+  SPRING: { gentle: { stiffness: 50, damping: 20 }, normal: { stiffness: 300, damping: 24 }, snappy: { stiffness: 400, damping: 25 } },
+  TRANSITION: {
+    fast: { duration: 0.15, ease: [0.4, 0, 0.2, 1] },
+    normal: { duration: 0.2, ease: [0.4, 0, 0.2, 1] },
+    slow: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+    springIn: { type: 'spring', stiffness: 300, damping: 24 },
+    springSnappy: { type: 'spring', stiffness: 400, damping: 25 },
+  },
+  INTERACTION: {
+    cardLift: { whileHover: { scale: 1.02 }, whileTap: { scale: 0.98 } },
+    buttonLift: { whileHover: { scale: 1.05 }, whileTap: { scale: 0.95 } },
+    subtle: { whileHover: { scale: 1.01 }, whileTap: { scale: 0.99 } },
+    none: { whileHover: {}, whileTap: {} },
+  },
+  PAGE_TRANSITION: {
+    viewSwitch: { initial: {}, animate: {}, exit: {}, transition: {} },
+    route: { initial: {}, animate: {}, exit: {}, transition: {} },
+    modal: { initial: {}, animate: {}, exit: {}, transition: {} },
+    backdrop: { initial: {}, animate: {}, exit: {}, transition: {} },
+    reduced: { initial: {}, animate: {}, exit: {}, transition: {} },
+  },
+  LIST_ANIMATION: {
+    container: { hidden: { opacity: 0 }, visible: { opacity: 1 } },
+    item: { hidden: { opacity: 0 }, visible: { opacity: 1 } },
+    gridItem: { hidden: { opacity: 0 }, visible: { opacity: 1 } },
+    reducedItem: { hidden: { opacity: 0 }, visible: { opacity: 1 } },
+  },
+  STAGGER: { fast: 0.03, normal: 0.05, slow: 0.1 },
 }));
 
 // Mock useTouchDevice
@@ -95,6 +123,11 @@ let innerWidthSpy: ReturnType<typeof vi.spyOn>;
 beforeEach(() => {
   // Default to desktop width (3 columns)
   innerWidthSpy = vi.spyOn(window, 'innerWidth', 'get').mockReturnValue(1200);
+
+  // Mock HTMLMediaElement methods not implemented in jsdom
+  window.HTMLMediaElement.prototype.play = vi.fn().mockResolvedValue(undefined);
+  window.HTMLMediaElement.prototype.pause = vi.fn();
+  window.HTMLMediaElement.prototype.load = vi.fn();
 });
 
 afterEach(() => {

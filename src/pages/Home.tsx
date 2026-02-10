@@ -699,7 +699,7 @@ export default function Home() {
               />
 
               {/* Resource count */}
-              <div className="flex items-center justify-center">
+              <div className="flex items-center justify-center" role="status" aria-live="polite">
                 <p className="flex items-center gap-2 text-sm text-os-text-secondary-dark">
                   <span className="text-lg font-semibold text-brand-aperol">
                     {filteredResourceIds ? filteredResourceIds.length : filteredResources.length}

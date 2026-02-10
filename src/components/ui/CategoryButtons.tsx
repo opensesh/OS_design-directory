@@ -74,6 +74,7 @@ export function CategoryButtons({
           {/* All button - resets filter */}
           <motion.button
             onClick={() => onCategoryChange(null)}
+            aria-pressed={activeCategory === null}
             className={`
               px-4 py-2 rounded-full text-sm font-medium
               transition-all duration-200 whitespace-nowrap
@@ -100,6 +101,7 @@ export function CategoryButtons({
                 onClick={() => onCategoryChange(category)}
                 onMouseEnter={() => setHoveredCategory(category)}
                 onMouseLeave={() => setHoveredCategory(null)}
+                aria-pressed={isActive}
                 className={`
                   px-4 py-2 rounded-full text-sm font-medium
                   transition-all duration-200 whitespace-nowrap
@@ -152,6 +154,7 @@ export function CategoryButtons({
                 {/* All subcategories button */}
                 <motion.button
                   onClick={() => onSubCategoryChange(null)}
+                  aria-pressed={activeSubCategory === null}
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.05 }}
@@ -183,6 +186,7 @@ export function CategoryButtons({
                       onClick={() => onSubCategoryChange(subCategory)}
                       onMouseEnter={() => setHoveredSubCategory(subCategory)}
                       onMouseLeave={() => setHoveredSubCategory(null)}
+                      aria-pressed={isActive}
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 0.05 + (index * 0.03) }}
