@@ -1,6 +1,8 @@
-import { useMemo, forwardRef } from 'react';
+import { useMemo, useRef, forwardRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SubcategoryCard } from './SubcategoryCard';
+import { DURATION, EASING, STAGGER } from '@/lib/motion-tokens';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 import type { NormalizedResource } from '../../types/resource';
 
 interface SubcategoryRowProps {
@@ -10,6 +12,7 @@ interface SubcategoryRowProps {
   resources: NormalizedResource[];
   activeSubcategory: string | null;
   onSubcategoryClick: (subcategory: string) => void;
+  onExpandComplete?: () => void;
 }
 
 export const SubcategoryRow = forwardRef<HTMLDivElement, SubcategoryRowProps>(
@@ -19,8 +22,12 @@ export const SubcategoryRow = forwardRef<HTMLDivElement, SubcategoryRowProps>(
     columnCount: _columnCount,
     resources,
     activeSubcategory,
-    onSubcategoryClick
+    onSubcategoryClick,
+    onExpandComplete
   }, ref) {
+    const prefersReducedMotion = useReducedMotion();
+    const isEnteringRef = useRef(true);
+
     // Extract unique subcategories with counts for this category
     const subcategories = useMemo(() => {
       const subcategoryMap = new Map<string, number>();
@@ -48,21 +55,26 @@ export const SubcategoryRow = forwardRef<HTMLDivElement, SubcategoryRowProps>(
       <AnimatePresence>
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, scaleY: 0 }}
-          animate={{ opacity: 1, scaleY: 1 }}
-          exit={{ opacity: 0, scaleY: 0 }}
-          transition={{
-            duration: 0.35,
-            ease: [0.4, 0, 0.2, 1],
-            opacity: { duration: 0.25 }
+          initial={prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
+          animate={prefersReducedMotion ? { opacity: 1 } : { height: 'auto', opacity: 1 }}
+          exit={prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
+          transition={prefersReducedMotion ? { duration: DURATION.fast } : {
+            height: { duration: DURATION.slow, ease: EASING.spring },
+            opacity: { duration: DURATION.normal, delay: 0.05 }
           }}
-          style={{ transformOrigin: 'top' }}
+          onAnimationComplete={() => {
+            if (isEnteringRef.current) {
+              onExpandComplete?.();
+              isEnteringRef.current = false;
+            }
+          }}
+          style={{ overflow: 'hidden' }}
         >
           {/* Use matching grid structure to align with cards - 1 col mobile, 2 tablet, 3 desktop */}
           {/* Added padding to accommodate hover scale effect on subcategory cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 py-4 px-1 -mx-1">
-            <div 
-              style={{ 
+            <div
+              style={{
                 gridColumn: gridColumnStart + ' / -1'
               }}
             >
@@ -73,11 +85,12 @@ export const SubcategoryRow = forwardRef<HTMLDivElement, SubcategoryRowProps>(
                 {subcategories.map((sub, index) => (
                   <motion.div
                     key={sub.name}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{
-                      duration: 0.2,
-                      delay: index * 0.05
+                    initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: -20 }}
+                    animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, x: 0 }}
+                    transition={prefersReducedMotion ? { duration: DURATION.fast } : {
+                      duration: DURATION.normal,
+                      ease: EASING.spring,
+                      delay: DURATION.fast + (index * STAGGER.normal)
                     }}
                   >
                     <SubcategoryCard
