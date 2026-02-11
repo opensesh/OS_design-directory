@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ChevronUp, ChevronDown, ChevronsUpDown, ExternalLink, Search, X } from 'lucide-react';
@@ -174,9 +174,23 @@ export function InspoTable({
     setUserHasModifiedFilters(true);
   };
 
-  // Sort state
-  const [sortField, setSortField] = useState<SortField | null>(null);
-  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+  // Sort state - default to rating descending (highest first)
+  const [sortField, setSortField] = useState<SortField | null>('gravityScore');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+
+  // Sticky filter bar height tracking
+  const filterContainerRef = useRef<HTMLDivElement>(null);
+  const [filterBarHeight, setFilterBarHeight] = useState(0);
+
+  useEffect(() => {
+    const el = filterContainerRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(() => {
+      setFilterBarHeight(el.getBoundingClientRect().height);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   // Extract unique values for filters
   const filterOptions = useMemo(() => {
@@ -279,33 +293,38 @@ export function InspoTable({
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3, ease: smoothEase }}
     >
-      {/* Filter Active Banner - shows when navigating from ResourceDetail */}
-      {showFilterBanner && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, ease: smoothEase }}
-          className="flex items-center justify-between px-4 py-2 bg-[#FE5102]/10 border-b border-[var(--border-secondary)]"
-        >
-          <span className="text-sm text-[#FE5102] font-medium">
-            Showing results for: {activeFilterLabel}
-          </span>
-          <button
-            onClick={clearFilters}
-            className="text-xs text-[var(--fg-tertiary)] hover:text-[var(--fg-primary)] transition-colors"
-          >
-            Clear filter
-          </button>
-        </motion.div>
-      )}
-
-      {/* Filters */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3, delay: 0.05, ease: smoothEase }}
-        className="bg-[var(--bg-primary)] border-b border-[var(--border-secondary)]"
+      {/* Sticky filter container - filter banner + filter bar */}
+      <div
+        ref={filterContainerRef}
+        className="sticky top-0 z-20 bg-[var(--bg-primary)]"
       >
+        {/* Filter Active Banner - shows when navigating from ResourceDetail */}
+        {showFilterBanner && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, ease: smoothEase }}
+            className="flex items-center justify-between px-4 py-2 bg-[#FE5102]/10 border-b border-[var(--border-secondary)]"
+          >
+            <span className="text-sm text-[#FE5102] font-medium">
+              Showing results for: {activeFilterLabel}
+            </span>
+            <button
+              onClick={clearFilters}
+              className="text-xs text-[var(--fg-tertiary)] hover:text-[var(--fg-primary)] transition-colors"
+            >
+              Clear filter
+            </button>
+          </motion.div>
+        )}
+
+        {/* Filters */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3, delay: 0.05, ease: smoothEase }}
+          className="bg-[var(--bg-primary)] border-b border-[var(--border-secondary)]"
+        >
         <div className="p-4 md:p-6 space-y-4">
           {/* Desktop: Flex row with filters right-aligned */}
           {/* Mobile: Stack vertically with labels visible */}
@@ -428,6 +447,7 @@ export function InspoTable({
           </div>
         </div>
       </motion.div>
+      </div>
 
       {/* Mobile Card View */}
       <div className="sm:hidden">
@@ -459,13 +479,14 @@ export function InspoTable({
       </div>
 
       {/* Desktop Table View */}
-      <div className="hidden sm:block overflow-x-auto">
+      <div className="hidden sm:block">
         <table className="w-full border-collapse">
           <motion.thead
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3, delay: 0.1, ease: smoothEase }}
-            className="sticky top-0 z-10 bg-[var(--bg-primary)] shadow-[0_1px_0_0_var(--border-secondary)]"
+            className="sticky z-10 bg-[var(--bg-primary)] shadow-[0_1px_0_0_var(--border-secondary)]"
+            style={{ top: filterBarHeight }}
           >
             <tr className="border-b border-[var(--border-secondary)]">
               {/* Thumbnail Header */}

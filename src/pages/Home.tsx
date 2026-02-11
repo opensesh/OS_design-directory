@@ -596,6 +596,7 @@ export default function Home() {
               exit={prefersReducedMotion ? PAGE_TRANSITION.reduced.exit : PAGE_TRANSITION.viewSwitch.exit}
               transition={prefersReducedMotion ? PAGE_TRANSITION.reduced.transition : PAGE_TRANSITION.viewSwitch.transition}
               className="w-full h-full"
+              style={{ overscrollBehaviorY: 'contain', WebkitOverflowScrolling: 'touch' }}
             >
               <CardView resources={resources} />
             </motion.div>
@@ -609,6 +610,7 @@ export default function Home() {
               exit={prefersReducedMotion ? PAGE_TRANSITION.reduced.exit : PAGE_TRANSITION.viewSwitch.exit}
               transition={prefersReducedMotion ? PAGE_TRANSITION.reduced.transition : PAGE_TRANSITION.viewSwitch.transition}
               className="w-full h-full overflow-auto"
+              style={{ overscrollBehaviorY: 'contain', WebkitOverflowScrolling: 'touch' }}
             >
               <div className="max-w-7xl mx-auto">
                 <InspoTable
