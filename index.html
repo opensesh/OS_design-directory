@@ -22,21 +22,9 @@
     <meta name="twitter:image" content="https://design-directory-blue.vercel.app/og-image.jpg" />
 
     <title>OS Design Directory</title>
-    <!-- Early theme detection to prevent flash of wrong theme -->
+    <!-- Apply dark theme immediately to prevent flash -->
     <script>
-      (function() {
-        var STORAGE_KEY = 'os-design-directory-theme';
-        var stored = localStorage.getItem(STORAGE_KEY);
-        var theme = stored || 'dark';
-        
-        // Resolve system preference
-        if (theme === 'system') {
-          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        }
-        
-        // Apply theme class immediately
-        document.documentElement.classList.add(theme);
-      })();
+      document.documentElement.classList.add('dark');
     </script>
   </head>
   <body>
