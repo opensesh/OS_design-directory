@@ -24,7 +24,6 @@ import {
 import { resources } from '../data';
 import { RatingScale } from '../components/ui/RatingScale';
 import { SearchModal } from '../components/search/SearchModal';
-import { ThemeToggle } from '../components/ui/ThemeToggle';
 
 /**
  * Get favicon URL for a given website URL
@@ -289,9 +288,6 @@ export default function ResourceDetail() {
               </div>
               <kbd className="hidden lg:inline text-[10px] px-1.5 py-0.5 bg-[var(--bg-primary)] rounded border border-[var(--border-secondary)]">⌘K</kbd>
             </button>
-
-            {/* Theme Toggle - desktop/tablet only */}
-            <ThemeToggle />
 
             {/* Search button - visible on mobile only */}
             <button
