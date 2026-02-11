@@ -21,17 +21,17 @@ export function CardViewBreadcrumbs({
 
   return (
     <motion.nav
-      className="flex items-center justify-between mb-6"
+      className="flex items-center justify-between mb-6 gap-4"
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="flex items-center gap-2 text-sm">
+      <div className="flex items-center gap-2 text-sm min-w-0">
         {/* Home / All Categories */}
         <button
           onClick={onNavigateHome}
           className={`
-            flex items-center gap-1.5 px-2 py-1 rounded-md
+            flex items-center gap-1.5 px-2 py-1 rounded-md shrink-0
             transition-colors duration-200
             ${!category
               ? 'text-[var(--fg-primary)] bg-[var(--bg-secondary)]/40'
@@ -40,17 +40,17 @@ export function CardViewBreadcrumbs({
           `}
         >
           <LayoutGrid className="w-3.5 h-3.5" />
-          <span>All Categories</span>
+          <span className="hidden sm:inline">All Categories</span>
         </button>
 
         {/* Category breadcrumb */}
         {category && (
           <>
-            <ChevronRight className="w-3.5 h-3.5 text-[var(--fg-secondary)]" />
+            <ChevronRight className="w-3.5 h-3.5 text-[var(--fg-secondary)] hidden sm:block shrink-0" />
             <button
               onClick={onNavigateCategory}
               className={`
-                px-2 py-1 rounded-md transition-colors duration-200
+                px-2 py-1 rounded-md transition-colors duration-200 truncate min-w-0
                 ${!subcategory
                   ? 'text-[var(--fg-primary)] bg-[var(--bg-secondary)]/40'
                   : 'text-[var(--fg-secondary)] hover:text-[var(--fg-primary)] hover:bg-[var(--bg-secondary)]/30'
@@ -68,9 +68,9 @@ export function CardViewBreadcrumbs({
         {/* Subcategory breadcrumb */}
         {subcategory && (
           <>
-            <ChevronRight className="w-3.5 h-3.5 text-[var(--fg-secondary)]" />
+            <ChevronRight className="w-3.5 h-3.5 text-[var(--fg-secondary)] shrink-0" />
             <span
-              className="px-2 py-1 rounded-md bg-[var(--bg-secondary)]/40"
+              className="px-2 py-1 rounded-md bg-[var(--bg-secondary)]/40 truncate min-w-0"
               style={{ color: categoryColor || undefined }}
             >
               {subcategory}
@@ -80,7 +80,7 @@ export function CardViewBreadcrumbs({
       </div>
 
       {/* Resource count */}
-      <p className="text-sm text-[var(--fg-secondary)]">
+      <p className="text-sm text-[var(--fg-secondary)] shrink-0 whitespace-nowrap">
         <span className="font-semibold text-brand-aperol">{resourceCount}</span>
         {' '}resource{resourceCount !== 1 ? 's' : ''}
       </p>
