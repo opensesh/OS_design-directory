@@ -1,4 +1,4 @@
-import { useMemo, Fragment, useRef, useEffect, useState } from 'react';
+import { useMemo, Fragment, useRef, useEffect, useState, useCallback } from 'react';
 import { CategoryCard } from './CategoryCard';
 import { SubcategoryRow } from './SubcategoryRow';
 import { CATEGORY_COLORS } from '../../types/resource';
@@ -58,19 +58,15 @@ export function CategoryGrid({
     };
   }, []);
 
-  // Scroll to subcategory row when category expands to ensure subcategories are visible
-  useEffect(() => {
-    if (expandedCategory && subcategoryRowRef.current) {
-      // Delay to allow the height animation to start
-      const timer = setTimeout(() => {
-        subcategoryRowRef.current?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest'
-        });
-      }, 150);
-      return () => clearTimeout(timer);
+  // Scroll to subcategory row after its expand animation completes
+  const handleExpandComplete = useCallback(() => {
+    if (subcategoryRowRef.current) {
+      subcategoryRowRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end'
+      });
     }
-  }, [expandedCategory]);
+  }, []);
 
   // Get all categories with counts
   const categoriesWithCounts = useMemo(() => {
@@ -144,6 +140,7 @@ export function CategoryGrid({
               resources={resources}
               activeSubcategory={activeSubcategory}
               onSubcategoryClick={onSubcategoryClick}
+              onExpandComplete={handleExpandComplete}
             />
           )}
         </Fragment>
