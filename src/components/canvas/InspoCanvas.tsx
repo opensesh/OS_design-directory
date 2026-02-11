@@ -729,7 +729,7 @@ interface GalaxySystemProps {
   matchedCategories?: string[];
   hoveredIndex: number | null;
   clickedIndex: number | null;
-  masterStartTime: number;
+  resolvedTheme?: 'light' | 'dark';
   resourceNodesRef: React.RefObject<ResourceNodesHandle>;
   onReady?: () => void;
 }
@@ -745,18 +745,22 @@ function GalaxySystem({
   matchedCategories,
   hoveredIndex,
   clickedIndex,
-  masterStartTime,
+  resolvedTheme,
   resourceNodesRef,
   onReady,
 }: GalaxySystemProps) {
   const groupRef = useRef<THREE.Group>(null);
-  
+
   // Layer progress for smooth overlapping transitions
   const layerProgressRef = useRef({ skybox: 0, nebula: 0, nodes: 0, rings: 0 });
   const [layerProgress, setLayerProgress] = useState({ skybox: 0, nebula: 0, nodes: 0, rings: 0 });
-  
+
   // Track whether onReady has been called
   const hasCalledOnReady = useRef(false);
+
+  // First-frame timing: starts animation timeline from when Suspense resolves
+  // (not from component mount, which may be seconds earlier due to texture loading)
+  const firstFrameTimeRef = useRef<number | null>(null);
 
   // Slow rotation - pause when hovering for easier interaction
   useFrame((_, delta) => {
@@ -764,22 +768,27 @@ function GalaxySystem({
     if (hoveredIndex === null && !isCameraAnimatingRef.current) {
       groupRef.current.rotation.y += delta * 0.02;
     }
-    
-    // Calculate layer progress based on master timeline
-    const elapsed = Date.now() - masterStartTime;
-    
+
+    // Initialize timeline on first frame after Suspense resolves
+    if (firstFrameTimeRef.current === null) {
+      firstFrameTimeRef.current = Date.now();
+    }
+
+    // Calculate layer progress from first frame, not from mount
+    const elapsed = Date.now() - firstFrameTimeRef.current;
+
     const skyboxRaw = Math.max(0, elapsed - LAYER_TIMING.skybox.startDelay) / LAYER_TIMING.skybox.duration;
     const nebulaRaw = Math.max(0, elapsed - LAYER_TIMING.nebula.startDelay) / LAYER_TIMING.nebula.duration;
     const nodesRaw = Math.max(0, elapsed - LAYER_TIMING.nodes.startDelay) / LAYER_TIMING.nodes.duration;
     const ringsRaw = Math.max(0, elapsed - LAYER_TIMING.saturnRings.startDelay) / LAYER_TIMING.saturnRings.duration;
-    
+
     const newProgress = {
       skybox: easeOutCubic(skyboxRaw),
       nebula: easeOutCubic(nebulaRaw),
       nodes: easeOutCubic(nodesRaw),
       rings: easeOutCubic(ringsRaw),
     };
-    
+
     // Only update state if values changed significantly (for performance)
     if (
       Math.abs(newProgress.skybox - layerProgressRef.current.skybox) > 0.01 ||
@@ -790,7 +799,7 @@ function GalaxySystem({
       layerProgressRef.current = newProgress;
       setLayerProgress(newProgress);
     }
-    
+
     // Check if ready to fire onReady callback
     if (
       !hasCalledOnReady.current &&
@@ -804,7 +813,14 @@ function GalaxySystem({
   });
 
   return (
-    <group ref={groupRef}>
+    <>
+      {/* Galaxy background — outside rotating group so skybox doesn't rotate with nodes */}
+      <GalaxyBackground
+        entranceProgress={layerProgress.skybox}
+        resolvedTheme={resolvedTheme}
+      />
+
+      <group ref={groupRef}>
       {/* Volumetric nebula clouds (background layer) */}
       {clusters.length > 0 && (
         <NebulaPlanes
@@ -867,6 +883,7 @@ function GalaxySystem({
         />
       )}
     </group>
+    </>
   );
 }
 
@@ -906,7 +923,6 @@ export default function InspoCanvas({
   onReady,
 }: InspoCanvasProps) {
   const { resolvedTheme } = useTheme();
-  const masterStartTimeRef = useRef<number>(Date.now());
   const resourceNodesRef = useRef<ResourceNodesHandle>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
@@ -979,14 +995,6 @@ export default function InspoCanvas({
       gl={{ alpha: false }}
       style={{ background: 'var(--bg-primary)' }}
     >
-      {/* Immersive galaxy background */}
-      <Suspense fallback={null}>
-        <GalaxyBackground
-          masterStartTime={masterStartTimeRef.current}
-          resolvedTheme={resolvedTheme}
-        />
-      </Suspense>
-
       {/* Lighting setup for physical materials */}
       <ambientLight intensity={0.3} />
       <directionalLight position={[10, 10, 5]} intensity={1.0} />
@@ -1021,7 +1029,8 @@ export default function InspoCanvas({
         activeCategory={activeCategory}
       />
 
-      {/* Galaxy system - clusters and nodes */}
+      {/* Galaxy system — single Suspense boundary for all texture-loading content
+          (skybox, planet textures, nebula) so nothing renders until everything is loaded */}
       <Suspense fallback={null}>
         <GalaxySystem
           isCameraAnimatingRef={isCameraAnimatingRef}
@@ -1034,7 +1043,7 @@ export default function InspoCanvas({
           matchedCategories={matchedCategories}
           hoveredIndex={hoveredIndex}
           clickedIndex={clickedIndex}
-          masterStartTime={masterStartTimeRef.current}
+          resolvedTheme={resolvedTheme}
           resourceNodesRef={resourceNodesRef}
           onReady={onReady}
         />
