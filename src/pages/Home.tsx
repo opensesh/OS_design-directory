@@ -26,7 +26,6 @@ const InspoCanvas = lazy(() => import('../components/canvas/InspoCanvas'));
 import { CanvasErrorBoundary } from '../components/canvas/CanvasErrorBoundary';
 import { AILoader } from '../components/ui/AILoader';
 import { UniverseLegend } from '../components/canvas/UniverseLegend';
-import { ThemeToggle } from '../components/ui/ThemeToggle';
 
 /**
  * Home Page
@@ -489,9 +488,6 @@ export default function Home() {
               </div>
               <kbd className="hidden lg:inline text-[10px] px-1.5 py-0.5 bg-os-bg-dark rounded border border-[var(--border-secondary)]">⌘K</kbd>
             </button>
-
-          {/* Theme Toggle - desktop/tablet only */}
-          <ThemeToggle />
 
           {/* Search button - visible on mobile only */}
           <button
