@@ -334,7 +334,7 @@ describe('CategoryGrid', () => {
       expect(subcategoryLabel).toBeInTheDocument();
 
       // Verify it's inside a SubcategoryRow container (motion.div)
-      const subcategoryRow = subcategoryLabel.closest('[style*="transformOrigin"]');
+      const subcategoryRow = subcategoryLabel.closest('[style*="overflow"]');
       expect(subcategoryRow || subcategoryLabel.parentElement).toBeInTheDocument();
     });
   });
