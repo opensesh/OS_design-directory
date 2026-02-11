@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
@@ -29,30 +29,19 @@ const itemVariants = {
 export const UniverseLegend: React.FC<UniverseLegendProps> = ({ isOpen, onClose }) => {
   // Accordion state - only one section open at a time
   const [openSection, setOpenSection] = useState<OpenSection | null>('keyboard');
-  
-  const containerRef = useRef<HTMLDivElement>(null);
 
   // Toggle function for accordion behavior
   const toggleSection = (section: OpenSection) => {
     setOpenSection(prev => prev === section ? null : section);
   };
 
-  // Click outside to close
+  // Set correct default section based on viewport when legend opens
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        onClose();
-      }
-    };
-
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      const isMobile = window.matchMedia('(max-width: 767px)').matches;
+      setOpenSection(isMobile ? 'touch' : 'keyboard');
     }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   // Escape key to close
   useEffect(() => {
@@ -115,7 +104,6 @@ export const UniverseLegend: React.FC<UniverseLegendProps> = ({ isOpen, onClose 
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          ref={containerRef}
           initial={{ opacity: 0, y: -20, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -20, scale: 0.95 }}
