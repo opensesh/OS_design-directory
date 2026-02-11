@@ -11,6 +11,9 @@ export default {
       screens: {
         'xs': '400px',  // Custom breakpoint for very small devices
       },
+      borderColor: {
+        DEFAULT: 'var(--border-secondary)',
+      },
       colors: {
         // BRAND-OS Color System (static values for specific use cases)
         brand: {

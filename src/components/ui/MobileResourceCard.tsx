@@ -67,7 +67,7 @@ export function MobileResourceCard({ resource, onClick }: MobileResourceCardProp
   return (
     <div
       onClick={onClick}
-      className="flex items-center gap-3 p-3 bg-os-bg-dark border-b border-[var(--border-secondary)]/50 active:bg-os-surface-dark/30 transition-colors cursor-pointer"
+      className="flex items-center gap-3 p-3 bg-os-bg-dark border-b border-[var(--border-secondary)] active:bg-os-surface-dark/30 transition-colors cursor-pointer"
     >
       {/* Column 1: Thumbnail (fixed width) */}
       <MobileThumbnail resource={resource} />
