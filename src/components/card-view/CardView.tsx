@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from 'react';
+import { useMemo, useCallback, useRef, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CardViewBreadcrumbs } from './CardViewBreadcrumbs';
@@ -25,6 +25,20 @@ export function CardView({ resources }: CardViewProps) {
 
   // Determine current level
   const level = activeSubcategory ? 3 : activeCategory ? 2 : 1;
+
+  // Scroll to top when navigating between levels
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const prevLevelRef = useRef<number>(level);
+
+  useEffect(() => {
+    if (scrollContainerRef.current && prevLevelRef.current !== level) {
+      scrollContainerRef.current.scrollTo({
+        top: 0,
+        behavior: prefersReducedMotion ? 'auto' : 'smooth'
+      });
+      prevLevelRef.current = level;
+    }
+  }, [level, prefersReducedMotion]);
 
   // Filter resources based on current state
   const filteredResources = useMemo(() => {
@@ -73,7 +87,7 @@ export function CardView({ resources }: CardViewProps) {
   }, [activeCategory, setSearchParams]);
 
   return (
-    <div className="h-full overflow-auto py-6">
+    <div ref={scrollContainerRef} className="h-full overflow-auto py-6">
       <div className="max-w-5xl mx-auto px-6">
         {/* Breadcrumbs */}
         <CardViewBreadcrumbs
