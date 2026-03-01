@@ -3,6 +3,7 @@ import { DURATION, EASING } from '@/lib/motion-tokens';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { IconCarousel } from './IconCarousel';
 import { LandingViewToggle } from './LandingViewToggle';
+import { Starfield } from './Starfield';
 import type { NormalizedResource } from '@/types/resource';
 
 interface LandingPageProps {
@@ -62,12 +63,19 @@ export function LandingPage({ resources, onNavigate, onOpenSearch }: LandingPage
 
   return (
     <motion.div
-      className="h-full flex flex-col items-center justify-center gap-6 md:gap-8 px-6 pb-16"
+      className="h-full flex flex-col items-center justify-center gap-6 md:gap-8 px-6 pb-16 relative"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
       exit="exit"
     >
+      {/* Starfield background */}
+      {!prefersReducedMotion && (
+        <div className="absolute inset-0 opacity-30 pointer-events-none">
+          <Starfield speed={0.5} quantity={400} starColor="rgba(255,255,255,0.8)" />
+        </div>
+      )}
+
       {/* Icon Carousel */}
       <motion.div variants={variants}>
         <IconCarousel resources={resources} />
