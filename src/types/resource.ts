@@ -21,6 +21,14 @@ export interface NormalizedResource {
   tier: number | null;
   thumbnail: string | null;
   screenshot: string | null;
+  /**
+   * Override background for the logo container.
+   * - null/omitted: default semi-transparent container
+   * - "light": warm neutral (#F5F3F0)
+   * - "dark": dark surface (#1C1C1C)
+   * - "#RRGGBB": specific hex color
+   */
+  logoBg?: string | null;
   /** Gravity score (1.0-10.0), higher = closer to center in 3D view */
   gravityScore: number;
   /** Brief explanation for the score (50 chars max) */
