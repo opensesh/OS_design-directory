@@ -39,7 +39,7 @@ export function LandingViewToggle({ onNavigate, onOpenSearch }: LandingViewToggl
           whileHover={prefersReducedMotion ? {} : { scale: 1.02 }}
           whileTap={prefersReducedMotion ? {} : { scale: 0.98 }}
           transition={TRANSITION.fast}
-          className="flex-1 px-4 py-2.5 rounded-md text-sm font-medium transition-colors text-os-text-secondary-dark hover:text-os-text-primary-dark hover:bg-[var(--bg-tertiary)]"
+          className="flex-1 px-4 py-2.5 rounded-md text-sm font-medium transition-all bg-[var(--bg-tertiary)]/50 text-os-text-secondary-dark hover:bg-[var(--bg-tertiary)] hover:text-os-text-primary-dark"
         >
           {option.label}
         </motion.button>

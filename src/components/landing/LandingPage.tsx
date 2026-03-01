@@ -23,6 +23,10 @@ const containerVariants = {
       delayChildren: 0.1,
     },
   },
+  exit: {
+    opacity: 0,
+    transition: { staggerChildren: 0.05, staggerDirection: -1 },
+  },
 };
 
 const itemVariants = {
@@ -32,11 +36,17 @@ const itemVariants = {
     y: 0,
     transition: { duration: DURATION.slow, ease: EASING.smooth },
   },
+  exit: {
+    opacity: 0,
+    y: -10,
+    transition: { duration: DURATION.normal, ease: EASING.smooth },
+  },
 };
 
 const reducedItemVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: DURATION.fast } },
+  exit: { opacity: 0, transition: { duration: DURATION.fast } },
 };
 
 /**
@@ -52,10 +62,11 @@ export function LandingPage({ resources, onNavigate, onOpenSearch }: LandingPage
 
   return (
     <motion.div
-      className="h-full flex flex-col items-center justify-center gap-6 md:gap-8 px-6"
+      className="h-full flex flex-col items-center justify-center gap-6 md:gap-8 px-6 pb-16"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
+      exit="exit"
     >
       {/* Icon Carousel */}
       <motion.div variants={variants}>
@@ -74,22 +85,19 @@ export function LandingPage({ resources, onNavigate, onOpenSearch }: LandingPage
       {/* Description */}
       <motion.p
         variants={variants}
-        className="text-base md:text-lg text-[var(--fg-secondary)] text-center max-w-md"
+        className="text-lg md:text-xl text-brand-vanilla text-center max-w-md"
       >
         Discover hand-picked design inspiration & resources.
       </motion.p>
 
-      {/* "Choose your view" label */}
-      <motion.span
-        variants={variants}
-        className="text-xs uppercase tracking-wider text-[var(--fg-tertiary)]"
-      >
-        Choose your view
-      </motion.span>
-
-      {/* View Toggle */}
-      <motion.div variants={variants} className="w-full flex justify-center">
-        <LandingViewToggle onNavigate={onNavigate} onOpenSearch={onOpenSearch} />
+      {/* Label + Toggle grouped with tight spacing */}
+      <motion.div variants={variants} className="flex flex-col items-center gap-2 w-full">
+        <span className="text-xs uppercase tracking-wider text-[var(--fg-tertiary)]">
+          Choose your view
+        </span>
+        <div className="w-full flex justify-center">
+          <LandingViewToggle onNavigate={onNavigate} onOpenSearch={onOpenSearch} />
+        </div>
       </motion.div>
     </motion.div>
   );
