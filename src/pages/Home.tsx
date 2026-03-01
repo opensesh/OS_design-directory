@@ -49,6 +49,15 @@ export default function Home() {
   const [loadingPhase, setLoadingPhase] = useState<LoadingPhase>('loading');
   const loadStartTime = useRef(Date.now());
 
+  // Safety timeout: if canvas never fires onReady, dismiss loader after 8s
+  useEffect(() => {
+    if (loadingPhase !== 'loading') return;
+    const timeout = setTimeout(() => {
+      setLoadingPhase('ready');
+    }, 8000);
+    return () => clearTimeout(timeout);
+  }, [loadingPhase]);
+
   // Display mode from URL params
   type DisplayMode = '3d' | 'table' | 'card';
   const displayMode: DisplayMode = (() => {
