@@ -8,8 +8,7 @@ import type { NormalizedResource } from '@/types/resource';
 
 interface LandingPageProps {
   resources: NormalizedResource[];
-  onNavigate: (display: '3d' | 'card') => void;
-  onOpenSearch: () => void;
+  onNavigate: (display: '3d' | 'card' | 'table') => void;
 }
 
 /**
@@ -55,9 +54,9 @@ const reducedItemVariants = {
  *
  * The front door of the Design Directory.
  * Shows a rotating icon carousel, title, description,
- * and a view toggle to jump into Universe, Card, or Search.
+ * and a view toggle to jump into Universe, Card, or Table.
  */
-export function LandingPage({ resources, onNavigate, onOpenSearch }: LandingPageProps) {
+export function LandingPage({ resources, onNavigate }: LandingPageProps) {
   const prefersReducedMotion = useReducedMotion();
   const variants = prefersReducedMotion ? reducedItemVariants : itemVariants;
 
@@ -71,8 +70,8 @@ export function LandingPage({ resources, onNavigate, onOpenSearch }: LandingPage
     >
       {/* Starfield background */}
       {!prefersReducedMotion && (
-        <div className="absolute inset-0 opacity-30 pointer-events-none">
-          <Starfield speed={0.5} quantity={400} starColor="rgba(255,255,255,0.8)" />
+        <div className="absolute inset-0 pointer-events-none">
+          <Starfield speed={0.75} quantity={400} starColor="rgba(255,255,255,0.8)" />
         </div>
       )}
 
@@ -104,7 +103,7 @@ export function LandingPage({ resources, onNavigate, onOpenSearch }: LandingPage
           Choose your view
         </span>
         <div className="w-full flex justify-center">
-          <LandingViewToggle onNavigate={onNavigate} onOpenSearch={onOpenSearch} />
+          <LandingViewToggle onNavigate={onNavigate} />
         </div>
       </motion.div>
     </motion.div>
