@@ -3,6 +3,6 @@
     "allow": [
       "Write(/Users/alexbouhdary/Documents/GitHub/OS_design-directory/**)",
       "Edit(/Users/alexbouhdary/Documents/GitHub/OS_design-directory/**)"
-    ],
+    ]
   }
 }
