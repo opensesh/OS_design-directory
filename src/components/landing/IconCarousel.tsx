@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { EASING, DURATION } from '@/lib/motion-tokens';
 import { useReducedMotion } from '@/hooks/useReducedMotion';

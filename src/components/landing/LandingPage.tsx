@@ -1,6 +1,5 @@
-import { useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { LIST_ANIMATION, STAGGER, DURATION, EASING } from '@/lib/motion-tokens';
+import { DURATION, EASING } from '@/lib/motion-tokens';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { IconCarousel } from './IconCarousel';
 import { LandingViewToggle } from './LandingViewToggle';

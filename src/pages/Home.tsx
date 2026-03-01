@@ -26,6 +26,7 @@ const InspoCanvas = lazy(() => import('../components/canvas/InspoCanvas'));
 import { CanvasErrorBoundary } from '../components/canvas/CanvasErrorBoundary';
 import { AILoader } from '../components/ui/AILoader';
 import { UniverseLegend } from '../components/canvas/UniverseLegend';
+import { LandingPage } from '../components/landing/LandingPage';
 
 /**
  * Home Page
@@ -59,13 +60,21 @@ export default function Home() {
   }, [loadingPhase]);
 
   // Display mode from URL params
-  type DisplayMode = '3d' | 'table' | 'card';
+  type DisplayMode = 'landing' | '3d' | 'table' | 'card';
   const displayMode: DisplayMode = (() => {
     const display = searchParams.get('display');
+    if (display === '3d') return '3d';
     if (display === 'table') return 'table';
     if (display === 'card') return 'card';
-    return '3d';
+    return 'landing';
   })();
+
+  // Top 10 resources by gravity score for the landing carousel
+  const topResources = useMemo(() => {
+    return [...resources]
+      .sort((a, b) => (b.gravityScore || 0) - (a.gravityScore || 0))
+      .slice(0, 10);
+  }, []);
 
   // Read filter params from URL for table view
   const categoryParam = searchParams.get('category');
@@ -524,7 +533,8 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Subheader - View Mode Indicator */}
+      {/* Subheader - View Mode Indicator (hidden on landing) */}
+      {displayMode !== 'landing' && (
       <section
         className={`pointer-events-auto flex-shrink-0 relative z-[258] border-b border-[var(--border-secondary)] ${displayMode === '3d' ? 'bg-os-bg-dark/60 backdrop-blur-xl' : 'bg-os-bg-dark'}`}
         role="region"
@@ -597,6 +607,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      )}
 
       {/* Content Area - FLEX-1 fills remaining space */}
       <main
@@ -604,8 +615,25 @@ export default function Home() {
         tabIndex={-1}
         className={`flex-1 relative min-h-0 overflow-hidden outline-none ${displayMode === '3d' ? '' : 'pointer-events-auto'}`}
       >
-        {/* Card View or Table View (3D mode uses empty spacer since canvas is fixed) */}
+        {/* Views: Landing, 3D (empty spacer), Card, Table */}
         <AnimatePresence mode="wait">
+          {displayMode === 'landing' && (
+            <motion.div
+              key="landing"
+              initial={prefersReducedMotion ? PAGE_TRANSITION.reduced.initial : PAGE_TRANSITION.viewSwitch.initial}
+              animate={prefersReducedMotion ? PAGE_TRANSITION.reduced.animate : PAGE_TRANSITION.viewSwitch.animate}
+              exit={prefersReducedMotion ? PAGE_TRANSITION.reduced.exit : PAGE_TRANSITION.viewSwitch.exit}
+              transition={prefersReducedMotion ? PAGE_TRANSITION.reduced.transition : PAGE_TRANSITION.viewSwitch.transition}
+              className="w-full h-full pointer-events-auto"
+            >
+              <LandingPage
+                resources={topResources}
+                onNavigate={(display) => setSearchParams({ display })}
+                onOpenSearch={() => setIsSearchModalOpen(true)}
+              />
+            </motion.div>
+          )}
+
           {displayMode === '3d' && (
             <div className="w-full h-full" />
           )}
