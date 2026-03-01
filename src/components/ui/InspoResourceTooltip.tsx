@@ -3,23 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import type { NormalizedResource } from '../../types/resource';
 import { CATEGORY_COLORS, DEFAULT_COLOR } from '../../types/resource';
 import { GravityScoreBadge } from './GravityScoreBadge';
-
-/**
- * Get favicon URL for a given website URL
- * Uses Google's favicon service as a reliable fallback
- */
-function getFaviconUrl(url: string | null): string | null {
-  if (!url) return null;
-
-  try {
-    const urlObj = new URL(url);
-    const domain = urlObj.hostname;
-    // Use Google's favicon service - reliable and fast
-    return `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
-  } catch {
-    return null;
-  }
-}
+import { ResourceLogo } from './ResourceLogo';
 
 interface InspoResourceTooltipProps {
   onClick?: (resource: NormalizedResource) => void;
@@ -85,9 +69,6 @@ export default function InspoResourceTooltip({
     ? CATEGORY_COLORS[resource.category] || DEFAULT_COLOR
     : DEFAULT_COLOR;
 
-  // Get favicon URL
-  const faviconUrl = resource ? getFaviconUrl(resource.url) : null;
-
   // Truncate description to 100 chars
   const truncatedDescription = resource?.description
     ? resource.description.length > 100
@@ -116,31 +97,13 @@ export default function InspoResourceTooltip({
             {/* Header with Favicon and Title */}
             <div className="flex items-start gap-3 mb-3">
               {/* Favicon */}
-              <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 overflow-hidden bg-[var(--bg-tertiary)]"
-                style={{
-                  borderColor: categoryColor,
-                  borderWidth: '1px',
-                  borderStyle: 'solid'
-                }}
-              >
-                {faviconUrl ? (
-                  <img
-                    src={faviconUrl}
-                    alt=""
-                    className="w-5 h-5 object-contain"
-                    onError={(e) => {
-                      // Hide broken image
-                      (e.target as HTMLImageElement).style.display = 'none';
-                    }}
-                  />
-                ) : (
-                  <div
-                    className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: categoryColor }}
-                  />
-                )}
-              </div>
+              {resource && (
+                <ResourceLogo
+                  resource={resource}
+                  size="sm"
+                  faviconSize="sm"
+                />
+              )}
 
               <div className="flex-1 min-w-0">
                 {/* Title */}

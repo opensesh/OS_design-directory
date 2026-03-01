@@ -9,6 +9,7 @@ import { getCategoryColor } from '../../types/resource';
 import { PAGE_TRANSITION } from '@/lib/motion-tokens';
 import { SearchResultSkeleton } from '@/components/ui/Skeleton';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { ResourceLogo } from '@/components/ui/ResourceLogo';
 
 // Virtual list item types
 type VirtualItem =
@@ -21,16 +22,6 @@ type VirtualItem =
 const HEADER_HEIGHT = 32;
 const RESULT_HEIGHT = 60;
 const POPULAR_LABEL_HEIGHT = 28;
-
-// Get favicon URL from domain using Google's service
-function getFaviconUrl(url: string): string {
-  try {
-    const domain = new URL(url).hostname;
-    return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
-  } catch {
-    return '';
-  }
-}
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -226,19 +217,9 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose, handleSelect]);
 
-  // Track favicon errors for fallback to letter initial
-  const [faviconErrors, setFaviconErrors] = useState<Set<string>>(new Set());
-
-  const handleFaviconError = useCallback((resourceId: string) => {
-    setFaviconErrors(prev => new Set(prev).add(resourceId));
-  }, []);
-
   // Render result item
   const renderResultItem = (result: SearchResult, isSelected: boolean, globalIndex: number) => {
     const categoryColor = getCategoryColor(result.resource.category);
-    const faviconUrl = getFaviconUrl(result.resource.url);
-    const hasFaviconError = faviconErrors.has(String(result.resource.id));
-    const showFavicon = faviconUrl && !hasFaviconError;
 
     return (
       <button
@@ -256,23 +237,7 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
         `}
         style={{ borderLeftColor: categoryColor }}
       >
-        {/* Favicon or fallback initial */}
-        <div
-          className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] overflow-hidden"
-        >
-          {showFavicon ? (
-            <img
-              src={faviconUrl}
-              alt=""
-              className="w-5 h-5 object-contain"
-              onError={() => handleFaviconError(String(result.resource.id))}
-            />
-          ) : (
-            <span className="text-sm font-medium text-[var(--fg-secondary)]">
-              {result.resource.name.charAt(0).toUpperCase()}
-            </span>
-          )}
-        </div>
+        <ResourceLogo resource={result.resource} size="sm" />
         <div className="flex-1 min-w-0">
           <div className="text-sm font-medium text-[var(--fg-primary)] truncate">
             {result.resource.name}

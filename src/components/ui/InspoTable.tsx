@@ -5,6 +5,7 @@ import { ChevronUp, ChevronDown, ChevronsUpDown, ExternalLink, Search, X } from 
 import type { NormalizedResource } from '../../types/resource';
 import { MobileResourceCard } from './MobileResourceCard';
 import { GravityScoreBadge } from './GravityScoreBadge';
+import { ResourceLogo } from './ResourceLogo';
 
 // Animation variants for staggered row entrance
 const rowVariants = {
@@ -32,62 +33,6 @@ const RATING_RANGES = [
   { value: '6-7', label: '6-7', min: 6.0, max: 6.99 },
   { value: 'below-6', label: 'Below 6', min: 0, max: 5.99 },
 ] as const;
-
-// Get favicon URL from domain using Google's service
-function getFaviconUrl(url: string): string {
-  try {
-    const domain = new URL(url).hostname;
-    return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
-  } catch {
-    return '';
-  }
-}
-
-// Thumbnail component with fallback to favicon
-function ResourceThumbnail({ resource }: { resource: NormalizedResource }) {
-  const [imgError, setImgError] = useState(false);
-  const [faviconError, setFaviconError] = useState(false);
-
-  const faviconUrl = getFaviconUrl(resource.url);
-  const hasThumbnail = resource.thumbnail && !imgError;
-  const hasFavicon = faviconUrl && !faviconError;
-
-  // Fallback: colored initial
-  if (!hasThumbnail && !hasFavicon) {
-    const initial = resource.name.charAt(0).toUpperCase();
-    return (
-      <div className="w-10 h-10 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-secondary)] flex items-center justify-center flex-shrink-0">
-        <span className="text-sm font-medium text-[var(--fg-secondary)]">{initial}</span>
-      </div>
-    );
-  }
-
-  // Show thumbnail if available
-  if (hasThumbnail) {
-    return (
-      <div className="w-10 h-10 rounded-lg overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-secondary)] flex-shrink-0 relative">
-        <img
-          src={resource.thumbnail!}
-          alt={resource.name}
-          className="w-full h-full object-cover"
-          onError={() => setImgError(true)}
-        />
-      </div>
-    );
-  }
-
-  // Fallback to favicon
-  return (
-    <div className="w-10 h-10 rounded-lg overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-secondary)] flex items-center justify-center flex-shrink-0">
-      <img
-        src={faviconUrl}
-        alt={resource.name}
-        className="w-6 h-6 object-contain"
-        onError={() => setFaviconError(true)}
-      />
-    </div>
-  );
-}
 
 interface InspoTableProps {
   resources: NormalizedResource[];
@@ -575,7 +520,7 @@ export function InspoTable({
                 >
                   {/* Thumbnail Column */}
                   <td className="p-4">
-                    <ResourceThumbnail resource={resource} />
+                    <ResourceLogo resource={resource} size="md" />
                   </td>
 
                   {/* Name Column - Links to detail page */}

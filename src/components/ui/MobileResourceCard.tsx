@@ -1,62 +1,6 @@
-import { useState } from 'react';
 import { GravityScoreBadge } from './GravityScoreBadge';
+import { ResourceLogo } from './ResourceLogo';
 import type { NormalizedResource } from '../../types/resource';
-
-// Get favicon URL from domain using Google's service
-function getFaviconUrl(url: string): string {
-  try {
-    const domain = new URL(url).hostname;
-    return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
-  } catch {
-    return '';
-  }
-}
-
-// Compact thumbnail for mobile cards
-function MobileThumbnail({ resource }: { resource: NormalizedResource }) {
-  const [imgError, setImgError] = useState(false);
-  const [faviconError, setFaviconError] = useState(false);
-
-  const faviconUrl = getFaviconUrl(resource.url);
-  const hasThumbnail = resource.thumbnail && !imgError;
-  const hasFavicon = faviconUrl && !faviconError;
-
-  // Fallback: colored initial
-  if (!hasThumbnail && !hasFavicon) {
-    const initial = resource.name.charAt(0).toUpperCase();
-    return (
-      <div className="w-10 h-10 rounded-lg bg-os-surface-dark border border-[var(--border-secondary)] flex items-center justify-center flex-shrink-0">
-        <span className="text-sm font-medium text-os-text-secondary-dark">{initial}</span>
-      </div>
-    );
-  }
-
-  // Show thumbnail if available
-  if (hasThumbnail) {
-    return (
-      <div className="w-10 h-10 rounded-lg overflow-hidden bg-os-surface-dark border border-[var(--border-secondary)] flex-shrink-0">
-        <img
-          src={resource.thumbnail!}
-          alt={resource.name}
-          className="w-full h-full object-cover"
-          onError={() => setImgError(true)}
-        />
-      </div>
-    );
-  }
-
-  // Fallback to favicon
-  return (
-    <div className="w-10 h-10 rounded-lg overflow-hidden bg-os-surface-dark border border-[var(--border-secondary)] flex items-center justify-center flex-shrink-0">
-      <img
-        src={faviconUrl}
-        alt={resource.name}
-        className="w-6 h-6 object-contain"
-        onError={() => setFaviconError(true)}
-      />
-    </div>
-  );
-}
 
 interface MobileResourceCardProps {
   resource: NormalizedResource;
@@ -70,7 +14,7 @@ export function MobileResourceCard({ resource, onClick }: MobileResourceCardProp
       className="flex items-center gap-3 p-3 bg-os-bg-dark border-b border-[var(--border-secondary)] active:bg-os-surface-dark/30 transition-colors cursor-pointer"
     >
       {/* Column 1: Thumbnail (fixed width) */}
-      <MobileThumbnail resource={resource} />
+      <ResourceLogo resource={resource} size="md" />
 
       {/* Column 2: Name + Category below (flex-grow) */}
       <div className="flex-1 min-w-0">

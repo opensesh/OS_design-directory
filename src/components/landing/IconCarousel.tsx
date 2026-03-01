@@ -4,22 +4,13 @@ import { EASING, DURATION } from '@/lib/motion-tokens';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { getCategoryColor } from '@/types/resource';
 import type { NormalizedResource } from '@/types/resource';
+import { getFaviconUrl } from '@/lib/favicon';
+import { ResourceLogo } from '@/components/ui/ResourceLogo';
 
 interface IconCarouselProps {
   resources: NormalizedResource[];
   /** Duration of each icon display in ms */
   interval?: number;
-}
-
-/**
- * Extracts the domain from a URL for favicon lookup.
- */
-function getDomain(url: string): string {
-  try {
-    return new URL(url).hostname;
-  } catch {
-    return url;
-  }
 }
 
 /**
@@ -36,8 +27,11 @@ export function IconCarousel({ resources, interval = 2500 }: IconCarouselProps) 
   // Preload all favicons on mount
   useEffect(() => {
     resources.forEach((r) => {
-      const img = new Image();
-      img.src = `https://www.google.com/s2/favicons?domain=${getDomain(r.url)}&sz=64`;
+      const url = getFaviconUrl(r.url, 'md');
+      if (url) {
+        const img = new Image();
+        img.src = url;
+      }
     });
   }, [resources]);
 
@@ -54,7 +48,6 @@ export function IconCarousel({ resources, interval = 2500 }: IconCarouselProps) 
   if (!resource) return null;
 
   const categoryColor = getCategoryColor(resource.category);
-  const faviconUrl = `https://www.google.com/s2/favicons?domain=${getDomain(resource.url)}&sz=64`;
 
   return (
     <div
@@ -91,47 +84,15 @@ export function IconCarousel({ resources, interval = 2500 }: IconCarouselProps) 
             className="w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center shadow-lg"
             style={{ backgroundColor: `${categoryColor}20`, border: `1px solid ${categoryColor}30` }}
           >
-            <FaviconImage
-              src={faviconUrl}
-              alt={resource.name}
-              fallbackName={resource.name}
+            <ResourceLogo
+              resource={resource}
+              size="md"
+              bordered={false}
+              className="bg-transparent"
             />
           </div>
         </motion.div>
       </AnimatePresence>
     </div>
-  );
-}
-
-/**
- * Favicon image with letter-initial fallback.
- */
-function FaviconImage({
-  src,
-  alt,
-  fallbackName,
-}: {
-  src: string;
-  alt: string;
-  fallbackName: string;
-}) {
-  const [error, setError] = useState(false);
-
-  if (error) {
-    return (
-      <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-[var(--bg-tertiary)] flex items-center justify-center text-sm font-semibold text-[var(--fg-primary)]">
-        {fallbackName.charAt(0).toUpperCase()}
-      </div>
-    );
-  }
-
-  return (
-    <img
-      src={src}
-      alt={alt}
-      className="w-8 h-8 md:w-10 md:h-10 rounded-lg"
-      loading="eager"
-      onError={() => setError(true)}
-    />
   );
 }

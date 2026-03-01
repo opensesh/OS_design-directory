@@ -24,18 +24,7 @@ import {
 import { resources } from '../data';
 import { RatingScale } from '../components/ui/RatingScale';
 import { SearchModal } from '../components/search/SearchModal';
-
-/**
- * Get favicon URL for a given website URL
- */
-function getFaviconUrl(url: string): string {
-  try {
-    const domain = new URL(url).hostname;
-    return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
-  } catch {
-    return '';
-  }
-}
+import { ResourceLogo } from '../components/ui/ResourceLogo';
 
 /**
  * Get domain from URL
@@ -112,9 +101,7 @@ function getPricingStyle(pricing: string | null) {
 export default function ResourceDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [imgError, setImgError] = useState(false);
   const [screenshotError, setScreenshotError] = useState(false);
-  const [faviconError, setFaviconError] = useState(false);
   const [urlCopied, setUrlCopied] = useState(false);
   const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null);
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
@@ -217,10 +204,8 @@ export default function ResourceDetail() {
     );
   }
 
-  const faviconUrl = getFaviconUrl(resource.url);
   const domain = getDomain(resource.url);
   const pricingStyle = getPricingStyle(resource.pricing);
-  const hasThumbnail = resource.thumbnail && !imgError;
   const hasScreenshot = resource.screenshot && !screenshotError;
 
   return (
@@ -426,31 +411,7 @@ export default function ResourceDetail() {
             {/* Icon + Title + Buttons Row */}
             <div className="flex items-start gap-4">
               {/* Thumbnail/Favicon */}
-              <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-secondary)] shadow-lg flex-shrink-0">
-                {hasThumbnail ? (
-                  <img
-                    src={resource.thumbnail!}
-                    alt={resource.name}
-                    className="w-full h-full object-cover"
-                    onError={() => setImgError(true)}
-                  />
-                ) : faviconUrl && !faviconError ? (
-                  <div className="w-full h-full flex items-center justify-center bg-[var(--bg-secondary)]">
-                    <img
-                      src={faviconUrl}
-                      alt={resource.name}
-                      className="w-8 h-8 object-contain"
-                      onError={() => setFaviconError(true)}
-                    />
-                  </div>
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-[var(--bg-secondary)]">
-                    <span className="text-xl font-bold text-[var(--fg-secondary)]">
-                      {resource.name.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                )}
-              </div>
+              <ResourceLogo resource={resource} size="xl" faviconSize="lg" className="shadow-lg" />
 
               {/* Title + Domain + Buttons */}
               <div className="flex-1 min-w-0">
@@ -715,34 +676,13 @@ export default function ResourceDetail() {
                 Related Resources
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                {relatedResources.map((related) => {
-                  const relatedFavicon = getFaviconUrl(related.url);
-                  return (
+                {relatedResources.map((related) => (
                     <Link
                       key={related.id}
                       to={`/resource/${related.id}`}
                       className="group flex items-center gap-3 p-3 rounded-lg bg-[var(--bg-secondary)]/40 border border-[var(--border-secondary)] hover:border-[var(--fg-tertiary)] hover:bg-[var(--bg-secondary)]/60 transition-all"
                     >
-                      {/* Mini thumbnail with favicon fallback */}
-                      <div className="w-10 h-10 rounded-md overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-secondary)] flex-shrink-0 flex items-center justify-center">
-                        {related.thumbnail ? (
-                          <img
-                            src={related.thumbnail}
-                            alt={related.name}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : relatedFavicon ? (
-                          <img
-                            src={relatedFavicon}
-                            alt={related.name}
-                            className="w-6 h-6 object-contain"
-                          />
-                        ) : (
-                          <span className="text-xs font-medium text-[var(--fg-secondary)]">
-                            {related.name.charAt(0)}
-                          </span>
-                        )}
-                      </div>
+                      <ResourceLogo resource={related} size="md" />
 
                       <div className="flex-1 min-w-0">
                         <h3 className="text-sm font-medium text-[var(--fg-primary)] group-hover:text-[#FE5102] transition-colors truncate">
@@ -755,8 +695,7 @@ export default function ResourceDetail() {
 
                       <ExternalLink className="w-3.5 h-3.5 text-[var(--fg-tertiary)] group-hover:text-[#FE5102] transition-colors flex-shrink-0" />
                     </Link>
-                  );
-                })}
+                  ))}
               </div>
             </motion.div>
           )}

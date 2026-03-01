@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import { getFaviconUrl, resolveLogoBg, type FaviconSize } from '@/lib/favicon';
 import type { NormalizedResource } from '@/types/resource';
 
-type LogoSize = 'xs' | 'sm' | 'md' | 'lg';
+type LogoSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 interface ResourceLogoProps {
   resource: NormalizedResource;
@@ -18,10 +18,11 @@ interface ResourceLogoProps {
 }
 
 const SIZE_MAP: Record<LogoSize, { container: string; img: string; text: string }> = {
-  xs: { container: 'w-6 h-6 rounded',     img: 'w-4 h-4',  text: 'text-[10px]' },
-  sm: { container: 'w-8 h-8 rounded-md',   img: 'w-5 h-5',  text: 'text-xs' },
-  md: { container: 'w-10 h-10 rounded-lg',  img: 'w-6 h-6',  text: 'text-sm' },
-  lg: { container: 'w-12 h-12 rounded-lg',  img: 'w-8 h-8',  text: 'text-base' },
+  xs: { container: 'w-6 h-6 rounded',       img: 'w-4 h-4',   text: 'text-[10px]' },
+  sm: { container: 'w-8 h-8 rounded-md',     img: 'w-5 h-5',   text: 'text-xs' },
+  md: { container: 'w-10 h-10 rounded-lg',   img: 'w-6 h-6',   text: 'text-sm' },
+  lg: { container: 'w-12 h-12 rounded-lg',   img: 'w-8 h-8',   text: 'text-base' },
+  xl: { container: 'w-16 h-16 rounded-xl',   img: 'w-10 h-10', text: 'text-xl' },
 };
 
 /**
