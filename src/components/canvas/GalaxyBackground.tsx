@@ -243,8 +243,8 @@ export default function GalaxyBackground({
         <Skybox opacity={darkOpacity} />
       )}
 
-      {/* Light mode skybox — always rendered so useTexture triggers Suspense */}
-      {showSkybox && (
+      {/* Light mode skybox — only render when actually in light mode to avoid 404 on missing texture */}
+      {showSkybox && isLightMode && (
         <LightSkybox opacity={lightOpacity} />
       )}
 
