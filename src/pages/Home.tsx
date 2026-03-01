@@ -1,6 +1,6 @@
 import { useState, useMemo, lazy, Suspense, useCallback, useRef, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Box, Table2, Search, LayoutGrid, Info, X } from 'lucide-react';
+import { Box, Table2, Search, LayoutGrid, Info, X, Github } from 'lucide-react';
 import { SearchModal } from '../components/search/SearchModal';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -506,6 +506,17 @@ export default function Home() {
           >
             <Search className="w-5 h-5" />
           </button>
+
+          {/* GitHub repository link */}
+          <a
+            href="https://github.com/opensesh/OS_design-directory"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center w-10 h-10 bg-os-surface-dark/50 border border-[var(--border-secondary)] rounded-lg text-os-text-secondary-dark hover:text-brand-aperol hover:border-brand-aperol/30 transition-all"
+            aria-label="View source on GitHub"
+          >
+            <Github className="w-5 h-5" />
+          </a>
           </div>
         </div>
         </div>
