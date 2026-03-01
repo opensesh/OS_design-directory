@@ -17,8 +17,9 @@ type VirtualItem =
   | { type: 'result'; result: SearchResult; globalIndex: number };
 
 // Item heights for virtualization
+// Result: py-3 (24px) + h-9 icon (36px) = 60px
 const HEADER_HEIGHT = 32;
-const RESULT_HEIGHT = 56;
+const RESULT_HEIGHT = 60;
 const POPULAR_LABEL_HEIGHT = 28;
 
 // Get favicon URL from domain using Google's service
@@ -128,6 +129,7 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
       return RESULT_HEIGHT;
     },
     overscan: 5,
+    measureElement: (el) => el.getBoundingClientRect().height,
   });
 
   // Handle mounting for portal
@@ -400,12 +402,13 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
                         return (
                           <div
                             key="popular-label"
+                            ref={virtualizer.measureElement}
+                            data-index={virtualRow.index}
                             style={{
                               position: 'absolute',
                               top: 0,
                               left: 0,
                               width: '100%',
-                              height: `${virtualRow.size}px`,
                               transform: `translateY(${virtualRow.start}px)`,
                             }}
                           >
@@ -420,12 +423,13 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
                         return (
                           <div
                             key={`header-${item.category}`}
+                            ref={virtualizer.measureElement}
+                            data-index={virtualRow.index}
                             style={{
                               position: 'absolute',
                               top: 0,
                               left: 0,
                               width: '100%',
-                              height: `${virtualRow.size}px`,
                               transform: `translateY(${virtualRow.start}px)`,
                             }}
                           >
@@ -439,12 +443,13 @@ export function SearchModal({ isOpen, onClose, onSelectResource }: SearchModalPr
                       return (
                         <div
                           key={result.resource.id}
+                          ref={virtualizer.measureElement}
+                          data-index={virtualRow.index}
                           style={{
                             position: 'absolute',
                             top: 0,
                             left: 0,
                             width: '100%',
-                            height: `${virtualRow.size}px`,
                             transform: `translateY(${virtualRow.start}px)`,
                           }}
                         >
