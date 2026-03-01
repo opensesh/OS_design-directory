@@ -567,7 +567,7 @@ export default function Home() {
             {/* Right: View toggle (all screen sizes) */}
             <div className="flex items-center bg-os-surface-dark/50 rounded-lg p-1 border border-[var(--border-secondary)]">
               <button
-                onClick={() => setSearchParams({})}
+                onClick={() => setSearchParams({ display: '3d' })}
                 className={`p-2 rounded-md transition-all ${
                   displayMode === '3d'
                     ? 'bg-brand-aperol text-white'
@@ -629,13 +629,19 @@ export default function Home() {
               <LandingPage
                 resources={topResources}
                 onNavigate={(display) => setSearchParams({ display })}
-                onOpenSearch={() => setIsSearchModalOpen(true)}
               />
             </motion.div>
           )}
 
           {displayMode === '3d' && (
-            <div className="w-full h-full" />
+            <motion.div
+              key="3d"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: DURATION.normal, ease: EASING.smooth }}
+              className="w-full h-full"
+            />
           )}
 
           {displayMode === 'card' && (
