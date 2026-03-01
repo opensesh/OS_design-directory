@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Globe } from 'lucide-react';
 import type { NormalizedResource } from '../../types/resource';
 import { getCategoryColor } from '../../types/resource';
 import { SPRING, STAGGER } from '@/lib/motion-tokens';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { ResourceLogo } from '@/components/ui/ResourceLogo';
 
 interface ResourceCardProps {
   resource: NormalizedResource;
@@ -15,18 +15,6 @@ export function ResourceCard({ resource, index }: ResourceCardProps) {
   const navigate = useNavigate();
   const categoryColor = getCategoryColor(resource.category);
   const prefersReducedMotion = useReducedMotion();
-
-  // Extract domain for favicon
-  const getFaviconUrl = (url: string) => {
-    try {
-      const domain = new URL(url).hostname;
-      return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
-    } catch {
-      return null;
-    }
-  };
-
-  const faviconUrl = getFaviconUrl(resource.url);
 
   // Pricing badge color - uses semantic tokens from theme.css
   const getPricingColor = (pricing: string | null) => {
@@ -73,44 +61,8 @@ export function ResourceCard({ resource, index }: ResourceCardProps) {
       }}
       whileTap={prefersReducedMotion ? {} : { scale: 0.98 }}
     >
-      {/* Thumbnail or Favicon */}
-      <div className="w-12 h-12 rounded-lg overflow-hidden mb-2 bg-os-bg-dark/50 flex items-center justify-center">
-        {resource.thumbnail ? (
-          <img
-            src={resource.thumbnail}
-            alt={resource.name}
-            width={48}
-            height={48}
-            loading="lazy"
-            decoding="async"
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              // Fallback to favicon on error
-              const target = e.target as HTMLImageElement;
-              if (faviconUrl) {
-                target.src = faviconUrl;
-              }
-            }}
-          />
-        ) : faviconUrl ? (
-          <img
-            src={faviconUrl}
-            alt={resource.name}
-            width={32}
-            height={32}
-            loading="lazy"
-            decoding="async"
-            className="w-8 h-8"
-            onError={(e) => {
-              // Hide on error
-              const target = e.target as HTMLImageElement;
-              target.style.display = 'none';
-            }}
-          />
-        ) : (
-          <Globe className="w-6 h-6 text-os-text-secondary-dark" />
-        )}
-      </div>
+      {/* Resource logo */}
+      <ResourceLogo resource={resource} size="lg" faviconSize="lg" className="mb-2" />
 
       {/* Resource name */}
       <p className="text-xs font-medium text-[var(--fg-primary)] line-clamp-2 leading-tight">
