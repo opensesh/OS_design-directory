@@ -12,7 +12,6 @@ import NebulaPlanes from './NebulaPlanes';
 import ClusterLabels from './ClusterLabels';
 import type { NormalizedResource } from '../../types/resource';
 import { CATEGORY_ORDER, CATEGORY_COLORS } from '../../types/resource';
-import { useTheme } from '../../lib/theme-provider';
 
 /**
  * Camera animation configuration
@@ -729,7 +728,6 @@ interface GalaxySystemProps {
   matchedCategories?: string[];
   hoveredIndex: number | null;
   clickedIndex: number | null;
-  resolvedTheme?: 'light' | 'dark';
   resourceNodesRef: React.RefObject<ResourceNodesHandle>;
   onReady?: () => void;
 }
@@ -745,7 +743,6 @@ function GalaxySystem({
   matchedCategories,
   hoveredIndex,
   clickedIndex,
-  resolvedTheme,
   resourceNodesRef,
   onReady,
 }: GalaxySystemProps) {
@@ -817,7 +814,6 @@ function GalaxySystem({
       {/* Galaxy background — outside rotating group so skybox doesn't rotate with nodes */}
       <GalaxyBackground
         entranceProgress={layerProgress.skybox}
-        resolvedTheme={resolvedTheme}
       />
 
       <group ref={groupRef}>
@@ -922,7 +918,6 @@ export default function InspoCanvas({
   onResourceClick,
   onReady,
 }: InspoCanvasProps) {
-  const { resolvedTheme } = useTheme();
   const resourceNodesRef = useRef<ResourceNodesHandle>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
@@ -1043,7 +1038,6 @@ export default function InspoCanvas({
           matchedCategories={matchedCategories}
           hoveredIndex={hoveredIndex}
           clickedIndex={clickedIndex}
-          resolvedTheme={resolvedTheme}
           resourceNodesRef={resourceNodesRef}
           onReady={onReady}
         />

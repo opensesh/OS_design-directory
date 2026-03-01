@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useTexture } from '@react-three/drei';
 import * as THREE from 'three';
@@ -159,43 +159,12 @@ function Skybox({ texturePath = '/textures/galaxy/skybox.jpg', opacity = 1 }: Sk
   );
 }
 
-interface LightSkyboxProps {
-  texturePath?: string;
-  opacity?: number;
-}
-
-/**
- * LightSkybox - Standard texture mapped to inside of sphere for light mode
- */
-function LightSkybox({ texturePath = '/textures/galaxy/skybox-light.jpg', opacity = 1 }: LightSkyboxProps) {
-  const texture = useTexture(texturePath);
-
-  useMemo(() => {
-    texture.mapping = THREE.EquirectangularReflectionMapping;
-    texture.colorSpace = THREE.SRGBColorSpace;
-  }, [texture]);
-
-  return (
-    <mesh scale={[-500, 500, 500]}>
-      <sphereGeometry args={[1, 128, 64]} />
-      <meshBasicMaterial
-        map={texture}
-        side={THREE.BackSide}
-        depthWrite={false}
-        transparent={true}
-        opacity={opacity}
-      />
-    </mesh>
-  );
-}
-
 interface GalaxyBackgroundProps {
   starCount?: number;
   starRadius?: number;
   showSkybox?: boolean;
   showStarfield?: boolean;
   entranceProgress: number;
-  resolvedTheme?: 'light' | 'dark';
 }
 
 /**
@@ -214,43 +183,15 @@ export default function GalaxyBackground({
   showSkybox = true,
   showStarfield = true,
   entranceProgress,
-  resolvedTheme = 'dark',
 }: GalaxyBackgroundProps) {
-  const isLightMode = resolvedTheme === 'light';
-
-  // Theme crossfade (0 = dark, 1 = light) — smooth ref-based lerp
-  const themeFadeRef = useRef(isLightMode ? 1 : 0);
-  const [themeFade, setThemeFade] = useState(isLightMode ? 1 : 0);
-
-  useFrame(() => {
-    const target = isLightMode ? 1 : 0;
-    const current = themeFadeRef.current;
-    if (Math.abs(target - current) > 0.005) {
-      const next = current + (target - current) * 0.08;
-      themeFadeRef.current = next;
-      setThemeFade(next);
-    }
-  });
-
-  // Calculate crossfaded opacities from parent's entrance progress
-  const darkOpacity = entranceProgress * (1 - themeFade);
-  const lightOpacity = entranceProgress * themeFade;
-
   return (
     <group>
-      {/* Dark mode skybox — always rendered so useTexture triggers Suspense */}
       {showSkybox && (
-        <Skybox opacity={darkOpacity} />
+        <Skybox opacity={entranceProgress} />
       )}
 
-      {/* Light mode skybox — only render when actually in light mode to avoid 404 on missing texture */}
-      {showSkybox && isLightMode && (
-        <LightSkybox opacity={lightOpacity} />
-      )}
-
-      {/* 3D starfield — hidden in light mode */}
       {showStarfield && (
-        <Starfield count={starCount} radius={starRadius} opacity={darkOpacity} />
+        <Starfield count={starCount} radius={starRadius} opacity={entranceProgress} />
       )}
     </group>
   );
