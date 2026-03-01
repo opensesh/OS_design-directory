@@ -180,7 +180,8 @@
     "thumbnail": null,
     "screenshot": "/assets/screenshots/8-mobbin.jpg",
     "gravityScore": 8.8,
-    "gravityRationale": "Essential UI pattern research tool"
+    "gravityRationale": "Essential UI pattern research tool",
+    "logoBg": "light"
   },
   {
     "id": 9,
@@ -226,7 +227,8 @@
     "thumbnail": null,
     "screenshot": "/assets/screenshots/10-midjourney.jpg",
     "gravityScore": 9.5,
-    "gravityRationale": "Leading AI art generator with best aesthetics"
+    "gravityRationale": "Leading AI art generator with best aesthetics",
+    "logoBg": "light"
   },
   {
     "id": 11,
@@ -249,7 +251,8 @@
     "thumbnail": null,
     "screenshot": "/assets/screenshots/11-dall-e.jpg",
     "gravityScore": 8.8,
-    "gravityRationale": "Strong AI image tool with editing"
+    "gravityRationale": "Strong AI image tool with editing",
+    "logoBg": "light"
   },
   {
     "id": 12,
@@ -318,7 +321,8 @@
     "thumbnail": null,
     "screenshot": "/assets/screenshots/14-chatgpt.jpg",
     "gravityScore": 9.6,
-    "gravityRationale": "Most widely adopted AI assistant"
+    "gravityRationale": "Most widely adopted AI assistant",
+    "logoBg": "light"
   },
   {
     "id": 15,
@@ -341,7 +345,8 @@
     "thumbnail": null,
     "screenshot": "/assets/screenshots/15-github.jpg",
     "gravityScore": 9.7,
-    "gravityRationale": "Essential platform for code collaboration"
+    "gravityRationale": "Essential platform for code collaboration",
+    "logoBg": "light"
   },
   {
     "id": 16,
@@ -410,7 +415,8 @@
     "thumbnail": null,
     "screenshot": "/assets/screenshots/18-notion.jpg",
     "gravityScore": 9.3,
-    "gravityRationale": "Essential team workspace with AI features"
+    "gravityRationale": "Essential team workspace with AI features",
+    "logoBg": "light"
   },
   {
     "id": 19,
@@ -456,7 +462,8 @@
     "thumbnail": null,
     "screenshot": "/assets/screenshots/20-vercel.jpg",
     "gravityScore": 9.3,
-    "gravityRationale": "Premier frontend deployment platform"
+    "gravityRationale": "Premier frontend deployment platform",
+    "logoBg": "light"
   },
   {
     "id": 21,
@@ -616,7 +623,8 @@
     "thumbnail": null,
     "screenshot": "/assets/screenshots/27-unsplash.jpg",
     "gravityScore": 9,
-    "gravityRationale": "Premier free stock photography"
+    "gravityRationale": "Premier free stock photography",
+    "logoBg": "light"
   },
   {
     "id": 28,
@@ -892,7 +900,8 @@
     "thumbnail": null,
     "screenshot": "/assets/screenshots/39-rive.jpg",
     "gravityScore": 9,
-    "gravityRationale": "Advanced interactive animations"
+    "gravityRationale": "Advanced interactive animations",
+    "logoBg": "light"
   },
   {
     "id": 40,
@@ -1145,7 +1154,8 @@
     "thumbnail": null,
     "screenshot": "/assets/screenshots/50-sora.jpg",
     "gravityScore": 9.1,
-    "gravityRationale": "Top ai resource"
+    "gravityRationale": "Top ai resource",
+    "logoBg": "light"
   },
   {
     "id": 51,
@@ -1168,7 +1178,8 @@
     "thumbnail": null,
     "screenshot": "/assets/screenshots/51-elevenlabs.jpg",
     "gravityScore": 9,
-    "gravityRationale": "Leading AI voice synthesis"
+    "gravityRationale": "Leading AI voice synthesis",
+    "logoBg": "light"
   },
   {
     "id": 52,
@@ -1375,7 +1386,8 @@
     "thumbnail": null,
     "screenshot": "/assets/screenshots/60-radix-ui.jpg",
     "gravityScore": 9,
-    "gravityRationale": "Best accessible component primitives"
+    "gravityRationale": "Best accessible component primitives",
+    "logoBg": "light"
   },
   {
     "id": 61,
@@ -1490,7 +1502,8 @@
     "thumbnail": null,
     "screenshot": "/assets/screenshots/65-godly.jpg",
     "gravityScore": 7.8,
-    "gravityRationale": "Modern web design curation"
+    "gravityRationale": "Modern web design curation",
+    "logoBg": "light"
   },
   {
     "id": 66,
@@ -2019,7 +2032,8 @@
     "thumbnail": null,
     "screenshot": "/assets/screenshots/88-render.jpg",
     "gravityScore": 8.4,
-    "gravityRationale": "Simple cloud deployment"
+    "gravityRationale": "Simple cloud deployment",
+    "logoBg": "light"
   },
   {
     "id": 89,
@@ -2134,7 +2148,8 @@
     "screenshot": "/assets/screenshots/93-cloudconvert.jpg",
     "id": 93,
     "gravityScore": 9,
-    "gravityRationale": "Top tools resource"
+    "gravityRationale": "Top tools resource",
+    "logoBg": "light"
   },
   {
     "name": "Compress JPEG",
@@ -2732,7 +2747,8 @@
     "screenshot": "/assets/screenshots/119-tweakcn.jpg",
     "id": 119,
     "gravityScore": 7.7,
-    "gravityRationale": "Useful tools resource"
+    "gravityRationale": "Useful tools resource",
+    "logoBg": "light"
   },
   {
     "name": "Studio 2AM",
@@ -2870,7 +2886,8 @@
     "screenshot": "/assets/screenshots/125-dithr-tool.jpg",
     "id": 125,
     "gravityScore": 7.7,
-    "gravityRationale": "Useful tools resource"
+    "gravityRationale": "Useful tools resource",
+    "logoBg": "light"
   },
   {
     "name": "STL to ASCII",
@@ -2916,7 +2933,8 @@
     "screenshot": "/assets/screenshots/127-kurt-mock-ups.jpg",
     "id": 127,
     "gravityScore": 7.5,
-    "gravityRationale": "Useful templates resource"
+    "gravityRationale": "Useful templates resource",
+    "logoBg": "light"
   },
   {
     "name": "Supernova",
@@ -3054,7 +3072,8 @@
     "screenshot": "/assets/screenshots/133-happy-editing.jpg",
     "id": 133,
     "gravityScore": 7.5,
-    "gravityRationale": "Useful learning resource"
+    "gravityRationale": "Useful learning resource",
+    "logoBg": "light"
   },
   {
     "name": "Ungrid",
@@ -3146,7 +3165,8 @@
     "screenshot": "/assets/screenshots/137-motion-boutique.jpg",
     "id": 137,
     "gravityScore": 7.7,
-    "gravityRationale": "Useful tools resource"
+    "gravityRationale": "Useful tools resource",
+    "logoBg": "light"
   },
   {
     "name": "21st.dev",
@@ -3238,7 +3258,8 @@
     "screenshot": "/assets/screenshots/141-plunk.jpg",
     "id": 141,
     "gravityScore": 7.7,
-    "gravityRationale": "Useful tools resource"
+    "gravityRationale": "Useful tools resource",
+    "logoBg": "light"
   },
   {
     "name": "Notion Templates",
@@ -3261,7 +3282,8 @@
     "screenshot": "/assets/screenshots/142-notion-templates.jpg",
     "id": 142,
     "gravityScore": 8.8,
-    "gravityRationale": "Top templates resource"
+    "gravityRationale": "Top templates resource",
+    "logoBg": "light"
   },
   {
     "name": "Notionland",
@@ -3284,7 +3306,8 @@
     "screenshot": "/assets/screenshots/143-notionland.jpg",
     "id": 143,
     "gravityScore": 7.5,
-    "gravityRationale": "Useful templates resource"
+    "gravityRationale": "Useful templates resource",
+    "logoBg": "light"
   },
   {
     "name": "Super",
@@ -3399,7 +3422,8 @@
     "screenshot": null,
     "gravityScore": 7.5,
     "gravityRationale": "Infinite canvas merging browser and workspace",
-    "id": 148
+    "id": 148,
+    "logoBg": "light"
   },
   {
     "name": "Designspiration",
@@ -3445,7 +3469,8 @@
     "screenshot": null,
     "gravityScore": 7.6,
     "gravityRationale": "AI color generator trained on your taste",
-    "id": 150
+    "id": 150,
+    "logoBg": "light"
   },
   {
     "name": "CPGD",
@@ -3514,7 +3539,8 @@
     "screenshot": null,
     "gravityScore": 7,
     "gravityRationale": "Premium device mockups for modern brands",
-    "id": 153
+    "id": 153,
+    "logoBg": "light"
   },
   {
     "name": "Bendito Mockup",
@@ -3537,7 +3563,8 @@
     "screenshot": null,
     "gravityScore": 6.8,
     "gravityRationale": "Stylized editorial device mockups",
-    "id": 154
+    "id": 154,
+    "logoBg": "light"
   },
   {
     "name": "Everything Universe",
