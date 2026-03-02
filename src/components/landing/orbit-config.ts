@@ -26,14 +26,14 @@ export interface OrbitIconConfig {
 
 export const RING_CONFIGS: OrbitRingConfig[] = [
   {
-    radius: 50,
+    radius: 58,
     speed: 0.4,
     count: 2,
     glowColor: '#FE5102', // Aperol (brightest, center)
     strokeOpacity: 0.5,
   },
   {
-    radius: 90,
+    radius: 105,
     speed: -0.25,
     count: 4,
     glowColor: '#cc4100', // Darker orange

@@ -630,6 +630,7 @@ export default function Home() {
             >
               <LandingPage
                 resources={topResources}
+                totalCount={resources.length}
                 onNavigate={(display) => setSearchParams({ display })}
               />
             </motion.div>
