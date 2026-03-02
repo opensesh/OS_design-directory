@@ -30,6 +30,7 @@
     "esbuild": "^0.27.2",
     "framer-motion": "^11.15.0",
     "lucide-react": "^0.548.0",
+    "ogl": "^1.0.11",
     "papaparse": "^5.5.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -12,6 +12,7 @@ export default defineConfig({
         manualChunks: {
           'vendor-three': ['three', '@react-three/fiber', '@react-three/drei'],
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-ogl': ['ogl'],
         },
       },
     },
