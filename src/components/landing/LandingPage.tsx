@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { DURATION, EASING } from '@/lib/motion-tokens';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
-import { IconCarousel } from './IconCarousel';
+import { OrbitingResources } from './OrbitingResources';
 import { LandingViewToggle } from './LandingViewToggle';
 import { Starfield } from './Starfield';
 import type { NormalizedResource } from '@/types/resource';
@@ -75,9 +75,9 @@ export function LandingPage({ resources, onNavigate }: LandingPageProps) {
         </div>
       )}
 
-      {/* Icon Carousel */}
+      {/* Orbiting Resources */}
       <motion.div variants={variants}>
-        <IconCarousel resources={resources} />
+        <OrbitingResources resources={resources} />
       </motion.div>
 
       {/* Title */}
