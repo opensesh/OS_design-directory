@@ -13,7 +13,8 @@
     "test:run": "vitest run",
     "migrate-screenshots": "npx tsx scripts/migrate-screenshots.ts",
     "capture-screenshots": "npx tsx scripts/capture-screenshots.ts",
-    "fix-screenshots": "npx tsx scripts/fix-screenshots.ts"
+    "fix-screenshots": "npx tsx scripts/fix-screenshots.ts",
+    "analyze-favicons": "npx tsx scripts/analyze-favicons.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",
