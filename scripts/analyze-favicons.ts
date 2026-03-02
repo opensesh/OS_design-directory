@@ -63,6 +63,7 @@ interface AnalysisResult {
 const args = process.argv.slice(2);
 const dryRun = args.includes('--dry-run');
 const force = args.includes('--force');
+const verbose = args.includes('--verbose');
 const idFlag = args.find(a => a.startsWith('--id='));
 const targetId = idFlag ? parseInt(idFlag.split('=')[1], 10) : null;
 
@@ -116,6 +117,22 @@ function rgbToHex(r: number, g: number, b: number): string {
  */
 function brightness(r: number, g: number, b: number): number {
   return (r + g + b) / 3;
+}
+
+/**
+ * Check if a hex color has enough saturation to look good as a background.
+ * Low-saturation colors (grays, near-whites, near-blacks) are poor background choices.
+ * Returns true if the color is vibrant enough.
+ */
+function isVibrant(hex: string): boolean {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const range = max - min;
+  // Require at least 40 units of channel spread for vibrancy
+  return range >= 40;
 }
 
 /**
@@ -218,11 +235,23 @@ function analyzePixels(
     return { logoBg: 'light', reason: `dark icon (${Math.round(darkRatio * 100)}% dark pixels)`, stats };
   }
 
-  // Decision: significant transparent padding with a clear dominant color
-  if (transparentRatio > TRANSPARENT_RATIO_THRESHOLD && dominantColor) {
+  // Decision: significant transparent padding with a clear vibrant dominant color
+  if (transparentRatio > TRANSPARENT_RATIO_THRESHOLD && dominantColor && isVibrant(dominantColor)) {
     return {
       logoBg: dominantColor,
       reason: `transparent padding (${Math.round(transparentRatio * 100)}% transparent), dominant: ${dominantColor}`,
+      stats,
+    };
+  }
+
+  // Decision: white background with a clear vibrant dominant color
+  // Many Google favicons have white backgrounds instead of transparent.
+  // If the white ratio is high and there's a distinct colored area, use the dominant color.
+  // Only apply if the dominant color is vibrant (not gray/neutral).
+  if (whiteRatio > TRANSPARENT_RATIO_THRESHOLD && dominantColor && isVibrant(dominantColor) && coloredCount > 0) {
+    return {
+      logoBg: dominantColor,
+      reason: `white background (${Math.round(whiteRatio * 100)}% white), dominant: ${dominantColor}`,
       stats,
     };
   }
@@ -311,6 +340,10 @@ async function main() {
     const result = await analyzeResource(resource);
     if (result) {
       results.push(result);
+      if (verbose) {
+        const s = result.stats;
+        console.log(`     transparent=${s.transparentRatio} dark=${s.darkRatio} white=${s.whiteRatio} colored=${s.coloredCount} dominant=${s.dominantColor}`);
+      }
       if (result.logoBg) {
         changes.push({
           id: result.id,
