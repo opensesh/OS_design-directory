@@ -3,11 +3,13 @@ import { DURATION, EASING } from '@/lib/motion-tokens';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { OrbitingResources } from './OrbitingResources';
 import { LandingViewToggle } from './LandingViewToggle';
+import { FlipCounter } from './FlipCounter';
 import { Starfield } from './Starfield';
 import type { NormalizedResource } from '@/types/resource';
 
 interface LandingPageProps {
   resources: NormalizedResource[];
+  totalCount: number;
   onNavigate: (display: '3d' | 'card' | 'table') => void;
 }
 
@@ -56,7 +58,7 @@ const reducedItemVariants = {
  * Shows a rotating icon carousel, title, description,
  * and a view toggle to jump into Universe, Card, or Table.
  */
-export function LandingPage({ resources, onNavigate }: LandingPageProps) {
+export function LandingPage({ resources, totalCount, onNavigate }: LandingPageProps) {
   const prefersReducedMotion = useReducedMotion();
   const variants = prefersReducedMotion ? reducedItemVariants : itemVariants;
 
@@ -105,6 +107,11 @@ export function LandingPage({ resources, onNavigate }: LandingPageProps) {
         <div className="w-full flex justify-center">
           <LandingViewToggle onNavigate={onNavigate} />
         </div>
+      </motion.div>
+
+      {/* Resource counter */}
+      <motion.div variants={variants} className="flex flex-col items-center">
+        <FlipCounter value={totalCount} delay={0.6} reduceMotion={prefersReducedMotion} />
       </motion.div>
     </motion.div>
   );
