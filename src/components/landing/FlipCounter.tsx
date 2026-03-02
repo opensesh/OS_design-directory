@@ -104,7 +104,7 @@ export function FlipCounter({ value, delay = 0, reduceMotion = false }: FlipCoun
   // Measure the actual rendered height of a digit container so the spring
   // maths are pixel-perfect at every viewport width (container uses clamp).
   const measureRef = useRef<HTMLDivElement>(null);
-  const [digitHeight, setDigitHeight] = useState(72);
+  const [digitHeight, setDigitHeight] = useState(48);
 
   useLayoutEffect(() => {
     if (measureRef.current) {
@@ -113,18 +113,23 @@ export function FlipCounter({ value, delay = 0, reduceMotion = false }: FlipCoun
   }, []);
 
   return (
-    <div className="flex flex-col items-center gap-3">
+    <div className="flex flex-col items-center gap-2">
+      {/* Label */}
+      <span className="text-xs uppercase tracking-wider text-[var(--fg-tertiary)]">
+        Total resources
+      </span>
+
       {/* Digit containers */}
-      <div className="flex items-center gap-1.5 sm:gap-2">
+      <div className="flex items-center gap-1 sm:gap-1.5">
         {places.map((place, idx) => (
           <div
             key={place}
             ref={idx === 0 ? measureRef : undefined}
-            className="relative flex items-center justify-center rounded-lg bg-[var(--bg-secondary)]/30 border border-[var(--border-secondary)] overflow-hidden"
+            className="relative flex items-center justify-center rounded-md bg-[var(--bg-secondary)]/30 border border-[var(--border-secondary)] overflow-hidden"
             style={{
-              height: 'clamp(56px, 9vw, 76px)',
-              width: 'clamp(40px, 7vw, 54px)',
-              fontSize: 'clamp(36px, 6.5vw, 52px)',
+              height: 'clamp(40px, 6vw, 52px)',
+              width: 'clamp(30px, 5vw, 38px)',
+              fontSize: 'clamp(24px, 4.5vw, 34px)',
             }}
           >
             {/* Top gradient (flip-clock shadow) */}
@@ -161,11 +166,6 @@ export function FlipCounter({ value, delay = 0, reduceMotion = false }: FlipCoun
           </div>
         ))}
       </div>
-
-      {/* Label */}
-      <span className="text-xs uppercase tracking-wider text-[var(--fg-tertiary)]">
-        {value} Resources &amp; counting
-      </span>
     </div>
   );
 }
