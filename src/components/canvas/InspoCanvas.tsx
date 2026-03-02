@@ -17,11 +17,11 @@ import { CATEGORY_ORDER, CATEGORY_COLORS } from '../../types/resource';
  * Camera animation configuration
  */
 const CAMERA_ANIMATION = {
-  DEFAULT_POSITION: new THREE.Vector3(0, 15, 125),
+  DEFAULT_POSITION: new THREE.Vector3(0, 15, 150),
   DEFAULT_TARGET: new THREE.Vector3(0, 0, 0),
   LERP_SPEED: 0.05,
   MIN_DISTANCE: 60,
-  MAX_DISTANCE: 180,
+  MAX_DISTANCE: 200,
   FOV: 60,
 };
 
@@ -684,9 +684,9 @@ function ResponsiveCamera({
       const widthFactor = aspectRatio / targetAspect;
       newZ = Math.max(80, baseZ / Math.sqrt(widthFactor));
     } else if (aspectRatio < targetAspect) {
-      // Narrow/portrait: move further back (max 180)
+      // Narrow/portrait: move further back (max 200)
       const heightFactor = targetAspect / aspectRatio;
-      newZ = Math.min(180, baseZ * Math.sqrt(heightFactor));
+      newZ = Math.min(200, baseZ * Math.sqrt(heightFactor));
     }
 
     targetZRef.current = newZ;
@@ -984,7 +984,7 @@ export default function InspoCanvas({
     <Canvas
       className="w-full h-full"
       camera={{
-        position: [0, 15, 125],
+        position: [0, 15, 150],
         fov: CAMERA_ANIMATION.FOV
       }}
       gl={{ alpha: false }}
