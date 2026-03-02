@@ -177,9 +177,9 @@ export function OrbitingResources({ resources }: OrbitingResourcesProps) {
                 r={r}
                 fill="none"
                 stroke={ring.glowColor}
-                strokeWidth={1}
-                strokeOpacity={ring.strokeOpacity * 0.4}
-                strokeDasharray="4 8"
+                strokeWidth={1.5}
+                strokeOpacity={ring.strokeOpacity * 0.7}
+                strokeDasharray="6 6"
                 shapeRendering="geometricPrecision"
               />
             </g>
@@ -192,8 +192,8 @@ export function OrbitingResources({ resources }: OrbitingResourcesProps) {
         <div
           className="rounded-full"
           style={{
-            width: 80 * scale,
-            height: 80 * scale,
+            width: 100 * scale,
+            height: 100 * scale,
             background:
               'radial-gradient(circle, rgba(254,81,2,0.12) 0%, transparent 70%)',
           }}
@@ -202,7 +202,7 @@ export function OrbitingResources({ resources }: OrbitingResourcesProps) {
 
       {/* Center logo */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <BrandMonogram size={Math.round(48 * scale)} />
+        <BrandMonogram size={Math.round(60 * scale)} />
       </div>
 
       {/* Orbiting icons */}

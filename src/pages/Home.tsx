@@ -27,6 +27,7 @@ import { CanvasErrorBoundary } from '../components/canvas/CanvasErrorBoundary';
 import { AILoader } from '../components/ui/AILoader';
 import { UniverseLegend } from '../components/canvas/UniverseLegend';
 import { LandingPage } from '../components/landing/LandingPage';
+import { HANDPICKED_ORBIT_NAMES } from '../components/landing/orbit-config';
 
 /**
  * Home Page
@@ -69,11 +70,12 @@ export default function Home() {
     return 'landing';
   })();
 
-  // Top 10 resources by gravity score for the landing carousel
+  // Handpicked resources for the orbiting landing graphic
   const topResources = useMemo(() => {
-    return [...resources]
-      .sort((a, b) => (b.gravityScore || 0) - (a.gravityScore || 0))
-      .slice(0, 10);
+    const nameSet = new Set(HANDPICKED_ORBIT_NAMES);
+    return resources
+      .filter((r) => nameSet.has(r.name))
+      .sort((a, b) => (b.gravityScore || 0) - (a.gravityScore || 0));
   }, []);
 
   // Read filter params from URL for table view

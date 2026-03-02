@@ -26,35 +26,38 @@ export interface OrbitIconConfig {
 
 export const RING_CONFIGS: OrbitRingConfig[] = [
   {
-    radius: 60,
+    radius: 50,
     speed: 0.4,
     count: 2,
     glowColor: '#FE5102', // Aperol (brightest, center)
-    strokeOpacity: 0.35,
+    strokeOpacity: 0.5,
   },
   {
-    radius: 105,
+    radius: 90,
     speed: -0.25,
-    count: 3,
-    glowColor: '#cc4100', // Darker orange
-    strokeOpacity: 0.25,
-  },
-  {
-    radius: 155,
-    speed: 0.15,
     count: 4,
-    glowColor: '#8B2D00', // Darkest orange
-    strokeOpacity: 0.18,
+    glowColor: '#cc4100', // Darker orange
+    strokeOpacity: 0.4,
   },
 ];
 
 /* ─── Icon Sizes ─── */
 
 const ICON_SIZES: Record<number, number> = {
-  0: 36, // inner
-  1: 32, // middle
-  2: 28, // outer
+  0: 34, // inner
+  1: 28, // outer
 };
+
+/* ─── Handpicked Resources ─── */
+
+export const HANDPICKED_ORBIT_NAMES = [
+  'Figma',
+  'Claude',
+  'GitHub',
+  'Midjourney',
+  'Framer',
+  'Untitled UI',
+];
 
 /* ─── Responsive Scale ─── */
 
