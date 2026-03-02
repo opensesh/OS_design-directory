@@ -56,7 +56,7 @@ export const HANDPICKED_ORBIT_NAMES = [
   'GitHub',
   'Midjourney',
   'Framer',
-  'Untitled UI',
+  'React Bits',
 ];
 
 /* ─── Responsive Scale ─── */

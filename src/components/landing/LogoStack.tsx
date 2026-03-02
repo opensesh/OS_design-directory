@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DURATION, EASING } from '@/lib/motion-tokens';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
-import { getFaviconUrl } from '@/lib/favicon';
 import { ResourceLogo } from '@/components/ui/ResourceLogo';
 import type { NormalizedResource } from '@/types/resource';
 
@@ -11,6 +10,15 @@ interface LogoStackProps {
   /** Cycle interval in ms */
   interval?: number;
 }
+
+/** Custom SVG logo overrides: path + container background */
+const CUSTOM_LOGOS: Record<string, { src: string; bg: string }> = {
+  Claude: { src: '/logos/claude.svg', bg: '#D77655' },
+  Figma: { src: '/logos/figma.svg', bg: '#FFFAEE' },
+  GitHub: { src: '/logos/github.svg', bg: '#191919' },
+  Midjourney: { src: '/logos/midjourney.svg', bg: '#FFFAEE' },
+  'React Bits': { src: '/logos/react-bits.svg', bg: '#191919' },
+};
 
 /** Position config for each slot in the 3-card stack */
 const SLOTS = [
@@ -22,7 +30,7 @@ const SLOTS = [
 /**
  * LogoStack
  *
- * Three resource favicons arranged in a forward-facing vertical stack.
+ * Three resource logos arranged in a forward-facing vertical stack.
  * The front card cycles out (slides down + fades), the stack shifts
  * forward, and a new card enters from behind — infinite carousel.
  */
@@ -31,16 +39,13 @@ export function LogoStack({ resources, interval = 2500 }: LogoStackProps) {
   const prefersReducedMotion = useReducedMotion();
   const len = resources.length;
 
-  // Preload favicons
+  // Preload custom SVGs
   useEffect(() => {
-    resources.forEach((r) => {
-      const url = getFaviconUrl(r.url, 'md');
-      if (url) {
-        const img = new Image();
-        img.src = url;
-      }
+    Object.values(CUSTOM_LOGOS).forEach(({ src }) => {
+      const img = new Image();
+      img.src = src;
     });
-  }, [resources]);
+  }, []);
 
   // Auto-cycle
   const advance = useCallback(() => {
@@ -68,6 +73,7 @@ export function LogoStack({ resources, interval = 2500 }: LogoStackProps) {
         {visible.map((resIdx, slot) => {
           const cfg = SLOTS[slot];
           const resource = resources[resIdx];
+          const custom = CUSTOM_LOGOS[resource.name];
 
           return (
             <motion.div
@@ -96,13 +102,26 @@ export function LogoStack({ resources, interval = 2500 }: LogoStackProps) {
               }}
               style={{ boxShadow: cfg.shadow }}
             >
-              <ResourceLogo
-                resource={resource}
-                size="lg"
-                faviconSize="md"
-                bordered
-                className="rounded-2xl !w-16 !h-16 md:!w-20 md:!h-20 shadow-lg"
-              />
+              {custom ? (
+                <div
+                  className="w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center overflow-hidden border border-[var(--border-secondary)]"
+                  style={{ backgroundColor: custom.bg }}
+                >
+                  <img
+                    src={custom.src}
+                    alt={resource.name}
+                    className="w-3/5 h-3/5 object-contain"
+                  />
+                </div>
+              ) : (
+                <ResourceLogo
+                  resource={resource}
+                  size="lg"
+                  faviconSize="md"
+                  bordered
+                  className="rounded-2xl !w-16 !h-16 md:!w-20 md:!h-20"
+                />
+              )}
             </motion.div>
           );
         })}
