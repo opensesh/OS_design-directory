@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DURATION, EASING } from '@/lib/motion-tokens';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -33,10 +34,16 @@ const SLOTS = [
  * Three resource logos arranged in a forward-facing vertical stack.
  * The front card cycles out (slides down + fades), the stack shifts
  * forward, and a new card enters from behind — infinite carousel.
+ *
+ * Only shows resources rated 9+, cycling from highest to lowest score,
+ * then looping back. Hover shows a tooltip; click navigates to the
+ * resource detail page.
  */
 export function LogoStack({ resources, interval = 2500 }: LogoStackProps) {
   const [index, setIndex] = useState(0);
+  const [hovered, setHovered] = useState(false);
   const prefersReducedMotion = useReducedMotion();
+  const navigate = useNavigate();
   const len = resources.length;
 
   // Preload custom SVGs
@@ -47,85 +54,123 @@ export function LogoStack({ resources, interval = 2500 }: LogoStackProps) {
     });
   }, []);
 
-  // Auto-cycle
+  // Auto-cycle (pauses on hover)
   const advance = useCallback(() => {
     setIndex((prev) => (prev + 1) % len);
   }, [len]);
 
   useEffect(() => {
-    if (len <= 1 || prefersReducedMotion) return;
+    if (len <= 1 || prefersReducedMotion || hovered) return;
     const timer = setInterval(advance, interval);
     return () => clearInterval(timer);
-  }, [len, interval, advance, prefersReducedMotion]);
+  }, [len, interval, advance, prefersReducedMotion, hovered]);
 
   if (!resources.length) return null;
 
   // The 3 visible resource indices (front → back)
   const visible = [0, 1, 2].map((offset) => (index + offset) % len);
+  const frontResource = resources[visible[0]];
 
   return (
     <div
-      className="relative w-16 h-16 md:w-20 md:h-20"
-      aria-live="polite"
-      aria-label="Featured design resources"
+      className="relative flex flex-col items-center"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
-      <AnimatePresence initial={false}>
-        {visible.map((resIdx, slot) => {
-          const cfg = SLOTS[slot];
-          const resource = resources[resIdx];
-          const custom = CUSTOM_LOGOS[resource.name];
-
-          return (
-            <motion.div
-              key={`${resIdx}-${resource.name}`}
-              className="absolute inset-0 flex items-center justify-center"
-              initial={
-                slot === 2
-                  ? { scale: 0.68, y: -32, opacity: 0, zIndex: cfg.zIndex }
-                  : false
-              }
-              animate={{
-                scale: cfg.scale,
-                y: cfg.y,
-                opacity: cfg.opacity,
-                zIndex: cfg.zIndex,
-              }}
-              exit={{
-                scale: 0.92,
-                y: 40,
-                opacity: 0,
-                zIndex: 4,
-              }}
-              transition={{
-                duration: prefersReducedMotion ? DURATION.fast : DURATION.slower,
-                ease: EASING.smooth,
-              }}
-              style={{ boxShadow: cfg.shadow }}
-            >
-              {custom ? (
-                <div
-                  className="w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center overflow-hidden border border-[var(--border-secondary)]"
-                  style={{ backgroundColor: custom.bg }}
-                >
-                  <img
-                    src={custom.src}
-                    alt={resource.name}
-                    className="w-3/5 h-3/5 object-contain"
-                  />
-                </div>
-              ) : (
-                <ResourceLogo
-                  resource={resource}
-                  size="lg"
-                  faviconSize="md"
-                  bordered
-                  className="rounded-2xl !w-16 !h-16 md:!w-20 md:!h-20"
-                />
+      {/* Tooltip — appears above the stack on hover */}
+      <AnimatePresence>
+        {hovered && frontResource && (
+          <motion.div
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 4 }}
+            transition={{ duration: 0.15 }}
+            className="absolute -top-10 left-1/2 -translate-x-1/2 z-10 whitespace-nowrap pointer-events-none"
+          >
+            <div className="px-3 py-1.5 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border-secondary)] shadow-lg">
+              <span className="text-xs font-medium text-[var(--fg-primary)]">
+                {frontResource.name}
+              </span>
+              {frontResource.category && (
+                <span className="text-xs text-[var(--fg-tertiary)] ml-1.5">
+                  · {frontResource.category}
+                </span>
               )}
-            </motion.div>
-          );
-        })}
+            </div>
+          </motion.div>
+        )}
       </AnimatePresence>
+
+      {/* Logo cards */}
+      <div
+        className="relative w-16 h-16 md:w-20 md:h-20 cursor-pointer"
+        role="button"
+        tabIndex={0}
+        aria-live="polite"
+        aria-label={`Featured resource: ${frontResource?.name ?? 'loading'}`}
+        onClick={() => frontResource && navigate(`/resource/${frontResource.id}`)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && frontResource) navigate(`/resource/${frontResource.id}`);
+        }}
+      >
+        <AnimatePresence initial={false}>
+          {visible.map((resIdx, slot) => {
+            const cfg = SLOTS[slot];
+            const resource = resources[resIdx];
+            const custom = CUSTOM_LOGOS[resource.name];
+
+            return (
+              <motion.div
+                key={`${resIdx}-${resource.name}`}
+                className="absolute inset-0 flex items-center justify-center"
+                initial={
+                  slot === 2
+                    ? { scale: 0.68, y: -32, opacity: 0, zIndex: cfg.zIndex }
+                    : false
+                }
+                animate={{
+                  scale: cfg.scale,
+                  y: cfg.y,
+                  opacity: cfg.opacity,
+                  zIndex: cfg.zIndex,
+                }}
+                exit={{
+                  scale: 0.92,
+                  y: 40,
+                  opacity: 0,
+                  zIndex: 4,
+                }}
+                transition={{
+                  duration: prefersReducedMotion ? DURATION.fast : DURATION.slower,
+                  ease: EASING.smooth,
+                }}
+                style={{ boxShadow: cfg.shadow }}
+              >
+                {custom ? (
+                  <div
+                    className="w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center overflow-hidden border border-[var(--border-secondary)]"
+                    style={{ backgroundColor: custom.bg }}
+                  >
+                    <img
+                      src={custom.src}
+                      alt={resource.name}
+                      className="w-3/5 h-3/5 object-contain"
+                    />
+                  </div>
+                ) : (
+                  <ResourceLogo
+                    resource={resource}
+                    size="lg"
+                    faviconSize="md"
+                    bordered
+                    className="rounded-2xl !w-16 !h-16 md:!w-20 md:!h-20"
+                  />
+                )}
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }

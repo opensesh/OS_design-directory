@@ -27,7 +27,6 @@ import { CanvasErrorBoundary } from '../components/canvas/CanvasErrorBoundary';
 import { AILoader } from '../components/ui/AILoader';
 import { UniverseLegend } from '../components/canvas/UniverseLegend';
 import { LandingPage } from '../components/landing/LandingPage';
-import { HANDPICKED_ORBIT_NAMES } from '../components/landing/orbit-config';
 
 /**
  * Home Page
@@ -70,11 +69,10 @@ export default function Home() {
     return 'landing';
   })();
 
-  // Handpicked resources for the orbiting landing graphic
+  // Top-rated resources (9+) for the landing logo carousel, highest first
   const topResources = useMemo(() => {
-    const nameSet = new Set(HANDPICKED_ORBIT_NAMES);
     return resources
-      .filter((r) => nameSet.has(r.name))
+      .filter((r) => r.gravityScore >= 9)
       .sort((a, b) => (b.gravityScore || 0) - (a.gravityScore || 0));
   }, []);
 
