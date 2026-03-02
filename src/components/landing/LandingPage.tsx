@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { DURATION, EASING } from '@/lib/motion-tokens';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
-import { OrbitingResources } from './OrbitingResources';
+import { LogoStack } from './LogoStack';
 import { LandingViewToggle } from './LandingViewToggle';
 import { FlipCounter } from './FlipCounter';
 import { Starfield } from './Starfield';
@@ -77,9 +77,9 @@ export function LandingPage({ resources, totalCount, onNavigate }: LandingPagePr
         </div>
       )}
 
-      {/* Orbiting Resources */}
+      {/* Logo Stack */}
       <motion.div variants={variants}>
-        <OrbitingResources resources={resources} />
+        <LogoStack resources={resources} />
       </motion.div>
 
       {/* Title */}
