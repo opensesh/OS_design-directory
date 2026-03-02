@@ -1,16 +1,22 @@
 /**
  * Favicon analysis script for automated logoBg detection
  *
- * Analyzes Google Favicons for each resource and determines optimal
- * logoBg values based on pixel data:
- * - Dark/black icons → logoBg: "light" (warm neutral background)
- * - Icons with transparent padding + dominant color → logoBg: "#RRGGBB"
+ * Uses EDGE PIXEL SAMPLING to determine the optimal logoBg value.
+ * The outer 2px border of a favicon represents its background/container
+ * color, which is what we want for the card's logoBg fill.
+ *
+ * Decision logic based on edge color:
+ * - Transparent edge + dark icon → logoBg: "light"
+ * - White edge → logoBg: "light"
+ * - Dark edge → skip (intentionally dark, fine on dark card bg)
+ * - Vibrant color edge → use that hex color
  *
  * Run with: bun run analyze-favicons
  * Options:
  *   --dry-run    Print proposed changes without writing
  *   --id=41      Analyze a single resource by ID
  *   --force      Re-analyze resources that already have logoBg
+ *   --verbose    Print detailed pixel stats
  */
 
 import sharp from 'sharp';
@@ -25,15 +31,12 @@ const __dirname = path.dirname(__filename);
 const RESOURCES_JSON_PATH = path.join(__dirname, '..', 'src', 'data', 'resources.json');
 const FAVICON_SIZE = 64;
 const DOWNLOAD_DELAY_MS = 200;
+const EDGE_WIDTH = 2; // Sample outer 2px border
 
 // Pixel classification thresholds
-const ALPHA_THRESHOLD = 10;      // Below this = transparent
-const DARK_BRIGHTNESS = 40;      // Below this = near-black
-const WHITE_BRIGHTNESS = 215;    // Above this = near-white
-
-// Decision thresholds
-const DARK_RATIO_THRESHOLD = 0.6;        // >60% dark pixels → "light" bg
-const TRANSPARENT_RATIO_THRESHOLD = 0.35; // >35% transparent → extract dominant color
+const ALPHA_THRESHOLD = 10;
+const DARK_BRIGHTNESS = 40;
+const WHITE_BRIGHTNESS = 215;
 
 interface Resource {
   id: number;
@@ -49,14 +52,8 @@ interface AnalysisResult {
   domain: string;
   logoBg: string | null;
   reason: string;
-  stats: {
-    totalPixels: number;
-    transparentRatio: number;
-    darkRatio: number;
-    whiteRatio: number;
-    coloredCount: number;
-    dominantColor: string | null;
-  };
+  edgeColor: string | null;
+  edgeType: 'transparent' | 'white' | 'dark' | 'color';
 }
 
 // Parse CLI flags
@@ -94,17 +91,6 @@ function getDomain(url: string): string | null {
 }
 
 /**
- * Quantize an RGB color to a 4-bit-per-channel bucket key.
- * This creates 16^3 = 4096 possible buckets.
- */
-function quantizeKey(r: number, g: number, b: number): string {
-  const rq = (r >> 4) & 0xf;
-  const gq = (g >> 4) & 0xf;
-  const bq = (b >> 4) & 0xf;
-  return `${rq},${gq},${bq}`;
-}
-
-/**
  * Convert RGB values to a hex color string.
  */
 function rgbToHex(r: number, g: number, b: number): string {
@@ -120,95 +106,107 @@ function brightness(r: number, g: number, b: number): number {
 }
 
 /**
- * Check if a hex color has enough saturation to look good as a background.
- * Low-saturation colors (grays, near-whites, near-blacks) are poor background choices.
- * Returns true if the color is vibrant enough.
+ * Quantize an RGB color to a 4-bit-per-channel bucket key.
  */
-function isVibrant(hex: string): boolean {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-  const range = max - min;
-  // Require at least 40 units of channel spread for vibrancy
-  return range >= 40;
+function quantizeKey(r: number, g: number, b: number): string {
+  return `${(r >> 4) & 0xf},${(g >> 4) & 0xf},${(b >> 4) & 0xf}`;
 }
 
 /**
- * Analyze raw RGBA pixel data to determine the optimal logoBg value.
+ * Check if a pixel is on the outer edge border of the image.
+ */
+function isEdgePixel(x: number, y: number, width: number, height: number): boolean {
+  return x < EDGE_WIDTH || x >= width - EDGE_WIDTH || y < EDGE_WIDTH || y >= height - EDGE_WIDTH;
+}
+
+/**
+ * Analyze favicon pixel data using edge pixel sampling.
+ *
+ * Samples the outer 2px border to determine the favicon's background color,
+ * then uses that to decide the optimal logoBg value.
  */
 function analyzePixels(
   data: Buffer,
   width: number,
   height: number,
-): { logoBg: string | null; reason: string; stats: AnalysisResult['stats'] } {
-  const totalPixels = width * height;
+): { logoBg: string | null; reason: string; edgeColor: string | null; edgeType: 'transparent' | 'white' | 'dark' | 'color' } {
+  // --- Pass 1: Classify edge pixels ---
+  let edgeTransparent = 0;
+  let edgeDark = 0;
+  let edgeWhite = 0;
+  let edgeTotal = 0;
 
-  let transparentCount = 0;
-  let darkCount = 0;
-  let whiteCount = 0;
+  // Histogram for colored edge pixels
+  const edgeBuckets: Map<string, { count: number; rSum: number; gSum: number; bSum: number }> = new Map();
+  let edgeColored = 0;
 
-  // Histogram buckets for colored pixels
-  const buckets: Map<string, { count: number; rSum: number; gSum: number; bSum: number }> = new Map();
-  let coloredCount = 0;
+  // --- Pass 2: Classify ALL pixels (for transparent-edge dark-icon detection) ---
+  let allDark = 0;
+  let allOpaque = 0;
 
-  for (let i = 0; i < data.length; i += 4) {
-    const r = data[i];
-    const g = data[i + 1];
-    const b = data[i + 2];
-    const a = data[i + 3];
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const i = (y * width + x) * 4;
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+      const a = data[i + 3];
 
-    // Transparent
-    if (a < ALPHA_THRESHOLD) {
-      transparentCount++;
-      continue;
-    }
+      const isTransparent = a < ALPHA_THRESHOLD;
+      const br = brightness(r, g, b);
+      const isDark = !isTransparent && br < DARK_BRIGHTNESS;
+      const isWhite = !isTransparent && br > WHITE_BRIGHTNESS;
 
-    const br = brightness(r, g, b);
+      // Track overall stats for dark-icon detection
+      if (!isTransparent) {
+        allOpaque++;
+        if (isDark) allDark++;
+      }
 
-    // Near-black
-    if (br < DARK_BRIGHTNESS) {
-      darkCount++;
-      continue;
-    }
+      // Edge pixel classification
+      if (isEdgePixel(x, y, width, height)) {
+        edgeTotal++;
 
-    // Near-white
-    if (br > WHITE_BRIGHTNESS) {
-      whiteCount++;
-      continue;
-    }
-
-    // Colored pixel → add to histogram
-    coloredCount++;
-    const key = quantizeKey(r, g, b);
-    const existing = buckets.get(key);
-    if (existing) {
-      existing.count++;
-      existing.rSum += r;
-      existing.gSum += g;
-      existing.bSum += b;
-    } else {
-      buckets.set(key, { count: 1, rSum: r, gSum: g, bSum: b });
+        if (isTransparent) {
+          edgeTransparent++;
+        } else if (isDark) {
+          edgeDark++;
+        } else if (isWhite) {
+          edgeWhite++;
+        } else {
+          edgeColored++;
+          const key = quantizeKey(r, g, b);
+          const existing = edgeBuckets.get(key);
+          if (existing) {
+            existing.count++;
+            existing.rSum += r;
+            existing.gSum += g;
+            existing.bSum += b;
+          } else {
+            edgeBuckets.set(key, { count: 1, rSum: r, gSum: g, bSum: b });
+          }
+        }
+      }
     }
   }
 
-  const opaqueCount = totalPixels - transparentCount;
-  const transparentRatio = transparentCount / totalPixels;
-  const darkRatio = opaqueCount > 0 ? darkCount / opaqueCount : 0;
-  const whiteRatio = opaqueCount > 0 ? whiteCount / opaqueCount : 0;
+  // --- Compute edge ratios ---
+  const edgeTransparentRatio = edgeTotal > 0 ? edgeTransparent / edgeTotal : 0;
+  const edgeDarkRatio = edgeTotal > 0 ? edgeDark / edgeTotal : 0;
+  const edgeWhiteRatio = edgeTotal > 0 ? edgeWhite / edgeTotal : 0;
+  const edgeColoredRatio = edgeTotal > 0 ? edgeColored / edgeTotal : 0;
 
-  // Find dominant color bucket
-  let dominantColor: string | null = null;
-  if (buckets.size > 0) {
+  // Find dominant edge color
+  let dominantEdgeColor: string | null = null;
+  if (edgeBuckets.size > 0) {
     let maxBucket: { count: number; rSum: number; gSum: number; bSum: number } | null = null;
-    for (const bucket of buckets.values()) {
+    for (const bucket of edgeBuckets.values()) {
       if (!maxBucket || bucket.count > maxBucket.count) {
         maxBucket = bucket;
       }
     }
     if (maxBucket && maxBucket.count > 0) {
-      dominantColor = rgbToHex(
+      dominantEdgeColor = rgbToHex(
         maxBucket.rSum / maxBucket.count,
         maxBucket.gSum / maxBucket.count,
         maxBucket.bSum / maxBucket.count,
@@ -216,47 +214,47 @@ function analyzePixels(
     }
   }
 
-  const stats: AnalysisResult['stats'] = {
-    totalPixels,
-    transparentRatio: Math.round(transparentRatio * 100) / 100,
-    darkRatio: Math.round(darkRatio * 100) / 100,
-    whiteRatio: Math.round(whiteRatio * 100) / 100,
-    coloredCount,
-    dominantColor,
-  };
-
-  // Decision: too few opaque pixels → skip (favicon is essentially empty)
-  if (opaqueCount < totalPixels * 0.05) {
-    return { logoBg: null, reason: 'skip: favicon is mostly empty', stats };
+  if (verbose) {
+    const pct = (n: number) => `${Math.round(n * 100)}%`;
+    console.log(`     edge: transparent=${pct(edgeTransparentRatio)} dark=${pct(edgeDarkRatio)} white=${pct(edgeWhiteRatio)} colored=${pct(edgeColoredRatio)} dominantEdge=${dominantEdgeColor}`);
+    console.log(`     all:  opaque=${allOpaque} dark=${allDark} darkRatio=${allOpaque > 0 ? Math.round(allDark / allOpaque * 100) : 0}%`);
   }
 
-  // Decision: predominantly dark icon → needs light background
-  if (darkRatio > DARK_RATIO_THRESHOLD) {
-    return { logoBg: 'light', reason: `dark icon (${Math.round(darkRatio * 100)}% dark pixels)`, stats };
+  // --- Decision logic based on edge type ---
+
+  // 1. Edge is mostly transparent → favicon has no container/background
+  if (edgeTransparentRatio > 0.5) {
+    const darkRatio = allOpaque > 0 ? allDark / allOpaque : 0;
+    if (darkRatio > 0.6) {
+      // Dark icon on transparent background (e.g. Three.js)
+      return { logoBg: 'light', reason: `transparent edge, dark icon (${Math.round(darkRatio * 100)}% dark)`, edgeColor: null, edgeType: 'transparent' };
+    }
+    // Colored icon on transparent — shows fine on dark card bg
+    return { logoBg: null, reason: 'skip: transparent edge, colored icon fine on dark bg', edgeColor: null, edgeType: 'transparent' };
   }
 
-  // Decision: significant transparent padding with a clear vibrant dominant color
-  if (transparentRatio > TRANSPARENT_RATIO_THRESHOLD && dominantColor && isVibrant(dominantColor)) {
-    return {
-      logoBg: dominantColor,
-      reason: `transparent padding (${Math.round(transparentRatio * 100)}% transparent), dominant: ${dominantColor}`,
-      stats,
-    };
+  // 2. Edge is mostly white → Google's default white background
+  if (edgeWhiteRatio > 0.5) {
+    return { logoBg: 'light', reason: `white edge (${Math.round(edgeWhiteRatio * 100)}% white)`, edgeColor: '#FFFFFF', edgeType: 'white' };
   }
 
-  // Decision: white background with a clear vibrant dominant color
-  // Many Google favicons have white backgrounds instead of transparent.
-  // If the white ratio is high and there's a distinct colored area, use the dominant color.
-  // Only apply if the dominant color is vibrant (not gray/neutral).
-  if (whiteRatio > TRANSPARENT_RATIO_THRESHOLD && dominantColor && isVibrant(dominantColor) && coloredCount > 0) {
-    return {
-      logoBg: dominantColor,
-      reason: `white background (${Math.round(whiteRatio * 100)}% white), dominant: ${dominantColor}`,
-      stats,
-    };
+  // 3. Edge is mostly dark → intentionally dark container, fine on dark card bg
+  if (edgeDarkRatio > 0.5) {
+    return { logoBg: null, reason: 'skip: dark edge, intentionally dark container', edgeColor: null, edgeType: 'dark' };
   }
 
-  return { logoBg: null, reason: 'skip: icon renders fine on default bg', stats };
+  // 4. Edge is a solid vibrant color → use it as logoBg
+  if (edgeColoredRatio > 0.3 && dominantEdgeColor) {
+    return { logoBg: dominantEdgeColor, reason: `colored edge: ${dominantEdgeColor}`, edgeColor: dominantEdgeColor, edgeType: 'color' };
+  }
+
+  // 5. Mixed edge — could be dark+colored or other combos
+  // If dark+colored makes up most of the edge, and there's a dominant color, use it
+  if ((edgeDarkRatio + edgeColoredRatio) > 0.5 && dominantEdgeColor) {
+    return { logoBg: dominantEdgeColor, reason: `mixed edge, dominant: ${dominantEdgeColor}`, edgeColor: dominantEdgeColor, edgeType: 'color' };
+  }
+
+  return { logoBg: null, reason: 'skip: ambiguous edge, leaving default', edgeColor: null, edgeType: 'transparent' };
 }
 
 /**
@@ -281,7 +279,7 @@ async function analyzeResource(resource: Resource): Promise<AnalysisResult | nul
       .raw()
       .toBuffer({ resolveWithObject: true });
 
-    const { logoBg, reason, stats } = analyzePixels(data, info.width, info.height);
+    const { logoBg, reason, edgeColor, edgeType } = analyzePixels(data, info.width, info.height);
 
     return {
       id: resource.id,
@@ -289,7 +287,8 @@ async function analyzeResource(resource: Resource): Promise<AnalysisResult | nul
       domain,
       logoBg,
       reason,
-      stats,
+      edgeColor,
+      edgeType,
     };
   } catch (err) {
     console.log(`  ⚠ Skipping ${resource.name} (image parse error: ${err})`);
@@ -305,7 +304,7 @@ function sleep(ms: number): Promise<void> {
 }
 
 async function main() {
-  console.log('🔍 Favicon Analysis Script');
+  console.log('🔍 Favicon Analysis Script (Edge Sampling)');
   console.log(`   Mode: ${dryRun ? 'DRY RUN' : 'LIVE'}`);
   if (targetId !== null) console.log(`   Target: ID ${targetId}`);
   if (force) console.log('   Force: re-analyzing existing overrides');
@@ -317,9 +316,9 @@ async function main() {
   console.log(`📦 Loaded ${resources.length} resources\n`);
 
   // Filter resources to analyze
-  let toAnalyze = resources.filter(r => {
+  const toAnalyze = resources.filter(r => {
     if (targetId !== null) return r.id === targetId;
-    if (!force && r.logoBg) return false; // Skip resources with existing overrides
+    if (!force && r.logoBg) return false;
     return true;
   });
 
@@ -340,10 +339,6 @@ async function main() {
     const result = await analyzeResource(resource);
     if (result) {
       results.push(result);
-      if (verbose) {
-        const s = result.stats;
-        console.log(`     transparent=${s.transparentRatio} dark=${s.darkRatio} white=${s.whiteRatio} colored=${s.coloredCount} dominant=${s.dominantColor}`);
-      }
       if (result.logoBg) {
         changes.push({
           id: result.id,
@@ -379,7 +374,6 @@ async function main() {
   if (!dryRun && changes.length > 0) {
     console.log('\n💾 Writing changes to resources.json...');
 
-    // Create a map for quick lookup
     const changeMap = new Map(changes.map(c => [c.id, c.logoBg]));
 
     const updatedResources = resources.map(r => {
