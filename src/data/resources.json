@@ -297,7 +297,7 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/13-claude.jpg",
-    "gravityScore": 9.4,
+    "gravityScore": 9.8,
     "gravityRationale": "Top AI assistant for coding and creative work"
   },
   {
@@ -320,7 +320,7 @@
     "tier": 1,
     "thumbnail": null,
     "screenshot": "/assets/screenshots/14-chatgpt.jpg",
-    "gravityScore": 9.6,
+    "gravityScore": 9.4,
     "gravityRationale": "Most widely adopted AI assistant",
     "logoBg": "light"
   },
