@@ -5,6 +5,8 @@ import { LogoStack } from './LogoStack';
 import { LandingViewToggle } from './LandingViewToggle';
 import { FlipCounter } from './FlipCounter';
 import { Starfield } from './Starfield';
+import { PrismaticBurst } from './PrismaticBurst';
+import { DecryptedText } from './DecryptedText';
 import type { NormalizedResource } from '@/types/resource';
 
 interface LandingPageProps {
@@ -70,6 +72,25 @@ export function LandingPage({ resources, totalCount, onNavigate }: LandingPagePr
       animate="visible"
       exit="exit"
     >
+      {/* Prismatic burst — renders behind Starfield via source order */}
+      {!prefersReducedMotion && (
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 2, ease: EASING.smooth }}
+        >
+          <PrismaticBurst
+            colors={['#FE5102', '#FFFAEE', '#191919']}
+            animationType="rotate3d"
+            intensity={1.1}
+            speed={0.25}
+            distort={37.5}
+            rayCount={75}
+          />
+        </motion.div>
+      )}
+
       {/* Starfield background */}
       {!prefersReducedMotion && (
         <div className="absolute inset-0 pointer-events-none">
@@ -88,7 +109,14 @@ export function LandingPage({ resources, totalCount, onNavigate }: LandingPagePr
         className="font-accent font-bold text-brand-aperol uppercase text-center leading-none"
         style={{ fontSize: 'clamp(2rem, 7vw, 5rem)' }}
       >
-        Design Directory
+        <DecryptedText
+          text="Design Directory"
+          speed={60}
+          maxIterations={10}
+          sequential
+          animateOn="view"
+          characters="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()"
+        />
       </motion.h1>
 
       {/* Description */}
