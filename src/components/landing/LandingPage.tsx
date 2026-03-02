@@ -74,21 +74,16 @@ export function LandingPage({ resources, totalCount, onNavigate }: LandingPagePr
     >
       {/* Prismatic burst — renders behind Starfield via source order */}
       {!prefersReducedMotion && (
-        <motion.div
-          className="absolute inset-0 pointer-events-none"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 2, ease: EASING.smooth }}
-        >
+        <div className="absolute inset-0 pointer-events-none animate-in fade-in duration-[2000ms]">
           <PrismaticBurst
             colors={['#FE5102', '#FFFAEE', '#191919']}
             animationType="rotate3d"
-            intensity={1.1}
+            intensity={1.5}
             speed={0.25}
             distort={37.5}
             rayCount={75}
           />
-        </motion.div>
+        </div>
       )}
 
       {/* Starfield background */}
