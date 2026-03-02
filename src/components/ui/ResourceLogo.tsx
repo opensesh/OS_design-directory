@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Globe } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getFaviconUrl, resolveLogoBg, type FaviconSize } from '@/lib/favicon';
 import type { NormalizedResource } from '@/types/resource';
@@ -25,12 +26,21 @@ const SIZE_MAP: Record<LogoSize, { container: string; img: string; text: string 
   xl: { container: 'w-16 h-16 rounded-xl',   img: 'w-10 h-10', text: 'text-xl' },
 };
 
+/** Globe icon pixel sizes per container size */
+const GLOBE_SIZE_MAP: Record<LogoSize, number> = {
+  xs: 14,
+  sm: 18,
+  md: 22,
+  lg: 28,
+  xl: 36,
+};
+
 /**
  * ResourceLogo
  *
  * Renders a resource's logo with consistent container treatment,
  * intelligent background handling, and graceful fallback chain:
- * thumbnail → favicon → letter initial
+ * thumbnail → favicon → Globe icon
  */
 export function ResourceLogo({
   resource,
@@ -92,13 +102,14 @@ export function ResourceLogo({
     );
   }
 
-  // 3. Letter initial fallback
-  const initial = resource.name.charAt(0).toUpperCase();
+  // 3. Globe icon fallback (no thumbnail, no valid favicon)
   return (
-    <div className={containerClass} style={containerStyle}>
-      <span className={cn(sizeConfig.text, 'font-medium text-[var(--fg-secondary)]')}>
-        {initial}
-      </span>
+    <div className={containerClass} style={{ backgroundColor: '#FFFAEE' }}>
+      <Globe
+        size={GLOBE_SIZE_MAP[size]}
+        className="text-[#191919]"
+        strokeWidth={1.5}
+      />
     </div>
   );
 }
