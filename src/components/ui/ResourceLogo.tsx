@@ -57,18 +57,34 @@ export function ResourceLogo({
   const hasFavicon = faviconUrl && !faviconError;
   const sizeConfig = SIZE_MAP[size];
 
+  // Force Globe fallback for resources with broken/generic Google favicons
+  const forceGlobe = resource.logoBg === 'globe';
+
   // Resolve background: explicit override > default container treatment
-  const explicitBg = resolveLogoBg(resource.logoBg);
+  const explicitBg = forceGlobe ? null : resolveLogoBg(resource.logoBg);
 
   const containerStyle = explicitBg ? { backgroundColor: explicitBg } : undefined;
 
   const containerClass = cn(
     sizeConfig.container,
     'flex items-center justify-center flex-shrink-0 overflow-hidden',
-    !explicitBg && 'bg-[var(--bg-secondary)]/40',
+    !explicitBg && !forceGlobe && 'bg-[var(--bg-secondary)]/40',
     bordered && 'border border-[var(--border-secondary)]',
     className,
   );
+
+  // 0. Force Globe fallback (logoBg: "globe")
+  if (forceGlobe) {
+    return (
+      <div className={containerClass} style={{ backgroundColor: '#FFFAEE' }}>
+        <Globe
+          size={GLOBE_SIZE_MAP[size]}
+          className="text-[#191919]"
+          strokeWidth={1.5}
+        />
+      </div>
+    );
+  }
 
   // 1. Thumbnail (full bleed)
   if (hasThumbnail) {

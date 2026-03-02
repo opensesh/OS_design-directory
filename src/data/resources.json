@@ -305,7 +305,7 @@
     "screenshot": "/assets/screenshots/13-claude.jpg",
     "gravityScore": 9.8,
     "gravityRationale": "Top AI assistant for coding and creative work",
-    "logoBg": "#DA6B47"
+    "logoBg": "light"
   },
   {
     "id": 14,
@@ -468,7 +468,8 @@
     "thumbnail": null,
     "screenshot": "/assets/screenshots/20-vercel.jpg",
     "gravityScore": 9.3,
-    "gravityRationale": "Premier frontend deployment platform"
+    "gravityRationale": "Premier frontend deployment platform",
+    "logoBg": "light"
   },
   {
     "id": 21,
@@ -1216,7 +1217,8 @@
     "thumbnail": null,
     "screenshot": "/assets/screenshots/52-v0.jpg",
     "gravityScore": 9.1,
-    "gravityRationale": "Pioneering AI UI generation"
+    "gravityRationale": "Pioneering AI UI generation",
+    "logoBg": "light"
   },
   {
     "id": 53,
@@ -1992,7 +1994,7 @@
     "screenshot": "/assets/screenshots/85-neon.jpg",
     "gravityScore": 8.5,
     "gravityRationale": "Serverless Postgres pioneer",
-    "logoBg": "#37C38F"
+    "logoBg": "light"
   },
   {
     "id": 86,
@@ -2956,7 +2958,8 @@
     "screenshot": "/assets/screenshots/126-stl-to-ascii.jpg",
     "id": 126,
     "gravityScore": 7.7,
-    "gravityRationale": "Useful tools resource"
+    "gravityRationale": "Useful tools resource",
+    "logoBg": "globe"
   },
   {
     "name": "Kurt Mock-ups",
@@ -3145,7 +3148,8 @@
     "screenshot": "/assets/screenshots/134-ungrid.jpg",
     "id": 134,
     "gravityScore": 7.7,
-    "gravityRationale": "Useful tools resource"
+    "gravityRationale": "Useful tools resource",
+    "logoBg": "globe"
   },
   {
     "name": "Video to ASCII",
@@ -3523,7 +3527,8 @@
     "screenshot": null,
     "gravityScore": 7.6,
     "gravityRationale": "AI color generator trained on your taste",
-    "id": 150
+    "id": 150,
+    "logoBg": "light"
   },
   {
     "name": "CPGD",

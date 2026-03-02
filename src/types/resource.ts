@@ -26,6 +26,7 @@ export interface NormalizedResource {
    * - null/omitted: default semi-transparent container
    * - "light": warm neutral (#F5F3F0)
    * - "dark": dark surface (#1C1C1C)
+   * - "globe": force Lucide Globe fallback (charcoal on vanilla)
    * - "#RRGGBB": specific hex color
    */
   logoBg?: string | null;
