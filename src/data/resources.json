@@ -21,7 +21,7 @@
     "screenshot": "/assets/screenshots/1-figma.jpg",
     "gravityScore": 9.8,
     "gravityRationale": "Industry standard for collaborative UI design",
-    "logoBg": "light"
+    "logoBg": "#FFFFFF"
   },
   {
     "id": 2,
@@ -233,7 +233,7 @@
     "screenshot": "/assets/screenshots/10-midjourney.jpg",
     "gravityScore": 9.5,
     "gravityRationale": "Leading AI art generator with best aesthetics",
-    "logoBg": "light"
+    "logoBg": "#FFFFFF"
   },
   {
     "id": 11,
@@ -353,7 +353,7 @@
     "screenshot": "/assets/screenshots/15-github.jpg",
     "gravityScore": 9.7,
     "gravityRationale": "Essential platform for code collaboration",
-    "logoBg": "light"
+    "logoBg": "#FFFFFF"
   },
   {
     "id": 16,
@@ -2698,7 +2698,8 @@
     "screenshot": "/assets/screenshots/115-untitled-ui.jpg",
     "id": 115,
     "gravityScore": 8.8,
-    "gravityRationale": "Top templates resource"
+    "gravityRationale": "Top templates resource",
+    "logoBg": "#FFFFFF"
   },
   {
     "name": "Thind UI",
