@@ -79,32 +79,37 @@ export function Starfield({
     };
 
     const resize = () => {
-      const oldStarArr = sd.current.star.arr.map((s) => [...s]);
-      measureViewport();
-      const cw = sd.current.ctx?.canvas.width ?? 0;
-      const ch = sd.current.ctx?.canvas.height ?? 0;
+      const el = canvas.parentElement;
+      if (!el) return;
 
-      if (cw !== sd.current.w || ch !== sd.current.h) {
-        const rw = sd.current.w / (cw || 1);
-        const rh = sd.current.h / (ch || 1);
+      const newW = el.clientWidth;
+      const newH = el.clientHeight;
 
-        if (sd.current.ctx) {
-          sd.current.ctx.canvas.width = sd.current.w;
-          sd.current.ctx.canvas.height = sd.current.h;
-          sd.current.ctx.strokeStyle = starColor;
-        }
+      if (newW === sd.current.w && newH === sd.current.h) return;
 
-        if (!sd.current.star.arr.length) {
-          bigBang();
-        } else {
-          sd.current.star.arr = sd.current.star.arr.map((star, i) => {
-            const ns = [...star];
-            ns[0] = oldStarArr[i][0] * rw;
-            ns[1] = oldStarArr[i][1] * rh;
-            ns[3] = sd.current.x + (ns[0] / ns[2]) * ratio;
-            ns[4] = sd.current.y + (ns[1] / ns[2]) * ratio;
-            return ns;
-          });
+      // Update viewport dimensions
+      sd.current.w = newW;
+      sd.current.h = newH;
+      sd.current.x = Math.round(newW / 2);
+      sd.current.y = Math.round(newH / 2);
+      sd.current.z = (newW + newH) / 2;
+      sd.current.star.colorRatio = 1 / sd.current.z;
+
+      // Resize canvas
+      if (sd.current.ctx) {
+        sd.current.ctx.canvas.width = newW;
+        sd.current.ctx.canvas.height = newH;
+        sd.current.ctx.strokeStyle = starColor;
+      }
+
+      // Re-center cursor to prevent directional drift
+      cursor.current.x = sd.current.x;
+      cursor.current.y = sd.current.y;
+
+      // Clamp star depths to new range so no stars become invisible
+      for (const star of sd.current.star.arr) {
+        if (star[2] > sd.current.z) {
+          star[2] = Math.random() * sd.current.z;
         }
       }
     };
