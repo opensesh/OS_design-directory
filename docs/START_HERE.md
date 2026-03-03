@@ -1,444 +1,241 @@
-# 🌌 3D Design Directory - Complete Build Guide
+# Customize This Project
 
-## 📋 Project Summary
-
-Building a 3D particle-based design resource directory with morphing transitions:
-- **Home View**: Rotating particle sphere (1000 particles)
-- **Explore View**: Flattened galaxy with spiral arms
-- **List View**: Traditional grid layout
-- **Resource Pages**: Detailed view with AI summaries
-
-**Key Feature**: Smooth morphing animations between all three layouts
+You've cloned the Design Directory — here's what you can change and where to find it. Each section points to the exact file and variable names so you can jump straight in.
 
 ---
 
-## 🎯 Tech Stack
+## Swap the Data (5 minutes)
 
-- Vite + React 18 + TypeScript
-- React Three Fiber + Drei (3D)
-- Three.js (WebGL)
-- Framer Motion (UI animations)
-- Tailwind CSS (styling)
-- Zustand (state management)
+**File:** `src/data/resources.json`
 
----
+This single JSON file powers the entire app — the 3D universe, card grid, table, search, and detail pages all read from it. Replace or edit entries to make the directory your own.
 
-## ⚡ AI Code Editor Starter Prompt
-
-**Copy this into your AI code editor (Claude Code, Cursor, etc.) to begin:**
-
-```
-I want to build a 3D Design Directory with particle visualizations that morph between sphere, galaxy, and grid layouts.
-
-Tech stack:
-- Vite + React 18
-- React Three Fiber (@react-three/fiber) + Drei
-- Framer Motion
-- Tailwind CSS
-- Zustand
-
-Please:
-1. Initialize: npm create vite@latest . -- --template react
-2. Install dependencies:
-   npm install @react-three/fiber @react-three/drei three framer-motion zustand
-   npm install -D tailwindcss autoprefixer postcss
-3. Set up Tailwind: npx tailwindcss init -p
-4. Create folder structure:
-
-src/
-├── components/
-│   ├── canvas/
-│   │   ├── InspoCanvas.tsx
-│   │   ├── ResourceNodes.tsx
-│   │   └── GalaxyBackground.tsx
-│   ├── ui/
-│   │   ├── CategoryButtons.tsx
-│   │   ├── ThemeToggle.tsx
-│   │   └── InspoTable.tsx
-│   ├── card-view/
-│   │   ├── CardView.tsx
-│   │   ├── CategoryGrid.tsx
-│   │   └── ResourceCard.tsx
-│   └── search/
-│       └── SearchModal.tsx
-├── pages/
-│   ├── Home.tsx
-│   └── ResourceDetail.tsx
-├── hooks/
-│   ├── useParticleTransition.ts
-│   └── useKeyboardShortcuts.ts
-├── store/
-│   └── useAppStore.ts
-├── utils/
-│   ├── particleLayouts.ts
-│   └── orbital-layout.ts
-└── data/
-    └── resources.json
-
-5. Create basic Three.js scene in App.tsx with:
-   - Canvas from R3F
-   - OrbitControls from drei
-   - Ambient light
-   - Temporary grid helper
-
-6. Start dev server and verify it works!
-
-After this, I'll implement the Fibonacci sphere particle distribution.
-```
-
----
-
-## 📅 5-Day Build Plan
-
-### Day 1: Foundation + Particle Sphere
-- ✅ Project setup
-- ✅ Basic Three.js scene
-- ✅ Fibonacci sphere distribution (1000 particles)
-- ✅ InstancedMesh optimization
-- ✅ Category color coding (Tools/Inspiration/AI/Learning/Templates/Community)
-- ✅ Auto-rotation
-
-### Day 2: Morph System Architecture
-- ✅ Layout generator functions (sphere/galaxy/grid)
-- ✅ Zustand state management
-- ✅ Design transition system
-- ✅ Test basic interpolation
-
-### Day 3: Morph Implementation ⭐
-- ✅ Lerp-based position interpolation
-- ✅ Camera animation during transition
-- ✅ Smooth easing functions
-- ✅ Loading overlay
-- ✅ All three layouts working
-
-### Day 4: Interactions + UI
-- ✅ Raycasting for particle clicks
-- ✅ Floating resource cards
-- ✅ Category filter buttons
-- ✅ View toggle (3D ↔ List)
-- ✅ List view implementation
-- ✅ Resource detail pages
-
-### Day 5: Polish + Deploy
-- ✅ Mobile responsiveness
-- ✅ Performance optimization (maintain 60fps)
-- ✅ Accessibility features
-- ✅ SEO meta tags
-- ✅ Deploy to Vercel/Netlify
-
----
-
-## 🔑 Critical Code Snippets
-
-### Fibonacci Sphere Distribution
-```javascript
-function generateSpherePositions(count, radius) {
-  const positions = new Float32Array(count * 3);
-  
-  for (let i = 0; i < count; i++) {
-    const phi = Math.acos(-1 + (2 * i) / count);
-    const theta = Math.sqrt(count * Math.PI) * phi;
-    
-    const x = radius * Math.sin(phi) * Math.cos(theta);
-    const y = radius * Math.sin(phi) * Math.sin(theta);
-    const z = radius * Math.cos(phi);
-    
-    positions[i * 3] = x;
-    positions[i * 3 + 1] = y;
-    positions[i * 3 + 2] = z;
-  }
-  
-  return positions;
-}
-```
-
-### Galaxy Spiral Distribution
-```javascript
-function generateGalaxyPositions(count, maxRadius) {
-  const positions = new Float32Array(count * 3);
-  const arms = 3;
-  
-  for (let i = 0; i < count; i++) {
-    const angle = (i / count) * Math.PI * 2 * arms;
-    const distance = (i / count) * maxRadius;
-    
-    const x = Math.cos(angle) * distance;
-    const y = Math.sin(angle) * distance;
-    const z = (Math.random() - 0.5) * 50; // Thin disc
-    
-    positions[i * 3] = x;
-    positions[i * 3 + 1] = y;
-    positions[i * 3 + 2] = z;
-  }
-  
-  return positions;
-}
-```
-
-### Morph Transition Hook
-```javascript
-function useMorphTransition(fromLayout, toLayout, duration = 1500) {
-  const [progress, setProgress] = useState(0);
-  
-  useEffect(() => {
-    const startTime = Date.now();
-    
-    const animate = () => {
-      const elapsed = Date.now() - startTime;
-      const t = Math.min(elapsed / duration, 1);
-      
-      // Ease-in-out-cubic
-      const eased = t < 0.5
-        ? 4 * t * t * t
-        : 1 - Math.pow(-2 * t + 2, 3) / 2;
-      
-      setProgress(eased);
-      
-      if (t < 1) requestAnimationFrame(animate);
-    };
-    
-    animate();
-  }, [fromLayout, toLayout]);
-  
-  return progress;
-}
-```
-
-### Particle Click Detection
-```javascript
-function useParticleInteraction(particlesRef) {
-  const raycaster = useMemo(() => {
-    const r = new THREE.Raycaster();
-    r.params.Points.threshold = 5;
-    return r;
-  }, []);
-  
-  const handleClick = (event) => {
-    const pointer = {
-      x: (event.clientX / window.innerWidth) * 2 - 1,
-      y: -(event.clientY / window.innerHeight) * 2 + 1
-    };
-    
-    raycaster.setFromCamera(pointer, camera);
-    const intersects = raycaster.intersectObject(particlesRef.current);
-    
-    if (intersects.length > 0) {
-      const particleIndex = intersects[0].index;
-      onParticleClick(particleIndex);
-    }
-  };
-  
-  return handleClick;
-}
-```
-
----
-
-## 🎨 Design System
-
-### Colors (Category-coded)
-```css
-Tools:       #EC4899 (Pink)
-Inspiration: #FF5102 (Orange)
-AI:          #06B6D4 (Cyan)
-Learning:    #10B981 (Green)
-Templates:   #F59E0B (Amber)
-Community:   #3B82F6 (Blue)
-
-Background (dark):  #141414
-Background (light): #faf8f5
-Brand accent:       #FE5102 (Aperol)
-```
-
-### Particle Specs
-- Count: 1000 (desktop), 500 (mobile)
-- Size: 2-4px base, 6-8px hover
-- Glow: Subtle additive blending
-- Color: Category-based with transitions
-
----
-
-## 📂 Resource Data Schema
+Each resource looks like this:
 
 ```json
-[
-  {
-    "id": 1,
-    "name": "Figma",
-    "url": "https://figma.com",
-    "description": "Cloud-based collaborative interface design platform...",
-    "category": "Tools",
-    "subCategory": "Design",
-    "pricing": "Freemium",
-    "featured": true,
-    "opensource": false,
-    "tags": ["design", "prototyping", "collaboration", "ui/ux"],
-    "count": null,
-    "tier": 1,
-    "thumbnail": null,
-    "screenshot": "/assets/screenshots/1-figma.jpg",
-    "gravityScore": 9.8,
-    "gravityRationale": "Industry standard for collaborative UI design"
-  }
-]
+{
+  "id": 1,
+  "name": "Your Resource",
+  "url": "https://example.com",
+  "description": "A few sentences about what this is.",
+  "category": "Tools",
+  "subCategory": "Design",
+  "pricing": "Free",
+  "featured": false,
+  "opensource": true,
+  "tags": ["design", "prototyping"],
+  "tier": 2,
+  "screenshot": "/assets/screenshots/1-your-resource.jpg",
+  "gravityScore": 7.5,
+  "gravityRationale": "Why this score"
+}
 ```
 
-**Key fields:**
-- `gravityScore` (1.0-10.0): Controls position in 3D view — higher scores appear closer to center
-- `screenshot`: Path relative to `public/`, captured via automation scripts
-- `category`: Must be one of: `Tools`, `Inspiration`, `AI`, `Learning`, `Templates`, `Community`
-- `pricing`: `Free`, `Freemium`, or `Paid`
+See the full schema reference in the [README](../README.md#resource-schema).
+
+**Tips:**
+- `gravityScore` (1.0-10.0) controls how close a resource appears to the center in the 3D universe. Higher = more prominent.
+- `category` must match one of the defined categories (see next section).
+- `screenshot` is a path relative to the `public/` folder.
+- Run `node scripts/validate.cjs` after editing to check for issues.
+- Use `npx tsx scripts/add-resources.ts` for bulk additions with automatic deduplication.
 
 ---
 
-## 🚨 Performance Targets
+## Change the Categories (10 minutes)
 
-- **60 FPS** (constant frame rate)
-- **< 3s load time** on 3G
-- **< 500KB** bundle size (gzipped)
-- **> 90** Lighthouse Performance score
+**File:** `src/types/resource.ts`
 
-### Optimization Checklist
-- [x] Use InstancedMesh (critical!)
-- [x] Reduce particles on mobile
-- [x] BufferGeometry for all shapes
-- [x] Proper Three.js disposal
-- [x] Lazy load heavy components
-- [x] Code splitting
+Two exports control how categories appear everywhere in the app:
 
----
+```typescript
+// Ring order in the 3D universe (inner -> outer)
+export const CATEGORY_ORDER = [
+  'Community', 'Inspiration', 'Learning', 'Templates', 'Tools', 'AI',
+] as const;
 
-## 💡 Working with AI Code Editors
-
-### Good Prompts
-✅ "Implement Fibonacci sphere in InspoCanvas.tsx using phi = acos(-1 + 2i/n)"
-✅ "Add raycasting with threshold=5 for particle clicks"
-✅ "Optimize with InstancedMesh, verify 60fps"
-
-### Bad Prompts
-❌ "Make the particles look cool"
-❌ "Fix the animation"
-❌ "Build the whole thing"
-
-### Pro Tips
-1. **Be specific** - Reference exact files and algorithms
-2. **Test incrementally** - Verify each feature works
-3. **Commit often** - Save progress frequently
-4. **Use extended thinking** - Ask for architecture plans
-5. **Reference docs** - Point to Three.js examples
-
----
-
-## 🔄 Development Workflow
-
-```
-Session 1: Setup
-→ Initialize project
-→ Verify dev server runs
-→ See empty scene
-✅ CHECKPOINT
-
-Session 2: Basic Sphere
-→ Implement Fibonacci distribution
-→ Test with 100 particles
-→ Scale to 1000
-→ Add rotation
-✅ CHECKPOINT
-
-Session 3: Optimize
-→ Switch to InstancedMesh
-→ Add color coding
-→ Verify 60fps
-✅ CHECKPOINT
-
-Session 4: Morph Design
-→ Plan architecture
-→ Create layout generators
-→ Set up state management
-✅ CHECKPOINT
-
-[Continue through Day 5...]
+// Color for each category (used in filters, 3D nodes, legend, cards)
+export const CATEGORY_COLORS: Record<string, string> = {
+  'Community':   '#3B82F6',
+  'Inspiration': '#FF5102',
+  'Learning':    '#10B981',
+  'Templates':   '#F59E0B',
+  'Tools':       '#EC4899',
+  'AI':          '#06B6D4',
+};
 ```
 
----
-
-## 🆘 Common Issues
-
-### Particles not showing
-1. Check camera position/distance
-2. Verify particle positions in range
-3. Try larger particle size temporarily
-4. Add axes/grid helpers for debugging
-
-### Low FPS
-1. Verify InstancedMesh is being used
-2. Reduce particle count
-3. Check for unnecessary re-renders
-4. Profile in Chrome DevTools
-
-### Morph looks jumpy
-1. Use requestAnimationFrame (not setInterval)
-2. Check easing function
-3. Ensure frame-independent timing
-4. Test with longer duration
+To add or rename a category:
+1. Update `CATEGORY_ORDER` and `CATEGORY_COLORS` in this file
+2. Update the `category` field in your resources in `src/data/resources.json` to match
+3. If you use AI search, also update the system prompt in `api/search/parse-query.ts`
 
 ---
 
-## 📚 Resources
+## Retheme the Colors (10 minutes)
 
-- [Three.js Journey](https://threejs-journey.com) - Best course
-- [R3F Docs](https://docs.pmnd.rs/react-three-fiber)
-- [Drei Helpers](https://github.com/pmndrs/drei)
-- [Three.js Examples](https://threejs.org/examples/)
+**File:** `src/styles/theme.css`
+
+All colors are CSS custom properties with light and dark mode variants:
+
+- **Light mode:** the `:root` block (starts with `--bg-primary: #faf8f5`)
+- **Dark mode:** the `.dark` block (starts with `--bg-primary: #141414`)
+- **Brand colors** (same in both modes): `--brand-charcoal`, `--brand-vanilla`, `--brand-aperol`
+
+The three brand colors define the overall palette:
+
+| Token | Default | Usage |
+|-------|---------|-------|
+| `--brand-charcoal` | `#191919` | Dark backgrounds |
+| `--brand-vanilla` | `#FFFAEE` | Light/cream accents |
+| `--brand-aperol` | `#FE5102` | Primary accent color |
+
+You can also edit brand colors in **`tailwind.config.ts`** under the `brand` palette, which maps to Tailwind utility classes like `text-brand-aperol` and `bg-brand-charcoal`.
 
 ---
 
-## ✅ Day 1 Success Criteria
+## Customize the Landing Page
 
-By end of Day 1, you should have:
-- [x] Rotating particle sphere
-- [x] 1000 particles at 60fps
-- [x] Color-coded categories
-- [x] Smooth auto-rotation
-- [x] Sample resource data
+The landing page is the first thing visitors see. Here's what you can tweak:
 
-**Take a screenshot!** This is your foundation.
+### Orbiting Logos
 
----
+**File:** `src/components/landing/orbit-config.ts`
 
-## 🎯 Next Session Prompts
+Change which resource logos orbit the center monogram:
 
-### After Day 1 Sphere Works:
-```
-Great! The sphere is working. Now let's design the morph system.
-
-Please create:
-1. src/utils/particleLayouts.ts with three functions:
-   - generateSphereLayout(count, radius)
-   - generateGalaxyLayout(count, maxRadius)
-   - generateGridLayout(count, columns)
-
-2. src/store/useAppStore.ts with Zustand:
-   - viewMode: '3d' | 'card' | 'table'
-   - activeCategory: null | 'Tools' | 'Inspiration' | 'AI' | 'Learning' | 'Templates' | 'Community'
-   - setViewMode, setCategory actions
-
-3. Plan the transition algorithm that will lerp between layouts.
-
-Let me know when complete and I'll review the architecture!
+```typescript
+export const HANDPICKED_ORBIT_NAMES = [
+  'Figma', 'Claude', 'GitHub', 'Midjourney', 'Framer', 'React Bits',
+];
 ```
 
+Replace these with names that match entries in your `resources.json`. The orbit has two rings — the first 2 names go on the inner ring, the next 4 on the outer ring.
+
+You can also adjust ring speed, radius, and glow color in `RING_CONFIGS` in the same file.
+
+### WebGL Background (PrismaticBurst)
+
+**File:** `src/components/landing/LandingPage.tsx` (lines 78-85)
+
+The landing page renders a full-screen WebGL shader effect. The props you can change:
+
+```tsx
+<PrismaticBurst
+  colors={['#FE5102', '#FFFAEE', '#191919']}  // Gradient colors
+  animationType="rotate3d"                       // "rotate", "rotate3d", or "hover"
+  intensity={1.5}                                // Brightness multiplier
+  speed={0.25}                                   // Animation speed
+  distort={37.5}                                 // 0-50+, organic distortion
+  rayCount={75}                                  // 0 = smooth, higher = visible rays
+/>
+```
+
+Try `animationType="hover"` to make the effect follow your mouse, or set `distort={0}` and `rayCount={0}` for a clean smooth gradient.
+
+### Starfield
+
+**File:** `src/components/landing/LandingPage.tsx` (line 92)
+
+```tsx
+<Starfield speed={0.75} quantity={400} starColor="rgba(255,255,255,0.8)" />
+```
+
+Increase `quantity` for a denser star field, or change `starColor` to match your brand.
+
+### Title Animation
+
+**File:** `src/components/landing/LandingPage.tsx` (lines 107-114)
+
+The title uses a character-scramble reveal animation. You can change:
+- `text` — the display text
+- `speed` — milliseconds per character reveal (lower = faster)
+- `characters` — the scramble character set
+- `revealDirection` — `"start"` (left to right), `"end"` (right to left), or `"center"` (spiral inward)
+
 ---
 
-## 🚀 Ready to Build!
+## Tweak Animations
 
-Open your AI code editor and paste the **AI Code Editor Starter Prompt** above to begin.
+**File:** `src/lib/motion-tokens.ts`
 
-The full conversation context is preserved here - reference this document anytime you need to remember the plan or find key code snippets.
+All animation timing is centralized in one file. Key presets:
 
-**You got this!**
+| Export | What it controls |
+|--------|-----------------|
+| `DURATION` | Timing: `fast` (150ms), `normal` (200ms), `slow` (300ms), `cinematic` (800ms) |
+| `EASING` | Curves: `smooth`, `spring`, `linear` |
+| `SPRING` | Physics: `gentle` (counters), `normal` (modals), `snappy` (buttons) |
+| `STAGGER` | Delay between list items: `fast` (30ms), `normal` (50ms), `slow` (100ms) |
+| `INTERACTION` | Hover/tap presets: `cardLift`, `buttonLift`, `subtle` |
+
+Change `DURATION.cinematic` to control how fast the 3D universe entrance feels. Change `SPRING.gentle` to affect how the flip counter rolls.
 
 ---
 
-*Last updated: February 2026*
-*Original build time: ~30-40 hours over 5 days*
+## Adjust Search Behavior
+
+**File:** `src/lib/search/semantic-mappings.ts`
+
+Search works client-side using synonym expansion and concept mapping. To teach the search engine new terms:
+
+**Add synonyms** — words that should match each other:
+```typescript
+export const synonymGroups = {
+  // existing entries...
+  photo: ['photography', 'image', 'picture', 'photos'],
+  // add your own:
+  presentation: ['slides', 'deck', 'pitch', 'slideshow'],
+};
+```
+
+**Add concept mappings** — abstract ideas that map to specific resources:
+```typescript
+export const conceptMappings = {
+  // existing entries...
+  // add your own:
+  'presentation tools': {
+    keywords: ['presentation', 'slides', 'deck'],
+    resourceNames: ['Canva', 'Pitch'],
+    categories: ['Tools'],
+    description: 'Slide deck and presentation tools',
+  },
+};
+```
+
+---
+
+## Change Site Metadata
+
+**File:** `index.html`
+
+Update these for your own deployment:
+- `<title>` — page title
+- `<meta name="description">` — search engine description
+- `<meta property="og:title">` and `og:description` — social share preview text
+- `<meta property="og:image">` — social share preview image (update the URL to your own domain)
+- `<link rel="icon">` — favicon
+
+---
+
+## Change Fonts
+
+**Config:** `tailwind.config.ts` (font family declarations)
+**Files:** `public/fonts/` (woff2 font files)
+**CSS:** `src/styles/fonts.css` (`@font-face` declarations)
+
+This project uses two font families:
+- **Neue Haas Grotesk Display** — headings and body text (`font-display` / `font-text`)
+- **OffBit** — accent/monospace elements like the landing title (`font-accent` / `font-mono`)
+
+**Important:** These are commercial fonts included for demonstration purposes. If you fork this project, you must either purchase your own license or replace them. Good open-source alternatives:
+
+| Current Font | Alternative | Get it |
+|-------------|-------------|--------|
+| Neue Haas Grotesk | Inter or DM Sans | [Inter](https://rsms.me/inter/) / [Google Fonts](https://fonts.google.com/specimen/DM+Sans) |
+| OffBit | Space Mono or JetBrains Mono | [Google Fonts](https://fonts.google.com/specimen/Space+Mono) / [JetBrains](https://www.jetbrains.com/lp/mono/) |
+
+To swap fonts:
+1. Replace the `.woff2` files in `public/fonts/`
+2. Update the `@font-face` declarations in `src/styles/fonts.css`
+3. Update font family names in `tailwind.config.ts`
