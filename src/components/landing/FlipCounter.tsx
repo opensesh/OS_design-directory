@@ -38,7 +38,7 @@ function DigitNumber({ mv, number, height }: DigitNumberProps) {
 
   return (
     <motion.span
-      className="absolute inset-0 flex items-center justify-center font-accent font-bold text-brand-aperol"
+      className="absolute inset-0 flex items-center justify-center font-accent font-bold text-brand-vanilla"
       style={{ y }}
     >
       {number}
