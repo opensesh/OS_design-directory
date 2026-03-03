@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DURATION, EASING } from '@/lib/motion-tokens';
@@ -141,6 +141,18 @@ export function LogoStack({ resources, interval = 2500 }: LogoStackProps) {
     setIndex((prev) => (prev - 1 + len) % len);
   }, [len]);
 
+  // Wheel scroll (desktop trackpad / mouse wheel) with 600 ms cooldown
+  const lastWheelTime = useRef(0);
+  const handleWheel = useCallback((e: React.WheelEvent) => {
+    e.stopPropagation();
+    const now = Date.now();
+    if (now - lastWheelTime.current < 600) return;
+    // Prefer horizontal delta (trackpad swipe); fall back to vertical (scroll wheel)
+    const delta = Math.abs(e.deltaX) >= Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    if (delta > 5) { lastWheelTime.current = now; advance(); }
+    else if (delta < -5) { lastWheelTime.current = now; retreat(); }
+  }, [advance, retreat]);
+
   // Auto-cycle (always forward)
   useEffect(() => {
     if (len <= 1 || prefersReducedMotion) return;
@@ -160,11 +172,12 @@ export function LogoStack({ resources, interval = 2500 }: LogoStackProps) {
 
   return (
     <motion.div
-      className="relative overflow-visible cursor-grab active:cursor-grabbing"
-      style={{ width: containerW, maxWidth: '95vw', height: containerH }}
+      className="relative overflow-visible"
+      style={{ width: containerW, maxWidth: '95vw', height: containerH, touchAction: 'none' }}
+      onWheel={handleWheel}
       onPanEnd={(_, info) => {
-        if (info.offset.x < -40) advance();
-        else if (info.offset.x > 40) retreat();
+        if (info.offset.x < -30) advance();
+        else if (info.offset.x > 30) retreat();
       }}
       onKeyDown={(e) => {
         if (e.key === 'ArrowRight') advance();
