@@ -76,6 +76,27 @@ export default function Home() {
       .sort((a, b) => (b.gravityScore || 0) - (a.gravityScore || 0));
   }, []);
 
+  // Deferred landing exit — sequenced content→background fade before navigation
+  const exitTargetRef = useRef<string | null>(null);
+  const [isLandingExiting, setIsLandingExiting] = useState(false);
+
+  const handleLandingNavigate = useCallback((display: '3d' | 'card' | 'table') => {
+    if (prefersReducedMotion) {
+      setSearchParams({ display });
+      return;
+    }
+    exitTargetRef.current = display;
+    setIsLandingExiting(true);
+  }, [prefersReducedMotion, setSearchParams]);
+
+  const handleLandingExitComplete = useCallback(() => {
+    const target = exitTargetRef.current;
+    if (!target) return;
+    exitTargetRef.current = null;
+    setIsLandingExiting(false);
+    setSearchParams({ display: target });
+  }, [setSearchParams]);
+
   // Read filter params from URL for table view
   const categoryParam = searchParams.get('category');
   const subCategoryParam = searchParams.get('subCategory');
@@ -632,15 +653,19 @@ export default function Home() {
             <motion.div
               key="landing"
               initial={prefersReducedMotion ? PAGE_TRANSITION.reduced.initial : PAGE_TRANSITION.viewSwitch.initial}
-              animate={prefersReducedMotion ? PAGE_TRANSITION.reduced.animate : PAGE_TRANSITION.viewSwitch.animate}
-              exit={prefersReducedMotion ? PAGE_TRANSITION.reduced.exit : PAGE_TRANSITION.viewSwitch.exit}
-              transition={prefersReducedMotion ? PAGE_TRANSITION.reduced.transition : PAGE_TRANSITION.viewSwitch.transition}
+              animate={{
+                ...(prefersReducedMotion ? PAGE_TRANSITION.reduced.animate : PAGE_TRANSITION.viewSwitch.animate),
+                transition: prefersReducedMotion ? PAGE_TRANSITION.reduced.transition : PAGE_TRANSITION.viewSwitch.transition,
+              }}
+              exit={{ opacity: 0, transition: { duration: 0.05 } }}
               className="w-full h-full pointer-events-auto"
             >
               <LandingPage
                 resources={topResources}
                 totalCount={resources.length}
-                onNavigate={(display) => setSearchParams({ display })}
+                onNavigate={handleLandingNavigate}
+                isExiting={isLandingExiting}
+                onExitComplete={handleLandingExitComplete}
               />
             </motion.div>
           )}
