@@ -32,3 +32,6 @@ dist-ssr
 
 # Vercel build output (should never be committed)
 .vercel/output
+
+# Generated script artifacts
+scripts/image-audit-report.json
