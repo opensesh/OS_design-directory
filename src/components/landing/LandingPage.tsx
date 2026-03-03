@@ -128,9 +128,9 @@ export function LandingPage({ resources, totalCount, onNavigate, isExiting, onEx
         {/* Description */}
         <motion.p
           variants={variants}
-          className="text-lg md:text-xl text-brand-vanilla text-center max-w-md"
+          className="text-lg md:text-xl text-brand-vanilla text-center max-w-sm"
         >
-          Discover hand-picked design inspiration & resources.
+          Discover hand-picked design inspiration & resources by experts.
         </motion.p>
 
         {/* Label + Toggle grouped with tight spacing */}
