@@ -78,6 +78,7 @@ export default function Home() {
 
   // Deferred landing exit — sequenced content→background fade before navigation
   const exitTargetRef = useRef<string | null>(null);
+  const exitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isLandingExiting, setIsLandingExiting] = useState(false);
 
   const handleLandingNavigate = useCallback((display: '3d' | 'card' | 'table') => {
@@ -85,13 +86,33 @@ export default function Home() {
       setSearchParams({ display });
       return;
     }
+    // Clear any previous exit timer
+    if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
+
     exitTargetRef.current = display;
     setIsLandingExiting(true);
+
+    // Guaranteed navigation after exit animation (500ms)
+    // This lives in Home rather than LandingPage so it can't be
+    // disrupted by child re-renders or unstable callback references.
+    exitTimerRef.current = setTimeout(() => {
+      exitTimerRef.current = null;
+      const target = exitTargetRef.current;
+      if (!target) return; // Already navigated via onExitComplete
+      exitTargetRef.current = null;
+      setIsLandingExiting(false);
+      setSearchParams({ display: target });
+    }, 500);
   }, [prefersReducedMotion, setSearchParams]);
 
   const handleLandingExitComplete = useCallback(() => {
     const target = exitTargetRef.current;
     if (!target) return;
+    // Animation completed before timeout — clear it and navigate now
+    if (exitTimerRef.current) {
+      clearTimeout(exitTimerRef.current);
+      exitTimerRef.current = null;
+    }
     exitTargetRef.current = null;
     setIsLandingExiting(false);
     setSearchParams({ display: target });

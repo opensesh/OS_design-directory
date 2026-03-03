@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { DURATION, EASING } from '@/lib/motion-tokens';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -48,7 +47,6 @@ const reducedItemVariants = {
 const EXIT_CONTENT_DURATION = 0.2;
 const EXIT_BG_DELAY = 0.15;
 const EXIT_BG_DURATION = 0.3;
-const EXIT_TOTAL_MS = (EXIT_BG_DELAY + EXIT_BG_DURATION) * 1000; // 450ms
 
 /**
  * LandingPage
@@ -60,14 +58,6 @@ const EXIT_TOTAL_MS = (EXIT_BG_DELAY + EXIT_BG_DURATION) * 1000; // 450ms
 export function LandingPage({ resources, totalCount, onNavigate, isExiting, onExitComplete }: LandingPageProps) {
   const prefersReducedMotion = useReducedMotion();
   const variants = prefersReducedMotion ? reducedItemVariants : itemVariants;
-
-  // Safety timeout — ensures navigation fires even if onAnimationComplete doesn't
-  useEffect(() => {
-    if (!isExiting || !onExitComplete) return;
-    const ms = prefersReducedMotion ? DURATION.fast * 1000 + 50 : EXIT_TOTAL_MS + 50;
-    const safety = setTimeout(onExitComplete, ms);
-    return () => clearTimeout(safety);
-  }, [isExiting, onExitComplete, prefersReducedMotion]);
 
   return (
     <div className="h-full flex flex-col items-center justify-center px-6 pb-16 relative">
