@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DURATION, EASING } from '@/lib/motion-tokens';
@@ -60,6 +60,44 @@ function useIsMobile() {
   return isMobile;
 }
 
+/** Classify a resource's effective background as dark, light, or color. */
+function classifyBg(resource: NormalizedResource): 'dark' | 'light' | 'color' {
+  const custom = CUSTOM_LOGOS[resource.name];
+  const bg = custom
+    ? custom.bg
+    : (resolveLogoBg(resource.logoBg) ?? DEFAULT_SOLID_BG);
+
+  const normalized = bg.toLowerCase();
+
+  const lightSet = new Set(['#f5f3f0', '#fffaee', '#ffffff', '#f5f5f5', '#fafafa']);
+  if (lightSet.has(normalized)) return 'light';
+
+  const darkSet = new Set(['#191919', '#1c1c1c', '#2a2a2a', '#323232', '#0d0d0d', '#000000']);
+  if (darkSet.has(normalized)) return 'dark';
+
+  return 'color';
+}
+
+/**
+ * Reorder resources so backgrounds cycle color → light → dark.
+ * Gravity-score ordering is preserved within each category bucket.
+ */
+function interleaveByCategory(sorted: NormalizedResource[]): NormalizedResource[] {
+  const buckets: Record<'color' | 'light' | 'dark', NormalizedResource[]> = {
+    color: [], light: [], dark: [],
+  };
+  for (const r of sorted) buckets[classifyBg(r)].push(r);
+
+  const result: NormalizedResource[] = [];
+  const maxLen = Math.max(buckets.color.length, buckets.light.length, buckets.dark.length);
+  for (let i = 0; i < maxLen; i++) {
+    if (i < buckets.color.length) result.push(buckets.color[i]);
+    if (i < buckets.light.length) result.push(buckets.light[i]);
+    if (i < buckets.dark.length)  result.push(buckets.dark[i]);
+  }
+  return result;
+}
+
 /**
  * LogoStack
  *
@@ -67,6 +105,9 @@ function useIsMobile() {
  * The center card is full size; flanking cards scale down uniformly (0.84 → 0.70).
  * Auto-cycles every 2.5 s; supports drag-to-scroll. Every card is individually
  * clickable and navigates to that resource's detail page.
+ *
+ * Resources are interleaved by background category (color → light → dark) so
+ * the carousel never shows long runs of same-tone cards.
  */
 export function LogoStack({ resources, interval = 2500 }: LogoStackProps) {
   const [index, setIndex] = useState(0);
@@ -74,9 +115,13 @@ export function LogoStack({ resources, interval = 2500 }: LogoStackProps) {
   const prefersReducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
   const navigate = useNavigate();
-  const len = resources.length;
+
+  // Reorder for visual variety before anything else
+  const diversified = useMemo(() => interleaveByCategory(resources), [resources]);
+  const len = diversified.length;
 
   const SLOTS = isMobile ? MOBILE_SLOTS : DESKTOP_SLOTS;
+  const cardSize = isMobile ? 56 : 80;
 
   // Preload custom SVGs
   useEffect(() => {
@@ -103,14 +148,15 @@ export function LogoStack({ resources, interval = 2500 }: LogoStackProps) {
     return () => clearInterval(timer);
   }, [len, interval, advance, prefersReducedMotion]);
 
-  if (!resources.length) return null;
+  if (!diversified.length) return null;
 
   // 5 visible resources: far-left → near-left → center → near-right → far-right
   const visible = [-2, -1, 0, 1, 2].map((offset) => (index + offset + len) % len);
-  const centerResource = resources[visible[2]];
+  const centerResource = diversified[visible[2]];
 
   const containerW = isMobile ? '300px' : '420px';
-  const containerH = isMobile ? '56px' : '80px';
+  const containerH = `${cardSize}px`;
+  const half = cardSize / 2;
 
   return (
     <motion.div
@@ -133,21 +179,26 @@ export function LogoStack({ resources, interval = 2500 }: LogoStackProps) {
       <AnimatePresence initial={false}>
         {visible.map((resIdx, slotIdx) => {
           const cfg = SLOTS[slotIdx];
-          const resource = resources[resIdx];
+          const resource = diversified[resIdx];
           const custom = CUSTOM_LOGOS[resource.name];
-
           const solidBg = !custom
             ? resolveLogoBg(resource.logoBg) ?? DEFAULT_SOLID_BG
             : undefined;
 
-          const cardClass = isMobile
-            ? 'w-14 h-14'
-            : 'w-20 h-20';
-
           return (
             <motion.div
               key={`${resIdx}-${resource.name}`}
-              className="absolute inset-0 flex items-center justify-center pointer-events-none"
+              className="absolute rounded-2xl overflow-hidden border border-[var(--border-secondary)] cursor-pointer"
+              style={{
+                top: '50%',
+                left: '50%',
+                marginTop: `-${half}px`,
+                marginLeft: `-${half}px`,
+                width: `${cardSize}px`,
+                height: `${cardSize}px`,
+                backgroundColor: custom ? custom.bg : solidBg,
+                boxShadow: cfg.shadow,
+              }}
               initial={{
                 x: direction > 0 ? 260 : -260,
                 scale: 0.55,
@@ -170,36 +221,23 @@ export function LogoStack({ resources, interval = 2500 }: LogoStackProps) {
                 duration: prefersReducedMotion ? DURATION.fast : DURATION.slower,
                 ease: EASING.smooth,
               }}
-              style={{ boxShadow: cfg.shadow }}
+              onClick={() => navigate(`/resource/${resource.id}`)}
+              title={resource.name}
             >
               {custom ? (
-                <div
-                  className={`${cardClass} rounded-2xl flex items-center justify-center overflow-hidden border border-[var(--border-secondary)] pointer-events-auto cursor-pointer`}
-                  style={{ backgroundColor: custom.bg }}
-                  onClick={() => navigate(`/resource/${resource.id}`)}
-                  title={resource.name}
-                >
-                  <img
-                    src={custom.src}
-                    alt={resource.name}
-                    className="w-3/5 h-3/5 object-contain"
-                  />
-                </div>
+                <img
+                  src={custom.src}
+                  alt={resource.name}
+                  className="w-3/5 h-3/5 object-contain absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                />
               ) : (
-                <div
-                  className={`${cardClass} rounded-2xl overflow-hidden border border-[var(--border-secondary)] pointer-events-auto cursor-pointer`}
-                  style={{ backgroundColor: solidBg }}
-                  onClick={() => navigate(`/resource/${resource.id}`)}
-                  title={resource.name}
-                >
-                  <ResourceLogo
-                    resource={resource}
-                    size="lg"
-                    faviconSize="md"
-                    bordered={false}
-                    className="rounded-2xl !w-full !h-full"
-                  />
-                </div>
+                <ResourceLogo
+                  resource={resource}
+                  size="lg"
+                  faviconSize="md"
+                  bordered={false}
+                  className="rounded-2xl !w-full !h-full"
+                />
               )}
             </motion.div>
           );
