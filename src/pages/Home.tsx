@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Box, Table2, Search, LayoutGrid, Info, X } from 'lucide-react';
 import { SearchModal } from '../components/search/SearchModal';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
+import { useTouchDevice } from '../hooks/useTouchDevice';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PAGE_TRANSITION, DURATION, EASING, TRANSITION } from '@/lib/motion-tokens';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -44,6 +45,7 @@ export default function Home() {
   const [legendButtonRect, setLegendButtonRect] = useState<DOMRect | null>(null);
   const legendButtonRef = useRef<HTMLButtonElement>(null);
   const prefersReducedMotion = useReducedMotion();
+  const isTouchDevice = useTouchDevice();
 
   // Universe loading state
   type LoadingPhase = 'loading' | 'ready';
@@ -326,10 +328,25 @@ export default function Home() {
     }
   }, []);
 
-  // Handle resource click
-  const handleResourceClick = (resource: NormalizedResource) => {
-    navigate(`/resource/${resource.id}`);
-  };
+  // Handle resource click — two-tap flow on touch devices
+  const handleResourceClick = useCallback((resource: NormalizedResource) => {
+    if (isTouchDevice && displayMode === '3d') {
+      // First tap: show resource card centered on screen
+      setHoveredResource(resource);
+      setMousePosition({
+        x: window.innerWidth / 2,
+        y: window.innerHeight / 2,
+      });
+    } else {
+      // Desktop: single click navigates directly
+      navigate(`/resource/${resource.id}`);
+    }
+  }, [isTouchDevice, displayMode, navigate]);
+
+  // Handle touch miss — dismiss resource card when tapping empty space
+  const handleCanvasMiss = useCallback(() => {
+    setHoveredResource(null);
+  }, []);
 
   // Handle resource hover
   const handleResourceHover = (resource: NormalizedResource | null, position?: { x: number; y: number }) => {
@@ -468,6 +485,7 @@ export default function Home() {
                   matchedCategories={matchedCategories}
                   onResourceClick={handleResourceClick}
                   onResourceHover={handleResourceHover}
+                  onMiss={handleCanvasMiss}
                   onReady={() => {
                     const elapsed = Date.now() - loadStartTime.current;
                     const minDisplayTime = 3000; // Ensure at least 2 full ripple cycles
@@ -838,6 +856,7 @@ export default function Home() {
         <InspoResourceTooltip
           resource={hoveredResource}
           mousePosition={mousePosition}
+          isTouchDevice={isTouchDevice}
           onClick={(resource) => {
             setHoveredResource(null);
             navigate(`/resource/${resource.id}`);

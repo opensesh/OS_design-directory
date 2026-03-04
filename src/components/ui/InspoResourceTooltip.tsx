@@ -9,6 +9,7 @@ interface InspoResourceTooltipProps {
   onClick?: (resource: NormalizedResource) => void;
   resource: NormalizedResource | null;
   mousePosition: { x: number; y: number };
+  isTouchDevice?: boolean;
 }
 
 /**
@@ -21,6 +22,7 @@ export default function InspoResourceTooltip({
   onClick,
   resource,
   mousePosition,
+  isTouchDevice = false,
 }: InspoResourceTooltipProps) {
   const tooltipRef = useRef<HTMLDivElement>(null);
   const [adjustedPosition, setAdjustedPosition] = useState({ x: 0, y: 0 });
@@ -141,9 +143,8 @@ export default function InspoResourceTooltip({
               </p>
             )}
 
-            {/* Click hint */}
             <p className="text-[var(--fg-tertiary)] text-xs mt-3 pt-2 border-t border-[var(--border-secondary)]">
-              Click to view details →
+              {isTouchDevice ? 'Tap to view details →' : 'Click to view details →'}
             </p>
           </div>
         </motion.div>

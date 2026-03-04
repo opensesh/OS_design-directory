@@ -923,6 +923,7 @@ interface InspoCanvasProps {
   matchedCategories?: string[];
   onResourceHover?: (resource: NormalizedResource | null, mousePosition: { x: number; y: number }) => void;
   onResourceClick?: (resource: NormalizedResource) => void;
+  onMiss?: () => void;
   onReady?: () => void;
 }
 
@@ -944,6 +945,7 @@ export default function InspoCanvas({
   matchedCategories,
   onResourceHover,
   onResourceClick,
+  onMiss,
   onReady,
 }: InspoCanvasProps) {
   const resourceNodesRef = useRef<ResourceNodesHandle>(null);
@@ -1007,6 +1009,11 @@ export default function InspoCanvas({
       }
     }
   }, [onResourceClick]);
+
+  // Handle touch miss (tapped empty space)
+  const handleMiss = useCallback(() => {
+    onMiss?.();
+  }, [onMiss]);
 
   return (
     <Canvas
@@ -1077,6 +1084,7 @@ export default function InspoCanvas({
           onHover={handleHover}
           onClick={handleClick}
           onClickAnimation={handleClickAnimation}
+          onMiss={handleMiss}
         />
       )}
 
