@@ -187,6 +187,13 @@ export default function Home() {
     };
   }, [hoveredResource]);
 
+  // Clear tooltip when leaving 3D view (prevents card carrying over to other pages)
+  useEffect(() => {
+    if (displayMode !== '3d') {
+      setHoveredResource(null);
+    }
+  }, [displayMode]);
+
   // Filter resources based on category, subcategory, and semantic search
   const filteredResources = useMemo(() => {
     // Start with all resources or filter by category/subcategory
@@ -826,15 +833,17 @@ export default function Home() {
       </div>
       {/* End of UI Overlay Container */}
 
-      {/* Tooltip - needs to be outside overlay for proper z-index */}
-      <InspoResourceTooltip
-        resource={hoveredResource}
-        mousePosition={mousePosition}
-        onClick={(resource) => {
-          setHoveredResource(null);
-          navigate(`/resource/${resource.id}`);
-        }}
-      />
+      {/* Tooltip - only shown in 3D view, outside overlay for proper z-index */}
+      {displayMode === '3d' && (
+        <InspoResourceTooltip
+          resource={hoveredResource}
+          mousePosition={mousePosition}
+          onClick={(resource) => {
+            setHoveredResource(null);
+            navigate(`/resource/${resource.id}`);
+          }}
+        />
+      )}
 
       {/* Search Modal - needs to be outside overlay for proper z-index */}
       <SearchModal
