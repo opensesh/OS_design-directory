@@ -202,6 +202,7 @@ interface InteractionControllerProps {
   onHover: (index: number | null) => void;
   onClick: (index: number) => void;
   onClickAnimation?: (index: number) => void;
+  onMiss?: () => void;
 }
 
 function InteractionController({
@@ -209,12 +210,14 @@ function InteractionController({
   onHover,
   onClick,
   onClickAnimation,
+  onMiss,
 }: InteractionControllerProps) {
   const { camera, gl } = useThree();
   const raycaster = useMemo(() => new THREE.Raycaster(), []);
   const mouse = useRef(new THREE.Vector2(-999, -999)); // Start off-screen
   const lastHoveredRef = useRef<number | null>(null);
   const isMouseInCanvasRef = useRef(false);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
   // Reusable objects for proximity check loop (avoids per-frame allocations)
   const tempMatrix = useRef(new THREE.Matrix4());
   const tempPosition = useRef(new THREE.Vector3());
@@ -286,16 +289,36 @@ function InteractionController({
       }
     };
 
+    // Track touch start position to distinguish taps from drags
+    const handleTouchStart = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      if (!touch) return;
+      touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+    };
+
     // Handle touch tap for mobile/tablet devices
+    const TOUCH_DRAG_THRESHOLD = 10; // pixels — movement beyond this = drag, not tap
     const handleTouchEnd = (event: TouchEvent) => {
       if (!resourceNodesRef.current) return;
-      
+
       const mesh = resourceNodesRef.current.getMesh();
       if (!mesh) return;
 
       // Use the last touch point
       const touch = event.changedTouches[0];
       if (!touch) return;
+
+      // Check if this was a drag (pan/rotate), not a tap
+      if (touchStartRef.current) {
+        const dx = touch.clientX - touchStartRef.current.x;
+        const dy = touch.clientY - touchStartRef.current.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        touchStartRef.current = null;
+
+        if (distance > TOUCH_DRAG_THRESHOLD) {
+          return; // Was a drag/pan — ignore
+        }
+      }
 
       const rect = canvas.getBoundingClientRect();
       mouse.current.x = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
@@ -319,6 +342,9 @@ function InteractionController({
             onClick(index);
           }, 150);
         }
+      } else {
+        // Tapped empty space — dismiss any open card
+        onMiss?.();
       }
     };
 
@@ -326,6 +352,7 @@ function InteractionController({
     canvas.addEventListener('mouseenter', handleMouseEnter);
     canvas.addEventListener('click', handleClick);
     canvas.addEventListener('mouseleave', handleMouseLeave);
+    canvas.addEventListener('touchstart', handleTouchStart, { passive: true });
     canvas.addEventListener('touchcancel', handleTouchCancel);
     canvas.addEventListener('touchend', handleTouchEnd);
 
@@ -334,10 +361,11 @@ function InteractionController({
       canvas.removeEventListener('mouseenter', handleMouseEnter);
       canvas.removeEventListener('click', handleClick);
       canvas.removeEventListener('mouseleave', handleMouseLeave);
+      canvas.removeEventListener('touchstart', handleTouchStart);
       canvas.removeEventListener('touchcancel', handleTouchCancel);
       canvas.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [camera, gl, raycaster, resourceNodesRef, onHover, onClick, onClickAnimation]);
+  }, [camera, gl, raycaster, resourceNodesRef, onHover, onClick, onClickAnimation, onMiss]);
 
   // Perform raycasting on each frame for smooth hover detection
   // With 2x radius screen-space proximity check for delightful gliding experience
