@@ -145,6 +145,7 @@ export function LogoStack({ resources, interval = 2500 }: LogoStackProps) {
   const lastWheelTime = useRef(0);
   const handleWheel = useCallback((e: React.WheelEvent) => {
     e.stopPropagation();
+    e.preventDefault();
     const now = Date.now();
     if (now - lastWheelTime.current < 600) return;
     // Prefer horizontal delta (trackpad swipe); fall back to vertical (scroll wheel)

@@ -60,7 +60,7 @@ export function LandingPage({ resources, totalCount, onNavigate, isExiting, onEx
   const variants = prefersReducedMotion ? reducedItemVariants : itemVariants;
 
   return (
-    <div className="h-full flex flex-col items-center justify-center px-6 pb-16 relative">
+    <div className="h-full flex flex-col items-center justify-center px-6 pb-16 relative overflow-x-hidden">
       {/* Background layer — Prismatic Burst + Starfield */}
       {!prefersReducedMotion && (
         <motion.div
