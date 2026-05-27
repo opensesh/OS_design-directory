@@ -3649,5 +3649,28 @@
     "gravityScore": 7.2,
     "gravityRationale": "3D animation and automated rigging tools",
     "id": 155
+  },
+  {
+    "name": "LandscapioAI",
+    "url": "https://www.landscapioai.com/",
+    "description": "AI-powered landscape design platform that helps homeowners and design teams turn outdoor spaces into realistic garden and yard concepts, exploring planting, hardscape, and style directions before committing to a build.",
+    "category": "AI",
+    "subCategory": "Landscape Design",
+    "pricing": "Freemium",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "ai",
+      "landscape-design",
+      "garden-design",
+      "exterior-design"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": null,
+    "gravityScore": 7.4,
+    "gravityRationale": "AI landscape and exterior design concept generation for real outdoor spaces",
+    "id": 156
   }
 ]
