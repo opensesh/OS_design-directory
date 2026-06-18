@@ -3649,5 +3649,29 @@
     "gravityScore": 7.2,
     "gravityRationale": "3D animation and automated rigging tools",
     "id": 155
+  },
+  {
+    "name": "Roblox GUI Maker",
+    "url": "https://robloxguimaker.dev/",
+    "description": "Roblox GUI Maker is a free AI-assisted planning tool for Roblox Studio interface work, helping creators turn prompts into ScreenGui layout ideas, HUDs, menus, shop screens, inventory flows, and Lua UI starter-code directions.\n\nDesigners and Roblox developers can use it before opening Studio to explore UI structure, name components, plan states, and hand a clearer blueprint to the implementation stage.",
+    "category": "AI",
+    "subCategory": "Design",
+    "pricing": "Free",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "ai",
+      "roblox",
+      "ui",
+      "game-dev",
+      "screen-gui"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": null,
+    "gravityScore": 7.4,
+    "gravityRationale": "Niche AI UI planner for Roblox Studio creators",
+    "id": 156
   }
 ]
