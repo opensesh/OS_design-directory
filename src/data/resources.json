@@ -3649,5 +3649,29 @@
     "gravityScore": 7.2,
     "gravityRationale": "3D animation and automated rigging tools",
     "id": 155
+  },
+  {
+    "name": "igly.ai",
+    "url": "https://igly.ai",
+    "description": "igly.ai is an AI image editing platform for fast visual cleanup and product-ready asset creation, combining background removal, inpainting, generative fill, and image upscaling in a browser-based workflow. Designers, marketers, and e-commerce teams can use it to remove distractions, replace or extend parts of an image, clean up product shots, and create sharper visuals without moving between multiple specialist tools.\n\nFor creative workflows, igly.ai fits the production stage after ideation: take a generated or photographed asset, fix unwanted areas, isolate the subject, upscale the final image, and export a cleaner version for landing pages, ads, product listings, or social content. Demo: https://www.youtube.com/watch?v=HB2E1WZ12is",
+    "category": "AI",
+    "subCategory": "Generative",
+    "pricing": "Freemium",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "ai",
+      "image-editing",
+      "background-removal",
+      "inpainting"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": null,
+    "gravityScore": 7.7,
+    "gravityRationale": "AI image editor for production-ready visuals",
+    "id": 156,
+    "logoBg": "light"
   }
 ]
