@@ -3649,5 +3649,28 @@
     "gravityScore": 7.2,
     "gravityRationale": "3D animation and automated rigging tools",
     "id": 155
+  },
+  {
+    "name": "FrontendAtlas Machine Coding",
+    "url": "https://frontendatlas.com/machine-coding",
+    "description": "Frontend interview preparation for machine-coding rounds, with prompts covering UI components, async widgets, forms, tables, keyboard behavior, accessibility, and implementation trade-offs.",
+    "category": "Learning",
+    "subCategory": "Guides",
+    "pricing": "Freemium",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "frontend",
+      "machine-coding",
+      "interview",
+      "practice"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": null,
+    "gravityScore": 7.8,
+    "gravityRationale": "Frontend machine-coding interview practice",
+    "id": 157
   }
 ]
