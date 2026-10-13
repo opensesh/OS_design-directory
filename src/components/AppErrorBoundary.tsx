@@ -42,7 +42,8 @@ export class AppErrorBoundary extends Component<Props, State> {
   };
 
   handleGoHome = () => {
-    window.location.href = '/';
+    // The app's home is the base path (/directory/ in production), not the site root
+    window.location.href = import.meta.env.BASE_URL;
   };
 
   render() {

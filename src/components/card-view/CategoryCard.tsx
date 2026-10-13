@@ -4,6 +4,7 @@ import { getCategoryColor } from "../../types/resource";
 import { useTouchDevice } from "../../hooks/useTouchDevice";
 import { DURATION, EASING } from "@/lib/motion-tokens";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { withBase } from "@/lib/base-path";
 
 interface CategoryCardProps {
   category: string;
@@ -14,21 +15,21 @@ interface CategoryCardProps {
 }
 
 const CATEGORY_VIDEOS: Record<string, string> = {
-  "Community": "/videos/categories/community.mp4",
-  "Inspiration": "/videos/categories/inspiration.mp4",
-  "Learning": "/videos/categories/learning.mp4",
-  "Templates": "/videos/categories/templates.mp4",
-  "Tools": "/videos/categories/tools.mp4",
-  "AI": "/videos/categories/ai.mp4",
+  "Community": withBase("/videos/categories/community.mp4"),
+  "Inspiration": withBase("/videos/categories/inspiration.mp4"),
+  "Learning": withBase("/videos/categories/learning.mp4"),
+  "Templates": withBase("/videos/categories/templates.mp4"),
+  "Tools": withBase("/videos/categories/tools.mp4"),
+  "AI": withBase("/videos/categories/ai.mp4"),
 };
 
 const CATEGORY_POSTERS: Record<string, string> = {
-  "Community": "/images/posters/community.jpg",
-  "Inspiration": "/images/posters/inspiration.jpg",
-  "Learning": "/images/posters/learning.jpg",
-  "Templates": "/images/posters/templates.jpg",
-  "Tools": "/images/posters/tools.jpg",
-  "AI": "/images/posters/ai.jpg",
+  "Community": withBase("/images/posters/community.jpg"),
+  "Inspiration": withBase("/images/posters/inspiration.jpg"),
+  "Learning": withBase("/images/posters/learning.jpg"),
+  "Templates": withBase("/images/posters/templates.jpg"),
+  "Tools": withBase("/images/posters/tools.jpg"),
+  "AI": withBase("/images/posters/ai.jpg"),
 };
 
 const CATEGORY_VIDEO_POSITIONS: Record<string, string> = {

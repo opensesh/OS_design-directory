@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import { useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 import { generateStarfieldLayout } from '../../utils/particle-layouts';
+import { withBase } from '../../lib/base-path';
 
 /**
  * GalaxyBackground Component
@@ -137,7 +138,7 @@ interface SkyboxProps {
 /**
  * Skybox - Equirectangular JPEG texture mapped to inside of sphere (dark mode)
  */
-function Skybox({ texturePath = '/textures/galaxy/skybox.jpg', opacity = 1 }: SkyboxProps) {
+function Skybox({ texturePath = withBase('/textures/galaxy/skybox.jpg'), opacity = 1 }: SkyboxProps) {
   const texture = useTexture(texturePath);
 
   useMemo(() => {

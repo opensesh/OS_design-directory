@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { DURATION, EASING } from '@/lib/motion-tokens';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { resolveLogoBg } from '@/lib/favicon';
+import { withBase } from '@/lib/base-path';
 import { ResourceLogo } from '@/components/ui/ResourceLogo';
 import type { NormalizedResource } from '@/types/resource';
 
@@ -15,11 +16,11 @@ interface LogoStackProps {
 
 /** Custom SVG logo overrides: path + container background */
 const CUSTOM_LOGOS: Record<string, { src: string; bg: string }> = {
-  Claude: { src: '/logos/claude.svg', bg: '#D77655' },
-  Figma: { src: '/logos/figma.svg', bg: '#FFFAEE' },
-  GitHub: { src: '/logos/github.svg', bg: '#191919' },
-  Midjourney: { src: '/logos/midjourney.svg', bg: '#FFFAEE' },
-  'React Bits': { src: '/logos/react-bits.svg', bg: '#191919' },
+  Claude: { src: withBase('/logos/claude.svg'), bg: '#D77655' },
+  Figma: { src: withBase('/logos/figma.svg'), bg: '#FFFAEE' },
+  GitHub: { src: withBase('/logos/github.svg'), bg: '#191919' },
+  Midjourney: { src: withBase('/logos/midjourney.svg'), bg: '#FFFAEE' },
+  'React Bits': { src: withBase('/logos/react-bits.svg'), bg: '#191919' },
 };
 
 /** Solid fallback for resources without an explicit logoBg */

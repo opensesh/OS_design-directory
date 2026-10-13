@@ -9,6 +9,7 @@ import {
 } from '../../utils/orbital-layout';
 import type { NormalizedResource } from '../../types/resource';
 import { getCategoryColor } from '../../types/resource';
+import { withBase } from '../../lib/base-path';
 
 /**
  * Planet texture paths for node surface detail
@@ -22,7 +23,7 @@ const PLANET_TEXTURES = [
   '/textures/planets/2k_uranus.jpg',
   '/textures/planets/2k_venus_atmosphere.jpg',
   '/textures/planets/2k_venus_surface.jpg',
-];
+].map((path) => withBase(path));
 
 /**
  * Seeded random number generator for consistent texture assignment

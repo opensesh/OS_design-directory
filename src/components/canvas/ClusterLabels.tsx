@@ -3,9 +3,12 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { Text, useFont } from '@react-three/drei';
 import * as THREE from 'three';
 import type { CategoryCluster } from '../../utils/orbital-layout';
+import { withBase } from '../../lib/base-path';
+
+const LABEL_FONT = withBase('/fonts/OffBit-Bold.woff2');
 
 // Preload font at module level to prevent suspension
-useFont.preload('/fonts/OffBit-Bold.woff2');
+useFont.preload(LABEL_FONT);
 
 /**
  * Animation configuration for cluster labels
@@ -75,7 +78,7 @@ function ClusterLabel({ cluster, isActive, isMatched, hasAnyFilter }: ClusterLab
         cluster.center.y + cluster.radius + ANIMATION.LABEL_OFFSET_Y,
         cluster.center.z,
       ]}
-      font="/fonts/OffBit-Bold.woff2"
+      font={LABEL_FONT}
       fontSize={ANIMATION.FONT_SIZE}
       color={cluster.color}
       fillOpacity={opacity}
