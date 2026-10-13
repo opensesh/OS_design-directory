@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import { useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 import type { CategoryCluster } from '../../utils/orbital-layout';
+import { withBase } from '../../lib/base-path';
 
 /**
  * Cloud configuration for volumetric nebula effect
@@ -208,7 +209,7 @@ export default function NebulaPlanes({
   globalOpacity = 1,
 }: NebulaPlanesProps) {
   // Load smoke texture
-  const texture = useTexture('/textures/clouds/smoke.png');
+  const texture = useTexture(withBase('/textures/clouds/smoke.png'));
 
   const hasAnyFilter = activeCategory !== null || (matchedCategories !== undefined && matchedCategories.length > 0);
 

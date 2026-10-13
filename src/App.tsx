@@ -1,8 +1,10 @@
+import { useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Home from './pages/Home';
 import ResourceDetail from './pages/ResourceDetail';
 import { PageTransition } from './components/layout/PageTransition';
+import { applyCanonical, canonicalUrl } from './lib/canonical';
 
 /**
  * App
@@ -18,6 +20,11 @@ import { PageTransition } from './components/layout/PageTransition';
  */
 function App() {
   const location = useLocation();
+
+  // Each route names its own opensession.co URL, so resource pages can be indexed one by one
+  useEffect(() => {
+    applyCanonical(canonicalUrl(location.pathname));
+  }, [location.pathname]);
 
   return (
     <AnimatePresence mode="wait">

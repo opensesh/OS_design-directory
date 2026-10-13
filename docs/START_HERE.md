@@ -213,8 +213,12 @@ Update these for your own deployment:
 - `<title>` — page title
 - `<meta name="description">` — search engine description
 - `<meta property="og:title">` and `og:description` — social share preview text
-- `<meta property="og:image">` — social share preview image (update the URL to your own domain)
+- `<meta property="og:image">` and `twitter:image` — social share preview image (update the URL to your own domain)
 - `<link rel="icon">` — favicon
+
+Two more settings live in code:
+- **Canonical URL:** the app sets the canonical link and `og:url` per route. Change `SITE_ORIGIN` in `src/lib/canonical.ts` to your domain.
+- **Base path:** the app is served under `/directory/`. Change `BASE` in `vite.config.ts` (`'/'` for the root of a domain) and the matching rules in `vercel.json`; see the README's [Base path](../README.md#base-path) section.
 
 ---
 

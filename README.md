@@ -36,7 +36,7 @@ bun dev
 bun run build
 ```
 
-The dev server runs at `http://localhost:3001/` with hot module replacement.
+The dev server runs at `http://localhost:3001/directory/` with hot module replacement. The app lives under the `/directory/` base path (see [Base path](#base-path)), so the URLs below are relative to it.
 
 ---
 
@@ -65,7 +65,7 @@ Want to create your own resource directory? Here's how:
 4. **Add screenshots** to `public/assets/screenshots/`
 5. **Customize branding** in `src/styles/theme.css`
 6. **Run `bun dev`** to preview your changes
-7. **Deploy** to Vercel, Netlify, or your preferred host
+7. **Deploy** to Vercel, Netlify, or your preferred host. The app builds under `/directory/`; to serve it from the root of your domain, see [Base path](#base-path)
 
 For a full walkthrough of everything you can customize — categories, colors, landing page effects, animations, search behavior, fonts — see **[docs/START_HERE.md](docs/START_HERE.md)**.
 
@@ -345,8 +345,24 @@ netlify deploy --prod
 **Manual**
 ```bash
 bun run build
-# Upload `dist/` folder to your host
+# The app builds into dist/directory/ and is served at /directory/.
+# Upload dist/ to your host and point its SPA fallback at /directory/index.html,
+# or see "Base path" below to serve it from the root.
 ```
+
+### Base path
+
+We serve the directory at [opensession.co/directory](https://opensession.co/directory), which proxies to this app's Vercel deployment, so the app lives under `/directory/` wherever it runs:
+
+- `BASE` in `vite.config.ts` sets Vite's `base` and the router's basename, and the build lands in `dist/directory/`.
+- `vercel.json` serves `/directory/*` (with the SPA fallback for deep links), maps `/directory/api/*` to the serverless functions and redirects `/` to `/directory`.
+- `SITE_ORIGIN` in `src/lib/canonical.ts` is the domain each route names as its canonical URL.
+
+To serve a fork from the root of its own domain:
+
+1. Set `BASE` to `'/'` in `vite.config.ts`. The build then lands in `dist/`.
+2. In `vercel.json`, replace the `redirects` and `rewrites` with a root SPA fallback: `{ "source": "/((?!api/)[^.]*)", "destination": "/index.html" }`. On other hosts, set their SPA fallback to `/index.html`.
+3. Set `SITE_ORIGIN` in `src/lib/canonical.ts` to your domain, and point the `og:image` and `twitter:image` URLs in `index.html` at it.
 
 ---
 
@@ -361,6 +377,7 @@ Fork it, build it, deploy it. No API keys, no backend, no external services requ
 ```bash
 bun run build
 # Upload dist/ to any static host (GitHub Pages, Netlify, Cloudflare, etc.)
+# The app is served at /directory/; see "Base path" to serve it from the root
 ```
 
 **What works:**

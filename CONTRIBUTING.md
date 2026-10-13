@@ -21,7 +21,7 @@ bun install
 bun dev
 ```
 
-The dev server runs at `http://localhost:3001/`.
+The dev server runs at `http://localhost:3001/directory/` (the app lives under the `/directory/` base path; see the README's Base path section).
 
 ## Making Changes
 

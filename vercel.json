@@ -3,6 +3,16 @@
   "buildCommand": "bun run build",
   "installCommand": "bun install",
   "framework": "vite",
+  "outputDirectory": "dist",
+  "redirects": [
+    { "source": "/", "destination": "/directory", "permanent": true },
+    { "source": "/resource/:id", "destination": "/directory/resource/:id", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/directory/api/:path*", "destination": "/api/:path*" },
+    { "source": "/directory", "destination": "/directory/index.html" },
+    { "source": "/directory/((?!api/)[^.]*)", "destination": "/directory/index.html" }
+  ],
   "headers": [
     {
       "source": "/(.*)",

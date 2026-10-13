@@ -5,6 +5,8 @@
  * filters and semantic concepts for intelligent search.
  */
 
+import { withBase } from '../base-path';
+
 /**
  * Parsed query structure returned by the LLM
  */
@@ -102,7 +104,7 @@ Now parse: "${query}"`;
  */
 export async function parseQueryWithLLM(query: string): Promise<ParsedQuery> {
   try {
-    const response = await fetch('/api/search/parse-query', {
+    const response = await fetch(withBase('/api/search/parse-query'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
