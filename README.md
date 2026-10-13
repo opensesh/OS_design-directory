@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-An interactive 3D design resource directory created by [Open Session](https://opensession.co). Use it as-is to explore 155+ curated design resources, or fork it as a template for any dataset — swap the JSON and make it your own.
+An interactive 3D design resource directory created by [open session](https://opensession.co). Use it as-is to explore 155+ curated design resources, or fork it as a template for any dataset — swap the JSON and make it your own.
 
 <!-- TODO: Add a GIF or screenshot here showing the app in action -->
 <!-- ![Design Directory Preview](docs/assets/preview.gif) -->
@@ -534,7 +534,7 @@ This project uses **Neue Haas Grotesk Display** and **OffBit** — both are comm
 
 ## Design Philosophy
 
-Every aspect of this project reflects Open Session's commitment to craft:
+Every aspect of this project reflects open session's commitment to craft:
 
 - **Brand-First Design** - Custom Aperol orange (#FE5102) with warm charcoal and vanilla neutrals
 - **Light & Dark Modes** - Full theming support with smooth transitions
@@ -550,7 +550,7 @@ Every aspect of this project reflects Open Session's commitment to craft:
 
 ---
 
-**Built with care by [Open Session](https://opensession.co)**
+**Built with care by [open session](https://opensession.co)**
 
 ---
 
