@@ -8,8 +8,9 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Curated design resources, tools, and inspiration for designers and developers." />
-    <!-- The app is served at opensession.co/directory (proxied to this deployment). It sets the canonical
-         link and og:url per route (src/lib/canonical.ts), so neither is written here. -->
+    <!-- The app is served at opensession.co/directory (proxied to this deployment). The build writes each
+         route's canonical link and og:url into its own HTML file (src/lib/prerender.ts), and the app keeps
+         them current as you navigate (src/lib/canonical.ts), so neither is written here. -->
 
     <!-- Open Graph / Social Preview -->
     <!-- FORK NOTE: Point the image URLs below at your own deployment, set SITE_ORIGIN in src/lib/canonical.ts
