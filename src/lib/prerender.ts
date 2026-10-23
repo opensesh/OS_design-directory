@@ -48,11 +48,10 @@ export function escapeHtml(value: string): string {
 /**
  * The short form of a resource's description, used as its page's meta description and as
  * its line on the directory page. Descriptions run 400–700 characters; search results show
- * about 155.
+ * about 155, so longer ones are cut at the last whole word before that.
  */
 export function summarize(description: string | null): string {
   if (!description) return '';
-  // TODO(Karim): how should a long description be shortened?
   const MAX = 155;
   if (description.length <= MAX) return description;
   return `${description.slice(0, MAX).replace(/\s+\S*$/, '')}…`;
