@@ -3,7 +3,9 @@
  * opensession.co/directory proxies to this deployment. Vite rewrites the URLs it bundles,
  * but not plain strings, so public-folder paths written in code go through `withBase`.
  */
-const BASE_URL = import.meta.env.BASE_URL;
+// import.meta.env only exists in code Vite builds; vite.config.ts also loads this file (through
+// canonical.ts, for the prerender plugin), where it falls back to the root
+const BASE_URL: string = import.meta.env?.BASE_URL ?? '/';
 
 /** The base without its trailing slash, so the router matches /directory as well as /directory/. */
 export const ROUTER_BASENAME = BASE_URL.replace(/\/$/, '');

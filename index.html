@@ -29,7 +29,13 @@
     <!-- Apply dark theme immediately to prevent flash -->
     <script>
       document.documentElement.classList.add('dark');
+      // Hides the build-time HTML in #root (src/lib/prerender.ts) until React replaces it
+      document.documentElement.dataset.js = '';
     </script>
+    <style>
+      [data-js] [data-prerendered] { display: none; }
+      [data-prerendered] { max-width: 48rem; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; }
+    </style>
   </head>
   <body>
     <div id="root"></div>
