@@ -135,14 +135,10 @@ export default function Home() {
   const [filteredResourceIds, setFilteredResourceIds] = useState<number[] | null>(null);
   const [matchedCategories, setMatchedCategories] = useState<string[]>([]);
 
-  // Sync URL params to filter state on mount/change
+  // Sync URL params to filter state on mount/change (React skips a set to the same value)
   useEffect(() => {
-    if (categoryParam !== activeCategory) {
-      setActiveCategory(categoryParam);
-    }
-    if (subCategoryParam !== activeSubCategory) {
-      setActiveSubCategory(subCategoryParam);
-    }
+    setActiveCategory(categoryParam);
+    setActiveSubCategory(subCategoryParam);
   }, [categoryParam, subCategoryParam]);
 
   // AI response state
