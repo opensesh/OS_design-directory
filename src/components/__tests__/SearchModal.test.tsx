@@ -407,7 +407,7 @@ describe('SearchModal', () => {
 
   // ── Favicon Fallback ───────────────────────────────────────────────
 
-  it('shows letter initial when favicon fails to load', () => {
+  it('shows the globe fallback when the favicon fails to load', () => {
     mockSearchReturn = {
       ...mockSearchReturn,
       defaultResults: [makeSearchResult({ id: 10, name: 'Zeplin', url: 'https://zeplin.io' })],
@@ -417,14 +417,12 @@ describe('SearchModal', () => {
       <SearchModal isOpen={true} onClose={onClose} onSelectResource={onSelectResource} />,
     );
 
-    // Simulate favicon error
-    const img = document.querySelector('img');
-    if (img) {
-      fireEvent.error(img);
-    }
+    // ResourceLogo falls back from the favicon to a Globe icon (it replaced the letter initial)
+    const img = screen.getByAltText('Zeplin');
+    fireEvent.error(img);
 
-    // Should show fallback initial "Z"
-    expect(screen.getByText('Z')).toBeInTheDocument();
+    expect(screen.queryByAltText('Zeplin')).not.toBeInTheDocument();
+    expect(document.querySelector('svg.lucide-globe')).toBeInTheDocument();
   });
 
   // ── Reset on close ─────────────────────────────────────────────────

@@ -589,7 +589,8 @@ function CameraController({
     }
     // Note: We no longer force camera back to default when filter is cleared
     // This allows users to keep their current view
-  }, [clusters, activeCategory, filteredResourceIds, matchedCategories, resources]);
+    // camera (useThree) and the two refs are stable for the canvas's lifetime, so listing them changes nothing
+  }, [clusters, activeCategory, filteredResourceIds, matchedCategories, resources, camera, controlsRef, isCameraAnimatingRef]);
 
   // Animate camera towards target (only when animating)
   useFrame((_, delta) => {
