@@ -4,14 +4,15 @@
   "installCommand": "bun install",
   "framework": "vite",
   "outputDirectory": "dist",
+  "cleanUrls": true,
+  "trailingSlash": false,
   "redirects": [
     { "source": "/", "destination": "/directory", "permanent": true },
     { "source": "/resource/:id", "destination": "/directory/resource/:id", "permanent": true }
   ],
   "rewrites": [
     { "source": "/directory/api/:path*", "destination": "/api/:path*" },
-    { "source": "/directory", "destination": "/directory/index.html" },
-    { "source": "/directory/((?!api/)[^.]*)", "destination": "/directory/index.html" }
+    { "source": "/directory", "destination": "/directory/index.html" }
   ],
   "headers": [
     {
