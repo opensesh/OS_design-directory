@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, cleanup, act, fireEvent } from '@testing-library/react';
+import { render, screen, cleanup, act, fireEvent, waitFor } from '@testing-library/react';
 import { CategoryGrid } from '../card-view/CategoryGrid';
 import type { NormalizedResource } from '../../types/resource';
 
@@ -323,11 +323,11 @@ describe('CategoryGrid', () => {
     expect(subRow).toHaveAttribute('data-column-count', '2');
   });
 
-  it('recalculates row grouping when column count changes', () => {
+  it('recalculates row grouping when column count changes', async () => {
     // Start desktop (3 cols): Row 0 [Community, Inspiration, Learning], Row 1 [Templates, Tools, AI]
     Object.defineProperty(window, 'innerWidth', { value: 1200, writable: true });
 
-    const { rerender } = render(
+    render(
       <CategoryGrid
         resources={resources}
         expandedCategory="Learning"
@@ -338,27 +338,19 @@ describe('CategoryGrid', () => {
     );
 
     // Learning is in row 0, column 2 on desktop
-    let subRow = screen.getByTestId('subcategory-row-Learning');
-    expect(subRow).toHaveAttribute('data-column-index', '2');
+    expect(screen.getByTestId('subcategory-row-Learning')).toHaveAttribute('data-column-index', '2');
 
     // Switch to tablet (2 cols): Row 0 [Community, Inspiration], Row 1 [Learning, Templates], ...
     Object.defineProperty(window, 'innerWidth', { value: 800, writable: true });
     act(() => { window.dispatchEvent(new Event('resize')); });
 
-    rerender(
-      <CategoryGrid
-        resources={resources}
-        expandedCategory="Learning"
-        activeSubcategory={null}
-        onCategoryClick={onCategoryClick}
-        onSubcategoryClick={onSubcategoryClick}
-      />,
-    );
-
-    subRow = screen.getByTestId('subcategory-row-Learning');
-    // Learning is now first in its row (index 0) on tablet
-    expect(subRow).toHaveAttribute('data-column-index', '0');
-    expect(subRow).toHaveAttribute('data-column-count', '2');
+    // The resize handler waits for the next animation frame before recounting columns
+    await waitFor(() => {
+      const subRow = screen.getByTestId('subcategory-row-Learning');
+      // Learning is now first in its row (index 0) on tablet
+      expect(subRow).toHaveAttribute('data-column-index', '0');
+      expect(subRow).toHaveAttribute('data-column-count', '2');
+    });
   });
 
   // ── Active Subcategory Passthrough ─────────────────────────────────
