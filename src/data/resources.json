@@ -3649,5 +3649,30 @@
     "gravityScore": 7.2,
     "gravityRationale": "3D animation and automated rigging tools",
     "id": 155
+  },
+  {
+    "name": "Pic2SVG",
+    "url": "https://pic2svg.com/",
+    "description": "Pic2SVG is a browser-based raster-to-vector converter that traces PNG and JPG images into editable SVG paths. It supports SVG, PDF, EPS, AI, and DXF export for vector editing and production workflows.\n\nTracing and preview are available with a free account, while downloadable files require a paid plan.",
+    "category": "Tools",
+    "subCategory": "Design",
+    "pricing": "Freemium",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "image",
+      "svg",
+      "vector",
+      "converter",
+      "design"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": null,
+    "gravityScore": 7.8,
+    "gravityRationale": "Raster-to-vector conversion for design workflows",
+    "id": 156,
+    "logoBg": "light"
   }
 ]
