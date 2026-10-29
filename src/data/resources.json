@@ -3649,5 +3649,25 @@
     "gravityScore": 7.2,
     "gravityRationale": "3D animation and automated rigging tools",
     "id": 155
+  },
+  {
+    "id": 156,
+    "name": "imgmov Last Frame Extractor",
+    "url": "https://imgmov.com/extract-last-frame-from-video",
+    "description": "Extract an ending still from a local video and inspect the join to a second clip before preparing a visual reference or next shot. The standalone browser utility is free and needs no account; video files stay on the device. This entry covers the frame utility only. imgmov's separate AI generation, sign-in and credit services are currently paused.",
+    "category": "Tools",
+    "subCategory": "Design",
+    "pricing": "Free",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "video",
+      "frame extraction",
+      "reference images",
+      "browser tool"
+    ],
+    "tier": 2,
+    "gravityScore": 1.0,
+    "gravityRationale": "Conservative outer-orbit placement for a focused video-reference utility; an editorial layout choice, not a popularity or performance rating."
   }
 ]
