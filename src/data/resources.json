@@ -3649,5 +3649,28 @@
     "gravityScore": 7.2,
     "gravityRationale": "3D animation and automated rigging tools",
     "id": 155
+  },
+  {
+    "name": "Thridy",
+    "url": "https://thridy.com",
+    "description": "Thridy is a free library of 13,000+ 3D icons rendered in one consistent style, so icons pulled for different parts of a project still read as one set. Every icon downloads as a high-resolution transparent PNG, free for personal and commercial use with no attribution or signup required. The library is organized into browsable categories with keyword search covering business, technology, food, travel, and everyday objects. For designers and developers who need dimensional icons that match each other, Thridy removes the style-mixing problem that comes with assembling icons from multiple packs.",
+    "category": "Templates",
+    "subCategory": "Assets",
+    "pricing": "Free",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "icons",
+      "3d",
+      "png",
+      "free"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": null,
+    "gravityScore": 5.5,
+    "gravityRationale": "Free 3D icon library in one consistent style",
+    "id": 156
   }
 ]
