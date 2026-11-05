@@ -3649,5 +3649,25 @@
     "gravityScore": 7.2,
     "gravityRationale": "3D animation and automated rigging tools",
     "id": 155
+  },
+  {
+    "id": 156,
+    "name": "Minglyph",
+    "url": "https://minglyph.com/",
+    "description": "AI-generated PNG lettering studies for short poster and cover titles. Use the public examples to compare spelling, material, spacing and readability before placing title imagery in a layout. These are static raster studies, not installable fonts or editable vectors. Public examples are free to browse; custom creation requires paid credits and provider availability. Current live provider success and customer adoption are not claimed.",
+    "category": "AI",
+    "subCategory": "Design & Creative",
+    "pricing": "Freemium",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "typography",
+      "lettering",
+      "png",
+      "poster",
+      "cover"
+    ],
+    "gravityScore": 1.0,
+    "gravityRationale": "Conservative outer-orbit editorial placement for a niche affiliated addition; this is a visualization parameter, not measured product performance or user demand."
   }
 ]
