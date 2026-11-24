@@ -3484,6 +3484,30 @@
     "logoBg": "light"
   },
   {
+    "name": "Linger",
+    "url": "https://withlinger.com/",
+    "description": "Linger is a local-first reference library for designers using Apple Silicon Macs with macOS 14 or later. Collect images and webpages with source links and notes, find them by text or color, and arrange references on a canvas while developing a visual direction. It has a full seven-day trial without sign-in or a payment card and is available with a one-time license.",
+    "category": "Tools",
+    "subCategory": "Productivity",
+    "pricing": "Paid",
+    "featured": false,
+    "opensource": false,
+    "tags": [
+      "design",
+      "reference library",
+      "mood boards",
+      "macOS",
+      "local-first"
+    ],
+    "count": null,
+    "tier": 2,
+    "thumbnail": null,
+    "screenshot": null,
+    "gravityScore": 7.5,
+    "gravityRationale": "Reference collection for visual design",
+    "id": 157
+  },
+  {
     "name": "Designspiration",
     "url": "https://www.designspiration.com/",
     "description": "Designspiration is a visual discovery platform with a deep archive of images across graphic design, typography, photography, and branding, supporting search by keyword and color so you can quickly hone in on specific aesthetics such as muted monochrome or bold type-heavy layouts.\n\nYou might lean on it when sketching visual territory for a new brand or feature launch, pulling references for diagram language, icon styles, and hero treatments, then translating those into token scales, motion directions, or layout templates inside your design system.",
